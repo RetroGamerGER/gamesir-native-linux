@@ -1,0 +1,33 @@
+{
+  "basis": "Successful isolated Deadband comparison, 20261012T165154770784Z; original sources retained unchanged",
+  "files": {
+    "setup.sh": {
+      "validated_source_sha256": "482cd0aac9e63c724efeccf48903fa8e0875f9b170144ad0f3701cfff211ac36",
+      "current_source_sha256": "7664466e3f9a944d1b76a9cfcd74b31316cd2d7d3c88aca82d8fdb1b1056b119"
+    },
+    "guest-check.py": {
+      "validated_source_sha256": "105216872466430161aac6ae01e2399b54a1edd37149effcfac1cb721004e5db",
+      "current_source_sha256": "d09a529639c1ec4df84f8ba779f33480983810e8a5ae6b649b6c806dced6b7b1"
+    },
+    "identity-check.py": {
+      "validated_source_sha256": "0de36993528e3125a2351c568024072539f3ad64c398279196b253606d9c1d17",
+      "current_source_sha256": "d768288ff45675b91c7c9676c120bb30c6afbf54d11791e187b50e7c3bc9369a"
+    },
+    "state-check.py": {
+      "validated_source_sha256": "081a414833efe5a6c9a1b28a08e8b298608871e0386ba17e5f1bba744ccc8a01",
+      "current_source_sha256": "b3c7f73f5eba12c37c4f064d56e9c3a55501d0c044f36e845c99b5fb7509e10e"
+    }
+  },
+  "adaptations": {
+    "setup.sh": "unchanged; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged",
+    "state-check.py": "unchanged; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged",
+    "identity-check.py": "fresh manifest target, exclusive Deadband 109c preparation state; no hardware writes; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged",
+    "guest-check.py": "450 s ceiling and 455 s reap timeout only; original signal handling and all post-capture audits retained; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged"
+  },
+  "license_annotation": {
+    "spdx": "GPL-2.0-only",
+    "historical_validated_source_sha256_preserved": true,
+    "current_source_sha256_covers_license_comment": true,
+    "comment_only": true
+  }
+}

@@ -1,0 +1,719 @@
+{
+  "poc_version": "0.1.0",
+  "operation": "offline_file_replay",
+  "counts": {
+    "records_total": 19,
+    "malformed": 9,
+    "truncated": 2,
+    "unknown": 3,
+    "ignored": 5
+  },
+  "packet_kinds": {
+    "x360_input": 1,
+    "gamesir_telemetry": 1,
+    "capture_truncated": 2,
+    "gamesir_read_reply": 2,
+    "gip_input_basic": 1,
+    "gip_input_unsupported": 1,
+    "gip_four_motor_output": 1,
+    "gamesir_vendor_unknown": 1,
+    "input_unknown": 1,
+    "unsupported_interface": 1,
+    "unsupported_endpoint": 1,
+    "foreign_vendor": 1,
+    "transfer_not_complete": 1,
+    "transfer_error": 1,
+    "empty": 1,
+    "oversized": 1,
+    "capture_length_mismatch": 1
+  },
+  "streams": [
+    {
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "counts": {
+        "malformed": 8,
+        "truncated": 2,
+        "unknown": 3,
+        "ignored": 2
+      },
+      "accepted_transfer_cadence": {
+        "records": 0,
+        "intervals": 0,
+        "first_timestamp_us": null,
+        "last_timestamp_us": null,
+        "zero_intervals": 0,
+        "clock_regressions": 0,
+        "statistics_us": null,
+        "observation_rate_hz": null,
+        "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+      },
+      "cadence_by_packet_kind": {},
+      "normal_and_imu_records_in_same_stream": false,
+      "co_presence_meaning": "records_present_only; not_continuous_simultaneous_hardware_support"
+    },
+    {
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "counts": {
+        "malformed": 1
+      },
+      "accepted_transfer_cadence": {
+        "records": 0,
+        "intervals": 0,
+        "first_timestamp_us": null,
+        "last_timestamp_us": null,
+        "zero_intervals": 0,
+        "clock_regressions": 0,
+        "statistics_us": null,
+        "observation_rate_hz": null,
+        "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+      },
+      "cadence_by_packet_kind": {},
+      "normal_and_imu_records_in_same_stream": false,
+      "co_presence_meaning": "records_present_only; not_continuous_simultaneous_hardware_support"
+    },
+    {
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 1
+      },
+      "endpoint": "82",
+      "counts": {
+        "ignored": 1
+      },
+      "accepted_transfer_cadence": {
+        "records": 0,
+        "intervals": 0,
+        "first_timestamp_us": null,
+        "last_timestamp_us": null,
+        "zero_intervals": 0,
+        "clock_regressions": 0,
+        "statistics_us": null,
+        "observation_rate_hz": null,
+        "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+      },
+      "cadence_by_packet_kind": {},
+      "normal_and_imu_records_in_same_stream": false,
+      "co_presence_meaning": "records_present_only; not_continuous_simultaneous_hardware_support"
+    },
+    {
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "84",
+      "counts": {
+        "ignored": 1
+      },
+      "accepted_transfer_cadence": {
+        "records": 0,
+        "intervals": 0,
+        "first_timestamp_us": null,
+        "last_timestamp_us": null,
+        "zero_intervals": 0,
+        "clock_regressions": 0,
+        "statistics_us": null,
+        "observation_rate_hz": null,
+        "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+      },
+      "cadence_by_packet_kind": {},
+      "normal_and_imu_records_in_same_stream": false,
+      "co_presence_meaning": "records_present_only; not_continuous_simultaneous_hardware_support"
+    },
+    {
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "045e",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "counts": {
+        "ignored": 1
+      },
+      "accepted_transfer_cadence": {
+        "records": 0,
+        "intervals": 0,
+        "first_timestamp_us": null,
+        "last_timestamp_us": null,
+        "zero_intervals": 0,
+        "clock_regressions": 0,
+        "statistics_us": null,
+        "observation_rate_hz": null,
+        "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+      },
+      "cadence_by_packet_kind": {},
+      "normal_and_imu_records_in_same_stream": false,
+      "co_presence_meaning": "records_present_only; not_continuous_simultaneous_hardware_support"
+    }
+  ],
+  "hardware_access": false,
+  "hardware_feasibility_proven": false,
+  "evidence_limit": "synthetic_records_are_parser_tests; capture_metadata_is_user_supplied",
+  "transport_limit": "mixed_synthetic_frames_are_not_a_USB_bandwidth_model",
+  "events": [
+    {
+      "record_number": 1,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 19,
+      "captured_length": 19,
+      "data_hex": "00140000000000000000000000000000000000",
+      "disposition": "malformed",
+      "kind": "x360_input",
+      "fields": {},
+      "reason": "expected_20_bytes_and_00_14_header"
+    },
+    {
+      "record_number": 2,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 60,
+      "captured_length": 60,
+      "data_hex": "1000113ce0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280118032a",
+      "disposition": "malformed",
+      "kind": "gamesir_telemetry",
+      "fields": {},
+      "reason": "needs_bytes_0_through_60"
+    },
+    {
+      "record_number": 3,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 61,
+      "data_hex": "1000113ce0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280118032aff",
+      "disposition": "truncated",
+      "kind": "capture_truncated",
+      "fields": {},
+      "reason": "full_payload_required"
+    },
+    {
+      "record_number": 4,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000113ce0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280118032aff000000",
+      "disposition": "truncated",
+      "kind": "capture_truncated",
+      "fields": {},
+      "reason": "full_payload_required"
+    },
+    {
+      "record_number": 5,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000223c0501123438deadbeef000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "disposition": "malformed",
+      "kind": "gamesir_read_reply",
+      "fields": {},
+      "reason": "invalid_or_missing_declared_payload"
+    },
+    {
+      "record_number": 6,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 12,
+      "captured_length": 12,
+      "data_hex": "1000223c050112340adeadbe",
+      "disposition": "malformed",
+      "kind": "gamesir_read_reply",
+      "fields": {},
+      "reason": "invalid_or_missing_declared_payload"
+    },
+    {
+      "record_number": 7,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 18,
+      "captured_length": 18,
+      "data_hex": "2000010f10010000ff030080ff7fffff0000",
+      "disposition": "malformed",
+      "kind": "gip_input_basic",
+      "fields": {},
+      "reason": "payload_length_mismatch_or_below_14"
+    },
+    {
+      "record_number": 8,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 18,
+      "captured_length": 18,
+      "data_hex": "2040010e10010000ff030080ff7fffff0000",
+      "disposition": "unknown",
+      "kind": "gip_input_unsupported",
+      "fields": {},
+      "reason": "unsupported_gip_header"
+    },
+    {
+      "record_number": 9,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 13,
+      "captured_length": 13,
+      "data_hex": "09000109000f650000000a0000",
+      "disposition": "malformed",
+      "kind": "gip_four_motor_output",
+      "fields": {},
+      "reason": "motor_percentage_exceeds_100"
+    },
+    {
+      "record_number": 10,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "10001199e0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280118032aff000000",
+      "disposition": "unknown",
+      "kind": "gamesir_vendor_unknown",
+      "fields": {},
+      "reason": "unrecognized_byte_3"
+    },
+    {
+      "record_number": 11,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "12000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "disposition": "unknown",
+      "kind": "input_unknown",
+      "fields": {},
+      "reason": "unrecognized_input_report"
+    },
+    {
+      "record_number": 12,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 1
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000113ce0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280118032aff000000",
+      "disposition": "ignored",
+      "kind": "unsupported_interface",
+      "fields": {},
+      "reason": "interface_1_not_a_verified_channel"
+    },
+    {
+      "record_number": 13,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "84",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000113ce0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280118032aff000000",
+      "disposition": "ignored",
+      "kind": "unsupported_endpoint",
+      "fields": {},
+      "reason": "only_82_and_02_supported"
+    },
+    {
+      "record_number": 14,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "045e",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 20,
+      "captured_length": 20,
+      "data_hex": "0014000000000000000000000000000000000000",
+      "disposition": "ignored",
+      "kind": "foreign_vendor",
+      "fields": {},
+      "reason": "target_vendor_is_3537"
+    },
+    {
+      "record_number": 15,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "submit",
+      "completion_status": -115,
+      "reported_length": 20,
+      "captured_length": 20,
+      "data_hex": "0014000000000000000000000000000000000000",
+      "disposition": "ignored",
+      "kind": "transfer_not_complete",
+      "fields": {},
+      "reason": "submissions_and_errors_not_replayed"
+    },
+    {
+      "record_number": 16,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": -32,
+      "reported_length": 20,
+      "captured_length": 20,
+      "data_hex": "0014000000000000000000000000000000000000",
+      "disposition": "ignored",
+      "kind": "transfer_error",
+      "fields": {},
+      "reason": "nonzero_completion_status"
+    },
+    {
+      "record_number": 17,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 0,
+      "captured_length": 0,
+      "data_hex": "",
+      "disposition": "malformed",
+      "kind": "empty",
+      "fields": {},
+      "reason": "empty_payload"
+    },
+    {
+      "record_number": 18,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 65,
+      "captured_length": 65,
+      "data_hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "disposition": "malformed",
+      "kind": "oversized",
+      "fields": {},
+      "reason": "layout_limit_64_bytes"
+    },
+    {
+      "record_number": 19,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 19,
+      "captured_length": 20,
+      "data_hex": "0014000000000000000000000000000000000000",
+      "disposition": "malformed",
+      "kind": "capture_length_mismatch",
+      "fields": {},
+      "reason": "captured_bytes_exceed_reported_length"
+    }
+  ]
+}

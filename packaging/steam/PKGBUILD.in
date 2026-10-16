@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: GPL-2.0-only
+pkgname=gamesir-native-steam
+pkgver=@VERSION@
+pkgrel=1
+pkgdesc='Optional GameSir G7 Pro Paddle mapping for Steam and Plasma sessions'
+arch=('any')
+license=('GPL-2.0-only')
+depends=('bash')
+makedepends=('python')
+optdepends=('steam: native Steam client for the explicit launcher'
+            'plasma-workspace: automatic mapping for a new Plasma session')
+source=("gamesir-native-steam-${pkgver}.tar.gz")
+sha256sums=('@SOURCE_SHA256@')
+
+check() {
+  cd "$srcdir/gamesir-native-steam-$pkgver"
+  python -B tests/test_packaging_steam.py
+}
+
+package() {
+  cd "$srcdir/gamesir-native-steam-$pkgver"
+  python -B scripts/package_steam.py stage --dest "$pkgdir"
+}

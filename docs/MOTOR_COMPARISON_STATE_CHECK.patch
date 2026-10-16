@@ -1,0 +1,21 @@
+--- a/work/measurement-b-code/state-check.py
++++ b/work/motor-comparison-code/state-check.py
+@@ -11,2 +11,16 @@
+-if (major, minor) != (235, 8):
+-    raise SystemExit("ABBRUCH: Gerätenummer gegenüber Stufe 2 abweichend")
++if minor != 8:
++    raise SystemExit("ABBRUCH: usbmon-Minornummer ist nicht Bus 8")
++# usbmon allocates its major dynamically; module load order can change it.
++# Bind it to the CURRENT kernel registration, never to a historical number.
++character_section = Path('/proc/devices').read_text().split('Character devices:\n', 1)[1].split('Block devices:', 1)[0]
++registered = [int(parts[0]) for line in character_section.splitlines()
++              if len(parts := line.split()) == 2 and parts[1] == 'usbmon']
++if registered != [major]:
++    raise SystemExit("ABBRUCH: Major nicht eindeutig als usbmon registriert")
++char_path = Path(f'/sys/dev/char/{major}:{minor}')
++class_path = Path('/sys/class/usbmon/usbmon8')
++if (char_path.resolve(strict=True) != class_path.resolve(strict=True)
++        or (char_path / 'subsystem').resolve(strict=True) != Path('/sys/class/usbmon').resolve(strict=True)
++        or (class_path / 'dev').read_text().strip() != f'{major}:{minor}'
++        or (char_path / 'dev').read_text().strip() != f'{major}:{minor}'):
++    raise SystemExit("ABBRUCH: usbmon-Klassenpfad oder Gerätenummer widersprüchlich")

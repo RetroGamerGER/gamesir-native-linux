@@ -1,0 +1,49 @@
+test_default_mode_reports_negative_cases_without_crashing (test_cli.CliTests.test_default_mode_reports_negative_cases_without_crashing) ... ok
+test_device_file_refused_without_json_report (test_cli.CliTests.test_device_file_refused_without_json_report) ... ok
+test_invalid_json_is_reported_as_input_error (test_cli.CliTests.test_invalid_json_is_reported_as_input_error) ... ok
+test_missing_file_is_reported_as_input_error (test_cli.CliTests.test_missing_file_is_reported_as_input_error) ... ok
+test_negative_replay_strict_exit_one_with_report (test_cli.CliTests.test_negative_replay_strict_exit_one_with_report) ... ok
+test_valid_replay_strict_success (test_cli.CliTests.test_valid_replay_strict_success) ... ok
+test_basic_gip_length_and_options_are_checked (test_protocol.PacketTests.test_basic_gip_length_and_options_are_checked) ... ok
+test_deterministic_arbitrary_bytes_never_crash_decoder (test_protocol.PacketTests.test_deterministic_arbitrary_bytes_never_crash_decoder) ... ok
+test_each_extra_button_is_independent (test_protocol.PacketTests.test_each_extra_button_is_independent) ... ok
+test_firmware_malformed_utf16_and_missing_terminator (test_protocol.PacketTests.test_firmware_malformed_utf16_and_missing_terminator) ... ok
+test_independent_fixture_expectations (test_protocol.PacketTests.test_independent_fixture_expectations) ... ok
+test_info_selector_echo_does_not_truncate_long_string (test_protocol.PacketTests.test_info_selector_echo_does_not_truncate_long_string) ... ok
+test_input_and_output_are_not_interchangeable (test_protocol.PacketTests.test_input_and_output_are_not_interchangeable) ... ok
+test_motor_order_and_all_zero_record (test_protocol.PacketTests.test_motor_order_and_all_zero_record) ... ok
+test_read_reply_offset_and_maximum_payload (test_protocol.PacketTests.test_read_reply_offset_and_maximum_payload) ... ok
+test_right_trigger_cannot_become_extra_buttons (test_protocol.PacketTests.test_right_trigger_cannot_become_extra_buttons) ... ok
+test_short_telemetry_never_decodes_partial_sensors (test_protocol.PacketTests.test_short_telemetry_never_decodes_partial_sensors) ... ok
+test_telemetry_channel_order_sign_and_endianness (test_protocol.PacketTests.test_telemetry_channel_order_sign_and_endianness) ... ok
+test_unknown_vendor_discriminators_stay_unknown (test_protocol.PacketTests.test_unknown_vendor_discriminators_stay_unknown) ... ok
+test_x360_requires_canonical_length_and_header (test_protocol.PacketTests.test_x360_requires_canonical_length_and_header) ... ok
+test_x360_signed_values_and_xpad_y_extremes (test_protocol.PacketTests.test_x360_signed_values_and_xpad_y_extremes) ... ok
+test_capture_kind_requires_host_capture_timebase (test_records.RecordTests.test_capture_kind_requires_host_capture_timebase) ... ok
+test_duplicate_json_keys_rejected (test_records.RecordTests.test_duplicate_json_keys_rejected) ... ok
+test_excessively_nested_json_is_a_record_error (test_records.RecordTests.test_excessively_nested_json_is_a_record_error) ... ok
+test_fifo_directory_and_symlink_to_device_are_rejected (test_records.RecordTests.test_fifo_directory_and_symlink_to_device_are_rejected) ... ok
+test_fixture_evidence_is_explicitly_synthetic (test_records.RecordTests.test_fixture_evidence_is_explicitly_synthetic) ... ok
+test_invalid_endpoint_hex_and_reserved_bits (test_records.RecordTests.test_invalid_endpoint_hex_and_reserved_bits) ... ok
+test_invalid_hex_payload_and_oversize_are_rejected (test_records.RecordTests.test_invalid_hex_payload_and_oversize_are_rejected) ... ok
+test_invalid_stage_address_status_and_schema (test_records.RecordTests.test_invalid_stage_address_status_and_schema) ... ok
+test_line_limit_and_json_errors_have_line_numbers (test_records.RecordTests.test_line_limit_and_json_errors_have_line_numbers) ... ok
+test_metadata_bool_is_not_an_integer (test_records.RecordTests.test_metadata_bool_is_not_an_integer) ... ok
+test_metadata_requires_complete_identity_and_source (test_records.RecordTests.test_metadata_requires_complete_identity_and_source) ... ok
+test_proc_fd_path_cannot_bypass_guard_via_regular_file_symlink (test_records.RecordTests.test_proc_fd_path_cannot_bypass_guard_via_regular_file_symlink) ... ok
+test_source_package_has_no_transport_or_process_imports (test_records.RecordTests.test_source_package_has_no_transport_or_process_imports) ... ok
+test_special_paths_are_rejected_before_open (test_records.RecordTests.test_special_paths_are_rejected_before_open) ... ok
+test_equal_timestamps_and_single_record (test_replay.ReplayTests.test_equal_timestamps_and_single_record) ... ok
+test_failed_or_incomplete_transfers_cannot_enter_cadence (test_replay.ReplayTests.test_failed_or_incomplete_transfers_cannot_enter_cadence) ... ok
+test_negative_fixture_error_counts (test_replay.ReplayTests.test_negative_fixture_error_counts) ... ok
+test_nonmonotonic_timestamps_are_not_silently_sorted (test_replay.ReplayTests.test_nonmonotonic_timestamps_are_not_silently_sorted) ... ok
+test_pid_filter_does_not_merge_other_identity (test_replay.ReplayTests.test_pid_filter_does_not_merge_other_identity) ... ok
+test_report_types_have_independent_timing (test_replay.ReplayTests.test_report_types_have_independent_timing) ... ok
+test_sessions_sources_and_timebases_never_merge (test_replay.ReplayTests.test_sessions_sources_and_timebases_never_merge) ... ok
+test_short_capture_does_not_decode_even_if_sensor_fields_fit (test_replay.ReplayTests.test_short_capture_does_not_decode_even_if_sensor_fields_fit) ... ok
+test_valid_fixture_counts_and_identity_separation (test_replay.ReplayTests.test_valid_fixture_counts_and_identity_separation) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 0.013s
+
+OK

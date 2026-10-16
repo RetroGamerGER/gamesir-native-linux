@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: GPL-2.0-only
+pkgname=gamesir-native-dkms
+pkgver=@VERSION@
+pkgrel=5
+pkgdesc='Experimental native GameSir G7 Pro driver and session manager'
+arch=('x86_64')
+license=('GPL-2.0-only')
+options=('!debug')
+depends=('dkms' 'python' 'systemd' 'kmod' 'clang' 'llvm' 'lld' 'make' 'gcc' 'binutils')
+makedepends=('gcc')
+optdepends=('linux-headers: matching headers for the stock Arch kernel; install matching headers for every target kernel')
+source=("gamesir-native-${pkgver}.tar.gz")
+sha256sums=('@SOURCE_SHA256@')
+
+build() {
+  cd "$srcdir/gamesir-native-$pkgver"
+  mkdir -p build
+  cc -std=c11 -Wall -Wextra -Werror -O2 tools/native/gsnative-ctl.c -o build/gsnative-ctl
+}
+
+check() {
+  cd "$srcdir/gamesir-native-$pkgver"
+  build/gsnative-ctl --self-test
+}
+
+package() {
+  cd "$srcdir/gamesir-native-$pkgver"
+  python -B scripts/package_alpha.py stage --dest "$pkgdir" --client build/gsnative-ctl
+}

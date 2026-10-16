@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "hardware_access": false,
+  "kernel_build_or_changes": false,
+  "status": "experimental_not_verified_calibration",
+  "profile": "docs/sdl-sensor-calibration.json",
+  "profile_sha256": "a3cf5432ca40da24693d10498d40348df6bf5116380ddcc5b1e32884911a626e",
+  "capture_sha256_verified": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+  "current_input_sha256_verified": {
+    "original-usbmon8.pcapng": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+    "derived/parser-records.jsonl": "63c928f9347bb3b262197305a2935c7060d9f95309bc690eab6bf34dfa838956",
+    "derived/telemetry-raw.json": "9369e9d956876b75f4113dba7599c27d172b9bcc1faab2b6503d82997365c44c"
+  },
+  "sample_count": 12204,
+  "counts_per_g": {
+    "numerator": 8192,
+    "denominator": 1
+  },
+  "output_unit": "m/s^2 (C integer output: micrometres/s^2)",
+  "axis_order": "wire_A0_A1_A2",
+  "axis_orientation_verified": false,
+  "bias_applied": false,
+  "includes_gravity": true,
+  "max_abs_rounding_error_m_s2": 5.00000000069889e-07,
+  "range_per_wire_axis_m_s2": [
+    [
+      -10.599131,
+      10.432734
+    ],
+    [
+      -1.140837,
+      25.759216
+    ],
+    [
+      -12.37922,
+      6.596026
+    ]
+  ],
+  "quiet_window": {
+    "seconds": [
+      67.03886,
+      73.03886
+    ],
+    "samples": 375,
+    "median_norm_raw_counts": 8215.838484293614,
+    "median_norm_m_s2": 9.835187146811036,
+    "median_norm_g": 1.0029099791275344,
+    "deviation_percent_from_one_g": 0.29099791275344344,
+    "establishes_calibration": false
+  },
+  "gyro_factor": null,
+  "gyro_derived_from_accel": false,
+  "gyro_frames_unchanged": 12204,
+  "strict_unverified_sensor_groups_blocked": 24408,
+  "final_sdl_release": false,
+  "limitations": [
+    "experimental common accel scale",
+    "wire axes only; SDL orientation unresolved",
+    "no bias or temperature correction",
+    "gyro physical factor unresolved"
+  ]
+}

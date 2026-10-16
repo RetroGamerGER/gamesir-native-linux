@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "hardware_access": false,
+  "runtime_calibration_ready": false,
+  "counts": {
+    "x360_input": 1458,
+    "failed_or_truncated_skipped": 14,
+    "input_unknown": 11,
+    "gip_input_basic": 3786,
+    "maintenance_exact_bytes": 521,
+    "experimental_accel_frames_converted": 12204,
+    "gyro_frames_preserved_raw": 12204,
+    "unverified_sensor_groups_blocked": 24408,
+    "gamesir_telemetry": 12204,
+    "gamesir_read_reply": 62,
+    "gamesir_profile_reply": 49,
+    "gamesir_firmware_reply": 48,
+    "motor_exact_bytes": 10,
+    "handshake_exact_bytes": 9
+  }
+}

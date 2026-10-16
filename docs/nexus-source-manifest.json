@@ -1,0 +1,2259 @@
+{
+  "schema": 1,
+  "analysis_date": "2026-10-16",
+  "application": "GameSir Nexus",
+  "package_version": "2.1.23.0",
+  "scope": "Own static-analysis metadata only; no vendor payloads or runtime results.",
+  "address_conventions": {
+    "offsets": "Zero-based absolute byte offsets. UTF8 for JavaScript; explicit UTF16LE for native string literals.",
+    "rva": "Relative virtual PE address, not file offset.",
+    "JL_image_base": "0x180000000"
+  },
+  "inputs": [
+    {
+      "name": "GameSir.Nexus-Manual Install.zip",
+      "bytes": 121402887,
+      "sha256": "66368251480ac7082fc07da8f133ca5723194839e6b21a3c2d323679c33e1219"
+    },
+    {
+      "name": "HJC.GameSir.Nexus2_0_2.1.23.0_x64.msixbundle",
+      "bytes": 58553643,
+      "sha256": "7a537cbcd8641147833140edebba984aebf59e72561b850e2786436b5e59c7b4"
+    },
+    {
+      "name": "HJC.GameSir.Nexus2_0_2.1.23.0_x64.msix",
+      "bytes": 57565503,
+      "sha256": "51212b76ec90f91d23eca1c7d33fd11f2be9f3187c962fb63d5d46c9fd31ce9f"
+    }
+  ],
+  "bundle_identical_to_outer_zip_member": true,
+  "main_package": {
+    "regular_files": 223,
+    "uncompressed_bytes": 83726636,
+    "firmware_files": 24,
+    "g7pro_firmware_files": 12,
+    "bundled_sys_or_inf": []
+  },
+  "components": [
+    {
+      "path": "AppxManifest.xml",
+      "bytes": 6364,
+      "sha256": "c43aaca3a0f11dc6e0509ee4773e60e1c39141bff7e01e6b334c1113be141399"
+    },
+    {
+      "path": "HJC.GameSir.Nexus2_0.exe",
+      "bytes": 20480,
+      "sha256": "c37cf978707f2fa7a450ad3e8018cbe3f129266afd25bfff58828d1312489a88"
+    },
+    {
+      "path": "HJC.GameSir.Nexus2_0.dll",
+      "bytes": 33306624,
+      "sha256": "36cb48433ca270994ada6625348af7f1c51a1a50f7dc6d63b7d0fff372c0a040"
+    },
+    {
+      "path": "D4XGaming.Devices.dll",
+      "bytes": 101376,
+      "sha256": "1e2184a8e30d6aa48ce39d522856215ee24e953093735f2eab96e08ab4be16a8"
+    },
+    {
+      "path": "D4XGaming.Devices.winmd",
+      "bytes": 5632,
+      "sha256": "3f5aa477951b7274eb9897975d3ee7bbd74ef545116c7a9b191ea4f118628765"
+    },
+    {
+      "path": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "bytes": 119808,
+      "sha256": "48385268c56638d953b60796ad76d950f6f1c104b1450fd48f42d0911af8ce37"
+    },
+    {
+      "path": "Web/js/app.4b7a6fef.js",
+      "bytes": 1975162,
+      "sha256": "5402b15f22c2a95a4ead965d707bef72217b6bc69a2f10e5f126133083868f0f"
+    },
+    {
+      "path": "Web/js/chunk-2d0e1bd0.a6548804.js",
+      "bytes": 50305,
+      "sha256": "261ae28fba54e2c36b087b53ba252bfbcf1bc0b2c0c3fb647bc63f5e51351183"
+    },
+    {
+      "path": "Web/js/chunk-vendors.83bff13c.js",
+      "bytes": 264744,
+      "sha256": "3beffd06bc7df4ea6caa60c28ee70d7f0c132881d02bb4b0d24f09e6e4c216b5"
+    },
+    {
+      "path": "WebView2Loader.dll",
+      "bytes": 165968,
+      "sha256": "462b36fd1be6ca9f7563466a89e57c41ef4a4def3e0a84fa885d203aea4a3aaf"
+    },
+    {
+      "path": "Microsoft.Web.WebView2.Core.dll",
+      "bytes": 773712,
+      "sha256": "05c06241310ceeb2e9816cc2441f8180dc9ae6da067a0d5053986f6986db94d4"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DG_V144_Key.ufw",
+      "bytes": 1270784,
+      "sha256": "5e53236ca92a6f23858ed90a93b13750baf04af55c0982eb3946c7901f7039f8"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DG_V144_No_Key.ufw",
+      "bytes": 1270784,
+      "sha256": "9e5d09f3c470d58303c8c3528ef299c2608eae8fdce78dd869494277f7f085f6"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_Key.ufw",
+      "bytes": 1903616,
+      "sha256": "fe9973ee75add2050eb9d35535571c09410bbe1e0299c6237df5e7b519da6885"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_No_Key.ufw",
+      "bytes": 1903616,
+      "sha256": "2ab88a108d20c7bfa55c714db2f79399af193bc711e807feaf47c1326ebe1eb0"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DG_V510_Key.ufw",
+      "bytes": 1271296,
+      "sha256": "f4d36b8dcdd40b819153862b9268b71e32ef8224450e3a2088269d627657d78a"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DG_V510_No_Key.ufw",
+      "bytes": 1271296,
+      "sha256": "e30f37a8f9f3fa1057f3982688f22f44223903c1dd4bc23653f457f0fedd85eb"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DV_V515_Key.ufw",
+      "bytes": 1904160,
+      "sha256": "d9baa3cede3e2bde25dbb9078c252bf03ca0a94402b3af9730158d446fd0f5fe"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DV_V515_No_Key.ufw",
+      "bytes": 1904160,
+      "sha256": "32e60afc18de02b9ad5ca2ba5a0afb052d35f9ef95315d3a58f971801025ed0b"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DG_V604_Key.ufw",
+      "bytes": 1271296,
+      "sha256": "46c3822bef8925222159ac0876aca47a5f7f7757d5edb58fd953b1db4308a04a"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DG_V604_No_Key.ufw",
+      "bytes": 1271296,
+      "sha256": "88b0dbda7fa64be2734340dbb8254228d67407372df4f0427ec8123328a7ad33"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DV_V608_Key.ufw",
+      "bytes": 1904160,
+      "sha256": "f5fa98ff5267642dcf6666e474c7f71ec391efecc67761d01881e00ab3ab83de"
+    },
+    {
+      "path": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DV_V608_No_Key.ufw",
+      "bytes": 1904160,
+      "sha256": "af554be20d0e18b53dc56e0cd2e20ebffcdb823f655247fabf0d7e383f1f519e"
+    }
+  ],
+  "anchors": [
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226060,
+      "identifier": "FirmwarePackages\\G7Pro\\PCWireless\\JS_3103_DV_V209_Key.ufw"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226228,
+      "identifier": "FirmwarePackages\\G7Pro\\PCWireless\\JS_3103_DG_V144_Key.ufw"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226412,
+      "identifier": "FirmwarePackages\\G7Pro\\WFF\\JS_3103_U_DV_V515_Key.ufw"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226580,
+      "identifier": "FirmwarePackages\\G7Pro\\WFF\\JS_3103_U_DG_V510_Key.ufw"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226708,
+      "identifier": "FirmwarePackages\\G7Pro\\ZZZ\\JS_3103_U_DV_V608_Key.ufw"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226836,
+      "identifier": "FirmwarePackages\\G7Pro\\ZZZ\\JS_3103_U_DG_V604_Key.ufw"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 15079436,
+      "identifier": "https://gs.7years-dc.com/"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14715156,
+      "identifier": "https://orsbjnbwlcsomwpjwexq.supabase.co/functions/v1/rapid-processor"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 15079508,
+      "identifier": "http://app.local/index.html"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "encoding": "ascii",
+      "byte_offset": 3470,
+      "identifier": "get_FirmwareVersionInfo"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "encoding": "ascii",
+      "byte_offset": 3494,
+      "identifier": "get_HardwareProductId"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "encoding": "ascii",
+      "byte_offset": 3516,
+      "identifier": "get_HardwareVendorId"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "encoding": "ascii",
+      "byte_offset": 3537,
+      "identifier": "get_HardwareVersionInfo"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "encoding": "ascii",
+      "byte_offset": 3711,
+      "identifier": "SendMessage"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "encoding": "ascii",
+      "byte_offset": 3739,
+      "identifier": "SendMessageA"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "encoding": "ascii",
+      "byte_offset": 3752,
+      "identifier": "GetMessageB"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "encoding": "ascii",
+      "byte_offset": 3773,
+      "identifier": "SendReceiveMessageC"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 596953,
+      "identifier": "setProfileByProperty(e,t,i){"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 597508,
+      "identifier": "saveProfileNow(e,t){"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 599361,
+      "identifier": "commonReq(e,t,i){"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 599588,
+      "identifier": "deviceReq(e,t){"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 595850,
+      "identifier": "send(e,t){window.chrome"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 1574655,
+      "identifier": "startCal(){"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 1574765,
+      "identifier": "finishCal(){"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 1574856,
+      "identifier": "exitCal(){"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 1575328,
+      "identifier": "motionCal(){"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 1574359,
+      "identifier": "CalibrationStateChanged"
+    },
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "encoding": "utf-8",
+      "byte_offset": 1574614,
+      "identifier": "CalibrationStateChanged"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10043747,
+      "identifier": "get_GyroX"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10043767,
+      "identifier": "get_GyroY"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10043787,
+      "identifier": "get_GyroZ"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10043807,
+      "identifier": "get_AccelX"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10043829,
+      "identifier": "get_AccelY"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10043851,
+      "identifier": "get_AccelZ"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10297382,
+      "identifier": "SensorModule"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10322055,
+      "identifier": "MotionMapModule"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10322208,
+      "identifier": "AdvanceMotionMapParser"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10322428,
+      "identifier": "MotionParser"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10228882,
+      "identifier": "LoadFirmwareVersions"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10292822,
+      "identifier": "ReadFirmwareVersion"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "ascii",
+      "byte_offset": 10292842,
+      "identifier": "ReadFirmwareVersionAck"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14391180,
+      "identifier": "V(\\d+)_Key\\.ufw"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14391236,
+      "identifier": "{0}.{1}.{2}"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14382748,
+      "identifier": "{0}.{1}"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226196,
+      "identifier": "G7Pro"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226364,
+      "identifier": "G7ProDongle"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "encoding": "utf-16-le",
+      "byte_offset": 14226540,
+      "identifier": "G7ProWFF"
+    }
+  ],
+  "static_code_findings": [
+    {
+      "file": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "rva": "0x16b0",
+      "file_offset": "0xab0",
+      "finding": "CRC16 routine: polynomial0x1021, init0, non-reflected; whole-container coverage not established."
+    },
+    {
+      "file": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "rva": "0x1750",
+      "file_offset": "0xb50",
+      "finding": "CRC32 routine: reflected0xedb88320, init0x26536734, no final XOR; whole-container coverage not established."
+    },
+    {
+      "file": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "rva": "0xb34b",
+      "finding": "Call computes cached CRC32 exposed through JL_getFirmwareDataCRC, cached fieldRVA0x1da18."
+    },
+    {
+      "file": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "rva": "0x1fc0..0x20e7",
+      "finding": "Transport callback framing56B with4B header/up to52B payload and512B blocks; actual physical USB report framing not proven."
+    },
+    {
+      "file": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "rva": "0x2120",
+      "finding": "JL_handleGipData accepts trailing56B; data0x4a/ack0x4c and correlation checks; no hardware update executed."
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x118ba70",
+      "file_offset": "0x1188e70",
+      "finding": "Same-object constructor flow associates standard DV path withG7Pro andDG withG7ProDongle; WFF andZZZ objects all receiveG7ProWFF. No unique device identity or compatibility proof."
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x141b650",
+      "file_offset": "0x1418a50",
+      "finding": "Catalogue constructor extracts version using filename regex and two/three-digit dot formatting. Not a live-device firmware query."
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x1d76753",
+      "file_offset": "0x1d73b53",
+      "finding": "gs.7years-dc.com selected as alternative to app.local UI path; not an established firmware catalogue/download endpoint."
+    }
+  ],
+  "verification": {
+    "msix_blockmap_files": 219,
+    "msix_blocks_verified": 1446,
+    "all_blocks_match": true,
+    "signature_trust_verified": false,
+    "hardware_access": false,
+    "network_access": false,
+    "vendor_code_executed": false,
+    "firmware_cached_sdk_crc32_verified": false,
+    "firmware_crc_scope": "Outer12 headers/tables/126 logical entry CRC16 verified; inner48 app-container headers/stored contents and48 app_area metadata validated. App-body meaning/CRC, cached SDK CRC32 and authenticity remain unestablished."
+  },
+  "project_references": {
+    "capture_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+    "imu_packets": 12204,
+    "accel_lsb_per_g": 8192,
+    "accel_status": "experimental and replaceable",
+    "gyro_lsb_per_degree_second": null,
+    "gyro_factor_independent": true
+  },
+  "private_evidence_directory": ".local/research/20261015-gamesir-nexus/",
+  "firmware_container_followup": {
+    "scope": {
+      "static_only": true,
+      "vendor_code_or_firmware_executed": false,
+      "network_or_ssh": false,
+      "hardware_or_system_changes": false,
+      "source_files_changed": false,
+      "proprietary_outputs_tracked": false
+    },
+    "source_file_count": 12,
+    "source_bytes_total": 19050624,
+    "header_bytes": 64,
+    "table_file_offset": "0x40",
+    "table_entry_bytes": 80,
+    "data_start_file_offset": "0x400",
+    "header_and_table_transform": "Own byte-only translation of statically inspected 16-bit XOR stream; reset seed0xffff for header and each table record.",
+    "crc16": {
+      "polynomial": "0x1021",
+      "initial": 0,
+      "reflected": false,
+      "final_xor": 0,
+      "header_basis": "Decoded bytes2..63, excluding checksum field at0",
+      "table_basis": "Encoded bytes at0x40, length80*entry_count",
+      "payload_basis": "After optional outer section transform, logical length excluding stored padding"
+    },
+    "section_transform": {
+      "block_bytes": 32,
+      "data_transform_rva": "0x18f0",
+      "seed_derivation_rva": "0x19c0",
+      "source": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "limits": "Decoding packaged bytes only, not vendor code execution; seed/key semantics do not prove device compatibility or firmware authenticity."
+    },
+    "entries_total": 126,
+    "empty_info_log_entries": 12,
+    "transformed_entries": 42,
+    "unchanged_entries": 84,
+    "all_header_table_size_and_outer_geometry_checks_passed": true,
+    "all_logical_payload_crc16_checks_passed": true,
+    "all_tail_magic_crc_checks_passed": true,
+    "entry_names": [
+      "flash.bin",
+      "info.log",
+      "isd_config.ini",
+      "ota.bin",
+      "script.ver",
+      "br23loader.bin (DG only)",
+      "flash2.bin",
+      "flash3.bin",
+      "flash4.bin",
+      "blimit.bin",
+      "tail.bin"
+    ],
+    "ota_identical_across_all_12": {
+      "same_stored_bytes_across_all_twelve": true,
+      "stored_bytes": 215104,
+      "declared_length": 215094,
+      "stored_sha256": "7d680619a277b85ff9d0a709a5709acddb52ccaabd6b6364f85d0701125b5628"
+    },
+    "inner_flash_headers": {
+      "outer_flash_files": 48,
+      "header_bytes": 32,
+      "crc_valid_directory_headers_per_file": 5,
+      "records_with_terminal_word_zero": 4,
+      "final_key_mac_record_terminal_word": "0xffff",
+      "names": [
+        "uboot.boot",
+        "isd_config.ini",
+        "app_dir_head",
+        "app_dir_head2",
+        "key_mac"
+      ],
+      "limits": "The original offset+length interpretation for app_dir_head fields was corrected in inner_flash_followup. Valid packed split/application container now established for48 files. Whole app-body/code decode and global physical relocation remain unresolved.",
+      "total_crc_valid_directory_headers": 240,
+      "prior_field8_as_length_interpretation_corrected": true
+    },
+    "configuration_findings": {
+      "files_examined": 24,
+      "chip_name": "AC695X",
+      "chip_name_key_offset_DG": "0x118",
+      "chip_name_key_offset_DV": "0x116",
+      "classification": "Container/pack-tool and configured MCU family; not proof of IMU chip or actual assembled MCU",
+      "FLASH_SIZE": {
+        "DG": "512K",
+        "DV": "1M"
+      },
+      "VID_and_PID_fields": "Version and model strings, not USB VID/PID",
+      "EOFFSET": "Flash offset in4-KiB units, not IMU bias",
+      "script_ver": "AC695X-v0.01-cfg_tool-v0.07",
+      "script_ver_sha256": "6cf6c2887a925ec5f336abeb199b8f92b0672e1c13ca6eab72ccafd0215699d6",
+      "sensor_scale_or_register_setup_found": false,
+      "scan_limit": "Named terms and config structure only; no global firmware absence claim."
+    },
+    "files": [
+      {
+        "path": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DG_V144_Key.ufw",
+        "bytes": 1270784,
+        "sha256": "5e53236ca92a6f23858ed90a93b13750baf04af55c0982eb3946c7901f7039f8",
+        "entries": 11,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "512K",
+          "version_field_named_VID": "1.44",
+          "model_field_named_PID": "JS_3103_DG",
+          "flash_offset_field_named_EOFFSET": "1"
+        },
+        "decoded_configuration_sha256": "592211ec2c317c87f3295794b545968e8b697a887a7757b2d56de607dff412b5"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DG_V144_No_Key.ufw",
+        "bytes": 1270784,
+        "sha256": "9e5d09f3c470d58303c8c3528ef299c2608eae8fdce78dd869494277f7f085f6",
+        "entries": 11,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "512K",
+          "version_field_named_VID": "1.44",
+          "model_field_named_PID": "JS_3103_DG",
+          "flash_offset_field_named_EOFFSET": "1"
+        },
+        "decoded_configuration_sha256": "592211ec2c317c87f3295794b545968e8b697a887a7757b2d56de607dff412b5"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_Key.ufw",
+        "bytes": 1903616,
+        "sha256": "fe9973ee75add2050eb9d35535571c09410bbe1e0299c6237df5e7b519da6885",
+        "entries": 10,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "1M",
+          "version_field_named_VID": "2.09",
+          "model_field_named_PID": "JS_3103_DV",
+          "flash_offset_field_named_EOFFSET": "16"
+        },
+        "decoded_configuration_sha256": "ee2dd7e138d86bc6969527dddf9a10cb3c513f8b100a88faa814e5533ef87f9b"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_No_Key.ufw",
+        "bytes": 1903616,
+        "sha256": "2ab88a108d20c7bfa55c714db2f79399af193bc711e807feaf47c1326ebe1eb0",
+        "entries": 10,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "1M",
+          "version_field_named_VID": "2.09",
+          "model_field_named_PID": "JS_3103_DV",
+          "flash_offset_field_named_EOFFSET": "16"
+        },
+        "decoded_configuration_sha256": "ee2dd7e138d86bc6969527dddf9a10cb3c513f8b100a88faa814e5533ef87f9b"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DG_V510_Key.ufw",
+        "bytes": 1271296,
+        "sha256": "f4d36b8dcdd40b819153862b9268b71e32ef8224450e3a2088269d627657d78a",
+        "entries": 11,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "512K",
+          "version_field_named_VID": "5.10",
+          "model_field_named_PID": "JS_3103_U_DG",
+          "flash_offset_field_named_EOFFSET": "1"
+        },
+        "decoded_configuration_sha256": "fa68be27514f150a2a6ba953e65e2dc9732a3745a1e74448d529e6ada6d17c35"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DG_V510_No_Key.ufw",
+        "bytes": 1271296,
+        "sha256": "e30f37a8f9f3fa1057f3982688f22f44223903c1dd4bc23653f457f0fedd85eb",
+        "entries": 11,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "512K",
+          "version_field_named_VID": "5.10",
+          "model_field_named_PID": "JS_3103_U_DG",
+          "flash_offset_field_named_EOFFSET": "1"
+        },
+        "decoded_configuration_sha256": "fa68be27514f150a2a6ba953e65e2dc9732a3745a1e74448d529e6ada6d17c35"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DV_V515_Key.ufw",
+        "bytes": 1904160,
+        "sha256": "d9baa3cede3e2bde25dbb9078c252bf03ca0a94402b3af9730158d446fd0f5fe",
+        "entries": 10,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "1M",
+          "version_field_named_VID": "5.15",
+          "model_field_named_PID": "JS_3103_U_DV",
+          "flash_offset_field_named_EOFFSET": "16"
+        },
+        "decoded_configuration_sha256": "22b90a51ddb7f14d4e1377ae70b22e562a274c2528f733c9d1217470af6824e7"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DV_V515_No_Key.ufw",
+        "bytes": 1904160,
+        "sha256": "32e60afc18de02b9ad5ca2ba5a0afb052d35f9ef95315d3a58f971801025ed0b",
+        "entries": 10,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "1M",
+          "version_field_named_VID": "5.15",
+          "model_field_named_PID": "JS_3103_U_DV",
+          "flash_offset_field_named_EOFFSET": "16"
+        },
+        "decoded_configuration_sha256": "22b90a51ddb7f14d4e1377ae70b22e562a274c2528f733c9d1217470af6824e7"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DG_V604_Key.ufw",
+        "bytes": 1271296,
+        "sha256": "46c3822bef8925222159ac0876aca47a5f7f7757d5edb58fd953b1db4308a04a",
+        "entries": 11,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "512K",
+          "version_field_named_VID": "6.04",
+          "model_field_named_PID": "JS_3103_U_DG",
+          "flash_offset_field_named_EOFFSET": "1"
+        },
+        "decoded_configuration_sha256": "f7c290bc13cd3ae345bc77b939eb7912eea5df8018cc8c85be09ec2debeea82b"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DG_V604_No_Key.ufw",
+        "bytes": 1271296,
+        "sha256": "88b0dbda7fa64be2734340dbb8254228d67407372df4f0427ec8123328a7ad33",
+        "entries": 11,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "512K",
+          "version_field_named_VID": "6.04",
+          "model_field_named_PID": "JS_3103_U_DG",
+          "flash_offset_field_named_EOFFSET": "1"
+        },
+        "decoded_configuration_sha256": "f7c290bc13cd3ae345bc77b939eb7912eea5df8018cc8c85be09ec2debeea82b"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DV_V608_Key.ufw",
+        "bytes": 1904160,
+        "sha256": "f5fa98ff5267642dcf6666e474c7f71ec391efecc67761d01881e00ab3ab83de",
+        "entries": 10,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "1M",
+          "version_field_named_VID": "6.08",
+          "model_field_named_PID": "JS_3103_U_DV",
+          "flash_offset_field_named_EOFFSET": "16"
+        },
+        "decoded_configuration_sha256": "5f3ffad502a50e73da8e46c33e9a76d89ffee564c7d4ecf6229f236bb8789a2d"
+      },
+      {
+        "path": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DV_V608_No_Key.ufw",
+        "bytes": 1904160,
+        "sha256": "af554be20d0e18b53dc56e0cd2e20ebffcdb823f655247fabf0d7e383f1f519e",
+        "entries": 10,
+        "header_crc16_verified": true,
+        "encoded_table_crc16_verified": true,
+        "all_logical_payload_crc16_verified": true,
+        "tail_magic_and_crc_verified": true,
+        "configuration": {
+          "chip_name_label": "AC695X",
+          "flash_size_label": "1M",
+          "version_field_named_VID": "6.08",
+          "model_field_named_PID": "JS_3103_U_DV",
+          "flash_offset_field_named_EOFFSET": "16"
+        },
+        "decoded_configuration_sha256": "5f3ffad502a50e73da8e46c33e9a76d89ffee564c7d4ecf6229f236bb8789a2d"
+      }
+    ],
+    "result": {
+      "gyro_lsb_per_degree_second": null,
+      "gyro_units_conversion": null,
+      "imu_chip": null,
+      "runtime_sensor_register_to_report_path_proven": false,
+      "experimental_accel_lsb_per_g_unchanged": 8192,
+      "remaining_gap": "Inner flash address/code representation and actual sensor initialization/calibration→report values; alternatively later separately authorized reference rotations.",
+      "firmware_flashing_or_compatibility_approval": false,
+      "signature_authenticity_verified": false
+    },
+    "private_evidence_directory": ".local/research/20261015-gamesir-nexus/firmware-sensor/",
+    "validation_counts": {
+      "firmware_sources": 12,
+      "outer_header_crc_pass": 12,
+      "raw_table_crc_pass": 12,
+      "tail_crc_pass": 12,
+      "outer_payload_crc_pass": 126,
+      "inner_flash_header_crc_pass": 48,
+      "inner_metadata_crc_pass": 240
+    },
+    "code_source": {
+      "source": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "bytes": 119808,
+      "sha256": "48385268c56638d953b60796ad76d950f6f1c104b1450fd48f42d0911af8ce37",
+      "image_base": "0x180000000"
+    },
+    "loader_code_intervals": [
+      {
+        "rva": "0x11b00",
+        "file_offset": "0x10f00",
+        "end_rva_exclusive": "0x11b7c",
+        "bytes": 124,
+        "sha256": "ccfc203837d30191e30b5cb6161b62510ac21fc2576a065f75d26fab69ba455e",
+        "role": "JL_loadFirmwareData export. Default calls 0xa530; alternate dispatch 0x15910->0xf220 based global0x1e38c.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0x52a5",
+        "file_offset": "0x46a5",
+        "end_rva_exclusive": "0x52af",
+        "bytes": 10,
+        "sha256": "a7105b6d7d516835272f4399c6fcfb6c083ac6605febd93f01a0057b3e71ee9a",
+        "role": "Initialize both16bitseedglobals0x1dee0/0x1dee2 toffff.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xa530",
+        "file_offset": "0x9930",
+        "end_rva_exclusive": "0xb3eb",
+        "bytes": 3771,
+        "sha256": "0ce223e1662d60f5d4a263b27d14acfb53c3e8323d9e3c8672f132314a337968",
+        "role": "Default outer64Bheader and80Btable load,crc,bounds,tail and type dispatch.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xa5c8",
+        "file_offset": "0x99c8",
+        "end_rva_exclusive": "0xa882",
+        "bytes": 698,
+        "sha256": "a5ca967bd27eaef8ee3d3f55ad8438834030c16ac25fc5cb3d1a83acfc19593c",
+        "role": "Header XOR, lowbyte of seedffff, feedback polynomial1021.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xa8c0",
+        "file_offset": "0x9cc0",
+        "end_rva_exclusive": "0xa95e",
+        "bytes": 158,
+        "sha256": "6be28bfa000575e055044a6559071c01530d71ad4140b250b2efd7dfe263193a",
+        "role": "CRC16 over decodedheader[2:64], then headerDWORD+4<=source size.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xa9bf",
+        "file_offset": "0x9dbf",
+        "end_rva_exclusive": "0xaa18",
+        "bytes": 89,
+        "sha256": "6b709387c318189bcf9765febbad5e75ec8fd4e936bccbfe5361961fac980f9e",
+        "role": "RecordcountLE16+8; raw tableCRC over n*80 bytes startingfile+64 matches decodedheaderLE16+2.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xab84",
+        "file_offset": "0x9f84",
+        "end_rva_exclusive": "0xabc9",
+        "bytes": 69,
+        "sha256": "bc359ece9cd277a58e5bf6d840c471683d13516878343fc18b7532238ab8021a",
+        "role": "Locate typeff namedtail.bin;copy64B;magic check at+34.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xac89",
+        "file_offset": "0xa089",
+        "end_rva_exclusive": "0xb061",
+        "bytes": 984,
+        "sha256": "0efe09ee47237d05b84dadc9f0b8bf76ed260d45ef6cee870a18f72f2d4794bb",
+        "role": "TailCRC overfirst32bytes againstLE16+32; derive data seed via19c0.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0x19c0",
+        "file_offset": "0xdc0",
+        "end_rva_exclusive": "0x1aa4",
+        "bytes": 228,
+        "sha256": "e3212297c39ba25e9ad167aa9681a99db4ab0745767920219133194b8a8efd6d",
+        "role": "Seed from mirrored pairs in first32tailbytes; threshold fromsum(first16) mod256, clamped55/aa at <=10/>=e0.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0x18f0",
+        "file_offset": "0xcf0",
+        "end_rva_exclusive": "0x19b2",
+        "bytes": 194,
+        "sha256": "1e9fa33cca6f7d09591e419fec92e9af652484f93340c15b7cdb1289c4cfc439",
+        "role": "32Bsectionblocks:seed=(source_offset>>2) xor derived16bitseed, XORstream polynomial1021;increment sourceoffset32.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xb151",
+        "file_offset": "0xa551",
+        "end_rva_exclusive": "0xb23b",
+        "bytes": 234,
+        "sha256": "517826265859752231657472e524470a19b55e47bcbd2a9d0fa02721710dd025",
+        "role": "Copy typea1 storedsize;transform declaredrange then checkCRC over declaredlength;pass to5520.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xb24f",
+        "file_offset": "0xa64f",
+        "end_rva_exclusive": "0xb276",
+        "bytes": 39,
+        "sha256": "6a1c6ac059e372d40fab8d47c47623e61318762c4c64741859550249418ba4c8",
+        "role": "Types0 and20..24 passed toinner parser56d0.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0x56d0",
+        "file_offset": "0x4ad0",
+        "end_rva_exclusive": "0xa52d",
+        "bytes": 20061,
+        "sha256": "436bb78026fa7fd5822cfd91aec6010f03d55a8611de134376681f1790d88f3b",
+        "role": "Inner flash parser; XOR32Bheader and32Bmetarecords withffff;checksCRC.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0x5c3d",
+        "file_offset": "0x503d",
+        "end_rva_exclusive": "0x5c76",
+        "bytes": 57,
+        "sha256": "0b3ba535ba038e19f03b75cf9e973b0f997e977ebb4acdbf0d650cc19c4d36a9",
+        "role": "InnerheaderCRC,byte+12==2;byte+13 used as mode flag, not proven recordcount.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0x60d3",
+        "file_offset": "0x54d3",
+        "end_rva_exclusive": "0x60e8",
+        "bytes": 21,
+        "sha256": "bd861d2f768f6d285bf11ab648ed947bc5ee3f6df74d28277d64839157f8912e",
+        "role": "InnerrecordCRC then terminalwordLE16+14 saved.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      },
+      {
+        "rva": "0xa463",
+        "file_offset": "0x9863",
+        "end_rva_exclusive": "0xa470",
+        "bytes": 13,
+        "sha256": "9c78b9cdd583f2bba371af1a63a02295553dea515f54c0e4bcafed9731b5b201",
+        "role": "Continue32Bmetarecords until terminalwordLE16+14 !=0.",
+        "boundary_basis": "Inspected code interval; may be part of a PE function, not a claim that every interval is a whole function"
+      }
+    ],
+    "private_evidence_hashes": {
+      "loader/final-findings.json": "d7038100001197cfe4ed6f9f513c9b9a4f4c611730d3131fc539206d7ce7caf4",
+      "loader/decoded-containers.json": "a76fa9f08bcc5df0adcf12777ba48e01eddbf68fdd4184e23f1b3bc3ad2828de",
+      "loader/extracted-payloads.json": "f765555d631429d2d88196c2d3247b7f20573c775faf156518dbc048bcfb0459",
+      "structure/structure-findings.json": "7bd315453630f3065a4e1ae7eb0ac1dfb872f7e9ba886dfbe85d0d853dc13d54",
+      "structure/independent-container-review.json": "a24fb48e88c5aa471e5a4ec35becf36c107b5216595deec53313955c143b410f",
+      "structure/decoded-config-review.json": "b26d4dd3a424f80141f186ae5f00a774d00e85e1663fca8340de80a453597a79",
+      "review/container-header-review.json": "22038774e12bea9a9df3a275a08c49283c5bedb45bef0558c01db34cbc5d9408",
+      "review/extracted-payload-review.json": "1da81cf8cfba20158110528f78c8eacfcd5e40a5dd49eaf844d292ec2be485a9"
+    }
+  },
+  "inner_flash_followup": {
+    "analysis_date": "2026-10-15",
+    "scope": {
+      "static_only": true,
+      "vendor_code_or_firmware_executed": false,
+      "network_or_ssh": false,
+      "hardware_or_system_changes": false,
+      "running_driver_changed": false,
+      "source_files_changed": false,
+      "proprietary_or_derived_key_bytes_tracked": false
+    },
+    "source_dll": {
+      "path": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "bytes": 119808,
+      "sha256": "48385268c56638d953b60796ad76d950f6f1c104b1450fd48f42d0911af8ce37"
+    },
+    "validation_counts": {
+      "outer_flash_payloads": 48,
+      "split_in_bounds": 48,
+      "field4_eq_boundary_plus32": 48,
+      "appcontainer_header_crc": 48,
+      "appcontainer_raw_content_crc": 48,
+      "app_area_metadata_crc": 48,
+      "default_marker_family": 36,
+      "dual_uboot_marker_family": 12
+    },
+    "address_field_semantics": {
+      "app_dir_head_dword8": "Local packed split boundary for all48 examined payloads, not length from DWORD4",
+      "app_dir_head_dword4": "Boundary plus32",
+      "app_dir_head2_dword8": "Alternate logical bank boundary, not a packed byte count",
+      "app_container": "At split,32B metadata header; stored content length DWORD8 begins split+32, CRC16 in WORD4 validates exact stored content",
+      "prefix_and_body": "Loader copies prefix[0:split] and app[split:file_size] into separate caches; no whole-body decode in inspected copy branches",
+      "global_physical_flash_map": "Not fully established; marker-specific metadata relocations are distinct from packed spans"
+    },
+    "modes_and_markers": {
+      "mode13": "Mode1 and16 choose separate cache branches; semantic chip/CPU/physicalerase interpretation is not proven.",
+      "default_path": "JL_loadFirmwareData11b00(default) -> a530 ->56d0. Markerffff->selector0,ff00->10,00ff->1; othermarkersskipdirectorybranch.",
+      "dual_uboot_path": "JL_setDualUbootEnabled11ae0 writesglobal1e38c;nonzero dispatch11b00->15910->f220->c7f0. c7f0 acceptsmarker0fff atd2ac/d2fa;mode1/16 stillsplit atDWORD+8.",
+      "nexus_caller_limit": "Which precise model operation sets DualUbootEnabled is not traced in this task; matching data does not prove a particular runtime call."
+    },
+    "metadata_relocation": {
+      "location": "Defaultparser rewrites only cached32B directorymetadata; c000 replaces32B at the original record position (sourceindex+1)*32.",
+      "exact_mod32_arithmetic": [
+        "DWORD+4/+8 -0x10000",
+        "DWORD+4/+8 +0x10000",
+        "DWORD+4/+8 +0xffff1000 (=-0xf000 mod2^32)"
+      ],
+      "padding": "The third selector branch appends0x1000 bytes offf to a prefix cache via1d20/c1b0.",
+      "integrity": "Recompute headerCRC16 and reapply32BmetadataXOR beforec000 replacement.",
+      "limit": "These operations do not establish one universal MCU physical address formula. No full virtualflashimage was synthesized or sent."
+    },
+    "key_no_key_relation": {
+      "app_area_metadata_headers_validated": 48,
+      "complete_pairs_validated": 24,
+      "content_bytes_compared_once_per_pair": 7960580,
+      "stream_period_bytes": 32,
+      "all_compared_content_bytes_equivalent_after_class_stream_normalization": true,
+      "mask_sha256": "1dfc2396111b7ade57b80c370424b4ed58af76102a9a88f5dda11b0169ce1acf",
+      "seed_and_full_mask_values": "Remain private; no key or firmware payload bytes included",
+      "does_not_prove": "Decoded CPU instructions, sensor register meaning, gyro units or complete firmware plaintext"
+    },
+    "dg_span_correction": {
+      "affected_candidate_spans": 24,
+      "extra_bytes_each": 32,
+      "explanation": "Treating unresolved app_area DWORD8 as post-metadata body length consumes32FF padding bytes outside validated content in DG cases. This produced an artificial last-block mismatch after unequal stream normalization. Full bounded content pairs match."
+    },
+    "recognition_checks": {
+      "outer_decoded_flash_files": 48,
+      "raw_ascii_utf16_sensor_or_unit_matches": 0,
+      "raw_candidate_zlib_wrappers": 6993,
+      "complete_valid_zlib_streams": 0,
+      "valid_PE_headers": 0,
+      "valid_BZip2_streams": 0,
+      "simple_fixed_32B_body_candidates": 48,
+      "putative_body_field2_crc_matches": 0,
+      "known_outer_address_xor_hypotheses": 14,
+      "address_xor_crc_matches": 0,
+      "limits": "Bounded named-token and selected-format/hypothesis checks only. No global sensor/compression absence, no established inner CRC coverage, ISA or plaintext-code claim."
+    },
+    "representative_mappings": [
+      {
+        "ufw_sha256": "9e5d09f3c470d58303c8c3528ef299c2608eae8fdce78dd869494277f7f085f6",
+        "outer_payload": "flash.bin",
+        "outer_ufw_offset": 1024,
+        "outer_size": 254720,
+        "outer_sha256": "9d14ba3e65e7f6e517819b5c5c13a072356b1e82af8613e021c4d17635e37d8a",
+        "mode_byte13": 1,
+        "marker_word2": "0xffff",
+        "matching_loader_branch": "default",
+        "prefix_packed_range": [
+          0,
+          6912
+        ],
+        "app_container_packed_range": [
+          6912,
+          254720
+        ],
+        "app_container_ufw_offset": 7936,
+        "app_dir_head_field4": 6944,
+        "app_dir_head_field8_boundary": 6912,
+        "app_dir_head2_field4": 259360,
+        "app_dir_head2_field8_second_boundary": 259328,
+        "app_content_stored_range": [
+          6944,
+          254592
+        ],
+        "app_content_length": 247648,
+        "app_content_sha256": "0d03c22f9c3bca224f1ceb7014ae1ad30af0f44aac3888075b42dd20ea42d26c",
+        "app_header_crc_valid": true,
+        "app_content_stored_crc_valid": true,
+        "app_area_head_crc_valid": true,
+        "ufw_source": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DG_V144_No_Key.ufw",
+        "app_area_field4_unresolved": "0x1e000c0"
+      },
+      {
+        "ufw_sha256": "9e5d09f3c470d58303c8c3528ef299c2608eae8fdce78dd869494277f7f085f6",
+        "outer_payload": "flash2.bin",
+        "outer_ufw_offset": 499744,
+        "outer_size": 258048,
+        "outer_sha256": "74d9c85aa42e04263586167b42f782589b6b44013fd43a846962143cf60562ba",
+        "mode_byte13": 16,
+        "marker_word2": "0xffff",
+        "matching_loader_branch": "default",
+        "prefix_packed_range": [
+          0,
+          8192
+        ],
+        "app_container_packed_range": [
+          8192,
+          258048
+        ],
+        "app_container_ufw_offset": 507936,
+        "app_dir_head_field4": 8224,
+        "app_dir_head_field8_boundary": 8192,
+        "app_dir_head2_field4": 258080,
+        "app_dir_head2_field8_second_boundary": 258048,
+        "app_content_stored_range": [
+          8224,
+          255872
+        ],
+        "app_content_length": 247648,
+        "app_content_sha256": "e74632af0d41fc6d4357f88ff3c6ceb03c4a7e405b15aa1c579743e46d9b3215",
+        "app_header_crc_valid": true,
+        "app_content_stored_crc_valid": true,
+        "app_area_head_crc_valid": true,
+        "ufw_source": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DG_V144_No_Key.ufw",
+        "app_area_field4_unresolved": "0x1e000c0"
+      },
+      {
+        "ufw_sha256": "2ab88a108d20c7bfa55c714db2f79399af193bc711e807feaf47c1326ebe1eb0",
+        "outer_payload": "flash.bin",
+        "outer_ufw_offset": 1024,
+        "outer_size": 419584,
+        "outer_sha256": "843359c0bd209883c0320c9c12df4e2622a064d1f162773431c44c192e870d4d",
+        "mode_byte13": 1,
+        "marker_word2": "0xffff",
+        "matching_loader_branch": "default",
+        "prefix_packed_range": [
+          0,
+          4096
+        ],
+        "app_container_packed_range": [
+          4096,
+          419584
+        ],
+        "app_container_ufw_offset": 5120,
+        "app_dir_head_field4": 4128,
+        "app_dir_head_field8_boundary": 4096,
+        "app_dir_head2_field4": 487200,
+        "app_dir_head2_field8_second_boundary": 487168,
+        "app_content_stored_range": [
+          4128,
+          419491
+        ],
+        "app_content_length": 415363,
+        "app_content_sha256": "9a1634166819bf4bed1c5a14570ec2a1fa4b61a8de63db0ad4332f8176cb995f",
+        "app_header_crc_valid": true,
+        "app_content_stored_crc_valid": true,
+        "app_area_head_crc_valid": true,
+        "ufw_source": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_No_Key.ufw",
+        "app_area_field4_unresolved": "0x1e000c0"
+      },
+      {
+        "ufw_sha256": "2ab88a108d20c7bfa55c714db2f79399af193bc711e807feaf47c1326ebe1eb0",
+        "outer_payload": "flash2.bin",
+        "outer_ufw_offset": 640032,
+        "outer_size": 421888,
+        "outer_sha256": "c5ec8ceb9172cec4463a9584524745110ccd09c24d6361f02227c9f5c2808f3b",
+        "mode_byte13": 16,
+        "marker_word2": "0xffff",
+        "matching_loader_branch": "default",
+        "prefix_packed_range": [
+          0,
+          4096
+        ],
+        "app_container_packed_range": [
+          4096,
+          421888
+        ],
+        "app_container_ufw_offset": 644128,
+        "app_dir_head_field4": 4128,
+        "app_dir_head_field8_boundary": 4096,
+        "app_dir_head2_field4": 483360,
+        "app_dir_head2_field8_second_boundary": 483328,
+        "app_content_stored_range": [
+          4128,
+          419491
+        ],
+        "app_content_length": 415363,
+        "app_content_sha256": "20413ae6fb9e8fc722762c52c191a86c0b060dc6885af8896411d3e38b8538ab",
+        "app_header_crc_valid": true,
+        "app_content_stored_crc_valid": true,
+        "app_area_head_crc_valid": true,
+        "ufw_source": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_No_Key.ufw",
+        "app_area_field4_unresolved": "0x1e000c0"
+      },
+      {
+        "ufw_sha256": "2ab88a108d20c7bfa55c714db2f79399af193bc711e807feaf47c1326ebe1eb0",
+        "outer_payload": "flash3.bin",
+        "outer_ufw_offset": 1061920,
+        "outer_size": 421888,
+        "outer_sha256": "9531f74103dbad89b73564d8e1cdd5d9d260834fef8e5612053143b8a1611844",
+        "mode_byte13": 16,
+        "marker_word2": "0xfff",
+        "matching_loader_branch": "dual-uboot",
+        "prefix_packed_range": [
+          0,
+          4096
+        ],
+        "app_container_packed_range": [
+          4096,
+          421888
+        ],
+        "app_container_ufw_offset": 1066016,
+        "app_dir_head_field4": 4128,
+        "app_dir_head_field8_boundary": 4096,
+        "app_dir_head2_field4": 483360,
+        "app_dir_head2_field8_second_boundary": 483328,
+        "app_content_stored_range": [
+          4128,
+          419491
+        ],
+        "app_content_length": 415363,
+        "app_content_sha256": "e62f001771007e1a7ddc82bead84e4eec26d16cd187eb9d101f244d382ae0c18",
+        "app_header_crc_valid": true,
+        "app_content_stored_crc_valid": true,
+        "app_area_head_crc_valid": true,
+        "ufw_source": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_No_Key.ufw",
+        "app_area_field4_unresolved": "0x1e000c0"
+      },
+      {
+        "ufw_sha256": "2ab88a108d20c7bfa55c714db2f79399af193bc711e807feaf47c1326ebe1eb0",
+        "outer_payload": "flash4.bin",
+        "outer_ufw_offset": 1483808,
+        "outer_size": 419584,
+        "outer_sha256": "818b053a999912e149b3d1418aef8c0d772fc61ffb4e9e65f4d87470d08145b5",
+        "mode_byte13": 1,
+        "marker_word2": "0xfff",
+        "matching_loader_branch": "dual-uboot",
+        "prefix_packed_range": [
+          0,
+          4096
+        ],
+        "app_container_packed_range": [
+          4096,
+          419584
+        ],
+        "app_container_ufw_offset": 1487904,
+        "app_dir_head_field4": 4128,
+        "app_dir_head_field8_boundary": 4096,
+        "app_dir_head2_field4": 487200,
+        "app_dir_head2_field8_second_boundary": 487168,
+        "app_content_stored_range": [
+          4128,
+          419491
+        ],
+        "app_content_length": 415363,
+        "app_content_sha256": "30d1c98416ce8f663e15d1db3a90b75628041e97a0ec32f4402a11bc00f0fca6",
+        "app_header_crc_valid": true,
+        "app_content_stored_crc_valid": true,
+        "app_area_head_crc_valid": true,
+        "ufw_source": "FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_No_Key.ufw",
+        "app_area_field4_unresolved": "0x1e000c0"
+      },
+      {
+        "ufw_sha256": "e30f37a8f9f3fa1057f3982688f22f44223903c1dd4bc23653f457f0fedd85eb",
+        "outer_payload": "flash.bin",
+        "outer_ufw_offset": 1024,
+        "outer_size": 254976,
+        "outer_sha256": "3cc75b68a03e3953e8281f188b68416572bf75222a10f1585dc36eca79330e93",
+        "mode_byte13": 1,
+        "marker_word2": "0xffff",
+        "matching_loader_branch": "default",
+        "prefix_packed_range": [
+          0,
+          6912
+        ],
+        "app_container_packed_range": [
+          6912,
+          254976
+        ],
+        "app_container_ufw_offset": 7936,
+        "app_dir_head_field4": 6944,
+        "app_dir_head_field8_boundary": 6912,
+        "app_dir_head2_field4": 259360,
+        "app_dir_head2_field8_second_boundary": 259328,
+        "app_content_stored_range": [
+          6944,
+          254924
+        ],
+        "app_content_length": 247980,
+        "app_content_sha256": "e4a0fdcf2fe081ae2bbe774c6d6534248f6b0f15e63c9ab340ab219111fae5f5",
+        "app_header_crc_valid": true,
+        "app_content_stored_crc_valid": true,
+        "app_area_head_crc_valid": true,
+        "ufw_source": "FirmwarePackages/G7Pro/WFF/JS_3103_U_DG_V510_No_Key.ufw",
+        "app_area_field4_unresolved": "0x1e000c0"
+      },
+      {
+        "ufw_sha256": "af554be20d0e18b53dc56e0cd2e20ebffcdb823f655247fabf0d7e383f1f519e",
+        "outer_payload": "flash.bin",
+        "outer_ufw_offset": 1024,
+        "outer_size": 419840,
+        "outer_sha256": "ac0efb9dcb43936eec9175e9f8c4cff0242d884896f7a69629a3da651318d3c4",
+        "mode_byte13": 1,
+        "marker_word2": "0xffff",
+        "matching_loader_branch": "default",
+        "prefix_packed_range": [
+          0,
+          4096
+        ],
+        "app_container_packed_range": [
+          4096,
+          419840
+        ],
+        "app_container_ufw_offset": 5120,
+        "app_dir_head_field4": 4128,
+        "app_dir_head_field8_boundary": 4096,
+        "app_dir_head2_field4": 487200,
+        "app_dir_head2_field8_second_boundary": 487168,
+        "app_content_stored_range": [
+          4128,
+          419715
+        ],
+        "app_content_length": 415587,
+        "app_content_sha256": "47cebfd003b330c73ca2b415e5b70e24ec320f12306c013049ead16c9da98ea6",
+        "app_header_crc_valid": true,
+        "app_content_stored_crc_valid": true,
+        "app_area_head_crc_valid": true,
+        "ufw_source": "FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DV_V608_No_Key.ufw",
+        "app_area_field4_unresolved": "0x1e000c0"
+      }
+    ],
+    "loader_code_intervals": [
+      {
+        "label": "dual-uboot-setters",
+        "rva": "0x11ae0",
+        "end_rva_exclusive": "0x11af7",
+        "file_offset": "0x10ee0",
+        "bytes": 23,
+        "sha256": "0c8d395d664f2fec2646767bcd7fcb4cca8d7718d63f8f0ddbd8760ded342341",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "load-dispatch",
+        "rva": "0x11b00",
+        "end_rva_exclusive": "0x11b7c",
+        "file_offset": "0x10f00",
+        "bytes": 124,
+        "sha256": "ccfc203837d30191e30b5cb6161b62510ac21fc2576a065f75d26fab69ba455e",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "alternate-wrapper",
+        "rva": "0x15910",
+        "end_rva_exclusive": "0x15977",
+        "file_offset": "0x14d10",
+        "bytes": 103,
+        "sha256": "368748d554dde0a31ad082cb03646a6753626bbc7dd42287ee8932654ac4c91b",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-second-directory-selector",
+        "rva": "0x6237",
+        "end_rva_exclusive": "0x62d0",
+        "file_offset": "0x5637",
+        "bytes": 153,
+        "sha256": "a174122e5aab687f8785fd037471363d5e09fe44f6f456b2fbd51a9154a03089",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-first-directory-selector-and-prefix",
+        "rva": "0x7e53",
+        "end_rva_exclusive": "0x7ee4",
+        "file_offset": "0x7253",
+        "bytes": 145,
+        "sha256": "ac635f17f19d1c3a2edba7a3717868bbe2ffd472b2646f3572ded7927a0f8206",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-prefix-copy-and-app-tail-copy",
+        "rva": "0x7f73",
+        "end_rva_exclusive": "0x802b",
+        "file_offset": "0x7373",
+        "bytes": 184,
+        "sha256": "cfde257b2aa5d7f35b01730414a943c42294d0d0c263aa33299f60cdbfab533b",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-relocate-first-directory-minus64k",
+        "rva": "0x80a5",
+        "end_rva_exclusive": "0x80d4",
+        "file_offset": "0x74a5",
+        "bytes": 47,
+        "sha256": "8b4cd0c0edde12f39c48188661794a24165ac4cf50ae0f29910383a5a61b4723",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-relocate-first-directory-plus64k",
+        "rva": "0x8754",
+        "end_rva_exclusive": "0x8764",
+        "file_offset": "0x7b54",
+        "bytes": 16,
+        "sha256": "69f4708c2eeea1a98475e9f2900c29299ab85412a31143d284e11b7084a087a6",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-padding-4k",
+        "rva": "0x8e81",
+        "end_rva_exclusive": "0x8eaa",
+        "file_offset": "0x8281",
+        "bytes": 41,
+        "sha256": "6b9ed6d2fb3964b3af2142ddecaa474fad561973c666525e22af53fb907cf3e3",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-relocate-first-directory-minus60k",
+        "rva": "0x8f04",
+        "end_rva_exclusive": "0x8f21",
+        "file_offset": "0x8304",
+        "bytes": 29,
+        "sha256": "e9be38041b917ddfdca31253c6dc266d90a662388e0159b0b43ff866574012e8",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-mode16-prefix",
+        "rva": "0x9384",
+        "end_rva_exclusive": "0x93db",
+        "file_offset": "0x8784",
+        "bytes": 87,
+        "sha256": "aa0ed79c584a9daf7793e7e5505465d1b2248ac41790a17d7ce6eb8b7a406b22",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "default-mode16-app-tail-copy",
+        "rva": "0x9567",
+        "end_rva_exclusive": "0x9578",
+        "file_offset": "0x8967",
+        "bytes": 17,
+        "sha256": "61b9858d3e24c4e30df85ca02aba0283e6e626a1d64b4fcf9acd28f931cea4a0",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "replace32byte-cache-record",
+        "rva": "0xc000",
+        "end_rva_exclusive": "0xc1ac",
+        "file_offset": "0xb400",
+        "bytes": 428,
+        "sha256": "776a229e8ca38d2cc8cac5912e23cd91aa0bf81ee965cb4da77299315a255242",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "append-to-string-cache",
+        "rva": "0xc1b0",
+        "end_rva_exclusive": "0xc2b0",
+        "file_offset": "0xb5b0",
+        "bytes": 256,
+        "sha256": "bdd85747ee7538466f7e25b610162e745a4dc3e17a930ebe7208ef4712a011f1",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "dual-uboot-marker-initialization",
+        "rva": "0xccdf",
+        "end_rva_exclusive": "0xcd0c",
+        "file_offset": "0xc0df",
+        "bytes": 45,
+        "sha256": "6beb5f5d7abce76b16923fca6dc1e21e356fe47cd7e9d595081910220e6ff190",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "dual-uboot-directory-selectors-and-prefix",
+        "rva": "0xd28e",
+        "end_rva_exclusive": "0xd342",
+        "file_offset": "0xc68e",
+        "bytes": 180,
+        "sha256": "1ae57a27ccd7ae356b29a07bbfb96abbe64a7d7411a59726e09f8525c54b25c8",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "dual-uboot-app-tail-copy",
+        "rva": "0xd3e1",
+        "end_rva_exclusive": "0xd3f5",
+        "file_offset": "0xc7e1",
+        "bytes": 20,
+        "sha256": "8393e230ffe334e973a254727b07250059096cdd8ef4b770129e885791f4cb58",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "dual-uboot-mode16-prefix",
+        "rva": "0xd487",
+        "end_rva_exclusive": "0xd4bf",
+        "file_offset": "0xc887",
+        "bytes": 56,
+        "sha256": "5ed4d57202a3c64fc228e4d7dc7171c2e0cc58013431500c311ba40a9d57a85d",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "dual-uboot-mode16-app-tail-copy",
+        "rva": "0xd552",
+        "end_rva_exclusive": "0xd565",
+        "file_offset": "0xc952",
+        "bytes": 19,
+        "sha256": "78f3b1157beaca57aeda70acfff0a5e80fa0dd54f51a0b33ec3fd7bf723ba5bd",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      },
+      {
+        "label": "alternate-calls-c7f0",
+        "rva": "0x10434",
+        "end_rva_exclusive": "0x10469",
+        "file_offset": "0xf834",
+        "bytes": 53,
+        "sha256": "5081478649e9168ea5da8e75d1052a6f929a89face102ab5e46eeb491be72448",
+        "boundary_basis": "Inspected instruction interval; not necessarily a whole PE function"
+      }
+    ],
+    "result": {
+      "packed_split_and_stored_app_content_proven": true,
+      "app_metadata_decode_proven": true,
+      "complete_app_body_decode_proven": false,
+      "sensor_initialization_to_raw_report_proven": false,
+      "imu_chip": null,
+      "gyro_lsb_per_degree_second": null,
+      "experimental_accel_lsb_per_g_unchanged": 8192,
+      "sdl_release_unchanged": true,
+      "concrete_remaining_gap": "Inner application-body representation and checksum coverage after metadata, then sensor register/configuration→processing→known64B USB report. No driver/calibration change justified."
+    },
+    "private_evidence_directory": ".local/research/20261015-gamesir-nexus/inner-flash-20261015/",
+    "private_evidence_hashes": {
+      "loader/loader-addressing-findings.json": "e7fe205ef075f9142c956325cada152228ef4bd0399461e2d71219c3f75abd48",
+      "loader/app-header-seeds.json": "371aee582340800380d71f9c5a1f891f58e3d28677512a0b51859c4bbf5e1902",
+      "layout/final-findings.json": "f296280ae952bc6778accf95596427363ec4a2666ce878ba711f7e7ceaa5146e",
+      "layout/flash-layout-map.json": "92d91d886d99a471ac736dc8b4d1cb4350629afd38610c03b0daed65557ac7ea",
+      "layout/app-metadata-and-pair-validation.json": "b3b9fe88ed1dd115b2c858831d47956e686d727f40d25731990dd1863430dc1a",
+      "layout/app-area-candidate-span-geometry.json": "d0fa1516acca6128e4b03257217daa708906dbc4adc9ece593b385f0a609e318",
+      "sensor/sensor-pass-findings.json": "45aa2fd889d00fa461ac86ef1c9919c2a507e191dd3e2b15c476dc6e02919684",
+      "sensor/candidate-body-recognition.json": "bb313b2d3fdb92bb77fc4d577023009df4d7ff79b863e1897e6e198e2763e098",
+      "capture/outer-decoded-capture-anchor-scan.json": "3e6c957c613a5b0b764eca3b124a05061322f3220104e0e7cd79f5bf932fe3bc",
+      "capture/bounded-address-xor-crc-probes.json": "e1290fd1d827da9c2d7ba2420f30107850e31f511d77ee35aa2331b3a097017c"
+    },
+    "historical_scope_note": "Earlier 15 October structure pass; application-file decode status superseded by inner_app_structure_20261016. Historical measurements/failed hypotheses preserved."
+  },
+  "lsm6dso_ctrl2g_followup_20261016": {
+    "scope": "Offline static file analysis only; no vendor execution, network, hardware or running-driver changes",
+    "accepted_sensor_identification": "User-confirmed DigiKey photograph identification, not derived from firmware",
+    "linux_reference_elf_sha256": "cc460b79659ff53a6fd69db2444f67fe0de87bf0ace5feb3da3648934d2b6669",
+    "linux_reference_details": "docs/imu-sensor-identification.json:local_linux_reference",
+    "register_reference": "Gyro 0x11 mask 0x0c, four normal values 00/04/08/0c; not active GameSir setting; optional125 mode unresolved",
+    "firmware_findings": {
+      "source_ufw_files_verified": 12,
+      "flash_payloads_verified": 48,
+      "stored_app_content_crcs_pass": 48,
+      "app_metadata_crcs_pass": 48,
+      "sensor_initialization_routine_verified": false,
+      "active_gyro_full_scale_dps": null,
+      "active_ctrl2_g_value": null,
+      "remaining_blocker": "Inner application structure/body decode and CRC coverage, then last effective sensor configuration and raw sensor-to-USB dataflow",
+      "private_evidence_directory": ".local/research/20261016-lsm6dso-ctrl2g/",
+      "private_evidence_hashes": {
+        "scan_ctrl2g.py": "b9fef5853b20f771b81c383160fe39de3bbc93acb2be56485b93f2da4570bb09",
+        "firmware-register-anchor-scan.json": "9f16418b2c3e8cf8bd41298b8c22f45e814d91508f378590ea4e0bdeaf21442b",
+        "structured-header-followup.json": "de133dd8b31b3e7e98c8e2df88af70794efc957e4e3f628a15a0d98a7bd07940",
+        "scan-summary.json": "d14ae1718042969e0252f7e92086edb20adc438ec0424f6df8fb8f1839a6046c"
+      }
+    },
+    "report": "docs/IMU-STATISTIK-UND-SENSORIDENTIFIKATION.rst",
+    "detailed_firmware_findings": "docs/imu-sensor-identification.json:firmware_ctrl2g_followup",
+    "historical_scope_note": "First register-anchor pass on 16 October; former application decode blocker solved by subsequent inner_app_structure_20261016. No active gyro setting established."
+  },
+  "inner_app_structure_20261016": {
+    "date": "2026-10-16",
+    "scope": "Offline own byte-only analysis; no vendor execution, emulation, import, network, hardware or running-driver changes",
+    "decoder_basis": "Position-dependent stream type already statically inspected at JL loader RVA 0x18f0, block positions relative to stored app content start; states/masks/decoded proprietary bytes private",
+    "source_ufw_files_verified": 12,
+    "flash_files_verified": 48,
+    "inner_record_header_crcs_verified": 288,
+    "inner_area_crcs_verified": 48,
+    "file_crcs_verified": 96,
+    "layout": {
+      "directory_bytes": 192,
+      "records": {
+        "0x00": "app_area_head",
+        "0x20": "app.bin",
+        "0x40": "cfg_tool.bin",
+        "0x60": "VM",
+        "0x80": "PRCT",
+        "0xa0": "BTIF"
+      },
+      "all_header_crc": "WORD+0 equals CRC16-CCITT init 0 of decoded header bytes [2,32)",
+      "app_area_end": "DWORD+8 is area end relative to app content start, not a length starting after its 32-byte header",
+      "app_area_content_crc": "WORD+2 equals CRC16-CCITT init 0 of decoded content [32,area_end)",
+      "file_spans": "app.bin/cfg_tool.bin DWORD+4 offset relative to content start, DWORD+8 length, WORD+2 CRC of decoded file",
+      "file_contiguity": "app.bin begins at 0xc0; cfg_tool.bin immediately follows and ends at area_end",
+      "logical_records_not_sliced_as_files": [
+        "VM",
+        "PRCT",
+        "BTIF"
+      ],
+      "dv_trailing_content_bytes_not_interpreted": 35151
+    },
+    "complete_key_no_key_content_pairs_equal": 24,
+    "main_and_cfg_files_identical_across_four_banks_per_source": true,
+    "application_file_decode_crc_validated": true,
+    "instruction_set_verified": false,
+    "sensor_selection_or_initialization_routine_verified": false,
+    "active_ctrl2_g_value": null,
+    "active_gyro_full_scale_dps": null,
+    "sensor_register_to_usb_count_preservation_proven": false,
+    "new_sensor_anchors": [
+      "LSM6DS3TR",
+      "QMI8658",
+      "Enter Sensor Cal Mode!",
+      "Sensor cal start",
+      "gyro factory = %d %d %d",
+      "rx usb sensor calibrate command"
+    ],
+    "sensor_anchor_scope": "Compiled strings in DV209/DV515/DV608, not a live detection, BOM determination or active-range proof; user-confirmed DigiKey LSM6DSO photo evidence retained independently",
+    "remaining_blocker": "Verified MCU instruction encoding/static decoder, then actual sensor selection and initialization, last effective CTRL2_G setting including reconfiguration, then sensor-register to USB dataflow",
+    "tools_checked": "Existing GNU/LLVM disassembler target inventories and named local tools; no confirmed Jieli instruction decoder found. No architecture selected on guess.",
+    "representatives": [
+      {
+        "source": "app/FirmwarePackages/G7Pro/PCWireless/JS_3103_DG_V144_No_Key.ufw",
+        "source_ufw_sha256": "9e5d09f3c470d58303c8c3528ef299c2608eae8fdce78dd869494277f7f085f6",
+        "payload_sha256": "9d14ba3e65e7f6e517819b5c5c13a072356b1e82af8613e021c4d17635e37d8a",
+        "area_end_relative_to_content_start": 247648,
+        "stored_decoded_bytes_after_inner_area": 0,
+        "files": [
+          {
+            "name": "app.bin",
+            "bytes": 246552,
+            "sha256": "b1181a4a244e885f033b281289f87a49893ea7fdfd8e70f019f681fe95aaf3e6",
+            "crc16_pass": true
+          },
+          {
+            "name": "cfg_tool.bin",
+            "bytes": 904,
+            "sha256": "647f7634ed212d419855fd7cefa094c5ffdbd05789e9fafcaa4bfd21ece9de21",
+            "crc16_pass": true
+          }
+        ]
+      },
+      {
+        "source": "app/FirmwarePackages/G7Pro/PCWireless/JS_3103_DV_V209_No_Key.ufw",
+        "source_ufw_sha256": "2ab88a108d20c7bfa55c714db2f79399af193bc711e807feaf47c1326ebe1eb0",
+        "payload_sha256": "843359c0bd209883c0320c9c12df4e2622a064d1f162773431c44c192e870d4d",
+        "area_end_relative_to_content_start": 380212,
+        "stored_decoded_bytes_after_inner_area": 35151,
+        "files": [
+          {
+            "name": "app.bin",
+            "bytes": 379140,
+            "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6",
+            "crc16_pass": true
+          },
+          {
+            "name": "cfg_tool.bin",
+            "bytes": 880,
+            "sha256": "94f8645d7a639d25366e8b11af2d70ff83f58ef8c08380ccc51d5a7ff29bab23",
+            "crc16_pass": true
+          }
+        ],
+        "sensor_anchors": [
+          {
+            "app_file_offset": "0x230f0",
+            "text": "Enter Sensor Cal Mode!",
+            "full32_literal_reference_candidates": [
+              {
+                "referenced_string_offset": 143600,
+                "candidate_reference_offset": 67354,
+                "encoding": "little",
+                "interpretation": "Literal reference only; not a proven executed call/instruction."
+              }
+            ]
+          },
+          {
+            "app_file_offset": "0x25629",
+            "text": "lsm6ds3 err!",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x25637",
+            "text": "qmi8658 err!",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x25eaf",
+            "text": "Sensor cal start",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x27370",
+            "text": "gyro factory = %d %d %d",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x288c1",
+            "text": "rx usb sensor calibrate command",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x289c9",
+            "text": ">>>>>>>>>>>>>>Sensor IS QMI8658",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x28f85",
+            "text": ">>>>>>>>>>>>>>Sensor IS LSM6DS3TR",
+            "full32_literal_reference_candidates": []
+          }
+        ],
+        "literal_address_base_evidence": {
+          "candidate_base": "0x1e000c0",
+          "candidate_reference_matches": 79,
+          "distinct_strings": 50,
+          "not_an_isa_or_entrypoint_proof": true
+        }
+      },
+      {
+        "source": "app/FirmwarePackages/G7Pro/WFF/JS_3103_U_DG_V510_No_Key.ufw",
+        "source_ufw_sha256": "e30f37a8f9f3fa1057f3982688f22f44223903c1dd4bc23653f457f0fedd85eb",
+        "payload_sha256": "3cc75b68a03e3953e8281f188b68416572bf75222a10f1585dc36eca79330e93",
+        "area_end_relative_to_content_start": 247980,
+        "stored_decoded_bytes_after_inner_area": 0,
+        "files": [
+          {
+            "name": "app.bin",
+            "bytes": 246884,
+            "sha256": "db5a7a1d22d57525cd1d2ead62362d1ebd487a0d5ecd6a90638352fd8ca34de8",
+            "crc16_pass": true
+          },
+          {
+            "name": "cfg_tool.bin",
+            "bytes": 904,
+            "sha256": "647f7634ed212d419855fd7cefa094c5ffdbd05789e9fafcaa4bfd21ece9de21",
+            "crc16_pass": true
+          }
+        ]
+      },
+      {
+        "source": "app/FirmwarePackages/G7Pro/WFF/JS_3103_U_DV_V515_No_Key.ufw",
+        "source_ufw_sha256": "32e60afc18de02b9ad5ca2ba5a0afb052d35f9ef95315d3a58f971801025ed0b",
+        "payload_sha256": "42844de123cdb6aaa19606d6327493475208f689e9485486899a14e9883b35eb",
+        "area_end_relative_to_content_start": 380436,
+        "stored_decoded_bytes_after_inner_area": 35151,
+        "files": [
+          {
+            "name": "app.bin",
+            "bytes": 379364,
+            "sha256": "77e77be00ccd03d4c7dc6e469875c977988ffcbecac78a66cfe337c633308673",
+            "crc16_pass": true
+          },
+          {
+            "name": "cfg_tool.bin",
+            "bytes": 880,
+            "sha256": "94f8645d7a639d25366e8b11af2d70ff83f58ef8c08380ccc51d5a7ff29bab23",
+            "crc16_pass": true
+          }
+        ],
+        "sensor_anchors": [
+          {
+            "app_file_offset": "0x231c8",
+            "text": "Enter Sensor Cal Mode!",
+            "full32_literal_reference_candidates": [
+              {
+                "referenced_string_offset": 143816,
+                "candidate_reference_offset": 67362,
+                "encoding": "little",
+                "interpretation": "Literal reference only; not a proven executed call/instruction."
+              }
+            ]
+          },
+          {
+            "app_file_offset": "0x25709",
+            "text": "lsm6ds3 err!",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x25717",
+            "text": "qmi8658 err!",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x25f8f",
+            "text": "Sensor cal start",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x27450",
+            "text": "gyro factory = %d %d %d",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x289a1",
+            "text": "rx usb sensor calibrate command",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x28aa9",
+            "text": ">>>>>>>>>>>>>>Sensor IS QMI8658",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x29065",
+            "text": ">>>>>>>>>>>>>>Sensor IS LSM6DS3TR",
+            "full32_literal_reference_candidates": []
+          }
+        ],
+        "literal_address_base_evidence": {
+          "candidate_base": "0x1e000c0",
+          "candidate_reference_matches": 79,
+          "distinct_strings": 50,
+          "not_an_isa_or_entrypoint_proof": true
+        }
+      },
+      {
+        "source": "app/FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DG_V604_No_Key.ufw",
+        "source_ufw_sha256": "88b0dbda7fa64be2734340dbb8254228d67407372df4f0427ec8123328a7ad33",
+        "payload_sha256": "48bcbc93d0cbcf6ab8b0817ef56b6e4287163549060fa62e75994ae1bc4ebe10",
+        "area_end_relative_to_content_start": 247980,
+        "stored_decoded_bytes_after_inner_area": 0,
+        "files": [
+          {
+            "name": "app.bin",
+            "bytes": 246884,
+            "sha256": "0169481cbd484b478b5c2443160c2075b4a89e8bdde58ba5b19bb36802158330",
+            "crc16_pass": true
+          },
+          {
+            "name": "cfg_tool.bin",
+            "bytes": 904,
+            "sha256": "647f7634ed212d419855fd7cefa094c5ffdbd05789e9fafcaa4bfd21ece9de21",
+            "crc16_pass": true
+          }
+        ]
+      },
+      {
+        "source": "app/FirmwarePackages/G7Pro/ZZZ/JS_3103_U_DV_V608_No_Key.ufw",
+        "source_ufw_sha256": "af554be20d0e18b53dc56e0cd2e20ebffcdb823f655247fabf0d7e383f1f519e",
+        "payload_sha256": "ac0efb9dcb43936eec9175e9f8c4cff0242d884896f7a69629a3da651318d3c4",
+        "area_end_relative_to_content_start": 380436,
+        "stored_decoded_bytes_after_inner_area": 35151,
+        "files": [
+          {
+            "name": "app.bin",
+            "bytes": 379364,
+            "sha256": "6c2155168aae2bfa01b8b391ec2295c4cbf0c27696a49a7d5a063eefdb22147b",
+            "crc16_pass": true
+          },
+          {
+            "name": "cfg_tool.bin",
+            "bytes": 880,
+            "sha256": "94f8645d7a639d25366e8b11af2d70ff83f58ef8c08380ccc51d5a7ff29bab23",
+            "crc16_pass": true
+          }
+        ],
+        "sensor_anchors": [
+          {
+            "app_file_offset": "0x231c6",
+            "text": "Enter Sensor Cal Mode!",
+            "full32_literal_reference_candidates": [
+              {
+                "referenced_string_offset": 143814,
+                "candidate_reference_offset": 67362,
+                "encoding": "little",
+                "interpretation": "Literal reference only; not a proven executed call/instruction."
+              }
+            ]
+          },
+          {
+            "app_file_offset": "0x25709",
+            "text": "lsm6ds3 err!",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x25717",
+            "text": "qmi8658 err!",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x25f8f",
+            "text": "Sensor cal start",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x27450",
+            "text": "gyro factory = %d %d %d",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x289a1",
+            "text": "rx usb sensor calibrate command",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x28aa9",
+            "text": ">>>>>>>>>>>>>>Sensor IS QMI8658",
+            "full32_literal_reference_candidates": []
+          },
+          {
+            "app_file_offset": "0x29065",
+            "text": ">>>>>>>>>>>>>>Sensor IS LSM6DS3TR",
+            "full32_literal_reference_candidates": []
+          }
+        ],
+        "literal_address_base_evidence": {
+          "candidate_base": "0x1e000c0",
+          "candidate_reference_matches": 79,
+          "distinct_strings": 50,
+          "not_an_isa_or_entrypoint_proof": true
+        }
+      }
+    ],
+    "verification": {
+      "passed": true,
+      "method": "Independent high/low-byte stream and table-driven CRC; CRC known-answer 0x31c3; no binascii import from first decoder.",
+      "source_ufw_hashes_verified": 12,
+      "flash_payloads_verified": 48,
+      "header_crcs_verified": 288,
+      "area_crcs_verified": 48,
+      "file_crcs_verified": 96,
+      "complete_decoded_images_byte_equal_independently": 48,
+      "crc_syndrome_image_size": 32768,
+      "crc_compatible_states_per_header": 2,
+      "structural_names_bounds_and_file_crcs_required": true,
+      "negative_controls_rejected": 24,
+      "prior_evidence_files_unchanged": 727,
+      "sdl_profile_sha256_unchanged": "a3cf5432ca40da24693d10498d40348df6bf5116380ddcc5b1e32884911a626e",
+      "active_gyro_range_dps": null,
+      "gyro_factor": null,
+      "vendor_execution_network_hardware_driver_actions": false
+    },
+    "private_evidence_directory": ".local/research/20261016-inner-structure-followup/",
+    "private_evidence_hashes": {
+      "decode_inner.py": "d3fa66a107a0aaebffb01c09cfb1225706309c373f63a597ddf1fcddacd923a8",
+      "inner-decoding-findings.json": "298f36cdb6c49e5e8166510e09be5b78e353f058b1eb1659e908e8db216a9c19",
+      "inspect_sensor_refs.py": "f5921fd18ec76a735f6b5191d10e6dc8c13d41e3dc32e8b6b9104879dc00cdce",
+      "sensor-reference-findings.json": "a829f292afa847864fe19f21f8e5f83b421028369e47787aa85114fb34da7bb6",
+      "verify_inner.py": "9507b99121dc362328697175fe6d81657116d3f10387f668e0b39bfd2725cfdd",
+      "independent-verification.json": "6232cc1671c8bcca5c9830c9d7bd9c418cb8f24d72b672a8cb95f3921f1e95e1",
+      "verification-notes.json": "083b36b9e860d854f61a9cca23d260b6c140bc185e48049cb16b813d01c8ed9c"
+    },
+    "firmware_version_to_live_unit_mapping_verified": false,
+    "private_evidence_manifest_sha256": "024017011a04f7393e7c0c42844eb9ab497c7cf99688a20d05bb440dcefe51bb",
+    "private_evidence_files_hashed": 153
+  },
+  "current_inner_structure_status": "inner_app_structure_20261016",
+  "mcu_sensor_followup_20261016": {
+    "date": "2026-10-16",
+    "scope": "Own static data-only readers; no vendor application/firmware execution, emulation, network, hardware or running-driver changes",
+    "complete_mcu_isa_verified": false,
+    "local_authoritative_isa_reference_found": false,
+    "empirical_pattern_scope": "Three limited field formats corroborated by string targets and cross-version code fingerprints; not a complete decoder, ABI, call/jump or memory-operation semantics",
+    "empirical_forms": [
+      {
+        "bytes": 6,
+        "meaning": "Literal-bearing form with contiguous LE32 field; architectural slot/register mapping unverified"
+      },
+      {
+        "bytes": 4,
+        "meaning": "Two LE16 units, 22 signed halfword-relative displacement bits from 6+16 fields; prefix flag bit 6 deliberately uninterpreted"
+      },
+      {
+        "bytes": 4,
+        "meaning": "16-bit signed constant form supported by contiguous complement masks for bits 5..14, switching to full 32-bit literals for bits 15..20"
+      }
+    ],
+    "cross_version_calibration_anchors": [
+      {
+        "variant": "JS_3103_DV_V209_No_Key",
+        "bytes": 379140,
+        "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6",
+        "calibration_eeprom_entries": [
+          {
+            "label": "Enter Sensor Cal Mode!",
+            "literal_offset": 67352,
+            "string_offset": 143600,
+            "transfer_offset": 67358,
+            "candidate_target": 281908,
+            "flag_bit6_uninterpreted": true
+          },
+          {
+            "label": "eeprom read over:",
+            "literal_offset": 67376,
+            "string_offset": 143413,
+            "transfer_offset": 67382,
+            "candidate_target": 281908,
+            "flag_bit6_uninterpreted": false
+          },
+          {
+            "label": "eeprom write over",
+            "literal_offset": 67424,
+            "string_offset": 143432,
+            "transfer_offset": 67430,
+            "candidate_target": 281908,
+            "flag_bit6_uninterpreted": false
+          }
+        ],
+        "shared_text_sink_offset": 281908,
+        "text_sink_92byte_sha256": "1e38e03337a68e18d88bef237273a4b855fdb62f33b05dc38cdf8a979f2db7f2",
+        "whole_halfword_scan_candidate_sink_refs": 424,
+        "corroborated_adjacent_printable_literal_refs": 50
+      },
+      {
+        "variant": "JS_3103_U_DV_V515_No_Key",
+        "bytes": 379364,
+        "sha256": "77e77be00ccd03d4c7dc6e469875c977988ffcbecac78a66cfe337c633308673",
+        "calibration_eeprom_entries": [
+          {
+            "label": "Enter Sensor Cal Mode!",
+            "literal_offset": 67360,
+            "string_offset": 143816,
+            "transfer_offset": 67366,
+            "candidate_target": 282132,
+            "flag_bit6_uninterpreted": true
+          },
+          {
+            "label": "eeprom read over:",
+            "literal_offset": 67384,
+            "string_offset": 143629,
+            "transfer_offset": 67390,
+            "candidate_target": 282132,
+            "flag_bit6_uninterpreted": false
+          },
+          {
+            "label": "eeprom write over",
+            "literal_offset": 67432,
+            "string_offset": 143648,
+            "transfer_offset": 67438,
+            "candidate_target": 282132,
+            "flag_bit6_uninterpreted": false
+          }
+        ],
+        "shared_text_sink_offset": 282132,
+        "text_sink_92byte_sha256": "1e38e03337a68e18d88bef237273a4b855fdb62f33b05dc38cdf8a979f2db7f2",
+        "whole_halfword_scan_candidate_sink_refs": 424,
+        "corroborated_adjacent_printable_literal_refs": 50
+      },
+      {
+        "variant": "JS_3103_U_DV_V608_No_Key",
+        "bytes": 379364,
+        "sha256": "6c2155168aae2bfa01b8b391ec2295c4cbf0c27696a49a7d5a063eefdb22147b",
+        "calibration_eeprom_entries": [
+          {
+            "label": "Enter Sensor Cal Mode!",
+            "literal_offset": 67360,
+            "string_offset": 143814,
+            "transfer_offset": 67366,
+            "candidate_target": 282132,
+            "flag_bit6_uninterpreted": true
+          },
+          {
+            "label": "eeprom read over:",
+            "literal_offset": 67384,
+            "string_offset": 143627,
+            "transfer_offset": 67390,
+            "candidate_target": 282132,
+            "flag_bit6_uninterpreted": false
+          },
+          {
+            "label": "eeprom write over",
+            "literal_offset": 67432,
+            "string_offset": 143646,
+            "transfer_offset": 67438,
+            "candidate_target": 282132,
+            "flag_bit6_uninterpreted": false
+          }
+        ],
+        "shared_text_sink_offset": 282132,
+        "text_sink_92byte_sha256": "1e38e03337a68e18d88bef237273a4b855fdb62f33b05dc38cdf8a979f2db7f2",
+        "whole_halfword_scan_candidate_sink_refs": 424,
+        "corroborated_adjacent_printable_literal_refs": 50
+      }
+    ],
+    "bounded_reference_intervals": [
+      {
+        "label": "signed16-to32-masks",
+        "first_source_offset": 76536,
+        "end_exclusive": 76644,
+        "size": 108,
+        "sha256": "fd50be1afcd8e5becb333e289e88653575f706aab629f2595bdb228b2cb61dea",
+        "cross_version_exact_matches": [
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_DV_V209_No_Key/flash/app.bin",
+            "offsets": [
+              76536
+            ]
+          },
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_U_DV_V515_No_Key/flash/app.bin",
+            "offsets": [
+              76544
+            ]
+          },
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_U_DV_V608_No_Key/flash/app.bin",
+            "offsets": [
+              76544
+            ]
+          }
+        ]
+      },
+      {
+        "label": "compact-leaf-cluster",
+        "first_source_offset": 95748,
+        "end_exclusive": 95836,
+        "size": 88,
+        "sha256": "8b355e54262350212dafb3ddab18a6236a9f4e874421795a2a0dba7f749ff878",
+        "cross_version_exact_matches": [
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_DV_V209_No_Key/flash/app.bin",
+            "offsets": [
+              95748
+            ]
+          },
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_U_DV_V515_No_Key/flash/app.bin",
+            "offsets": [
+              95964
+            ]
+          },
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_U_DV_V608_No_Key/flash/app.bin",
+            "offsets": [
+              95962
+            ]
+          }
+        ]
+      },
+      {
+        "label": "text-sink-through-candidate-terminator",
+        "first_source_offset": 281908,
+        "end_exclusive": 282000,
+        "size": 92,
+        "sha256": "1e38e03337a68e18d88bef237273a4b855fdb62f33b05dc38cdf8a979f2db7f2",
+        "cross_version_exact_matches": [
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_DV_V209_No_Key/flash/app.bin",
+            "offsets": [
+              281908
+            ]
+          },
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_U_DV_V515_No_Key/flash/app.bin",
+            "offsets": [
+              282132
+            ]
+          },
+          {
+            "source": "20261016-inner-structure-followup/decoded/JS_3103_U_DV_V608_No_Key/flash/app.bin",
+            "offsets": [
+              282132
+            ]
+          }
+        ]
+      }
+    ],
+    "truncated_16bit_relative_model_rejected": true,
+    "candidate_counts_are_not_proven_executed_calls": true,
+    "reader_verification": {
+      "corroborated_loci_checks": 175,
+      "refusal_controls_passed": 8,
+      "signed_mask_patterns_verified": 16,
+      "prior_evidence_files_unchanged": 881,
+      "sdl_profile_sha256_unchanged": "a3cf5432ca40da24693d10498d40348df6bf5116380ddcc5b1e32884911a626e"
+    },
+    "local_sensor_id_reference": {
+      "source_elf_sha256": "cc460b79659ff53a6fd69db2444f67fe0de87bf0ace5feb3da3648934d2b6669",
+      "models": [
+        {
+          "model": "lsm6ds3",
+          "expected_who_am_i": "0x69",
+          "who_register_from_probe": "0x0f",
+          "id_entry_file_offset": "0x6d38",
+          "id_entry24B_sha256": "f2b31cdfeb5ae8621a01c5390934bc7c1f29f1321c7e6fc96ff52844ec3acd9f"
+        },
+        {
+          "model": "lsm6ds3tr-c",
+          "expected_who_am_i": "0x6a",
+          "who_register_from_probe": "0x0f",
+          "id_entry_file_offset": "0x76e0",
+          "id_entry24B_sha256": "0d3a091429b27749be1919ae7faf55f008581e0bb948c72f9f3e223b498abb44"
+        },
+        {
+          "model": "lsm6dso",
+          "expected_who_am_i": "0x6c",
+          "who_register_from_probe": "0x0f",
+          "id_entry_file_offset": "0x7b90",
+          "id_entry24B_sha256": "b0c0fb64b1d1bbea7a8718704a3f56942c49b0d3c02aba4e7860cc22268f01c8"
+        },
+        {
+          "model": "lsm6dsox",
+          "expected_who_am_i": "0x6c",
+          "who_register_from_probe": "0x0f",
+          "id_entry_file_offset": "0x7ba8",
+          "id_entry24B_sha256": "83304885a182020a8e25e7acbd92453a7181bb40354315373985b6db358b41c6"
+        }
+      ],
+      "tr_c_and_dso_gain_tables_identical": true,
+      "reference_is_not_a_device_read": true
+    },
+    "firmware_who_read_verified": false,
+    "firmware_id_compare_verified": false,
+    "sensor_selection_routine_verified": false,
+    "ctrl2_g_write_site_verified": false,
+    "active_ctrl2_g_value": null,
+    "active_gyro_full_scale_dps": null,
+    "sensor_register_to_usb_scaling_proven": false,
+    "target_chain": "WHO_AM_I register read -> actual ID compare -> sensor selection/init -> last effective CTRL2_G configuration -> sensor-register to USB report dataflow",
+    "generic_st_driver_supporting_multiple_variants": "Hypothesis only; neither dual-variant support nor real unit branch established",
+    "who_literal_scan_limit": "Known long forms show 0x0f candidates without sensor I/O context and no 0x69/6a/6c literals in three DV apps. Unknown compact constants/comparisons/memory operations mean no absence proof.",
+    "variant_status": "User retains DigiKey photo report but questions exact variant and reports identical-looking packages. Actual model reopened; no DigiKey error or TR-C presence established.",
+    "later_documented_diagnostic_option": "A pre-existing documented sensor-ID query may be assessed later under separate scope/approval; no unknown device commands or experimental I2C writes and no current hardware authorization.",
+    "secondary_DV209_data": {
+      "resource_header_crcs_verified": 28,
+      "resource_file_crcs_verified": 27,
+      "resource_area_crc_verified": true,
+      "zlib_stream_offset": "0x65600",
+      "zlib_stored_bytes": 131,
+      "zlib_decoded_bytes": 327,
+      "zlib_eof_and_adler_verified": true,
+      "adler32": "0x6eeb2a61",
+      "interpretation": "Tone resources proven. Ten float-triplet records suggest audio EQ only; no gyro factor or architecture map. Other trailing parts/versions not fully explained."
+    },
+    "remaining_blocker": "Unknown compact argument/comparison/memory semantics and architectural register/ABI mapping prevent a supported WHO-ID-to-init-to-CTRL2_G write trace; full authoritative ISA source unavailable locally.",
+    "private_evidence_directory": ".local/research/20261016-mcu-instructions/",
+    "private_evidence_hashes": {
+      "main/pattern_reader.py": "56d9dd30e07d027755130314bdcd204f5daab70f5cf3c5f38c7d6c01f5c90e85",
+      "main/validated-patterns.json": "ed6fcf1fb1cc2a3bb9da8871643bb87b7f38edea664b6e63923cc0deb05a884a",
+      "main/local-who-reference.json": "57ceef691a92eed61cbe09b5959a40c6a27256ddcb8ca8dd60f80c019417887a",
+      "local-isa-sources/findings.json": "4422064e61ef0baf75ca72bcb87fe7685b9d8b24419f395b12206788ba92254c",
+      "local-isa-sources/secondary-sections-summary.json": "5b0faf9e77ec415d660ec3b8609f8f3ccfac2ac2ab85d0a87cc3101b027499ee",
+      "sensor-anchors/analyze_sensor_anchors.py": "030a1cadd99ae9a3dd7bab697bfd9c8d5b7f544842ff77c07a54fa8ce93bdf94",
+      "sensor-anchors/sensor-anchor-findings.json": "1a16ee89aece8146e408f924c24dad89f4ab7b3e924c66fb532e3819a8ee21d9",
+      "empirical-review/review.py": "99231b47341d1b5418efd9ccac92f78f3ef953804398e63eaabe032c56ecf38c",
+      "empirical-review/findings.json": "7fbb8c0d2be171121f9dd77286f976f4bc455582b588555d077c60f5a9cf8b97",
+      "empirical-review/who_id_review.py": "cad8ab7a6a603b02fbc364e8fabf4fe5db2c6f91f82ae3bd7f1f1410e581255f",
+      "empirical-review/who-id-findings.json": "b6f8c2e6e02284a9075b6569bddd7709773271ce5e5dbc017a26748517bc3fe0"
+    },
+    "private_evidence_manifest_sha256": "165154a82a80a49cfda0fbfac45a74afc039adb12d4315777a81ff3e36a9095f",
+    "private_evidence_files_hashed": 19
+  },
+  "current_mcu_sensor_status": "mcu_sensor_followup_20261016"
+}

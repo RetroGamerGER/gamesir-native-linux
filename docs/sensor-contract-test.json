@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "hardware_access": false,
+  "kernel_build_or_changes": false,
+  "calibrations": "synthetic strict SDL references; experimental accel arithmetic; no device calibration proof",
+  "sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "coverage": [
+    "physical-unit examples",
+    "fractional sensitivity",
+    "signed axis permutation",
+    "bias subtraction",
+    "rounding",
+    "verification gates",
+    "invalid metadata",
+    "overflow",
+    "no partial output",
+    "replaceable rational experimental accel scale",
+    "signed full-range accel",
+    "no gyro fallback"
+  ]
+}

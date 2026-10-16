@@ -1,0 +1,7 @@
+#!/usr/bin/python -B
+# SPDX-License-Identifier: GPL-2.0-only
+"""Installed command entrypoint; privilege changes are always explicit."""
+import os
+import sys
+os.execv('/usr/bin/python', ['/usr/bin/python', '-B',
+         '/usr/lib/gamesir-native/gamesir_native.py', *sys.argv[1:]])

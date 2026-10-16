@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-16",
+  "result": "90-second IIO display and guided cue test passed; calibration not established",
+  "tool_commit": "b0fc0a1",
+  "requested_recording_seconds": 90,
+  "preparation_seconds": 30,
+  "completion_ui_seconds": 3,
+  "observation_count": 4305,
+  "observed_midpoint_span_seconds": 89.987772072,
+  "reader_snapshot_rate_hz": 47.82872051278625,
+  "reader_rate_is_not_usb_poll_rate_or_sensor_odr": true,
+  "maximum_completed_six_read_sweep_ms": 1.062578,
+  "cue_order": [
+    "preparation",
+    "rest",
+    "pickup_buffer",
+    "motion",
+    "put_down_buffer",
+    "rest_end",
+    "finished"
+  ],
+  "maximum_cue_request_lateness_ms": 20.364921,
+  "first_read_after_rest_cue_ms": 0.241645,
+  "last_read_before_finished_cue_ms": 11.609393,
+  "no_sensor_reads_during_preparation_or_after_finished": true,
+  "phase_summaries": {
+    "rest": {
+      "samples": 527,
+      "window_policy": "cue+2s through next cue-2s; host read-window midpoint, not a device timestamp",
+      "gyro_raw_stats": [
+        {
+          "mean": -0.14041745730550284,
+          "std_population": 1.7863115975781245,
+          "min": -11,
+          "max": 19
+        },
+        {
+          "mean": -0.4250474383301708,
+          "std_population": 0.6703101519721235,
+          "min": -2,
+          "max": 1
+        },
+        {
+          "mean": 0.2998102466793169,
+          "std_population": 1.9532632069551024,
+          "min": -10,
+          "max": 6
+        }
+      ],
+      "accel_raw_stats": [
+        {
+          "mean": -171.45351043643265,
+          "std_population": 12.7473337619036,
+          "min": -341,
+          "max": -141
+        },
+        {
+          "mean": 8229.417457305502,
+          "std_population": 20.582511293421238,
+          "min": 8058,
+          "max": 8478
+        },
+        {
+          "mean": -68.95256166982922,
+          "std_population": 16.55064185491802,
+          "min": -250,
+          "max": 25
+        }
+      ],
+      "accel_norm_g_experimental": {
+        "mean": 1.0048240204821524,
+        "std_population": 0.002524630321818343,
+        "min": 0.9841987512630579,
+        "max": 1.0357731042859
+      },
+      "physical_action_verified_by_independent_reference": false
+    },
+    "pickup_buffer": {
+      "samples": 527,
+      "window_policy": "cue+2s through next cue-2s; host read-window midpoint, not a device timestamp",
+      "gyro_raw_stats": [
+        {
+          "mean": 21.13662239089184,
+          "std_population": 115.23606793577105,
+          "min": -418,
+          "max": 600
+        },
+        {
+          "mean": -47.46489563567363,
+          "std_population": 162.35772987110292,
+          "min": -767,
+          "max": 318
+        },
+        {
+          "mean": -1.1290322580645162,
+          "std_population": 97.75835935183316,
+          "min": -579,
+          "max": 470
+        }
+      ],
+      "accel_raw_stats": [
+        {
+          "mean": 4.798861480075901,
+          "std_population": 272.8326866658663,
+          "min": -820,
+          "max": 975
+        },
+        {
+          "mean": 8237.518026565465,
+          "std_population": 199.21018420974303,
+          "min": 7402,
+          "max": 9605
+        },
+        {
+          "mean": -945.438330170778,
+          "std_population": 1053.6562849809914,
+          "min": -3097,
+          "max": 765
+        }
+      ],
+      "accel_norm_g_experimental": {
+        "mean": 1.020718846194599,
+        "std_population": 0.02898637080952623,
+        "min": 0.9092697279255456,
+        "max": 1.1758577125501575
+      },
+      "physical_action_verified_by_independent_reference": false
+    },
+    "motion": {
+      "samples": 1243,
+      "window_policy": "cue+2s through next cue-2s; host read-window midpoint, not a device timestamp",
+      "gyro_raw_stats": [
+        {
+          "mean": 11.819790828640386,
+          "std_population": 1206.9724420930079,
+          "min": -4229,
+          "max": 4088
+        },
+        {
+          "mean": 54.38374899436846,
+          "std_population": 338.8602280953295,
+          "min": -1216,
+          "max": 1113
+        },
+        {
+          "mean": 7.140788415124699,
+          "std_population": 1612.4113247738844,
+          "min": -3748,
+          "max": 4160
+        }
+      ],
+      "accel_raw_stats": [
+        {
+          "mean": 714.9300080450523,
+          "std_population": 4586.711430130632,
+          "min": -9201,
+          "max": 9111
+        },
+        {
+          "mean": 4980.340305711987,
+          "std_population": 3185.838713962824,
+          "min": -4160,
+          "max": 10654
+        },
+        {
+          "mean": -1122.3395012067579,
+          "std_population": 3589.1042557429996,
+          "min": -10125,
+          "max": 7114
+        }
+      ],
+      "accel_norm_g_experimental": {
+        "mean": 1.021254740359716,
+        "std_population": 0.09855055583875903,
+        "min": 0.4637066854571674,
+        "max": 1.3654088575989438
+      },
+      "physical_action_verified_by_independent_reference": false
+    },
+    "put_down_buffer": {
+      "samples": 526,
+      "window_policy": "cue+2s through next cue-2s; host read-window midpoint, not a device timestamp",
+      "gyro_raw_stats": [
+        {
+          "mean": -3.494296577946768,
+          "std_population": 39.703642717482694,
+          "min": -432,
+          "max": 130
+        },
+        {
+          "mean": -2.2680608365019013,
+          "std_population": 13.94497629686954,
+          "min": -159,
+          "max": 13
+        },
+        {
+          "mean": -4.55893536121673,
+          "std_population": 36.480936034092906,
+          "min": -380,
+          "max": 77
+        }
+      ],
+      "accel_raw_stats": [
+        {
+          "mean": -7.5437262357414445,
+          "std_population": 52.940250672321596,
+          "min": -212,
+          "max": 537
+        },
+        {
+          "mean": 8211.992395437263,
+          "std_population": 80.63743162721009,
+          "min": 7683,
+          "max": 9542
+        },
+        {
+          "mean": 69.51520912547528,
+          "std_population": 65.13369372034636,
+          "min": -463,
+          "max": 736
+        }
+      ],
+      "accel_norm_g_experimental": {
+        "mean": 1.002529141659248,
+        "std_population": 0.009846864691284072,
+        "min": 0.9400657908390468,
+        "max": 1.165921723436182
+      },
+      "physical_action_verified_by_independent_reference": false
+    },
+    "rest_end": {
+      "samples": 526,
+      "window_policy": "cue+2s through next cue-2s; host read-window midpoint, not a device timestamp",
+      "gyro_raw_stats": [
+        {
+          "mean": -0.06273764258555133,
+          "std_population": 1.0617168621751951,
+          "min": -3,
+          "max": 3
+        },
+        {
+          "mean": -0.30798479087452474,
+          "std_population": 0.6614111884636941,
+          "min": -2,
+          "max": 1
+        },
+        {
+          "mean": 0.27756653992395436,
+          "std_population": 1.6241261383442627,
+          "min": -5,
+          "max": 5
+        }
+      ],
+      "accel_raw_stats": [
+        {
+          "mean": -13.9106463878327,
+          "std_population": 8.976183144340244,
+          "min": -39,
+          "max": 18
+        },
+        {
+          "mean": 8210.401140684411,
+          "std_population": 17.078679441763185,
+          "min": 8162,
+          "max": 8263
+        },
+        {
+          "mean": 70.11026615969581,
+          "std_population": 9.383628304515044,
+          "min": 45,
+          "max": 103
+        }
+      ],
+      "accel_norm_g_experimental": {
+        "mean": 1.00228547449422,
+        "std_population": 0.0020802946742979208,
+        "min": 0.9963894049991393,
+        "max": 1.008689454470388
+      },
+      "physical_action_verified_by_independent_reference": false
+    }
+  },
+  "user_feedback": {
+    "statement": "Ja, Hinweise sichtbar und Ablauf durchgeführt",
+    "notifications_visible_user_confirmed": true,
+    "followed_motion_and_put_down_cues_user_confirmed": true,
+    "independent_angle_reference_provided": false
+  },
+  "observed_axis_labels": "raw G0/G1/G2 and A0/A1/A2, not verified housing or SDL axes",
+  "all_three_gyro_raw_channels_changed_with_motion": true,
+  "coherent_six_axis_snapshots": false,
+  "live_conversion_profile_dps_assumption": 500,
+  "offline_hypotheses_evaluated": [
+    125,
+    250,
+    500,
+    1000,
+    2000
+  ],
+  "actual_gyro_range_selected": null,
+  "chip_model_verified": false,
+  "bias_verified": false,
+  "axis_mapping_verified": false,
+  "gyro_scale_verified": false,
+  "packet_loss_known": false,
+  "angle_integration": null,
+  "sdl_runtime_enabled": false,
+  "return_check": {
+    "pid_109c": true,
+    "same_usb_address": true,
+    "same_usb_instance": true,
+    "gs_native_if0_unchanged": true,
+    "same_iio_instance": true,
+    "service": "active/running",
+    "main_pid": 1060,
+    "nrestarts": 0,
+    "state_check_method": "cached metadata only; no sensor reads after completion"
+  },
+  "kernel_logs_read_in_this_run": false,
+  "kernel_warning_absence_proven": false,
+  "hardware_writes_or_driver_changes": false,
+  "automatic_retry": false,
+  "original_outputs_unchanged": true,
+  "private_evidence_directory": ".local/integration/20261016-gyro-guided-002",
+  "original_output_hashes": {
+    "observations.jsonl": "91b37e132d187c279141f58dafb76f4f8d0e81e3e7d673fcec027daec488eae7",
+    "report.json": "20e120e302f50f102a40f3f8012bcb8530368e9b8f82c3abc6046dda9303dd27",
+    "cues.jsonl": "aff97ea7cd2798bf0c58702b42386b413b4e6c731f6ce85bb0a3dd4b56857d48",
+    "SHA256SUMS": "19a8444f4f640018647d597b4abb622d4d681291687a4b62923a409ea753e270"
+  },
+  "offline_comparison_sha256": "b37289ad432caa256d8e1015f9a2915a713887f989c905d0c987c4e352daafae",
+  "private_manifest_sha256": "c8ce7867ab6e7bedcd27a44581b6d98b3802e3f4107fef9f870376d715ee5dfc",
+  "private_plot": {
+    "path": ".local/integration/20261016-gyro-guided-002/analysis/gyro-display.png",
+    "sha256": "78b2016df9d9abbc520e15c81553c90bf04b17f179291164b6c0ebd60bd77849",
+    "raw_values_only": true
+  }
+}

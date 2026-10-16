@@ -1,0 +1,1190 @@
+{
+  "poc_version": "0.1.0",
+  "operation": "offline_file_replay",
+  "counts": {
+    "records_total": 19,
+    "decoded": 19
+  },
+  "packet_kinds": {
+    "x360_input": 4,
+    "gamesir_telemetry": 3,
+    "gamesir_read_reply": 1,
+    "gamesir_firmware_reply": 1,
+    "gamesir_profile_reply": 1,
+    "gip_four_motor_output": 5,
+    "x360_rumble_output": 1,
+    "gamesir_vendor_output": 1,
+    "gip_input_basic": 2
+  },
+  "streams": [
+    {
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "counts": {
+        "decoded": 10
+      },
+      "accepted_transfer_cadence": {
+        "records": 10,
+        "intervals": 9,
+        "first_timestamp_us": 0,
+        "last_timestamp_us": 3000,
+        "zero_intervals": 0,
+        "clock_regressions": 0,
+        "statistics_us": {
+          "min": 100,
+          "max": 500,
+          "median": 500,
+          "p95_nearest_rank": 500
+        },
+        "observation_rate_hz": 3000.0,
+        "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+      },
+      "cadence_by_packet_kind": {
+        "x360_input": {
+          "records": 4,
+          "intervals": 3,
+          "first_timestamp_us": 0,
+          "last_timestamp_us": 3000,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": {
+            "min": 1000,
+            "max": 1000,
+            "median": 1000,
+            "p95_nearest_rank": 1000
+          },
+          "observation_rate_hz": 1000.0,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        },
+        "gamesir_telemetry": {
+          "records": 3,
+          "intervals": 2,
+          "first_timestamp_us": 500,
+          "last_timestamp_us": 2500,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": {
+            "min": 1000,
+            "max": 1000,
+            "median": 1000.0,
+            "p95_nearest_rank": 1000
+          },
+          "observation_rate_hz": 1000.0,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        },
+        "gamesir_read_reply": {
+          "records": 1,
+          "intervals": 0,
+          "first_timestamp_us": 1700,
+          "last_timestamp_us": 1700,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": null,
+          "observation_rate_hz": null,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        },
+        "gamesir_firmware_reply": {
+          "records": 1,
+          "intervals": 0,
+          "first_timestamp_us": 1800,
+          "last_timestamp_us": 1800,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": null,
+          "observation_rate_hz": null,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        },
+        "gamesir_profile_reply": {
+          "records": 1,
+          "intervals": 0,
+          "first_timestamp_us": 1900,
+          "last_timestamp_us": 1900,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": null,
+          "observation_rate_hz": null,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        }
+      },
+      "normal_and_imu_records_in_same_stream": true,
+      "co_presence_meaning": "records_present_only; not_continuous_simultaneous_hardware_support"
+    },
+    {
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "counts": {
+        "decoded": 7
+      },
+      "accepted_transfer_cadence": {
+        "records": 7,
+        "intervals": 6,
+        "first_timestamp_us": 3500,
+        "last_timestamp_us": 6500,
+        "zero_intervals": 0,
+        "clock_regressions": 0,
+        "statistics_us": {
+          "min": 500,
+          "max": 500,
+          "median": 500.0,
+          "p95_nearest_rank": 500
+        },
+        "observation_rate_hz": 2000.0,
+        "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+      },
+      "cadence_by_packet_kind": {
+        "gip_four_motor_output": {
+          "records": 5,
+          "intervals": 4,
+          "first_timestamp_us": 3500,
+          "last_timestamp_us": 5500,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": {
+            "min": 500,
+            "max": 500,
+            "median": 500.0,
+            "p95_nearest_rank": 500
+          },
+          "observation_rate_hz": 2000.0,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        },
+        "x360_rumble_output": {
+          "records": 1,
+          "intervals": 0,
+          "first_timestamp_us": 6000,
+          "last_timestamp_us": 6000,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": null,
+          "observation_rate_hz": null,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        },
+        "gamesir_vendor_output": {
+          "records": 1,
+          "intervals": 0,
+          "first_timestamp_us": 6500,
+          "last_timestamp_us": 6500,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": null,
+          "observation_rate_hz": null,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        }
+      },
+      "normal_and_imu_records_in_same_stream": false,
+      "co_presence_meaning": "records_present_only; not_continuous_simultaneous_hardware_support"
+    },
+    {
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-109c",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "109c",
+        "bus": 8,
+        "address": 13,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "counts": {
+        "decoded": 2
+      },
+      "accepted_transfer_cadence": {
+        "records": 2,
+        "intervals": 1,
+        "first_timestamp_us": 0,
+        "last_timestamp_us": 2000,
+        "zero_intervals": 0,
+        "clock_regressions": 0,
+        "statistics_us": {
+          "min": 2000,
+          "max": 2000,
+          "median": 2000,
+          "p95_nearest_rank": 2000
+        },
+        "observation_rate_hz": 500.0,
+        "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+      },
+      "cadence_by_packet_kind": {
+        "gip_input_basic": {
+          "records": 2,
+          "intervals": 1,
+          "first_timestamp_us": 0,
+          "last_timestamp_us": 2000,
+          "zero_intervals": 0,
+          "clock_regressions": 0,
+          "statistics_us": {
+            "min": 2000,
+            "max": 2000,
+            "median": 2000,
+            "p95_nearest_rank": 2000
+          },
+          "observation_rate_hz": 500.0,
+          "meaning": "file_order_and_host_or_synthetic_time; not_sensor_sampling_or_latency"
+        }
+      },
+      "normal_and_imu_records_in_same_stream": false,
+      "co_presence_meaning": "records_present_only; not_continuous_simultaneous_hardware_support"
+    }
+  ],
+  "hardware_access": false,
+  "hardware_feasibility_proven": false,
+  "evidence_limit": "synthetic_records_are_parser_tests; capture_metadata_is_user_supplied",
+  "transport_limit": "mixed_synthetic_frames_are_not_a_USB_bandwidth_model",
+  "events": [
+    {
+      "record_number": 1,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 20,
+      "captured_length": 20,
+      "data_hex": "0014011000ff0080ff7fffff0000000000000000",
+      "disposition": "decoded",
+      "kind": "x360_input",
+      "fields": {
+        "buttons": {
+          "up": true,
+          "down": false,
+          "left": false,
+          "right": false,
+          "menu": false,
+          "view": false,
+          "ls": false,
+          "rs": false,
+          "lb": false,
+          "rb": false,
+          "home": false,
+          "a": true,
+          "b": false,
+          "x": false,
+          "y": false
+        },
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "sticks_xpad_default_axes": {
+          "lx": -32768,
+          "ly": -32768,
+          "rx": -1,
+          "ry": -1
+        },
+        "triggers_u8": {
+          "lt": 0,
+          "rt": 255
+        },
+        "reserved_button_bit_3": false,
+        "undecoded_tail_hex": "000000000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 2,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 500,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000113ce0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280118032aff000000",
+      "disposition": "decoded",
+      "kind": "gamesir_telemetry",
+      "fields": {
+        "header_byte_1": 0,
+        "header_byte_2": 17,
+        "gyro_raw_i16": [
+          -32768,
+          0,
+          32767
+        ],
+        "accel_raw_i16": [
+          -1234,
+          8192,
+          256
+        ],
+        "sensor_units": "raw_counts; scale_and_orientation_unverified",
+        "device_timestamp": null,
+        "sticks_processed_u8": [
+          128,
+          129,
+          130,
+          131
+        ],
+        "sticks_raw_u8": [
+          134,
+          126,
+          133,
+          132
+        ],
+        "processed_buttons_hex": "0000",
+        "raw_buttons_hex": "2801",
+        "extra_buttons": {
+          "home": false,
+          "share": false,
+          "l4": true,
+          "r4": true,
+          "m": false,
+          "l5": true,
+          "r5": true
+        },
+        "unknown_extra_bits_hex": "0000",
+        "triggers_processed_u8": {
+          "lt": 42,
+          "rt": 255
+        },
+        "raw_trigger_bytes_59_60": [
+          42,
+          255
+        ],
+        "battery_percent_raw": 75,
+        "charging_flag_raw": 1,
+        "undecoded_padding_hex": "000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 3,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 1000,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 20,
+      "captured_length": 20,
+      "data_hex": "0014022050af0080ff7fffff0000000000000000",
+      "disposition": "decoded",
+      "kind": "x360_input",
+      "fields": {
+        "buttons": {
+          "up": false,
+          "down": true,
+          "left": false,
+          "right": false,
+          "menu": false,
+          "view": false,
+          "ls": false,
+          "rs": false,
+          "lb": false,
+          "rb": false,
+          "home": false,
+          "a": false,
+          "b": true,
+          "x": false,
+          "y": false
+        },
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "sticks_xpad_default_axes": {
+          "lx": -32768,
+          "ly": -32768,
+          "rx": -1,
+          "ry": -1
+        },
+        "triggers_u8": {
+          "lt": 80,
+          "rt": 175
+        },
+        "reserved_button_bit_3": false,
+        "undecoded_tail_hex": "000000000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 4,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 1500,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000123ce0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280100002aff000000",
+      "disposition": "decoded",
+      "kind": "gamesir_telemetry",
+      "fields": {
+        "header_byte_1": 0,
+        "header_byte_2": 18,
+        "gyro_raw_i16": [
+          -32768,
+          0,
+          32767
+        ],
+        "accel_raw_i16": [
+          -1234,
+          8192,
+          256
+        ],
+        "sensor_units": "raw_counts; scale_and_orientation_unverified",
+        "device_timestamp": null,
+        "sticks_processed_u8": [
+          128,
+          129,
+          130,
+          131
+        ],
+        "sticks_raw_u8": [
+          134,
+          126,
+          133,
+          132
+        ],
+        "processed_buttons_hex": "0000",
+        "raw_buttons_hex": "2801",
+        "extra_buttons": {
+          "home": false,
+          "share": false,
+          "l4": false,
+          "r4": false,
+          "m": false,
+          "l5": false,
+          "r5": false
+        },
+        "unknown_extra_bits_hex": "0000",
+        "triggers_processed_u8": {
+          "lt": 42,
+          "rt": 255
+        },
+        "raw_trigger_bytes_59_60": [
+          42,
+          255
+        ],
+        "battery_percent_raw": 75,
+        "charging_flag_raw": 1,
+        "undecoded_padding_hex": "000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 5,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 1700,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000223c0501123404deadbeef000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "disposition": "decoded",
+      "kind": "gamesir_read_reply",
+      "fields": {
+        "category": 1,
+        "offset": 4660,
+        "length": 4,
+        "payload_hex": "deadbeef",
+        "trailing_bytes_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 6,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 1800,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000233c0a3000320034003400300031003500320000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "disposition": "decoded",
+      "kind": "gamesir_firmware_reply",
+      "fields": {
+        "selector_echo": 10,
+        "firmware_text": "02440152",
+        "four_character_groups": [
+          "0244",
+          "0152"
+        ],
+        "later_groups_meaning": "unknown; not assigned to dongle firmware"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 7,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 1900,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000243c0c0300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "disposition": "decoded",
+      "kind": "gamesir_profile_reply",
+      "fields": {
+        "active_profile": 3
+      },
+      "reason": null
+    },
+    {
+      "record_number": 8,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 2000,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 20,
+      "captured_length": 20,
+      "data_hex": "00140440a05f0080ff7fffff0000000000000000",
+      "disposition": "decoded",
+      "kind": "x360_input",
+      "fields": {
+        "buttons": {
+          "up": false,
+          "down": false,
+          "left": true,
+          "right": false,
+          "menu": false,
+          "view": false,
+          "ls": false,
+          "rs": false,
+          "lb": false,
+          "rb": false,
+          "home": false,
+          "a": false,
+          "b": false,
+          "x": true,
+          "y": false
+        },
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "sticks_xpad_default_axes": {
+          "lx": -32768,
+          "ly": -32768,
+          "rx": -1,
+          "ry": -1
+        },
+        "triggers_u8": {
+          "lt": 160,
+          "rt": 95
+        },
+        "reserved_button_bit_3": false,
+        "undecoded_tail_hex": "000000000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 9,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 2500,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "1000133ce0808182830000002aff00000000800000ff7f2efb00200001000000014b0000000000000000000000000000000000867e8584280118032aff000000",
+      "disposition": "decoded",
+      "kind": "gamesir_telemetry",
+      "fields": {
+        "header_byte_1": 0,
+        "header_byte_2": 19,
+        "gyro_raw_i16": [
+          -32768,
+          0,
+          32767
+        ],
+        "accel_raw_i16": [
+          -1234,
+          8192,
+          256
+        ],
+        "sensor_units": "raw_counts; scale_and_orientation_unverified",
+        "device_timestamp": null,
+        "sticks_processed_u8": [
+          128,
+          129,
+          130,
+          131
+        ],
+        "sticks_raw_u8": [
+          134,
+          126,
+          133,
+          132
+        ],
+        "processed_buttons_hex": "0000",
+        "raw_buttons_hex": "2801",
+        "extra_buttons": {
+          "home": false,
+          "share": false,
+          "l4": true,
+          "r4": true,
+          "m": false,
+          "l5": true,
+          "r5": true
+        },
+        "unknown_extra_bits_hex": "0000",
+        "triggers_processed_u8": {
+          "lt": 42,
+          "rt": 255
+        },
+        "raw_trigger_bytes_59_60": [
+          42,
+          255
+        ],
+        "battery_percent_raw": 75,
+        "charging_flag_raw": 1,
+        "undecoded_padding_hex": "000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 10,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 3000,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 20,
+      "captured_length": 20,
+      "data_hex": "00140880f00f0080ff7fffff0000000000000000",
+      "disposition": "decoded",
+      "kind": "x360_input",
+      "fields": {
+        "buttons": {
+          "up": false,
+          "down": false,
+          "left": false,
+          "right": true,
+          "menu": false,
+          "view": false,
+          "ls": false,
+          "rs": false,
+          "lb": false,
+          "rb": false,
+          "home": false,
+          "a": false,
+          "b": false,
+          "x": false,
+          "y": true
+        },
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "sticks_xpad_default_axes": {
+          "lx": -32768,
+          "ly": -32768,
+          "rx": -1,
+          "ry": -1
+        },
+        "triggers_u8": {
+          "lt": 240,
+          "rt": 15
+        },
+        "reserved_button_bit_3": false,
+        "undecoded_tail_hex": "000000000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 11,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "timestamp_us": 3500,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 13,
+      "captured_length": 13,
+      "data_hex": "09000109000f190000000a0000",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "fields": {
+        "sequence_raw": 1,
+        "motor_percentages": {
+          "lt": 25,
+          "rt": 0,
+          "left_grip": 0,
+          "right_grip": 0
+        },
+        "all_amplitudes_zero": false,
+        "duration_ticks_10ms": 10,
+        "pause_ticks_10ms": 0,
+        "repeat_count_raw": 0,
+        "scope": "decoded_file_bytes; no_command_sent_or_physical_motor_verified"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 12,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "timestamp_us": 4000,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 13,
+      "captured_length": 13,
+      "data_hex": "09000209000f002800000a0000",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "fields": {
+        "sequence_raw": 2,
+        "motor_percentages": {
+          "lt": 0,
+          "rt": 40,
+          "left_grip": 0,
+          "right_grip": 0
+        },
+        "all_amplitudes_zero": false,
+        "duration_ticks_10ms": 10,
+        "pause_ticks_10ms": 0,
+        "repeat_count_raw": 0,
+        "scope": "decoded_file_bytes; no_command_sent_or_physical_motor_verified"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 13,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "timestamp_us": 4500,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 13,
+      "captured_length": 13,
+      "data_hex": "09000309000f00004b000a0000",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "fields": {
+        "sequence_raw": 3,
+        "motor_percentages": {
+          "lt": 0,
+          "rt": 0,
+          "left_grip": 75,
+          "right_grip": 0
+        },
+        "all_amplitudes_zero": false,
+        "duration_ticks_10ms": 10,
+        "pause_ticks_10ms": 0,
+        "repeat_count_raw": 0,
+        "scope": "decoded_file_bytes; no_command_sent_or_physical_motor_verified"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 14,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "timestamp_us": 5000,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 13,
+      "captured_length": 13,
+      "data_hex": "09000409000f0000005a0a0000",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "fields": {
+        "sequence_raw": 4,
+        "motor_percentages": {
+          "lt": 0,
+          "rt": 0,
+          "left_grip": 0,
+          "right_grip": 90
+        },
+        "all_amplitudes_zero": false,
+        "duration_ticks_10ms": 10,
+        "pause_ticks_10ms": 0,
+        "repeat_count_raw": 0,
+        "scope": "decoded_file_bytes; no_command_sent_or_physical_motor_verified"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 15,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "timestamp_us": 5500,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 13,
+      "captured_length": 13,
+      "data_hex": "09000509000f00000000000000",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "fields": {
+        "sequence_raw": 5,
+        "motor_percentages": {
+          "lt": 0,
+          "rt": 0,
+          "left_grip": 0,
+          "right_grip": 0
+        },
+        "all_amplitudes_zero": true,
+        "duration_ticks_10ms": 0,
+        "pause_ticks_10ms": 0,
+        "repeat_count_raw": 0,
+        "scope": "decoded_file_bytes; no_command_sent_or_physical_motor_verified"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 16,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "timestamp_us": 6000,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 8,
+      "captured_length": 8,
+      "data_hex": "0008001234000000",
+      "disposition": "decoded",
+      "kind": "x360_rumble_output",
+      "fields": {
+        "left_grip_u8": 18,
+        "right_grip_u8": 52,
+        "undecoded_bytes_hex": "00000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 17,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-100a",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "100a",
+        "bus": 8,
+        "address": 12,
+        "interface": 0
+      },
+      "endpoint": "02",
+      "timestamp_us": 6500,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 64,
+      "captured_length": 64,
+      "data_hex": "0f002502f20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "disposition": "decoded",
+      "kind": "gamesir_vendor_output",
+      "fields": {
+        "sequence_raw": 37,
+        "command": 2,
+        "command_name": "heartbeat",
+        "payload_hex": "f20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 18,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-109c",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "109c",
+        "bus": 8,
+        "address": 13,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 0,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 18,
+      "captured_length": 18,
+      "data_hex": "2000010e10010000ff030080ff7fffff0000",
+      "disposition": "decoded",
+      "kind": "gip_input_basic",
+      "fields": {
+        "sequence_raw": 1,
+        "buttons_raw_hex": "1001",
+        "triggers_raw_u16": {
+          "lt": 0,
+          "rt": 1023
+        },
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "undecoded_extension_hex": "",
+        "scope": "basic_GIP_layout_only; G7_Pro_RF_support_unverified"
+      },
+      "reason": null
+    },
+    {
+      "record_number": 19,
+      "source": {
+        "kind": "synthetic",
+        "id": "constructed-layouts-v1-not-usb-bandwidth-model"
+      },
+      "session": "demo-109c",
+      "timebase": "synthetic",
+      "device": {
+        "vid": "3537",
+        "pid": "109c",
+        "bus": 8,
+        "address": 13,
+        "interface": 0
+      },
+      "endpoint": "82",
+      "timestamp_us": 2000,
+      "stage": "complete",
+      "completion_status": 0,
+      "reported_length": 18,
+      "captured_length": 18,
+      "data_hex": "2000010e10010000ff030080ff7fffff0000",
+      "disposition": "decoded",
+      "kind": "gip_input_basic",
+      "fields": {
+        "sequence_raw": 1,
+        "buttons_raw_hex": "1001",
+        "triggers_raw_u16": {
+          "lt": 0,
+          "rt": 1023
+        },
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "undecoded_extension_hex": "",
+        "scope": "basic_GIP_layout_only; G7_Pro_RF_support_unverified"
+      },
+      "reason": null
+    }
+  ]
+}

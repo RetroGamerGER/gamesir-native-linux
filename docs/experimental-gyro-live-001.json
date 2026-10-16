@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-16",
+  "result": "aborted; phase schedule not met",
+  "executed_tool_commit": "b2b9515",
+  "executed_tool_sha256": "89c35e8fd3721c32eddeb9c8b9bf15a4d0d173aa00b097b8edf63d8821d845a2",
+  "recorded_samples": 3600,
+  "observed_span_seconds": 74.763645717,
+  "requested_recording_seconds": 90,
+  "assumed_gyro_profile_dps": 500,
+  "range_was_written_to_sensor": false,
+  "abort_initiated_by": "Codex operator; SIGINT to the exact matching recorder process",
+  "primary_reason": "Chat phase announcements delayed; prepared cue schedule not met. No movement cue issued. No automatic repeat.",
+  "recorder_failure_label": "user_interrupted",
+  "recorder_failure_label_note": "user_interrupted is the generic KeyboardInterrupt/SIGINT label; [tester] did not request this abort",
+  "cue_offsets_seconds": [
+    {
+      "event": "preparation_start",
+      "instruction": "Controller ruhig auf ebene Fläche legen; Bewegungsansage abwarten",
+      "offset_from_first_read_s": -54.124466885
+    },
+    {
+      "event": "recording_verified",
+      "instruction": "Ruhephase läuft; Controller liegen lassen",
+      "offset_from_first_read_s": 9.184864216
+    },
+    {
+      "event": "phase_cue",
+      "phase": "pickup_buffer",
+      "instruction": "Controller aufnehmen, noch nicht drehen",
+      "offset_from_first_read_s": 28.645024006
+    },
+    {
+      "event": "abort_requested",
+      "offset_from_first_read_s": 74.776047793
+    }
+  ],
+  "coherent_six_axis_samples": false,
+  "qualified_angle_calibration": false,
+  "actual_gyro_factor_verified": false,
+  "sensor_read_error_reported": false,
+  "kernel_log_was_read": false,
+  "kernel_warning_absence_proven": false,
+  "return_check": {
+    "usb": "3537:109c",
+    "if0_driver": "gs_native",
+    "iio_name": "gamesir_g7pro_raw_experimental",
+    "service": "active/running",
+    "main_pid": 1060,
+    "nrestarts": 0,
+    "driver_or_service_change_by_codex": false
+  },
+  "next_attempt": "Requires fresh approval; prepare locally timed native KDE cues offline first.",
+  "private_evidence_directory": ".local/integration/20261016T153054Z-gyro-display",
+  "private_manifest_sha256": "a29138b15707e1660b55f68593fffda5caa815524f707c6c60ffa3ad7d0327ed",
+  "original_observations_sha256": "42f6b4f3c56ddc6b4e46ca2320d500eb03a104568ee3e210aa476b2045d58021",
+  "offline_guided_followup": {
+    "status": "implemented and offline tested; no real GUI or further sensor run",
+    "option": "--guided-kde",
+    "preparation_seconds_without_sensor_reads": 30,
+    "observation_seconds": 90,
+    "completion_notice_seconds_without_sensor_reads": 3,
+    "cue_offsets_seconds": [
+      0,
+      15,
+      30,
+      60,
+      75,
+      90
+    ],
+    "maximum_cue_lateness_seconds": 2,
+    "diagnostic_synthetic_tests_passed": 65,
+    "full_make_test_passed": true,
+    "real_kde_notification_delivery_verified": false,
+    "automatic_retry_performed": false,
+    "tool_sha256": "52611839a59009af75cdd660cf682a1149f05f89fc6605436ea0111853a19682",
+    "tests_sha256": "68ffb59d5c760df5ec0132eec70b99cbbf3d456824987e991a2accb83d84484f",
+    "regression_log_sha256": "54eefe805855d2f0bf1edc37f28d563fd67094b94a8db3b02a5bc1aef902cddb"
+  }
+}

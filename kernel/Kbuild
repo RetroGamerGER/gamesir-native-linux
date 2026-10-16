@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-only
+obj-m := gs_native.o
+gs_native-y := gs_native_usb.o gs_protocol.o gs_sensor.o gs_runtime.o gs_startup.o
+ccflags-y += -Werror

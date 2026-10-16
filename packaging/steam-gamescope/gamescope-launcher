@@ -1,0 +1,16 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-only
+# Keep the vendor launcher responsible for Steam flags and devkit selection.
+# No device access, service control, copied vendor logic or profile changes.
+if [ ! -f /usr/lib/steamos/steam-launcher ] ||
+   [ ! -x /usr/lib/steamos/steam-launcher ]; then
+    printf '%s\n' 'gamesir-native-steam-gamescope: missing executable vendor Steam launcher' >&2
+    exit 127
+fi
+if [ -f /usr/share/gamesir-native-steam/session.sh ] &&
+   [ -r /usr/share/gamesir-native-steam/session.sh ]; then
+    . /usr/share/gamesir-native-steam/session.sh
+else
+    printf '%s\n' 'gamesir-native-steam-gamescope: mapping helper unavailable; continuing with vendor launcher' >&2
+fi
+exec /usr/lib/steamos/steam-launcher "$@"

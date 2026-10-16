@@ -1,0 +1,128 @@
+{
+  "passed": true,
+  "hardware_access": false,
+  "system_changes": false,
+  "native_cold_start_hardware_validated": false,
+  "method": "Actual shared C startup state machine; synthetic clock/transport/port ownership. Two recorded segments are joined synthetically, not a new capture.",
+  "sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "coverage": "PASS: 15 captured TX packets; 75 per-transfer failures; identity, ownership, pacing, deadlines, cancellation, idle-pad liveness, independent IMU, one-shot sequence handoff, four arbitrary topology tokens, two concurrent dongles, port moves and new reconnect sessions",
+  "source_sha256": {
+    "src/gs_protocol.c": "ec729e0e6d60cad789a4dcbd810c1854fe59005c26c2ea9f6f18b0d84f623c87",
+    "src/gs_runtime.c": "8fb938ac78fd9994927cc50b954f7f1e0f724a6a1901ba62edddba28154ef3d5",
+    "src/gs_startup.c": "0533954cf4dcc3e208f56b00f95ef696c2d9904fd5438197bff7f78a6dcd0573",
+    "tests/test_startup.c": "d34792868106726eecc6721b908830e319a74fadcb468364e7ce38839a4b23c5",
+    "src/gs_startup.h": "730fedde3a6e6f63570aa9bcc4383961878859a98474343c05cfec711a0548e6",
+    "src/gs_protocol.h": "e343a249e35c6b501d7194154edba0dfc32002a18cdd0278f3f02eb7d26fe3a7",
+    "src/gs_runtime.h": "7c5112414a0e58ccd8d922a3f6d724cb45a72c71d2f21817e9e638ac837aacba",
+    "tests/run_startup_test.py": "b9d3bd7aa703ca476541912cc257219d3b2a9bf39555eec32e2027f769208a71",
+    "fixtures/startup-capture.json": "dde1f0dd580d894cd0b8eaacb6547e8a0a8853507e62520ac77f03e192ac8a53"
+  },
+  "limits": [
+    "No live USB or kernel lifecycle executed.",
+    "Kernel probe/disconnect coordinator and a live activation interface remain to be integrated.",
+    "Returned TX intents do not open, claim, write, bind or initialize actual hardware.",
+    "READY marks completed init USB transfers and fresh raw IMU; firmware acknowledgement and gamepad evidence are separate.",
+    "Topology tokens simulate arbitrary root/hub ports; live Linux topology discovery and token allocation are not yet implemented.",
+    "Gyroscope scale and physical axes remain uncalibrated."
+  ],
+  "basis_commit": "4a6dbea90a57a6e06c9e0c98153820c7a6ab85d3",
+  "date": "2026-10-12",
+  "regression": {
+    "command": "make test",
+    "exit_status": 0,
+    "log": "build/startup-evidence/regression.log",
+    "log_sha256": "86def9c56e8dbadc39ee5dd031792a6ba3893f5668c0c80194717e02826b6f0b"
+  },
+  "static_analysis": {
+    "tool": "clang --analyze -std=c11 -Wall -Wextra -Werror -Xanalyzer -analyzer-output=text src/gs_startup.c",
+    "exit_status": 0,
+    "diagnostics": []
+  },
+  "existing_kernel_module": {
+    "unchanged": true,
+    "sha256": "b54a2a76a50b997e90f82cb1003a27f1c4f564a90876a03505562df6c4964127",
+    "rebuilt_loaded_or_bound": false
+  },
+  "capture_sources": [
+    {
+      "role": "transition",
+      "original_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "original_bytes": 1057480824,
+      "link_type": 220,
+      "timestamps": "host usb microseconds relative to first selected submission",
+      "sha256_verified_during_extraction": true,
+      "selected_tx": 9
+    },
+    {
+      "role": "native_init",
+      "original_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+      "original_bytes": 1375197976,
+      "link_type": 220,
+      "timestamps": "host usb microseconds relative to first selected submission",
+      "sha256_verified_during_extraction": true,
+      "selected_tx": 6
+    }
+  ],
+  "identity_evidence": {
+    "method": "Saved kernel MESSAGE and udev ID_SERIAL_SHORT for the historical target only; observations may repeat an enumeration.",
+    "raw_serial_values_included": false,
+    "sources": [
+      {
+        "source": "build/hardware-tests/002-native-motor-109c-check-20261012T174402017137Z/stdout.txt",
+        "sha256": "48ad6d16f068465928ded7eb13774c73e618ba29978b893bf3ecd6c8a1f827a5",
+        "target_serial_observations": 3
+      },
+      {
+        "source": "build/hardware-tests/002-native-motor-module-unload-20261012T180059111239Z/before.stdout",
+        "sha256": "96f339e75ac9f78a7a45da56bf4191d2ee23fe33be44c1f1a0761f4c46d242a2",
+        "target_serial_observations": 1
+      },
+      {
+        "source": "sprint-002/captures/20261011T141131938846Z-measurement-B-deadband/usb-udev-events.log",
+        "sha256": "457de6339b8c8ff01d4f3a528d76a9ec832fdd1949808d36c9c676156016c544",
+        "target_serial_observations": 5
+      }
+    ],
+    "per_pid": {
+      "100a": {
+        "usb_serial_string_indices": [
+          3
+        ],
+        "observations": 4,
+        "distinct_values": 1,
+        "lengths": [
+          10
+        ]
+      },
+      "109c": {
+        "usb_serial_string_indices": [
+          3
+        ],
+        "observations": 5,
+        "distinct_values": 1,
+        "lengths": [
+          16
+        ]
+      }
+    },
+    "serial_equal_across_modes": false,
+    "individual_uniqueness_proven": false,
+    "dongle_versus_radio_controller_serial_origin_proven": false,
+    "stable_after_repairing_proven": false,
+    "usable_as_confirmed_cross_mode_uid": false
+  },
+  "protocol_confirmations": {
+    "usb_completions_checked": true,
+    "separate_firmware_initialization_ack_proven": false,
+    "unknown_type_03_used_as_ack": false
+  },
+  "not_yet_implemented": [
+    "Linux probe/disconnect and topology token allocation including root/hub lifetimes",
+    "Live exclusive interface ownership transfer and explicit startup activation",
+    "Integration with existing kernel START without duplicate initialization or sequence reset",
+    "Permanent operation, full hotplug/suspend/resume and independent hardware cold-start validation"
+  ]
+}

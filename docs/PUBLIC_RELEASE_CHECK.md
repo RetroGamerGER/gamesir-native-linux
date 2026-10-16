@@ -1,0 +1,121 @@
+# PRE-ALPHA publication check and artifact policy
+
+Date: 2026-10-16. This document records offline publication preparation,
+not a release announcement or permission to install, activate or push.
+
+## Privacy decision
+
+The complete reachable history through `3e620f3` was inspected: 93 commits,
+1,515 reachable objects including 1,037 distinct file blobs, 18,670,815 blob
+bytes and 237 distinct file paths. All author/committer records were checked
+in addition to blob contents and filenames.
+
+**The existing development history is NOT approved for publication.** All
+93 commits contain a personal author/committer email address; five subjects
+contain private machine references. Historical documents include personal
+names, local home paths and host labels. A clean current README does not
+remove information from earlier commits. No history was rewritten, deleted,
+uploaded or placed in the release artifacts.
+
+The current 237-file tree was also inspected (3,379,063 bytes). No real
+credential, private key, authentication URL, email, MAC address, network IP,
+USB serial or UID value was identified in its contents. Version numbers,
+documented password prompts, synthetic session tokens and privacy-detection
+expressions were reviewed as false positives. This is a bounded inspection,
+not a guarantee that no possible sensitive information exists.
+
+No raw captures, manufacturer executables, firmware, installed drivers,
+ELF/PE files or files larger than 1 MiB were found among the tracked files.
+The sole binary is the project's own IMU statistics plot: no private labels
+or EXIF were identified, only a plotting-software metadata field. Source
+authors, public upstream references and required license notices must remain
+intact; the module's existing author attribution is intentionally retained.
+
+## Conservative public-source preparation
+
+Prepare a separate source snapshot without `.git`, ignored files, local
+evidence, build logs, installed-package inventories or original captures.
+Keep the development repository and original evidence unchanged locally.
+
+For that snapshot only:
+
+- Replace the private development-session `AGENTS.md` with public contributor
+  rules containing the same project, license and hardware-safety boundaries.
+- Replace private home/workspace paths and machine labels with neutral
+  placeholders. Anonymize personal tester references in historical prose.
+- Generalize the synthetic home paths in the guided-test fixture; do not
+  change runtime logic, protocol constants, firmware assumptions or guards.
+- Preserve historical evidence/source hashes as historical hashes. Record
+  transformed file hashes separately and regenerate the snapshot's outer
+  checksum manifest. An anonymized report is not the original evidence file.
+- Keep all linked documents and package-allowlisted files. Removing historical
+  files indiscriminately would break links and package generation.
+- Record the original source commit, fixed archive timestamp, transformation
+  categories and per-file hashes in public export metadata, without copying
+  private replacement values or commit identities.
+
+Do not represent this snapshot as an anonymization of the Git history.
+Publishing the existing history, rewriting it, creating a replacement public
+history or selecting a public author identity requires a separate decision.
+
+## PRE-ALPHA artifacts
+
+The intended source release candidate contains:
+
+1. The complete sanitized development source, including tests, GPL-v2 text,
+   UAPI exception and provenance documentation.
+2. The existing DKMS build-source archive and PKGBUILD (`0.1.0.alpha3-5`).
+3. The optional Steam build-source archive and PKGBUILD (`0.1.0.alpha2-1`).
+4. The optional CachyOS Gamescope build-source archive and PKGBUILD
+   (`0.1.0.alpha1-1`).
+5. PRE-ALPHA release notes, an exact artifact inventory and SHA256 checksums.
+
+All three component archives must be generated from the sanitized source,
+not directly from the private working tree. Retaining old package versions
+does not make old local binaries match the candidate. The collection is
+explicitly PRE-ALPHA even though internal module versions contain `alpha`.
+No tag is created by this preparation.
+
+Unprivileged staging can verify installed paths without installing anything.
+Run the full default offline suite in the sanitized source and compare two
+independent generations of each component archive. Check license bytes,
+links, modes, ownership metadata, archive paths, private data and checksums.
+
+No Arch binary packages are offered by this source-only preparation.
+Ordinary `makepkg` embeds local build/start paths, packager metadata and the
+installed-package inventory in `.BUILDINFO`; these require a controlled
+neutral build environment before a binary release. In addition, the current
+build host lacks the optional Gamescope runtime dependencies required by its
+normal dependency check. Do not install dependencies or use `--nodeps` as
+part of this check. Source recipes remain buildable on a prepared target.
+
+## Build-environment warning found during preparation
+
+The first sanitized snapshot passed the full offline suite and produced a
+module for `7.2.11-1-garuda`, but the local build helper then raised an
+assertion on Kbuild's compiler-metadata warning: headers report Clang 23.1.1,
+the available compiler is Clang 23.1.3. Kbuild itself returned success. This
+must not be described as a warning-free or hardware-validated build.
+
+The narrow offline correction recognizes only the complete known Kbuild
+message with both compiler-version lines and matching compiler family. It
+records an environment warning separately in the JSON report. Incomplete,
+unexpected or additional warnings still fail the helper; Kbuild failure,
+module identity and alias checks are preserved. `W=1` and `-Werror` remain
+enabled. This is a build-reporting change, not a loaded-driver change.
+
+## Remaining approval and validation boundaries
+
+The artifact inventory must record the actual source commit and results;
+the source-only candidate is not an installed or hardware-tested build.
+Any module build is offline and does not replace the loaded driver. Gyro
+calibration remains paused. Existing limits for game-trigger integration,
+ZZZ coverage, suspend/resume and repeated reconnect remain unchanged.
+
+Before publication, review the exact candidate and choose repository
+destination, visibility, history strategy and public contributor identity.
+There is no permission to create a remote, tag, upload or push. The original
+history remains a publication blocker even if the sanitized artifacts pass.
+
+See [release audit](RELEASE_AUDIT.md), [installation/removal](INSTALLATION.md)
+and [licensing/provenance](LICENSING.md).

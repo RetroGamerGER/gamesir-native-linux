@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Precede Arch's 71-dkms-remove hook; a failed safe release aborts removal.
+[Trigger]
+Operation = Remove
+Type = Package
+Target = gamesir-native-dkms
+
+[Action]
+Description = Return GameSir controllers safely before replacing native driver
+When = PreTransaction
+Exec = /usr/bin/python -B /usr/lib/gamesir-native/prepare_remove.py --remove
+AbortOnFail

@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "status": "experimental_accel_gyro_unscaled_sdl_not_released",
+  "runtime_enable": false,
+  "verified_flags": 0,
+  "scope": {
+    "vid": "3537",
+    "pid": "109c",
+    "transport": "G7 Pro 2.4 GHz dongle",
+    "capture_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89"
+  },
+  "accelerometer": {
+    "wire_offsets_signed_le16": [
+      23,
+      25,
+      27
+    ],
+    "counts_per_g": 8192,
+    "counts_per_g_denominator": 1,
+    "scale_status": "experimental_replaceable_user_authorized",
+    "scale_verified": false,
+    "experimental_conversion": {
+      "enabled_for_offline_replay": true,
+      "function": "gs_accel_convert_experimental",
+      "output_unit": "micrometres_per_second_squared",
+      "axis_order": "wire_A0_A1_A2",
+      "apply_bias": false,
+      "standard_gravity_m_s2": 9.80665
+    },
+    "sdl_from_wire_signed_axis_map": null,
+    "orientation_verified": false,
+    "bias_raw": null,
+    "bias_verified": false
+  },
+  "gyroscope": {
+    "wire_offsets_signed_le16": [
+      17,
+      19,
+      21
+    ],
+    "counts_per_degree_per_second": null,
+    "derive_from_accelerometer": false,
+    "fallback_factor": null,
+    "scale_verified": false,
+    "sdl_from_wire_signed_axis_map": null,
+    "orientation_verified": false,
+    "bias_raw": null,
+    "bias_verified": false
+  },
+  "test_constants_are_not_calibration": {
+    "previous_fixture_accel_counts_per_g": 8192,
+    "previous_fixture_gyro_counts_per_degree_per_second": 16,
+    "fractional_conversion_example_counts_per_degree_per_second": 16.4
+  },
+  "output_contract": {
+    "separate_evdev_sensor_device": true,
+    "same_nonempty_unique_uniq_as_gamepad": true,
+    "input_prop_accelerometer": true,
+    "accelerometer_axes": [
+      "ABS_X",
+      "ABS_Y",
+      "ABS_Z"
+    ],
+    "gyroscope_axes": [
+      "ABS_RX",
+      "ABS_RY",
+      "ABS_RZ"
+    ],
+    "resolution_must_be_positive_verified": true,
+    "axis_reorder_and_bias_before_rational_gain": true,
+    "no_runtime_profile_supplied": true,
+    "iio_raw_output_remains_separate": true,
+    "host_event_timestamps_allowed": true,
+    "device_clock_required_for_sdl": false
+  },
+  "sensor_identification": {
+    "chip_model": null,
+    "verified": false,
+    "active_gyro_full_scale_dps": null,
+    "evidence_status": "imu-sensor-identification.json"
+  }
+}

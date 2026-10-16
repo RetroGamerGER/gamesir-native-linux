@@ -1,0 +1,431 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-11",
+  "method": "read-only inventory followed by hash-verified copies; no originals moved or deleted",
+  "source_roots": {
+    "native": "existing project root",
+    "offline": "../gamesir-offline-poc"
+  },
+  "files": [
+    {
+      "component": "native",
+      "path": "AGENTS.md",
+      "size": 775,
+      "sha256": "a687bba2a0323441386f47b9f4450d3eff18ab1cee58f26e5daaf8c80b1f03a0"
+    },
+    {
+      "component": "native",
+      "path": "README.rst",
+      "size": 3031,
+      "sha256": "f54cb5daf4eb9cedecd417c69f1df7ccbbc1a18218bcf112fb27284db99ab0fd"
+    },
+    {
+      "component": "native",
+      "path": "SHA256SUMS",
+      "size": 4451,
+      "sha256": "9df03acb9c71fda9c24241224c987c9cf3c6f4843ea5fd2688174d0be85f4601"
+    },
+    {
+      "component": "native",
+      "path": "docs/ARCHITEKTUR.rst",
+      "size": 6672,
+      "sha256": "ae43617b5e1315e2bd458050c4fc2caa2e9a998ad254084788defa9e53720bba"
+    },
+    {
+      "component": "native",
+      "path": "docs/EXPERIMENTELLE-BESCHLEUNIGUNG.rst",
+      "size": 5004,
+      "sha256": "d47fa0a40908e80b287fa504e002e8805b5a6d2a4eaca4ab9d9d1cc434cdf639"
+    },
+    {
+      "component": "native",
+      "path": "docs/IMU-STATISTIK-UND-SENSORIDENTIFIKATION.rst",
+      "size": 11322,
+      "sha256": "2e25ded2bade6a592520b36206b7aa6412801afec046376c16404fe8a45483f3"
+    },
+    {
+      "component": "native",
+      "path": "docs/SDL-SENSOR-ERGEBNIS.rst",
+      "size": 7939,
+      "sha256": "3bc4aa15c28c8219518da0fdc7ac63b31ae56cb3cfecc552b8927e40e1298d3c"
+    },
+    {
+      "component": "native",
+      "path": "docs/SDL-SKALIERUNG-UND-ACHSEN.rst",
+      "size": 13580,
+      "sha256": "cbab36ede90029ee61dc433b45a8abcaf1995a88033b8acf8911bc07043041e3"
+    },
+    {
+      "component": "native",
+      "path": "docs/core-capture-validation.json",
+      "size": 585,
+      "sha256": "973d7f487e7784f6a09c4c1d5f8828a7755a8e6430f1622defcf2d0fb9000ae6"
+    },
+    {
+      "component": "native",
+      "path": "docs/evidence-verification.json",
+      "size": 8559,
+      "sha256": "ed339ab18f4ebd487065e185cca2c7698e2e68131fbecb88d32256a446858000"
+    },
+    {
+      "component": "native",
+      "path": "docs/experimental-accel-validation.json",
+      "size": 1921,
+      "sha256": "0e75b289d1e64e329774161a4c224252cf3bdb4ffd3307a2c0325e293258f212"
+    },
+    {
+      "component": "native",
+      "path": "docs/imu-calibration-analysis.json",
+      "size": 142203,
+      "sha256": "74ca9e5e4e87c84399c9e9ae9b788a7ac53578c089ce66ece57946f9171301fd"
+    },
+    {
+      "component": "native",
+      "path": "docs/imu-sensor-identification.json",
+      "size": 2729,
+      "sha256": "984383a10079796fb95590e043e16d21ffdd00bbbe7a5d1fa15bcceadaa41319"
+    },
+    {
+      "component": "native",
+      "path": "docs/imu-statistik.png",
+      "size": 313350,
+      "sha256": "0fb273e938c61a09229f80437ab74b30c685721e2b0372007c40b5c4d10b53ef"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-sensor-calibration.json",
+      "size": 2354,
+      "sha256": "a3cf5432ca40da24693d10498d40348df6bf5116380ddcc5b1e32884911a626e"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/build.log",
+      "size": 1241,
+      "sha256": "08998d8919a6d4684e9e21154796d53b93a10ee4d71ba532c969a36b4f2a7580"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/results.json",
+      "size": 27693,
+      "sha256": "3cf2c2228f33415c34154d7fa59ce9fceb89785b9e3fcefe08866e471032de0e"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl2-iio-only.log",
+      "size": 920,
+      "sha256": "f284f1f5cf92a0f60cee1267bc572d1ff44e99b669ba033e0c4512a5023cdecf"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl2-matching-uniq.log",
+      "size": 994,
+      "sha256": "b6068054d9e37a0eeb93ce20e1735f6a2380530c3f035f24bd42248b1ba17903"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl2-missing-rz.log",
+      "size": 953,
+      "sha256": "07f07b8eef9874a3fdf2a484971001918c6a81f04244d7fb4b7ada49e1f6acd6"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl2-synthetic-converted.log",
+      "size": 972,
+      "sha256": "d79ae407b017c9f7d36e841a61327ce4fd651f69cef6ae353d9fb6c572964f78"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl2-wrong-uniq.log",
+      "size": 923,
+      "sha256": "40f6e86ae9763ee1d01cd8541b4af0cd3037666517a1ac83988c95dc78d86256"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl2-zero-resolution.log",
+      "size": 939,
+      "sha256": "f2f333c71e977184f59744813fdc98bdfa0513ad7bdab25f48265dd2d1c4aa7e"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl3-iio-only.log",
+      "size": 921,
+      "sha256": "318d59232dbfab70556cee12b9137169cadf00856e6b77f16ad6823768811955"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl3-matching-uniq.log",
+      "size": 995,
+      "sha256": "403f35c40baa3ac264ef108f2bffece4fc2827ebc48af73ec5e265ed4cde676e"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl3-missing-rz.log",
+      "size": 954,
+      "sha256": "616c0d7019dbb9cec671b3dad4231a49347a1247bf88c4820a1f8e0819c3e7bb"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl3-synthetic-converted.log",
+      "size": 973,
+      "sha256": "62c5295962a5afd9468b35b2fdfef982a28e3e073cac247821132179af4482fe"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl3-wrong-uniq.log",
+      "size": 924,
+      "sha256": "14cb2538314ae54634c125389df6625b93be1006f18aabb860c5d1c47a1b8c25"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/sdl3-zero-resolution.log",
+      "size": 940,
+      "sha256": "fd1923068372b902cc2fdcaa81adb279935c66998c60a6c2b945915a100f789b"
+    },
+    {
+      "component": "native",
+      "path": "docs/sdl-validation/source-manifest.json",
+      "size": 2814,
+      "sha256": "e0769494b4b6f2f5dad90862454d569ad2593da9df87ff4e1ce0239493401d56"
+    },
+    {
+      "component": "native",
+      "path": "docs/sensor-contract-test.json",
+      "size": 602,
+      "sha256": "f535b5658411f000a55df99f106e3ec6184281414978f6e19a5b317664da637a"
+    },
+    {
+      "component": "native",
+      "path": "docs/sensor-contract-test.log",
+      "size": 641,
+      "sha256": "44fae0cce4edbbc357e858900bb7d54f8e74189bd066c795e761251e9e26959f"
+    },
+    {
+      "component": "native",
+      "path": "docs/sensor-evidence/fcc-g7pro-internal-8420178.pdf",
+      "size": 931414,
+      "sha256": "0b5c4e0486197af5c9bedb44ca0e96b610e170d42c854bf26f8e1402e29c0fa4"
+    },
+    {
+      "component": "native",
+      "path": "src/gs_protocol.c",
+      "size": 4661,
+      "sha256": "8a4a732fedd9e49c0658ee9b14f3fcd3f2140f9990afd0a8814a92a214523461"
+    },
+    {
+      "component": "native",
+      "path": "src/gs_protocol.h",
+      "size": 1831,
+      "sha256": "3a0b64d220f497d73b305962cb8f6ca0ae58c95786e56de6f76df72edd768b19"
+    },
+    {
+      "component": "native",
+      "path": "src/gs_sensor.c",
+      "size": 3180,
+      "sha256": "7da367e58d3b15ac154659e78fe354e21973acc6a032534afbdc94186761c1ea"
+    },
+    {
+      "component": "native",
+      "path": "src/gs_sensor.h",
+      "size": 1889,
+      "sha256": "5a7cd469283b6878f387a60cb9fa3224ae5b48e457028380290957505bc13616"
+    },
+    {
+      "component": "native",
+      "path": "tests/analyze_imu_calibration.py",
+      "size": 12828,
+      "sha256": "6739efd488cd58393ddffe07a4be93369f2f7e9d75694d7c7f5ee15d7b1d01fa"
+    },
+    {
+      "component": "native",
+      "path": "tests/audit_sdl_sandbox.py",
+      "size": 1731,
+      "sha256": "1619e88923c356ef01cd964414244d3faad20182f8a15382cc81e89c72084add"
+    },
+    {
+      "component": "native",
+      "path": "tests/check_capture_core.py",
+      "size": 11180,
+      "sha256": "1f5875c9c26c67bfe60284be1fa681894ecbf2eb6dd0f7c750e9084bf01cb091"
+    },
+    {
+      "component": "native",
+      "path": "tests/plot_imu_statistics.py",
+      "size": 2823,
+      "sha256": "c536bc87f57a2f3fb33651f6c36a55bdce33a5f2addc5bb58653b219d42fcf1c"
+    },
+    {
+      "component": "native",
+      "path": "tests/run_sdl_sensor_test.py",
+      "size": 7704,
+      "sha256": "cf3120cfc91e809cc0bf0fd9edd87442a8099d51cf0d01a3477f2aa744e26771"
+    },
+    {
+      "component": "native",
+      "path": "tests/run_sensor_contract_test.py",
+      "size": 1634,
+      "sha256": "c34705160285d44aebc66fb9975631b441be6847b56ff0756d0118ee03bbcd1e"
+    },
+    {
+      "component": "native",
+      "path": "tests/sdl_evdev_fixture.c",
+      "size": 7443,
+      "sha256": "b64e14a2d61863f9bd3b0ee8bcc5f380cceba79dbcdbed4b09c8396183ecda5f"
+    },
+    {
+      "component": "native",
+      "path": "tests/sdl_sensor_probe.c",
+      "size": 5454,
+      "sha256": "1eed3f6228a47fe8c45623e3e3c39eea2a2644d2888c3fe26b7fadf218914329"
+    },
+    {
+      "component": "native",
+      "path": "tests/test_sensor_contract.c",
+      "size": 4817,
+      "sha256": "e0d2c2a6d0932cc9454f0c5a332a8e392159fd133de387f354b2cb599038f702"
+    },
+    {
+      "component": "offline",
+      "path": "AGENTS.md",
+      "size": 1476,
+      "sha256": "28d69991f69981f13bf39f4c29391bec23f539d28a41ebe78902c5488fa227ce"
+    },
+    {
+      "component": "offline",
+      "path": "MANIFEST.sha256",
+      "size": 2071,
+      "sha256": "d2210399178d4ddfebc5e03b7425c5632e80178cd99de71973f4b62dea858d06"
+    },
+    {
+      "component": "offline",
+      "path": "README.md",
+      "size": 3596,
+      "sha256": "e949aaad5dd7524cce1e04dcd718aadb95d972619a37111dfca6e208d7dbd4b8"
+    },
+    {
+      "component": "offline",
+      "path": "docs/PROJECT_STATE.md",
+      "size": 3137,
+      "sha256": "ae48a7494533e738e0af6c149e11b9cf8a6af21910b0ecc4c7b7180a0cf9e2bd"
+    },
+    {
+      "component": "offline",
+      "path": "docs/PROTOCOL.md",
+      "size": 5661,
+      "sha256": "48ce5188e06853cff59bb350727d5e7aba06ddc40f1817fdc186d4af16071675"
+    },
+    {
+      "component": "offline",
+      "path": "docs/RECORD_FORMAT.md",
+      "size": 3469,
+      "sha256": "1f344ce7f36052f8b80156b801fb0fbb3e64ddcf4aeddf546852945bbad526f1"
+    },
+    {
+      "component": "offline",
+      "path": "docs/source-map.json",
+      "size": 1244,
+      "sha256": "5d0fb22b74d7b3fed2b07511d65aea77cbfa2ed259b7abe76dca3be86959d7ec"
+    },
+    {
+      "component": "offline",
+      "path": "fixtures/expected.json",
+      "size": 9939,
+      "sha256": "a7667013462f1fc77e910ab72bc95f1087624869787f4f081a9d5eb4e1fe748d"
+    },
+    {
+      "component": "offline",
+      "path": "fixtures/synthetic_negative.jsonl",
+      "size": 8700,
+      "sha256": "36fbf2a519b29d4f9f1cbb13866664ebddef6c46e3003a254f26643ece9c8dfe"
+    },
+    {
+      "component": "offline",
+      "path": "fixtures/synthetic_valid.jsonl",
+      "size": 8562,
+      "sha256": "652b28bb514b1c7ff54d2df54e6da0868c63120692dbd0fc971b74e61c0904ec"
+    },
+    {
+      "component": "offline",
+      "path": "gamesir_offline/__init__.py",
+      "size": 105,
+      "sha256": "14595135b5e66b21579da8f24b5493e41536c9bfb19568735ffded2dc861c162"
+    },
+    {
+      "component": "offline",
+      "path": "gamesir_offline/__main__.py",
+      "size": 48,
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "component": "offline",
+      "path": "gamesir_offline/cli.py",
+      "size": 1871,
+      "sha256": "1e8ac32be81c0050da7ff9b032e27473b775a0532aac2bff8b18d8a9f80b8526"
+    },
+    {
+      "component": "offline",
+      "path": "gamesir_offline/protocol.py",
+      "size": 8492,
+      "sha256": "d88fcfa6b10c474e334bf7228c65c52d9b26d4139aa720ebafc989b4097018fa"
+    },
+    {
+      "component": "offline",
+      "path": "gamesir_offline/records.py",
+      "size": 6640,
+      "sha256": "7e442aae45e92c2fba6b10a23f810473a60d559af6fce608dd930e3794b27adf"
+    },
+    {
+      "component": "offline",
+      "path": "gamesir_offline/replay.py",
+      "size": 5392,
+      "sha256": "b79c74defa9bd6df40b070432a5256c82d812c89c941c66f03eb54c52d27baf3"
+    },
+    {
+      "component": "offline",
+      "path": "results/TEST_REPORT.md",
+      "size": 4253,
+      "sha256": "1de8081d8e5475b6b14a71fc66c39c16e8e8550c0b80fd309e605f0fe7ffd67b"
+    },
+    {
+      "component": "offline",
+      "path": "results/synthetic-negative-replay.json",
+      "size": 20197,
+      "sha256": "9ab4a082765f142f63f4e6c811a0423dda5210ade289377a171236df63ab3770"
+    },
+    {
+      "component": "offline",
+      "path": "results/synthetic-valid-replay.json",
+      "size": 31892,
+      "sha256": "0bc7121e5b6718012d19c7dc4e9b2cb1032c0e7330f1ec91d9c1e210bb5bf102"
+    },
+    {
+      "component": "offline",
+      "path": "results/unittest.txt",
+      "size": 5711,
+      "sha256": "70b1f234fd0ba35e1e14484499346a9dc61a763737e2e66693226ff5ceb4dd16"
+    },
+    {
+      "component": "offline",
+      "path": "tests/test_cli.py",
+      "size": 2231,
+      "sha256": "5ea65e8aa381da819666813ae6db828ad3a99f3585af677af6da5de242ecbe7c"
+    },
+    {
+      "component": "offline",
+      "path": "tests/test_protocol.py",
+      "size": 6975,
+      "sha256": "779a64c399b2007643d4920fedda2c56b7e00f2958e56f576269c06bd7d08444"
+    },
+    {
+      "component": "offline",
+      "path": "tests/test_records.py",
+      "size": 6073,
+      "sha256": "d8b2aa944975d58aa7b022809641288a6d266ff0b249d00dc692e155a54ab1bb"
+    },
+    {
+      "component": "offline",
+      "path": "tests/test_replay.py",
+      "size": 4086,
+      "sha256": "85bfee7c7ccc4059971fb05e71967e122189c7398f1fdea016c7fa599298b840"
+    }
+  ]
+}

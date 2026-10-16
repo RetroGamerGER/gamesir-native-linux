@@ -1,0 +1,24 @@
+{
+  "research_date": "2026-10-11",
+  "executed_third_party_modules": false,
+  "sources": [
+    {
+      "file": "linux-7.2.9/drivers/input/joystick/xpad.c",
+      "url": "https://github.com/gregkh/linux/blob/5fce161649b4d779d1b76d9fcd52dc77779774b8/drivers/input/joystick/xpad.c",
+      "sha256": "19dd00fc4b0341ef18575a87b9b3fbd5f809e4588ff2909e2c357af2f2358517",
+      "symbols": "xpad360_process_packet; xpadone_process_packet; xpad_play_effect"
+    },
+    {
+      "file": "gamesir-linux-tools-771b28ae75b0a614a6a7fec9aa606606a27b3b8d/vendors/gamesir/models/g7pro/protocol.py",
+      "url": "https://github.com/broroeror/gamesir-linux-tools/blob/771b28ae75b0a614a6a7fec9aa606606a27b3b8d/vendors/gamesir/models/g7pro/protocol.py",
+      "sha256": "3e64572c66c657d40556df0917674605eb20baef66ed96138be0874fbbb54f52",
+      "symbols": "parse_input; rumble_packet"
+    },
+    {
+      "file": "g7ctl-0ea4b5223ba2191c88a3c4d1ff8d34f594bfeb1b/pyg7/session.py",
+      "url": "https://github.com/questionablesyntax/g7ctl/blob/0ea4b5223ba2191c88a3c4d1ff8d34f594bfeb1b/pyg7/session.py",
+      "sha256": "9f498b94948126f24c30dbb21bcac3244b5fe6a083377e686368a741216d98ab",
+      "symbols": "read_chunk; read_device_info; read_firmware_version"
+    }
+  ]
+}

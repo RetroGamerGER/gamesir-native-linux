@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: GPL-2.0-only
+[Unit]
+Description=GameSir G7 Pro native alpha session manager
+After=systemd-udevd.service
+Documentation=file:/usr/share/doc/gamesir-native/docs/ALPHA_INSTALLATION.md
+
+[Service]
+Type=simple
+User=root
+UMask=0077
+RuntimeDirectory=gamesir-native
+RuntimeDirectoryMode=0700
+StateDirectory=gamesir-native
+StateDirectoryMode=0700
+ExecStartPre=/usr/bin/modprobe industrialio
+ExecStartPre=/usr/bin/modprobe gs_native bootstrap_mode=1 enable_output=1 persistent_mode=1
+ExecStart=/usr/bin/python -B /usr/lib/gamesir-native/gamesir_native.py daemon
+TimeoutStopSec=90
+# No unbounded crash/reinitialization loop. Failed recovery requires attention.
+Restart=no
+KillSignal=SIGTERM
+KillMode=mixed
+SendSIGKILL=no
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=full
+# sysfs binding writes and the controlled module load above require root.
+# Do not hide /sys or private-map /dev: the manager validates exact devices.
+
+[Install]
+WantedBy=multi-user.target

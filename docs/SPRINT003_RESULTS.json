@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-11T18:00:29.162734+00:00",
+  "phase": "Sprint 003 offline implementation and validation",
+  "hardware_tested": false,
+  "module_loaded_or_installed": false,
+  "usb_nodes_opened": false,
+  "system_or_package_changes": false,
+  "build": {
+    "built": true,
+    "kernel_release": "7.2.9-2-garuda",
+    "module_sha256": "6cf68587aa951d95c84ec8bd30f14dd0a751e034ed10c2865eba208c4cd397d8",
+    "vermagic": "7.2.9-2-garuda SMP preempt mod_unload",
+    "autoload_aliases": [],
+    "warnings": 0,
+    "compiler": "clang version 23.1.1",
+    "header_compiler": "\"clang version 23.1.1, LLD 23.1.1\"",
+    "dependencies": "industrialio",
+    "loaded_or_installed": false,
+    "hardware_access": false,
+    "module": "build/kernel/gs_native.ko",
+    "flags": [
+      "LLVM=1",
+      "W=1",
+      "-Werror"
+    ]
+  },
+  "static_analysis": {
+    "passed": true,
+    "checkpatch_returncode": 0,
+    "checkpatch_ignored": [
+      "CAMELCASE: kernel USB descriptor members"
+    ],
+    "clang_static_analyzer": [
+      {
+        "translation_unit": "gs_native_usb",
+        "returncode": 0,
+        "diagnostics": 0,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_protocol",
+        "returncode": 0,
+        "diagnostics": 0,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_sensor",
+        "returncode": 0,
+        "diagnostics": 0,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_runtime",
+        "returncode": 0,
+        "diagnostics": 0,
+        "passed": true
+      }
+    ],
+    "sparse": "not installed; not executed",
+    "hardware_access": false,
+    "loaded_module": false,
+    "limits": "Static analysis does not model all kernel allocation/refcount/URB/workqueue concurrency semantics"
+  },
+  "tests": {
+    "default_suite": {
+      "passed": true,
+      "python_parser_tests": 44,
+      "tool_parser_vectors": 14,
+      "log": "build/results/sprint003-final-tests.log"
+    },
+    "sensor_contract": {
+      "passed": true,
+      "hardware_access": false,
+      "kernel_build_or_changes": false,
+      "calibrations": "synthetic strict SDL references; experimental accel arithmetic; no device calibration proof",
+      "sanitizers": [
+        "address",
+        "undefined"
+      ],
+      "coverage": [
+        "physical-unit examples",
+        "fractional sensitivity",
+        "signed axis permutation",
+        "bias subtraction",
+        "rounding",
+        "verification gates",
+        "invalid metadata",
+        "overflow",
+        "no partial output",
+        "replaceable rational experimental accel scale",
+        "signed full-range accel",
+        "no gyro fallback"
+      ]
+    },
+    "protocol_state": {
+      "passed": true,
+      "hardware_access": false,
+      "kernel_build_or_changes": false,
+      "sanitizers": [
+        "address",
+        "undefined"
+      ],
+      "coverage": [
+        "independent motor stop",
+        "all 15 channel masks",
+        "exact expiry boundaries",
+        "FF preserves trigger pulses",
+        "atomic invalid requests",
+        "deadline overflow",
+        "FF endpoints and quarter values",
+        "zero motor packet",
+        "incomplete frame rejection"
+      ],
+      "limits": "No live transport, competing writers, mechanical motor test or hardware lifecycle validation"
+    },
+    "runtime": {
+      "passed": true,
+      "hardware_access": false,
+      "sanitizers": [
+        "address",
+        "undefined"
+      ],
+      "actual_runtime_source_tested": "src/gs_runtime.c",
+      "uapi_sizes": {
+        "info": 56,
+        "sample": 48,
+        "pulse": 32
+      },
+      "coverage": "PASS: identity isolation, output/owner gates, finite one-shot sessions, independent pulse deadlines, ABI rejection, fault/suspend/disconnect terminal states",
+      "limits": [
+        "no kernel URB/workqueue execution",
+        "no physical disconnect",
+        "no kernel race/fault injection"
+      ]
+    },
+    "target_fixtures": {
+      "gip_initialization_packets": 3,
+      "passed": true,
+      "hardware_access": false,
+      "packet_cases": 7,
+      "transition_packets": 9,
+      "source_capture_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "scope": "small saved target-only regression selection; no calibration claim"
+    },
+    "kernel_mapping_fixtures": {
+      "passed": true,
+      "hardware_access": false,
+      "method": "actual gsn_pad function compiled with fake input callbacks, independent Python packet reference",
+      "packets": 34,
+      "synthetic_packets": 32,
+      "capture_packets": 0,
+      "limits": "does not execute kernel input core or URB callbacks"
+    },
+    "kernel_mapping_full_capture": {
+      "passed": true,
+      "hardware_access": false,
+      "method": "actual gsn_pad function compiled with fake input callbacks, independent Python packet reference",
+      "packets": 5278,
+      "synthetic_packets": 32,
+      "capture_packets": 5244,
+      "limits": "does not execute kernel input core or URB callbacks"
+    },
+    "full_capture_core": {
+      "passed": true,
+      "hardware_access": false,
+      "runtime_calibration_ready": false,
+      "counts": {
+        "native_mode_policy_accepted": 17448,
+        "x360_input": 1458,
+        "failed_or_truncated_skipped": 14,
+        "gip_initialization_exact_bytes": 21,
+        "input_unknown": 11,
+        "gip_input_basic": 3786,
+        "maintenance_exact_bytes": 521,
+        "experimental_accel_frames_converted": 12204,
+        "gyro_frames_preserved_raw": 12204,
+        "unverified_sensor_groups_blocked": 24408,
+        "gamesir_telemetry": 12204,
+        "gamesir_read_reply": 62,
+        "gamesir_profile_reply": 49,
+        "gamesir_firmware_reply": 48,
+        "motor_exact_bytes": 10,
+        "handshake_exact_bytes": 9
+      }
+    },
+    "experimental_acceleration": {
+      "passed": true,
+      "hardware_access": false,
+      "kernel_build_or_changes": false,
+      "status": "experimental_not_verified_calibration",
+      "profile": "docs/sdl-sensor-calibration.json",
+      "profile_sha256": "a3cf5432ca40da24693d10498d40348df6bf5116380ddcc5b1e32884911a626e",
+      "capture_sha256_verified": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "current_input_sha256_verified": {
+        "original-usbmon8.pcapng": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+        "derived/parser-records.jsonl": "63c928f9347bb3b262197305a2935c7060d9f95309bc690eab6bf34dfa838956",
+        "derived/telemetry-raw.json": "9369e9d956876b75f4113dba7599c27d172b9bcc1faab2b6503d82997365c44c"
+      },
+      "sample_count": 12204,
+      "counts_per_g": {
+        "numerator": 8192,
+        "denominator": 1
+      },
+      "output_unit": "m/s^2 (C integer output: micrometres/s^2)",
+      "axis_order": "wire_A0_A1_A2",
+      "axis_orientation_verified": false,
+      "bias_applied": false,
+      "includes_gravity": true,
+      "max_abs_rounding_error_m_s2": 5.00000000069889e-07,
+      "range_per_wire_axis_m_s2": [
+        [
+          -10.599131,
+          10.432734
+        ],
+        [
+          -1.140837,
+          25.759216
+        ],
+        [
+          -12.37922,
+          6.596026
+        ]
+      ],
+      "quiet_window": {
+        "seconds": [
+          67.03886,
+          73.03886
+        ],
+        "samples": 375,
+        "median_norm_raw_counts": 8215.838484293614,
+        "median_norm_m_s2": 9.835187146811036,
+        "median_norm_g": 1.0029099791275344,
+        "deviation_percent_from_one_g": 0.29099791275344344,
+        "establishes_calibration": false
+      },
+      "gyro_factor": null,
+      "gyro_derived_from_accel": false,
+      "gyro_frames_unchanged": 12204,
+      "strict_unverified_sensor_groups_blocked": 24408,
+      "final_sdl_release": false,
+      "limitations": [
+        "experimental common accel scale",
+        "wire axes only; SDL orientation unresolved",
+        "no bias or temperature correction",
+        "gyro physical factor unresolved"
+      ]
+    },
+    "device_free_sdl": {
+      "passed": true,
+      "cases": 12,
+      "installed_packages": [
+        "sdl3 3.4.18-1",
+        "sdl2-compat 2.32.74-1"
+      ],
+      "method": "installed SDL + synthetic evdev syscall fixture inside device-free Bubblewrap",
+      "scales_are_synthetic_not_g7_calibration": true,
+      "sdl2_compat_uses_sdl3_not_independent_implementations": true,
+      "results": [
+        {
+          "api": "SDL3",
+          "scenario": "iio-only",
+          "passed": true
+        },
+        {
+          "api": "SDL3",
+          "scenario": "matching-uniq",
+          "passed": true
+        },
+        {
+          "api": "SDL3",
+          "scenario": "wrong-uniq",
+          "passed": true
+        },
+        {
+          "api": "SDL3",
+          "scenario": "missing-rz",
+          "passed": true
+        },
+        {
+          "api": "SDL3",
+          "scenario": "zero-resolution",
+          "passed": true
+        },
+        {
+          "api": "SDL3",
+          "scenario": "synthetic-converted",
+          "passed": true
+        },
+        {
+          "api": "SDL2",
+          "scenario": "iio-only",
+          "passed": true
+        },
+        {
+          "api": "SDL2",
+          "scenario": "matching-uniq",
+          "passed": true
+        },
+        {
+          "api": "SDL2",
+          "scenario": "wrong-uniq",
+          "passed": true
+        },
+        {
+          "api": "SDL2",
+          "scenario": "missing-rz",
+          "passed": true
+        },
+        {
+          "api": "SDL2",
+          "scenario": "zero-resolution",
+          "passed": true
+        },
+        {
+          "api": "SDL2",
+          "scenario": "synthetic-converted",
+          "passed": true
+        }
+      ]
+    },
+    "portability": {
+      "passed": true,
+      "method": "independent copy of explicitly staged source files; no .git or .local configuration copied",
+      "default_tests_passed": true,
+      "kernel_build_passed": true,
+      "private_paths_required": false,
+      "hardware_access": false,
+      "log": "build/results/sprint003-portability.log",
+      "binary_reproducibility_claim": false
+    }
+  },
+  "implemented": [
+    "explicit interface-0 and PID-selected single-probe test binding without USB autoload aliases",
+    "separate 100a XInput and 109c GIP/IMU policies",
+    "Linux input gamepad adapter",
+    "six IIO raw channels and atomic host-timestamped sensor snapshot",
+    "replaceable experimental 8192/1 LSB/g acceleration; gyro unchanged",
+    "exclusive private developer ABI with four independent bounded motor channels",
+    "serialized GIP initialization/heartbeat/guide outputs only after explicit enabled session START",
+    "normal zero motor packet; one best-effort stop on fault or teardown; persistent stop-error reporting",
+    "finite sessions, terminal transport faults, disconnect/suspend/reset/shutdown resource paths"
+  ],
+  "unverified_or_not_implemented": [
+    "no live native kernel operation or physical motor/input/IMU validation",
+    "no kernel URB/workqueue race or allocation fault injection",
+    "no physically guaranteed stop after host/link failure",
+    "no firmware identity transition in kernel prototype",
+    "109c handoff and return to 100a must be explicitly agreed before live IMU/motor test",
+    "gyro physical sensitivity, housing axes and bias remain unresolved",
+    "no calibrated evdev sensor or final SDL sensor release",
+    "no standard kernel FF_RUMBLE callback or Steam/Proton impulse-trigger API",
+    "no IIO buffered samples or native Deadband configuration adapter",
+    "no proven simultaneous native input/IMU/rumble runtime or 1000 Hz IMU"
+  ],
+  "decision": {
+    "100a_input": "conditional GO after fresh read-only baseline check and separate approvals for module, binding and input test steps",
+    "109c_imu_motors": "NO-GO for execution until explicit handoff/return path is settled; code prepared offline",
+    "plan": "docs/HARDWARE_TEST_PLAN.md"
+  },
+  "reproduce": [
+    "make test",
+    "make kernel-analyze",
+    "make test-capture",
+    "make test-sdl"
+  ],
+  "source_sha256": {
+    "kernel/Kbuild": "ede9921fcb44c877f1fb1df72389c15a9d1c29ae8930540378d18bc3dde4e113",
+    "kernel/gs_native_usb.c": "6a1f54d536337715c2c806f33603e12805e1034e95dcfcdd06338bab1e02088b",
+    "kernel/gs_protocol.c": "42fb43ef9bbd5ba4aca92bc574449e96584ae199aac5bd14175f6ff2797799c2",
+    "kernel/gs_sensor.c": "21a0139076915c42930b1fac162abbd569b8e9174b47b6b6126a454e83a8f466",
+    "kernel/gs_runtime.c": "fc39657ca5e5b1e0c58d3561950e1f5fce002d6052a415c7690a8a6d46e7eeca",
+    "include/uapi/gs_native.h": "3850573c2da40db92b73816945ef60549b19a24962107bcfc7eb42105ce210e6",
+    "src/gs_protocol.c": "8a4a732fedd9e49c0658ee9b14f3fcd3f2140f9990afd0a8814a92a214523461",
+    "src/gs_protocol.h": "3a0b64d220f497d73b305962cb8f6ca0ae58c95786e56de6f76df72edd768b19",
+    "src/gs_sensor.c": "7da367e58d3b15ac154659e78fe354e21973acc6a032534afbdc94186761c1ea",
+    "src/gs_sensor.h": "5a7cd469283b6878f387a60cb9fa3224ae5b48e457028380290957505bc13616",
+    "src/gs_runtime.c": "0002db1473edc53ede1fdd03b16209f4fdb267b65c6537f56a0ddb93cc7f6d72",
+    "src/gs_runtime.h": "7c5112414a0e58ccd8d922a3f6d724cb45a72c71d2f21817e9e638ac837aacba",
+    "tools/native/gsnative-ctl.c": "872662b4224775007922e7534bb95587955f1b16457b932ff0d10041ec18fef6",
+    "tools/native/preflight.py": "b24d32e937c322fbd41e9374d99af248d73bedbac5e21047e124f5511f019846",
+    "scripts/build_kernel.py": "818dd95ef047f23eb067e6819060ccfaff296ad5feb8321d85dbe60be6f45e37",
+    "scripts/analyze_kernel.py": "9be9ae648f806403bf7c4ed195f6fc8a2a53f8b8f1eafd4ae45c1ab486bc718c",
+    "tests/test_runtime.c": "40ad0dfc912d71daa196917147182ed7780badc9dd334416ebd062f3fb2700cb",
+    "tests/run_runtime_test.py": "30ade528f0b766224f98bf0a26e6be2f91393289d4bb15dfec357b0d575e7326",
+    "tests/check_kernel_mapping.py": "b08f021ece110b2f61a2146756ca1d160a31ed4f4410aecb14b282e4041eb527",
+    "tests/check_capture_core.py": "a310e1511a79d50fe847aa7bfe4a7c64d53698fad938c2267447bd787e211afb",
+    "tests/check_protocol_fixtures.py": "3f7f57c50764a94e5968922f7193f60e6a2d9ffe30f4ce8e59440ec4127781da",
+    "fixtures/sprint002-target.json": "ca6ecab7370948a343e9f4fd03398dcd60992707164aec8b1215c5c7c1c66ccf",
+    "Makefile": "a611963491509b94546038ef8b1cce7418bb2eed1463a6cf3989bcfe5c1d14be"
+  }
+}

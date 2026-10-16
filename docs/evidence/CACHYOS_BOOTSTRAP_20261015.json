@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "kernel": "7.2.9-2-cachyos-deckify",
+  "package": "gamesir-native-dkms 0.1.0.alpha3-3",
+  "loaded_srcversion": "C6818C24711721D136684D5",
+  "kernel_source_sha256": "9be8da48d50efcefd7cbcf793120754e2d7a781afb7417180d09c2e1fb7142fc",
+  "real_hardware": {
+    "resume_calls": 1,
+    "conditional_failure_release_calls": 1,
+    "motor_test": false,
+    "native_input_imu_test_started": false,
+    "source": {"vid": "3537", "pid": "100a", "port": "1-3.2", "bus": 1, "address": 11, "if0_driver": "xpad", "if1_driver": "usbhid"},
+    "bootstrap": {"result": -19, "failed_stage": 2, "stage_name": "GS_BOOT_WAIT_REMOVE", "step": 9, "pending": 0, "transition": 1, "tx_count": 9, "tx_step": 8, "tx_status": 0, "tx_actual": 8, "tx_expected": 8, "handover": 0, "timed_out": false},
+    "kernel_timeline": [
+      {"utc": "2026-10-15T14:06:52.647826+00:00", "monotonic_us": 4198212130, "event": "bootstrap_finished_ENODEV"},
+      {"utc": "2026-10-15T14:06:52.739705+00:00", "monotonic_us": 4198304009, "event": "usb_disconnect_address_11"},
+      {"utc": "2026-10-15T14:06:53.941708+00:00", "monotonic_us": 4199506012, "event": "new_usb_address_12"},
+      {"utc": "2026-10-15T14:06:54.197725+00:00", "monotonic_us": 4199762029, "event": "enumerated_3537_109c"},
+      {"utc": "2026-10-15T14:06:54.271707+00:00", "monotonic_us": 4199836011, "event": "generic_xbox_input_registered"}
+    ],
+    "bootstrap_log_precedes_usb_disconnect_log_us": 91879,
+    "first_transport_error": null,
+    "empty_sysfs_decimal_attribute": "Observed ValueError; attribute path not recorded",
+    "final": {"pid": "109c", "address": 12, "if0_driver": "xpad", "native_bindings": [], "module_refcnt": 0, "service": "active/running", "autostart": "disabled", "paused": true, "phase": "blocked", "returned": false, "release_exit_code": 1, "error": "Unowned new 109c instance; no END attempted", "end_attempted": false, "cleanup_attempted": false, "restored_100a": false}
+  },
+  "synthetic_reproduction": {
+    "method": "Actual extracted adapter functions and existing fake USB harness; ASan/UBSan; product sources unchanged",
+    "cases": [
+      {"injected_error": -32, "path": "RX completion", "result": -19, "failed_stage": 2, "transfers": 9},
+      {"injected_error": -71, "path": "RX completion", "result": -19, "failed_stage": 2, "transfers": 9},
+      {"injected_error": -19, "path": "RX completion", "result": 0, "transfers": 15},
+      {"injected_error": -32, "path": "RX resubmit", "result": -19, "failed_stage": 2, "transfers": 9},
+      {"injected_error": -71, "path": "RX resubmit", "result": -19, "failed_stage": 2, "transfers": 9},
+      {"injected_error": -19, "path": "RX resubmit", "result": 0, "transfers": 15}
+    ],
+    "diagnostic_loss_proven": true,
+    "actual_hardware_RX_status_proven": false,
+    "result_log_sha256": "dc4c02786a9bd3ca400f6f13787d148bda6e54e069e2a94e0a6cb51b749e06b4"
+  },
+  "limits": [
+    "No USB packet capture in this run; full OUT completions are kernel diagnostic evidence, not a new packet-byte capture.",
+    "Synthetic EPIPE/EPROTO reproduce the final hardware signature; the real first transport status is unknown.",
+    "Log order does not establish the earlier electrical link or USB-core state transition time.",
+    "xpad bound the new 109c; no verified return to 100a or normal input-function acceptance.",
+    "No additional hardware/system action after the single failure Release; no fix installed and no push."
+  ]
+}

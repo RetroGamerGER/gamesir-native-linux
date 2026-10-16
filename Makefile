@@ -1,0 +1,109 @@
+# SPDX-License-Identifier: GPL-2.0-only
+PYTHON ?= python
+
+.PHONY: test test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-capture test-sdl test-sdl-buttons analyze-imu manifest kernel kernel-analyze tools test-tools test-hardware-helper test-alpha alpha-source test-steam steam-source
+
+test: test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-tools test-hardware-helper test-alpha test-steam
+
+test-licensing:
+	$(PYTHON) -B tests/test_licensing.py
+
+test-public-readme:
+	$(PYTHON) -B tests/test_public_readme.py
+
+test-alpha:
+	$(PYTHON) -B tests/test_kernel_toolchain.py
+	$(PYTHON) -B tests/test_service_manager.py
+	$(PYTHON) -B tests/test_service_client.py
+	$(PYTHON) -B tests/test_service_haptics.py
+	$(PYTHON) -B tests/test_packaging_alpha.py
+	$(PYTHON) -B tests/test_sdl_mapping.py
+	$(PYTHON) -B tests/test_steam_mapping_audit.py
+	$(PYTHON) -B tests/test_steam_paddle_audit.py
+
+# Offline artifact only; destination must be absent/empty. Never install/load.
+alpha-source: tools
+	$(PYTHON) -B scripts/package_alpha.py source --dest build/alpha-source
+
+# Optional userspace integration only: never start Steam or touch a device.
+test-steam:
+	$(PYTHON) -B tests/test_steam_session_env.py
+	$(PYTHON) -B tests/test_packaging_steam.py
+	$(PYTHON) -B tests/test_packaging_gamescope.py
+
+steam-source:
+	$(PYTHON) -B scripts/package_steam.py source --dest build/steam-source
+
+test-startup:
+	$(PYTHON) -B tests/run_startup_test.py
+	$(PYTHON) -B tests/check_kernel_startup.py
+	$(PYTHON) -B tests/check_kernel_claim.py
+	$(PYTHON) -B tests/check_kernel_ff_lifetime.py
+
+test-hardware-helper:
+	$(PYTHON) -B tests/test_hardware_test_002.py
+	$(PYTHON) -B tests/test_hardware_test_003.py
+	$(PYTHON) -B tests/test_bootstrap_observation.py
+	$(PYTHON) -B tests/check_native_client_output.py
+	$(PYTHON) -B tests/test_native_usb_capture.py
+
+kernel:
+	$(PYTHON) -B scripts/build_kernel.py
+
+kernel-analyze: kernel
+	$(PYTHON) -B scripts/analyze_kernel.py
+
+tools:
+	mkdir -p build
+	clang -std=c11 -Wall -Wextra -Werror -O2 tools/native/gsnative-ctl.c -o build/gsnative-ctl
+
+test-tools: tools
+	build/gsnative-ctl --self-test
+
+test-parser:
+	cd tools/offline && $(PYTHON) -B -m unittest discover -s tests -v
+
+test-sensor:
+	$(PYTHON) -B tests/run_sensor_contract_test.py
+
+test-imu-diagnostic:
+	$(PYTHON) -B tests/test_imu_diagnostic.py
+
+test-imu-stream:
+	$(PYTHON) -B tests/test_imu_stream.py
+	$(PYTHON) -B tests/test_gyro_reference.py
+	$(PYTHON) -B tests/test_iio_buffer_setup.py
+	$(PYTHON) -B tests/test_gyro_worker.py
+	$(PYTHON) -B tests/test_gyro_guided.py
+
+test-iio-buffer:
+	$(PYTHON) -B tests/check_kernel_iio_buffer.py
+
+test-protocol:
+	$(PYTHON) -B tests/run_protocol_state_test.py
+
+test-runtime:
+	$(PYTHON) -B tests/run_runtime_test.py
+	$(PYTHON) -B tests/check_kernel_mapping.py
+	$(PYTHON) -B tests/check_native_motor_output.py
+
+test-fixtures:
+	$(PYTHON) -B tests/check_protocol_fixtures.py
+
+# Optional: private saved files, never live hardware.
+test-capture:
+	$(PYTHON) -B tests/check_capture_core.py
+	$(PYTHON) -B tests/check_kernel_mapping.py --capture
+
+# Device-free synthetic SDL tests; requires installed Bubblewrap/SDL/clang.
+test-sdl: test-sdl-buttons
+	$(PYTHON) -B tests/run_sdl_sensor_test.py
+
+test-sdl-buttons:
+	$(PYTHON) -B tests/run_sdl_buttons_test.py
+
+analyze-imu:
+	$(PYTHON) -B tests/analyze_imu_calibration.py
+
+manifest:
+	$(PYTHON) -B scripts/update_manifest.py

@@ -1,0 +1,276 @@
+{
+  "date": "2026-10-12",
+  "base_commit": "1e17784f5c1259d4e22935f6f0e748205ba5786d",
+  "scope": "Opt-in native kernel bootstrap, per-transition USB object/topology matching, fresh reconnect instances; offline only",
+  "hardware_access": false,
+  "system_changes": false,
+  "module_loaded_or_installed": false,
+  "independent_hardware_start_validated": false,
+  "default_activation": "Disabled. Explicit bootstrap_mode and per-device request required; no autoload aliases.",
+  "reconnect": "Fresh passive 100a instance when USB core assigns the free interface; new explicit request required. Existing xpad owner unchanged.",
+  "previous_hardware_tested_module": {
+    "preserved": true,
+    "path": "build/preserved-modules/b54a2a76a50b997e90f82cb1003a27f1c4f564a90876a03505562df6c4964127/gs_native.ko",
+    "sha256": "b54a2a76a50b997e90f82cb1003a27f1c4f564a90876a03505562df6c4964127"
+  },
+  "build": {
+    "built": true,
+    "kernel_release": "7.2.9-2-garuda",
+    "module_sha256": "d70e3687ce4c1d4eb6af6701490327343932cde381c0b2dab36e2f3fc94c8b51",
+    "vermagic": "7.2.9-2-garuda SMP preempt mod_unload",
+    "autoload_aliases": [],
+    "warnings": 0,
+    "compiler": "clang version 23.1.1",
+    "header_compiler": "\"clang version 23.1.1, LLD 23.1.1\"",
+    "dependencies": "industrialio",
+    "loaded_or_installed": false,
+    "hardware_access": false,
+    "module": "build/kernel/gs_native.ko",
+    "flags": [
+      "LLVM=1",
+      "W=1",
+      "-Werror"
+    ]
+  },
+  "full_regression": {
+    "command": "make test",
+    "exit_status": 0,
+    "log": "build/kernel-startup/regression.log",
+    "sha256": "cb8296c9ea4791a81a5f2140dc7a2b1dfc724d9be44d241d0dad1e1c9ac12983",
+    "report_metadata_refresh": "tests/run_startup_test.py rerun successfully after correcting stale report scope text"
+  },
+  "client": {
+    "passed": true,
+    "hardware_access": false,
+    "synthetic_syscalls": true,
+    "real_client_source": true,
+    "asan_ubsan": true,
+    "cases": [
+      "normal",
+      "deadline",
+      "limit-300",
+      "limit-301",
+      "default-session",
+      "pulse-1000",
+      "pulse-1001",
+      "start-fail",
+      "pulse-fail",
+      "stop-fail",
+      "end-fail"
+    ],
+    "bootstrap_cases": [
+      "bootstrap-normal",
+      "bootstrap-handover",
+      "bootstrap-invalid",
+      "bootstrap-fail"
+    ],
+    "session_limits_seconds": {
+      "client": 300,
+      "kernel": 315,
+      "default_client": 20
+    },
+    "pulse_limits_ms": {
+      "accepted": [
+        400,
+        1000
+      ],
+      "rejected": 1001
+    },
+    "deadline_uses_virtual_time": true,
+    "301_seconds_rejected_before_open": true
+  },
+  "kernel_adapter": {
+    "passed": true,
+    "hardware_access": false,
+    "method": "Actual extracted kernel C functions; synthetic USB tree, enumeration, ownership, workqueue, time and syscalls",
+    "functions": [
+      "gsn_boot_delete",
+      "gsn_now_us",
+      "gsn_now_ms",
+      "gsn_delete",
+      "gsn_sequence",
+      "gsn_fault",
+      "gsn_send",
+      "gsn_stop",
+      "gsn_flush_motors",
+      "gsn_service",
+      "gsn_open",
+      "gsn_release",
+      "gsn_start",
+      "gsn_root",
+      "gsn_boot_route",
+      "gsn_describe",
+      "gsn_boot_cancel_device",
+      "gsn_boot_detach",
+      "gsn_boot_pending",
+      "gsn_boot_connect",
+      "gsn_boot_rx",
+      "gsn_boot_adopt",
+      "gsn_boot_service",
+      "gsn_boot_find",
+      "gsn_boot_handover",
+      "gsn_bootstrap",
+      "gsn_boot_status",
+      "gsn_quiesce"
+    ],
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "coverage": "PASS: 55 actual-kernel adapter scenarios; captured 15-TX bootstrap, arbitrary root/hub ports, handover permission/race, signal/disconnect/deadline/transfer failures, parallel reservation isolation, balanced refs, one-shot runtime sequence",
+    "source_sha256": {
+      "kernel/gs_native_usb.c": "99cbc9c0223d7f6648a062e970842c6da74f0c6f9cc4d1d6db0d3f2bcd09cd64",
+      "src/gs_startup.c": "16902a6f7037e8f9213690a089e2d2fdc01041aee8099b315a963aa4aea595f7",
+      "tests/kernel_startup_fake.c": "3c2e4104654026d9fe7d3de0ed7812c19f6c0b3460ebf6cf7a9a4b8203eaf762",
+      "tests/check_kernel_startup.py": "57d820314ceac648a6211eac7120102bbe75d33b0414df3dcff511940d06c998"
+    },
+    "limits": [
+      "Does not execute Linux USB/input/IIO cores or real kernel locks/URBs.",
+      "Probe allocation/registration is simulated; the actual full module is built and analyzed separately.",
+      "No proof of race freedom, cold-start hardware success or suspend/resume support."
+    ]
+  },
+  "portable_startup": {
+    "passed": true,
+    "hardware_access": false,
+    "system_changes": false,
+    "native_cold_start_hardware_validated": false,
+    "method": "Actual shared C startup state machine; synthetic clock/transport/port ownership. Two recorded segments are joined synthetically, not a new capture.",
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "coverage": "PASS: 15 captured TX packets; 75 per-transfer failures; identity, ownership, pacing, deadlines, cancellation, idle-pad liveness, independent IMU, one-shot sequence handoff, four arbitrary topology tokens, two concurrent dongles, port moves and new reconnect sessions",
+    "source_sha256": {
+      "src/gs_protocol.c": "ec729e0e6d60cad789a4dcbd810c1854fe59005c26c2ea9f6f18b0d84f623c87",
+      "src/gs_runtime.c": "8fb938ac78fd9994927cc50b954f7f1e0f724a6a1901ba62edddba28154ef3d5",
+      "src/gs_startup.c": "16902a6f7037e8f9213690a089e2d2fdc01041aee8099b315a963aa4aea595f7",
+      "tests/test_startup.c": "d34792868106726eecc6721b908830e319a74fadcb468364e7ce38839a4b23c5",
+      "src/gs_startup.h": "df20c4a5178a521386596e74c6beea061cf2f17449d8a817ea60215bc7fa0bbd",
+      "src/gs_protocol.h": "e343a249e35c6b501d7194154edba0dfc32002a18cdd0278f3f02eb7d26fe3a7",
+      "src/gs_runtime.h": "7c5112414a0e58ccd8d922a3f6d724cb45a72c71d2f21817e9e638ac837aacba",
+      "tests/run_startup_test.py": "acef58a035290321e30262c37c1de336d296e1b18de46754187845ea32796dbd",
+      "fixtures/startup-capture.json": "dde1f0dd580d894cd0b8eaacb6547e8a0a8853507e62520ac77f03e192ac8a53"
+    },
+    "limits": [
+      "No live USB or kernel lifecycle executed.",
+      "This shared-core test excludes the kernel coordinator and activation interface; see kernel-startup-test.json for their separate simulation.",
+      "Returned TX intents do not open, claim, write, bind or initialize actual hardware.",
+      "READY marks completed init USB transfers and fresh raw IMU; firmware acknowledgement and gamepad evidence are separate.",
+      "Topology tokens simulate arbitrary root/hub ports; this test does not execute live Linux topology discovery or token allocation.",
+      "Gyroscope scale and physical axes remain uncalibrated."
+    ]
+  },
+  "native_motor_send": {
+    "passed": true,
+    "hardware_access": false,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "method": "Actual gsn_sequence/gsn_fault/gsn_send/gsn_stop/gsn_flush_motors extracted unchanged; own shared C runtime and protocol; synthetic clock/locks/USB",
+    "cases": [
+      "1000-ms LT wire packet",
+      "1000-ms RT wire packet",
+      "1000-ms left-grip wire packet",
+      "1000-ms right-grip wire packet",
+      "500-ms remaining deadline reaches wire",
+      "expiry between flush and send emits zero instead of restarting pulse",
+      "already expired pulse emits zero",
+      "expired session cannot send a new motor packet",
+      "explicit stop emits zero and successful END does not duplicate it",
+      "USB transport error faults runtime and cannot report success",
+      "short USB transfer faults runtime and cannot report success",
+      "failed final stop is retained without retry or false success",
+      "invalid internal send shapes do not reach USB",
+      "clean unexpired state does not resend motor packet",
+      "maintenance and motor packets retain shared sequence",
+      "unbind blocks a new pulse but permits the final zero packet"
+    ],
+    "kernel_source_sha256": "99cbc9c0223d7f6648a062e970842c6da74f0c6f9cc4d1d6db0d3f2bcd09cd64",
+    "extracted_functions_sha256": "fdfcfa5947372ea18eeba0d6134ce32e2c619cf1b34c57a36f7a5f7edbfe3a0a",
+    "source_sha256": {
+      "src/gs_protocol.c": "ec729e0e6d60cad789a4dcbd810c1854fe59005c26c2ea9f6f18b0d84f623c87",
+      "src/gs_runtime.c": "8fb938ac78fd9994927cc50b954f7f1e0f724a6a1901ba62edddba28154ef3d5",
+      "include/uapi/gs_native.h": "bbf87456390e3a3b078464cdb4c6ae2b4b7cd7233a9e38282157e294529557a8"
+    },
+    "limits": [
+      "No real kernel lock scheduling, DMA, USB device, workqueue or concurrent IRQ execution.",
+      "Simulated clock jump covers expiry between flush and the final send gate; host scheduling after that gate is not a hard realtime guarantee.",
+      "USB replacement records requested bytes and injects completion results; no mechanical effect is measured."
+    ]
+  },
+  "static_analysis": {
+    "passed": true,
+    "checkpatch_returncode": 0,
+    "checkpatch_ignored": [
+      "CAMELCASE: kernel USB descriptor members"
+    ],
+    "clang_static_analyzer": [
+      {
+        "translation_unit": "gs_native_usb",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_protocol",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_sensor",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_runtime",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_startup",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      }
+    ],
+    "sparse": "not installed; not executed",
+    "hardware_access": false,
+    "loaded_module": false,
+    "limits": "Static analysis does not model all kernel allocation/refcount/URB/workqueue concurrency semantics"
+  },
+  "source_sha256": {
+    "Makefile": "857acdeeda7e9c164fe19473e3a63e0667d7d2d551159d3ebcdbb21495a5e6af",
+    "include/uapi/gs_native.h": "bbf87456390e3a3b078464cdb4c6ae2b4b7cd7233a9e38282157e294529557a8",
+    "kernel/Kbuild": "f21d59fe9f74b142fcddf85196522fb1254620d153cc95ad824f2ef2232c80a6",
+    "kernel/gs_native_usb.c": "99cbc9c0223d7f6648a062e970842c6da74f0c6f9cc4d1d6db0d3f2bcd09cd64",
+    "kernel/gs_startup.c": "2ef3534bc2d2c8dfadb25e293d6167e66a8be2b75d3c792b64b069b9e92fd23a",
+    "scripts/analyze_kernel.py": "ad8acbc3a118b8fa2519ad2a9e612f82b98be75320d124af6a2e39ced5da15cd",
+    "src/gs_startup.c": "16902a6f7037e8f9213690a089e2d2fdc01041aee8099b315a963aa4aea595f7",
+    "src/gs_startup.h": "df20c4a5178a521386596e74c6beea061cf2f17449d8a817ea60215bc7fa0bbd",
+    "tests/check_kernel_startup.py": "57d820314ceac648a6211eac7120102bbe75d33b0414df3dcff511940d06c998",
+    "tests/check_native_client_output.py": "8b23d4f99b0f8f1d5cc989877f0e0a837a6c58adbb734e81475ddbc2f4d02892",
+    "tests/check_native_motor_output.py": "2e7a34a29abc9dd31ceab65266b719db9c6909120cc05fda00ab66088104ab17",
+    "tests/kernel_startup_fake.c": "3c2e4104654026d9fe7d3de0ed7812c19f6c0b3460ebf6cf7a9a4b8203eaf762",
+    "tests/native_client_fake.c": "ad9897c7d33f507347a603ae75bd5cf617d3b500eefa9aebf474da0cdccf3173",
+    "tests/run_startup_test.py": "acef58a035290321e30262c37c1de336d296e1b18de46754187845ea32796dbd",
+    "tools/native/gsnative-ctl.c": "e05709d62e32823c899f587ffcfd67415db28a9a268ebdb89a0258e76f3d0eff"
+  },
+  "open_items": [
+    "No live cold start, USB core integration, mechanical action or return to xpad executed with this build.",
+    "Synthetic kernel-function tests do not prove real lock scheduling, race freedom, allocation failure handling or USB/input/IIO core behavior.",
+    "Different identical dongles at the same physical port within a pending transition are not authenticated by a verified stable UID.",
+    "Finite runtime retained: default 30 seconds, maximum 315 seconds. Permanent hotplug binding policy, suspend/resume restart and installation remain open.",
+    "No automatic retry or recovery after bootstrap failure; the future hardware run needs a concrete return plan and separate approvals.",
+    "Gyroscope physical scaling and calibrated SDL sensor output remain unresolved."
+  ]
+}

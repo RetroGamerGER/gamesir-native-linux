@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-12",
+  "scope": "offline preparation only; no hardware execution or authorization",
+  "plan": "docs/HARDWARE_TEST_002.md",
+  "phases": "docs/HARDWARE_TEST_002_PHASES.json",
+  "hardware_access": false,
+  "module_loaded": false,
+  "system_or_installed_application_changed": false,
+  "client_max_seconds": 120,
+  "client_default_seconds": 20,
+  "kernel_max_session_ms": 135000,
+  "kernel_default_session_ms": 30000,
+  "max_single_pulse_ms": 400,
+  "one_session_per_binding": true,
+  "offline_validation": {
+    "make_test": {
+      "passed": true,
+      "python_tests": 44,
+      "c_asan_ubsan": true,
+      "mapping": true,
+      "fixtures": true,
+      "client_self_test": true
+    },
+    "extended_deadline_cases": [
+      "120000 ms and 135000 ms expiry",
+      "135001 ms rejection",
+      "400 ms independent pulse expiry",
+      "pulse cannot overrun deadline",
+      "restart denied after expiry"
+    ],
+    "phase_plan_checked": true,
+    "kernel_build": {
+      "built": true,
+      "kernel_release": "7.2.9-2-garuda",
+      "module_sha256": "10bf827f05cdbff4a5389b47e2fb514a69cdbf604010d5d6439f0cf55eddf0ca",
+      "vermagic": "7.2.9-2-garuda SMP preempt mod_unload",
+      "autoload_aliases": [],
+      "warnings": 0,
+      "compiler": "clang version 23.1.1",
+      "header_compiler": "\"clang version 23.1.1, LLD 23.1.1\"",
+      "dependencies": "industrialio",
+      "loaded_or_installed": false,
+      "hardware_access": false,
+      "module": "build/kernel/gs_native.ko",
+      "flags": [
+        "LLVM=1",
+        "W=1",
+        "-Werror"
+      ]
+    },
+    "kernel_static_analysis": {
+      "passed": true,
+      "checkpatch_returncode": 0,
+      "checkpatch_ignored": [
+        "CAMELCASE: kernel USB descriptor members"
+      ],
+      "clang_static_analyzer": [
+        {
+          "translation_unit": "gs_native_usb",
+          "returncode": 0,
+          "diagnostics": 0,
+          "passed": true
+        },
+        {
+          "translation_unit": "gs_protocol",
+          "returncode": 0,
+          "diagnostics": 0,
+          "passed": true
+        },
+        {
+          "translation_unit": "gs_sensor",
+          "returncode": 0,
+          "diagnostics": 0,
+          "passed": true
+        },
+        {
+          "translation_unit": "gs_runtime",
+          "returncode": 0,
+          "diagnostics": 0,
+          "passed": true
+        }
+      ],
+      "sparse": "not installed; not executed",
+      "hardware_access": false,
+      "loaded_module": false,
+      "limits": "Static analysis does not model all kernel allocation/refcount/URB/workqueue concurrency semantics"
+    }
+  },
+  "historical_test001_module": {
+    "source_commit": "4e76ff759595546609db3a708fcf282479e6b453",
+    "preserved_path": "build/module-history/4e76ff7/gs_native.ko",
+    "sha256": "6cf68587aa951d95c84ec8bd30f14dd0a751e034ed10c2865eba208c4cd397d8",
+    "checksum_checked": true
+  },
+  "remaining_before_hardware_approval": [
+    "Offline review of local cues, evdev reader, single-owner sample collection and guarded handover helper",
+    "Fresh system and device preflight",
+    "Explicit approvals including precisely enumerated handover and return actions"
+  ],
+  "native_109c_validated": false,
+  "native_return_109c_to_100a_validated": false,
+  "gyro_si_calibrated": false
+}

@@ -1,0 +1,11 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-only
+# Explicit entrypoint for sessions that do not source Plasma environment hooks.
+# Pass arguments unchanged; no Steam shutdown, restart, profile edits or sudo.
+if [ ! -f /usr/share/gamesir-native-steam/session.sh ] ||
+   [ ! -r /usr/share/gamesir-native-steam/session.sh ]; then
+    printf '%s\n' 'gamesir-native-steam: missing readable session helper' >&2
+    exit 1
+fi
+. /usr/share/gamesir-native-steam/session.sh
+exec /usr/bin/steam "$@"

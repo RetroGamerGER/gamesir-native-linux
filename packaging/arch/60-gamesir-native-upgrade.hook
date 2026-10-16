@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: GPL-2.0-only
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = gamesir-native-dkms
+
+[Action]
+Description = Return GameSir controllers safely before upgrading native driver
+When = PreTransaction
+Exec = /usr/bin/python -B /usr/lib/gamesir-native/prepare_remove.py --upgrade
+AbortOnFail

@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-16",
+  "kind": "coherent_imu_revision5_installation_and_paused_start",
+  "target": "Garuda test host only",
+  "package": {
+    "name": "gamesir-native-dkms",
+    "old_version": "0.1.0.alpha3-3",
+    "installed_version": "0.1.0.alpha3-5",
+    "sha256": "fe2b02bbd7455525a5090bb33751d5d4c98358141526992f09aecfcbc4bc312b",
+    "source_snapshot_commit": "154d056",
+    "transaction_exit": 0,
+    "exact_package_delta": {
+      "removed": [
+        "gamesir-native-dkms 0.1.0.alpha3-3"
+      ],
+      "added": [
+        "gamesir-native-dkms 0.1.0.alpha3-5"
+      ]
+    },
+    "payload_files_verified": 81,
+    "payload_errors": [],
+    "qkk_total_entries": 102,
+    "qkk_altered_entries": 0
+  },
+  "release": {
+    "explicit_release_calls": 1,
+    "returned": true,
+    "paused": true,
+    "leases_empty": true,
+    "actual_pid_after_return": "100a",
+    "if0": "xpad",
+    "if1": "usbhid"
+  },
+  "module": {
+    "version": "0.1.0.alpha3",
+    "srcversion": "71D6C2E25BA80E69BB4818D",
+    "vermagic": "7.2.11-1-garuda SMP preempt mod_unload",
+    "dependencies": [
+      "ff-memless",
+      "industrialio",
+      "kfifo_buf"
+    ],
+    "autoload_aliases": [],
+    "installed_compressed_module_sha256": "aec4a4fb585bbc8f3894ec18492020054dae503d5a7c5c6cf9753c7514111a8a",
+    "actual_dkms_build_exit": 0,
+    "dkms_status": "installed",
+    "dkms_log_sha256": "1147a028e42a5a970bc48fa109b076a94e203d9e53707e0e98cd371eae437b7d",
+    "known_build_warnings": [
+      "warning: the compiler differs from the one used to build the kernel"
+    ],
+    "unexpected_build_diagnostics": [],
+    "loaded_after_explicit_service_start": true
+  },
+  "system_hooks": {
+    "snapper_snapshots": [
+      91,
+      92
+    ],
+    "dkms_clean_deprecation": true,
+    "normal_and_fallback_initramfs_rebuilt": true
+  },
+  "paused_start": {
+    "explicit_service_start_calls": 1,
+    "active_state": "active",
+    "sub_state": "running",
+    "unit_file_state": "enabled",
+    "pid": 51607,
+    "restart_count": 0,
+    "module_parameters": {
+      "bootstrap_mode": true,
+      "enable_output": true,
+      "persistent_mode": true
+    },
+    "kfifo_buf_loaded": true,
+    "paused": true,
+    "leases_empty": true,
+    "no_native_bindings": true,
+    "no_native_iio_instance": true,
+    "target_usb_unchanged_by_start": true,
+    "observed_pid": "100a",
+    "observed_bus": 8,
+    "observed_address": 14,
+    "observed_port": "8-6",
+    "resume_executed": false
+  },
+  "sensor_buffer_enabled": false,
+  "sensor_capture_started": false,
+  "gyro_calibration_verified": false,
+  "sdl_sensor_profile_changed": false,
+  "motor_impulse_tests": false,
+  "firmware_actions": false,
+  "unattended_reboot": false,
+  "remote_host_changed": false,
+  "pushed": false,
+  "private_evidence_directory": ".local/integration/20261016T163456Z-coherent-iio-revision5-install",
+  "evidence_sha256": {
+    "before-release-public.json": "29037dab4e56804a3009d4e2a1d63aaac28c94a8c976e71079d2a9059c28322e",
+    "release.stdout": "09b41f3e54c9333d530d137419ef3f8a2728438a9d87c750be316162146500e3",
+    "return-assessment.json": "1a14e504c7df51d63a3533c2fd0d665a38c540a0fe5fa8d3a4272da51c65317a",
+    "pacman-session.log": "7e8516ebc07fdea080ec93dcf1f2fb9b9d5edebd6781b51fe0dfcd48bb8b1a14",
+    "payload-verification.json": "8866ac6310fa8087eca1532f299dd517a5703ef6d4331a208096faf00a125b90",
+    "postflight-root.stdout": "3b2b3ca95e6f7326c7363ac206a7a77b47a35a3c8c0b753c6d6392a10e22462d",
+    "start-assessment.json": "f5b90c6cbbb2906a03a87e0d2863fc24c5d5a9331151fc170a049b18c5247a2b",
+    "installed-module.json": "1b291547c1777643b6908ecc5eefe06f81d2a4d7b2f5a4fa7345b870c256f48a",
+    "kernel-after.json": "06dba7fdec91779e2577e725dd93aebf34164342af4a4931b481759a674b391d",
+    "service-after.json": "b526ef8f533de8189abd548cb09196f8cb74740a06913533c7372f9e49b63e3a",
+    "FINAL_SHA256SUMS": "a431ef8c31cffef45fdff2d1aa22c624c47e89f1182544c88eaa183255b4f0ef"
+  },
+  "limits": [
+    "Installation and paused start verified; no new gamepad, coherent buffer, motion, motor or suspend/hotplug test.",
+    "Immediate status returned=false after fresh manager start precedes its >=1 second normal observation threshold; no extra release or repair triggered.",
+    "Observed USB port/address/inode are session evidence, not production selection constants.",
+    "Known Clang version mismatch and CLEAN deprecation retained; no blanket warning-free claim.",
+    "Readonly audit initially included archive metadata as installed files, then corrected to 81 usr/ payload entries; no installation retry or system correction."
+  ],
+  "native_runtime_readback": {
+    "utc": "2026-10-16T16:49:29.175450+00:00",
+    "actor_statement": "User reported controller already connected/bound before the planned agent Resume.",
+    "resume_calls_by_codex": 0,
+    "no_redundant_activation": true,
+    "manager_active": true,
+    "paused": false,
+    "exact_own_lease_verified": true,
+    "bootstrap_result": {
+      "source_pid": "100a",
+      "source_address": 16,
+      "runtime_pid": "109c",
+      "runtime_address": 17,
+      "state": 7,
+      "error": 0,
+      "pad": 1,
+      "imu": 1,
+      "handover": 1,
+      "kernel_tokens": [
+        1,
+        2
+      ]
+    },
+    "device_inode": 99051,
+    "iio_inode": 99312,
+    "service_pid": 51607,
+    "service_restarts": 0,
+    "buffer_metadata": {
+      "name": "gamesir_g7pro_raw_experimental",
+      "dev": "235:0",
+      "calibration_status": "experimental=8192/1_LSB/g gyro_raw axes_unverified",
+      "current_timestamp_clock": "monotonic",
+      "buffer/enable": "0",
+      "buffer/length": "128",
+      "buffer/watermark": "1",
+      "buffer_push_errors": "0",
+      "buffer_stream_active": "0"
+    },
+    "all_eight_scan_layouts_verified": true,
+    "all_scan_enables_zero": true,
+    "device_settings_changed": false,
+    "sensor_raw_read": false,
+    "device_node_opened": false,
+    "coherent_buffer_samples_read": 0,
+    "rotation_test_started": false,
+    "private_evidence_directory": ".local/integration/20261016T164923Z-coherent-user-resume-readback",
+    "evidence_sha256": {
+      "assessment.json": "840b7afa12ac78b89432362ad60a23c1087a58e45be5f089712c69e1b983bbc4",
+      "before-public.json": "5c07db5196383a54dd6ac0dcfe2d820cdca9fccd3d6926c636b2f5784ca3c2dd",
+      "after-public.json": "102cbf56fc11f72daf8fa440bb29a7c1e23387a073d66414258b8dc793cb1366",
+      "manager-status.stdout": "a409c0b43e118b94b1350e1ce838859667c184b9e0a8990578e7af29ff1c5ea3",
+      "saved-state.stdout": "a256feaed4e349badba7c295b6874e133b3a592bb5d4596b1717969fe611c36e",
+      "SHA256SUMS": "efd07be8dd40d753dc1bd0dc9836de86039ac3991d8520bb74a369cd1d60971c"
+    },
+    "limits": [
+      "Current registration/ownership and successful bootstrap attestation only, no new functional gameplay or coherent buffer capture.",
+      "Zero push errors with a disabled buffer is not proof of successful sample delivery."
+    ]
+  }
+}

@@ -1,0 +1,870 @@
+{
+  "schema": "gamesir-native-motor-comparison-results-v1",
+  "date": "2026-10-12",
+  "source_commit": "4a415cf",
+  "scope": "One explicitly authorized native 300-second session with manual Deadband bootstrap, twelve separate motor pulses, isolated USB capture and verified return. Offline analysis only after completion.",
+  "controlled_e2e_passed": true,
+  "independent_cold_start_validated": false,
+  "permanent_installation_authorized": false,
+  "module_sha256": "b54a2a76a50b997e90f82cb1003a27f1c4f564a90876a03505562df6c4964127",
+  "kernel": "7.2.9-2-garuda",
+  "evidence": {
+    "run_directory": "build/hardware-tests/002-native-motor-comparison-20261012T175050895176Z-run",
+    "control_directory": "build/hardware-tests/002-native-motor-comparison-20261012T175050895176Z-control",
+    "original_pcapng": {
+      "path": "build/hardware-tests/002-native-motor-comparison-20261012T175050895176Z-run/usb-capture/original-usbmon8.pcapng",
+      "bytes": 1375197976,
+      "sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+      "private_shared_bus": true,
+      "original_unchanged": true
+    },
+    "derived_reports": [
+      {
+        "path": "build/hardware-tests/002-native-motor-comparison-20261012T175050895176Z-run-analysis/compact-target-results-reviewed.json",
+        "sha256": "9d5bfd02146a29d55da832f09c855b59c2b4ca6a3a2dece7b9a1453b2933a431"
+      },
+      {
+        "path": "build/results/native-motor-client-analysis-20261012.json",
+        "sha256": "4e78448b6f2a4a28bb199ede4a357ab43f23ef2579bd40a0f1a011941174c1f2"
+      },
+      {
+        "path": "build/hardware-tests/002-native-motor-comparison-20261012T175050895176Z-run-analysis/supplementary-out-audit.json",
+        "sha256": "e37d4cd911f8a8eb8de0f5f12c2d760356f024f81571239fa73b5157dff4bdde"
+      }
+    ],
+    "native_manifest_sha256": "9738a4d6f6e4e6c0da8e1ca32facb8e4812d88ed6467f454f23087ddbe149530",
+    "original_result_fields_preserved": {
+      "motor_perception_confirmed": false,
+      "xpad_restored": false
+    },
+    "later_confirmation_note": "Later human feedback and return/unload evidence supplement immutable result.json without rewriting it."
+  },
+  "identity": {
+    "vid": "3537",
+    "physical_port": "8-6",
+    "bus": 8,
+    "native_interface": 0,
+    "baseline": {
+      "pid": "100a",
+      "address": 31,
+      "drivers": [
+        "xpad",
+        "usbhid"
+      ]
+    },
+    "native": {
+      "pid": "109c",
+      "address": 32,
+      "interface0_driver": "gs_native"
+    },
+    "return": {
+      "pid": "100a",
+      "address": 33,
+      "drivers": [
+        "xpad",
+        "usbhid"
+      ]
+    },
+    "capture_epochs": [
+      {
+        "id": 0,
+        "bus": 8,
+        "address": 32,
+        "pid": "109c",
+        "start_us": null,
+        "end_us": 1791827894088222
+      },
+      {
+        "id": 1,
+        "bus": 8,
+        "address": 33,
+        "pid": "100a",
+        "start_us": 1791827895701981,
+        "end_us": null
+      }
+    ],
+    "100a_to_109c_before_capture": true
+  },
+  "session": {
+    "start_call_monotonic_ns": 20315521286646,
+    "start_call_utc_estimate": "2026-10-12T17:53:12.570771+00:00",
+    "start_call_utc_basis": "Translated using start_call event UTC minus receipt latency; monotonic deltas are authoritative.",
+    "start_marker_receipt_latency_ms": 15.528743,
+    "session_ready_ack_receipt_monotonic_ns": 20315836155816,
+    "start_to_ready_ack_receipt_seconds": 0.31486917,
+    "run_finished_monotonic_ns": 20615524190566,
+    "start_to_run_finished_seconds": 300.00290392,
+    "quit_command_monotonic_ns": 20615524213509,
+    "start_to_quit_command_seconds": 300.002926863,
+    "end_confirmation_receipt_monotonic_ns": 20615534353460,
+    "end_confirmation_receipt_utc": "2026-10-12T17:58:12.583838+00:00",
+    "start_call_to_end_confirmation_receipt_seconds": 300.013066814,
+    "ready_ack_to_end_confirmation_receipt_seconds": 299.698197644,
+    "end_usb_zero_confirmed_by_client": true,
+    "timing_limit": "START_CALL is captured in client before START ioctl. ACK/END times are recorder receipt times, after ioctl return and stdout polling; exact kernel/mechanical start/stop times are not present here. END receipt bounds the end return from above. A 300 s client deadline counts initialization."
+  },
+  "capture": {
+    "first_packet_utc": "2026-10-12T17:52:55.241242+00:00",
+    "last_packet_utc": "2026-10-12T17:58:42.583220+00:00",
+    "duration_seconds": 347.341978,
+    "all_bus_events": 314799,
+    "target_events": 109687,
+    "truncated_all": 0,
+    "truncated_target": 0,
+    "drops": {
+      "ifrecv": 314799,
+      "ifdrop": 0,
+      "osdrop": null
+    },
+    "sandbox_before_after_passed": true,
+    "host_mounts_namespaces_node_unchanged": true
+  },
+  "motor_commands": {
+    "pulse_commands": 12,
+    "stop_commands": 12,
+    "pulse_acknowledgements": 12,
+    "stop_acknowledgements": 12,
+    "end_acknowledgements": 1,
+    "pulses_per_motor": {
+      "left": 3,
+      "right": 3,
+      "lt": 3,
+      "rt": 3
+    },
+    "requested_percent": 100,
+    "requested_duration_ms": 1000,
+    "stop_ack_to_next_pulse_command_seconds": [
+      5.000810797,
+      5.002989943,
+      46.931083186,
+      5.003273518,
+      5.004257414,
+      46.959851026,
+      5.003242346,
+      5.020597409,
+      46.924112518,
+      5.001822509,
+      5.000154597
+    ],
+    "minimum_stop_ack_to_next_pulse_command_seconds": 5.000154597,
+    "minimum_within_motor_stop_ack_to_next_pulse_command_seconds": 5.000154597,
+    "pulse_command_to_ack_receipt_ms_min": 5.111277,
+    "pulse_command_to_ack_receipt_ms_max": 5.238134,
+    "stop_command_to_ack_receipt_ms_min": 5.128691,
+    "stop_command_to_ack_receipt_ms_max": 26.349909,
+    "pulse_ack_receipt_to_stop_command_seconds_min": 1.00066312,
+    "pulse_ack_receipt_to_stop_command_seconds_max": 1.00936326,
+    "physical_feedback": {
+      "source": "Human confirmation relayed in parent task, after immutable run logs were closed.",
+      "all_12_felt_and_stopped": true,
+      "not_in_original_result_json": true
+    }
+  },
+  "motor_usb": {
+    "starts": 12,
+    "zeros": 24,
+    "all_36_encoder_matches": true,
+    "all_36_successful_complete_13byte_transfers": true,
+    "encoded_duration_ms": {
+      "count": 12,
+      "min": 1000,
+      "median": 1000.0,
+      "p95": 1000,
+      "max": 1000
+    },
+    "first_zero_delay_us": {
+      "count": 12,
+      "min": 999116,
+      "median": 1002398.5,
+      "p95": 1007376,
+      "max": 1007376
+    },
+    "quiet_gap_after_confirmed_stop_us": {
+      "count": 11,
+      "min": 5000194,
+      "median": 5003290,
+      "p95": 46959887,
+      "max": 46959887
+    },
+    "trials": [
+      {
+        "number": 1,
+        "motor": "left_grip",
+        "values_LT_RT_LG_RG": [
+          0,
+          0,
+          100,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 104,
+        "payload_hex": "09006809000f00006400640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 48864,
+        "start_submit_us": 1791827637572173,
+        "start_completion_us": 1791827637572688,
+        "start_submit_native_seconds": 45.001407,
+        "pulse_command_us": 1791827637572153,
+        "pulse_ack_us": 1791827637577391,
+        "stop_command_us": 1791827638586019,
+        "stop_ack_us": 1791827638591248,
+        "first_zero_submit_us": 1791827638575502,
+        "first_zero_completion_us": 1791827638576713,
+        "first_zero_submit_frame": 50397,
+        "first_zero_sequence": 107,
+        "start_to_first_zero_us": 1003329,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          50397,
+          50409
+        ],
+        "explicit_stop_candidate_frames": [
+          50409
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1013857,
+        "next_start_after_stop_ack_us": 5000845,
+        "gamepad_packets_start_to_first_zero": 440,
+        "imu_packets_start_to_first_zero": 62
+      },
+      {
+        "number": 2,
+        "motor": "left_grip",
+        "values_LT_RT_LG_RG": [
+          0,
+          0,
+          100,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 120,
+        "payload_hex": "09007809000f00006400640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 57777,
+        "start_submit_us": 1791827643592093,
+        "start_completion_us": 1791827643592832,
+        "start_submit_native_seconds": 51.021327,
+        "pulse_command_us": 1791827643592059,
+        "pulse_ack_us": 1791827643597225,
+        "stop_command_us": 1791827644597888,
+        "stop_ack_us": 1791827644603112,
+        "first_zero_submit_us": 1791827644593486,
+        "first_zero_completion_us": 1791827644596855,
+        "first_zero_submit_frame": 59307,
+        "first_zero_sequence": 124,
+        "start_to_first_zero_us": 1001393,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          59307,
+          59313
+        ],
+        "explicit_stop_candidate_frames": [
+          59313
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1005887,
+        "next_start_after_stop_ack_us": 5003021,
+        "gamepad_packets_start_to_first_zero": 439,
+        "imu_packets_start_to_first_zero": 62
+      },
+      {
+        "number": 3,
+        "motor": "left_grip",
+        "values_LT_RT_LG_RG": [
+          0,
+          0,
+          100,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 137,
+        "payload_hex": "09008909000f00006400640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 66791,
+        "start_submit_us": 1791827649606133,
+        "start_completion_us": 1791827649608975,
+        "start_submit_native_seconds": 57.035367,
+        "pulse_command_us": 1791827649606102,
+        "pulse_ack_us": 1791827649611270,
+        "stop_command_us": 1791827650613767,
+        "stop_ack_us": 1791827650640117,
+        "first_zero_submit_us": 1791827650613509,
+        "first_zero_completion_us": 1791827650617007,
+        "first_zero_submit_frame": 68231,
+        "first_zero_sequence": 140,
+        "start_to_first_zero_us": 1007376,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          68231,
+          68235
+        ],
+        "explicit_stop_candidate_frames": [
+          68231,
+          68235
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1028847,
+        "next_start_after_stop_ack_us": 46931119,
+        "gamepad_packets_start_to_first_zero": 436,
+        "imu_packets_start_to_first_zero": 63
+      },
+      {
+        "number": 4,
+        "motor": "right_grip",
+        "values_LT_RT_LG_RG": [
+          0,
+          0,
+          0,
+          100
+        ],
+        "expected_single_motor": true,
+        "sequence": 244,
+        "payload_hex": "0900f409000f00000064640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 108133,
+        "start_submit_us": 1791827697571236,
+        "start_completion_us": 1791827697574116,
+        "start_submit_native_seconds": 105.00047,
+        "pulse_command_us": 1791827697571200,
+        "pulse_ack_us": 1791827697576324,
+        "stop_command_us": 1791827698581118,
+        "stop_ack_us": 1791827698586292,
+        "first_zero_submit_us": 1791827698572492,
+        "first_zero_completion_us": 1791827698574141,
+        "first_zero_submit_frame": 109629,
+        "first_zero_sequence": 248,
+        "start_to_first_zero_us": 1001256,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          109629,
+          109639
+        ],
+        "explicit_stop_candidate_frames": [
+          109639
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1009968,
+        "next_start_after_stop_ack_us": 5003290,
+        "gamepad_packets_start_to_first_zero": 438,
+        "imu_packets_start_to_first_zero": 63
+      },
+      {
+        "number": 5,
+        "motor": "right_grip",
+        "values_LT_RT_LG_RG": [
+          0,
+          0,
+          0,
+          100
+        ],
+        "expected_single_motor": true,
+        "sequence": 6,
+        "payload_hex": "09000609000f00000064640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 116921,
+        "start_submit_us": 1791827703589582,
+        "start_completion_us": 1791827703590259,
+        "start_submit_native_seconds": 111.018816,
+        "pulse_command_us": 1791827703589565,
+        "pulse_ack_us": 1791827703594792,
+        "stop_command_us": 1791827704598299,
+        "stop_ack_us": 1791827704603434,
+        "first_zero_submit_us": 1791827704594499,
+        "first_zero_completion_us": 1791827704598293,
+        "first_zero_submit_frame": 118447,
+        "first_zero_sequence": 9,
+        "start_to_first_zero_us": 1004917,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          118447,
+          118451
+        ],
+        "explicit_stop_candidate_frames": [
+          118451
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1008642,
+        "next_start_after_stop_ack_us": 5004288,
+        "gamepad_packets_start_to_first_zero": 440,
+        "imu_packets_start_to_first_zero": 63
+      },
+      {
+        "number": 6,
+        "motor": "right_grip",
+        "values_LT_RT_LG_RG": [
+          0,
+          0,
+          0,
+          100
+        ],
+        "expected_single_motor": true,
+        "sequence": 22,
+        "payload_hex": "09001609000f00000064640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 125873,
+        "start_submit_us": 1791827709607722,
+        "start_completion_us": 1791827709610410,
+        "start_submit_native_seconds": 117.036956,
+        "pulse_command_us": 1791827709607691,
+        "pulse_ack_us": 1791827709612924,
+        "stop_command_us": 1791827710617832,
+        "stop_ack_us": 1791827710622969,
+        "first_zero_submit_us": 1791827710611490,
+        "first_zero_completion_us": 1791827710614436,
+        "first_zero_submit_frame": 127347,
+        "first_zero_sequence": 25,
+        "start_to_first_zero_us": 1003768,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          127347,
+          127355
+        ],
+        "explicit_stop_candidate_frames": [
+          127355
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1010045,
+        "next_start_after_stop_ack_us": 46959887,
+        "gamepad_packets_start_to_first_zero": 439,
+        "imu_packets_start_to_first_zero": 63
+      },
+      {
+        "number": 7,
+        "motor": "left_trigger",
+        "values_LT_RT_LG_RG": [
+          100,
+          0,
+          0,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 130,
+        "payload_hex": "09008209000f64000000640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 164763,
+        "start_submit_us": 1791827757582856,
+        "start_completion_us": 1791827757583648,
+        "start_submit_native_seconds": 165.01209,
+        "pulse_command_us": 1791827757582820,
+        "pulse_ack_us": 1791827757588005,
+        "stop_command_us": 1791827758589995,
+        "stop_ack_us": 1791827758595123,
+        "first_zero_submit_us": 1791827758584490,
+        "first_zero_completion_us": 1791827758587681,
+        "first_zero_submit_frame": 166151,
+        "first_zero_sequence": 133,
+        "start_to_first_zero_us": 1001634,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          166151,
+          166153
+        ],
+        "explicit_stop_candidate_frames": [
+          166153
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1007118,
+        "next_start_after_stop_ack_us": 5003260,
+        "gamepad_packets_start_to_first_zero": 396,
+        "imu_packets_start_to_first_zero": 63
+      },
+      {
+        "number": 8,
+        "motor": "left_trigger",
+        "values_LT_RT_LG_RG": [
+          100,
+          0,
+          0,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 146,
+        "payload_hex": "09009209000f64000000640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 173535,
+        "start_submit_us": 1791827763598383,
+        "start_completion_us": 1791827763599818,
+        "start_submit_native_seconds": 171.027617,
+        "pulse_command_us": 1791827763598366,
+        "pulse_ack_us": 1791827763603526,
+        "stop_command_us": 1791827764607483,
+        "stop_ack_us": 1791827764612779,
+        "first_zero_submit_us": 1791827764597499,
+        "first_zero_completion_us": 1791827764599847,
+        "first_zero_submit_frame": 175049,
+        "first_zero_sequence": 149,
+        "start_to_first_zero_us": 999116,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          175049,
+          175061
+        ],
+        "explicit_stop_candidate_frames": [
+          175061
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1009253,
+        "next_start_after_stop_ack_us": 5020629,
+        "gamepad_packets_start_to_first_zero": 437,
+        "imu_packets_start_to_first_zero": 61
+      },
+      {
+        "number": 9,
+        "motor": "left_trigger",
+        "values_LT_RT_LG_RG": [
+          100,
+          0,
+          0,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 162,
+        "payload_hex": "0900a209000f64000000640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 182467,
+        "start_submit_us": 1791827769633408,
+        "start_completion_us": 1791827769635996,
+        "start_submit_native_seconds": 177.062642,
+        "pulse_command_us": 1791827769633377,
+        "pulse_ack_us": 1791827769638488,
+        "stop_command_us": 1791827770642721,
+        "stop_ack_us": 1791827770647879,
+        "first_zero_submit_us": 1791827770635489,
+        "first_zero_completion_us": 1791827770636029,
+        "first_zero_submit_frame": 183983,
+        "first_zero_sequence": 165,
+        "start_to_first_zero_us": 1002081,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          183983,
+          184024
+        ],
+        "explicit_stop_candidate_frames": [
+          184024
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1009391,
+        "next_start_after_stop_ack_us": 46924128,
+        "gamepad_packets_start_to_first_zero": 438,
+        "imu_packets_start_to_first_zero": 63
+      },
+      {
+        "number": 10,
+        "motor": "right_trigger",
+        "values_LT_RT_LG_RG": [
+          0,
+          100,
+          0,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 15,
+        "payload_hex": "09000f09000f00640000640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 227027,
+        "start_submit_us": 1791827817572007,
+        "start_completion_us": 1791827817573334,
+        "start_submit_native_seconds": 225.001241,
+        "pulse_command_us": 1791827817571991,
+        "pulse_ack_us": 1791827817577158,
+        "stop_command_us": 1791827818579734,
+        "stop_ack_us": 1791827818584948,
+        "first_zero_submit_us": 1791827818576488,
+        "first_zero_completion_us": 1791827818577357,
+        "first_zero_submit_frame": 228473,
+        "first_zero_sequence": 18,
+        "start_to_first_zero_us": 1004481,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          228473,
+          228479
+        ],
+        "explicit_stop_candidate_frames": [
+          228479
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1007790,
+        "next_start_after_stop_ack_us": 5001837,
+        "gamepad_packets_start_to_first_zero": 439,
+        "imu_packets_start_to_first_zero": 63
+      },
+      {
+        "number": 11,
+        "motor": "right_trigger",
+        "values_LT_RT_LG_RG": [
+          0,
+          100,
+          0,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 31,
+        "payload_hex": "09001f09000f00640000640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 236001,
+        "start_submit_us": 1791827823586785,
+        "start_completion_us": 1791827823589495,
+        "start_submit_native_seconds": 231.016019,
+        "pulse_command_us": 1791827823586770,
+        "pulse_ack_us": 1791827823591939,
+        "stop_command_us": 1791827824601302,
+        "stop_ack_us": 1791827824606520,
+        "first_zero_submit_us": 1791827824589501,
+        "first_zero_completion_us": 1791827824593535,
+        "first_zero_submit_frame": 237519,
+        "first_zero_sequence": 34,
+        "start_to_first_zero_us": 1002716,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          237519,
+          237533
+        ],
+        "explicit_stop_candidate_frames": [
+          237533
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1014581,
+        "next_start_after_stop_ack_us": 5000194,
+        "gamepad_packets_start_to_first_zero": 439,
+        "imu_packets_start_to_first_zero": 62
+      },
+      {
+        "number": 12,
+        "motor": "right_trigger",
+        "values_LT_RT_LG_RG": [
+          0,
+          100,
+          0,
+          0
+        ],
+        "expected_single_motor": true,
+        "sequence": 47,
+        "payload_hex": "09002f09000f00640000640000",
+        "encoded_duration_ms": 1000,
+        "valid_transfer": true,
+        "start_submit_frame": 244887,
+        "start_submit_us": 1791827829606714,
+        "start_completion_us": 1791827829609672,
+        "start_submit_native_seconds": 237.035948,
+        "pulse_command_us": 1791827829606674,
+        "pulse_ack_us": 1791827829611850,
+        "stop_command_us": 1791827830616388,
+        "stop_ack_us": 1791827830621521,
+        "first_zero_submit_us": 1791827830607489,
+        "first_zero_completion_us": 1791827830609699,
+        "first_zero_submit_frame": 246423,
+        "first_zero_sequence": 50,
+        "start_to_first_zero_us": 1000775,
+        "zero_transfers_until_next_start": 2,
+        "zero_submit_frames": [
+          246423,
+          246435
+        ],
+        "explicit_stop_candidate_frames": [
+          246435
+        ],
+        "all_zero_transfers_valid": true,
+        "stop_ack_after_pulse_ack_us": 1009671,
+        "next_start_after_stop_ack_us": null,
+        "gamepad_packets_start_to_first_zero": 438,
+        "imu_packets_start_to_first_zero": 62
+      }
+    ]
+  },
+  "native_streams": {
+    "gip_reports": 34125,
+    "imu_reports": 18744,
+    "unknown_reports": 15,
+    "c_python_field_matches": {
+      "gamesir_telemetry": 18744,
+      "input_unknown": 15,
+      "gip_input_basic": 34125
+    },
+    "c_python_issues": [],
+    "imu_channel_order": [
+      "G0",
+      "G1",
+      "G2",
+      "A0",
+      "A1",
+      "A2"
+    ],
+    "imu_raw_min": [
+      -2420,
+      -2334,
+      -3624,
+      -26058,
+      1576,
+      -13592
+    ],
+    "imu_raw_max": [
+      2980,
+      2548,
+      4124,
+      9028,
+      12863,
+      3300
+    ],
+    "host_completion_intervals": {
+      "gamesir_telemetry": {
+        "packets": 18744,
+        "interval_min_us": 1986,
+        "interval_median_us": 16000,
+        "interval_max_us": 34012,
+        "observed_hz_over_report_span": 62.47629701524266
+      },
+      "input_unknown": {
+        "packets": 15,
+        "interval_min_us": 20000551,
+        "interval_median_us": 20184521.5,
+        "interval_max_us": 20892591,
+        "observed_hz_over_report_span": 0.04939223559701242
+      },
+      "gip_input_basic": {
+        "packets": 34125,
+        "interval_min_us": 1792,
+        "interval_median_us": 2000.0,
+        "interval_max_us": 33290801,
+        "observed_hz_over_report_span": 157.84588528910626
+      }
+    },
+    "input_events": 101995,
+    "syn_dropped": 0,
+    "snapshot_rows": 13634,
+    "snapshot_unique_sample_numbers": 13633,
+    "all_12_windows_have_input_and_six_changing_raw_channels": true,
+    "last_info": {
+      "type": "info",
+      "pid": 4252,
+      "state": 1,
+      "error": 0,
+      "output": 1,
+      "session": 1,
+      "pad": 34125,
+      "imu": 18731,
+      "rejected": 15,
+      "accel_num": 8192,
+      "accel_den": 1
+    },
+    "usb_counts_at_last_info": {
+      "gamesir_telemetry": 18731,
+      "input_unknown": 15,
+      "gip_input_basic": 34125
+    }
+  },
+  "out": {
+    "transfers": 697,
+    "init": 3,
+    "heartbeats": 658,
+    "motors": 36,
+    "shared_sequence_wraps": 2,
+    "shared_sequence_issues": [],
+    "all_complete_and_successful": true
+  },
+  "unknown_input": {
+    "count": 15,
+    "pattern": "03 20 SS 04 87 00 00 00",
+    "sequence_min": "1d",
+    "sequence_max": "2b",
+    "usb_status": 0,
+    "length_bytes": 8,
+    "malformed_evidence": false,
+    "meaning": "unknown; not established as status",
+    "explains_rejected_counter": true
+  },
+  "errors": {
+    "native_session_failed_urbs": 0,
+    "target_transition_failures": [
+      {
+        "frame": 19596,
+        "timestamp_us": 1791827592420929,
+        "native_seconds": -0.149837,
+        "epoch": 0,
+        "endpoint": 130,
+        "stage": "C",
+        "status": -2,
+        "inside_native_session": false
+      },
+      {
+        "frame": 19699,
+        "timestamp_us": 1791827592532595,
+        "native_seconds": -0.038171,
+        "epoch": 0,
+        "endpoint": 130,
+        "stage": "C",
+        "status": -108,
+        "inside_native_session": false
+      },
+      {
+        "frame": 297111,
+        "timestamp_us": 1791827894052865,
+        "native_seconds": 301.482099,
+        "epoch": 0,
+        "endpoint": 130,
+        "stage": "C",
+        "status": -108,
+        "inside_native_session": false
+      },
+      {
+        "frame": 298724,
+        "timestamp_us": 1791827895812805,
+        "native_seconds": 303.242039,
+        "epoch": 1,
+        "endpoint": 130,
+        "stage": "C",
+        "status": -2,
+        "inside_native_session": false
+      }
+    ],
+    "native_kernel_warning_count": 0,
+    "before_capture_warning": "xpad unable to receive magic message: -32 on old 100a immediately before disconnect; nonfatal query path identified, causal explanation not established",
+    "after_end_warning": "Previously known HID ignoring exceeding usage max on returned 100a Interface 1"
+  },
+  "user_confirmation": {
+    "all_12_felt_and_ended": true,
+    "text": "Ja, alle zwölf spürbar und jeweils beendet",
+    "normal_kde_function": true,
+    "normal_kde_text": "Ja, normale Funktion"
+  },
+  "return_verification": {
+    "gs_native_unloaded": true,
+    "rmmod_exit_code": 0,
+    "completed_utc": "2026-10-12T18:01:05.610916+00:00",
+    "usbmon_and_industrialio_left_loaded": true,
+    "evidence_directory": "build/hardware-tests/002-native-motor-module-unload-20261012T180059111239Z"
+  },
+  "offline_validation": {
+    "command": "make test",
+    "exit_code": 0,
+    "parser_tests": 44,
+    "hardware_helper_tests": 29,
+    "synthetic_client_cases": 11,
+    "recorder_adapter_tests": 34,
+    "synthetic_kernel_motor_cases": 15,
+    "sensor_protocol_runtime_fixtures_kernelmapping_clientselftest": "passed",
+    "hardware_access": false
+  },
+  "limits": [
+    "Deadband still performs the initial 100a-to-109c transition and is closed during native runtime.",
+    "Earlier unperceived native 400-ms left-grip pulse remains causally unexplained; new run deliberately used 1000 ms.",
+    "Original USB trace includes other devices and stays private; this summary exports target-derived data only.",
+    "Host software and USB timings do not measure exact mechanical vibration duration; perception was confirmed by the human.",
+    "ifdrop is zero; absent osdrop means unknown, not zero.",
+    "IIO/ioctl snapshots are not a full IMU stream; full raw packets are preserved in the capture.",
+    "Gyro sensitivity, physical axes/bias, final SDL sensor output, autonomous startup and general hotplug/duration behavior remain unvalidated.",
+    "Experimental 8192 LSB/g retained independently of unknown gyro sensitivity.",
+    "No new mapping of additional physical buttons is inferred from this motor test.",
+    "First private GIP C comparison used an incorrect enum constant; reviewed derivation corrects it against the existing header without changing original data or driver."
+  ]
+}

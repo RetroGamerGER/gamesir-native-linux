@@ -1,0 +1,190 @@
+{
+  "schema": 1,
+  "origin": "real_saved_target_packets_two_independent_recordings",
+  "join": "Synthetic coordinator join; not a recorded native cold start. No addresses, serials or other-device data.",
+  "sources": [
+    {
+      "role": "transition",
+      "original_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "original_bytes": 1057480824,
+      "link_type": 220,
+      "timestamps": "host usb microseconds relative to first selected submission"
+    },
+    {
+      "role": "native_init",
+      "original_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+      "original_bytes": 1375197976,
+      "link_type": 220,
+      "timestamps": "host usb microseconds relative to first selected submission"
+    }
+  ],
+  "transition": {
+    "packets": [
+      {
+        "submit_frame": 25679,
+        "completion_frame": 25680,
+        "submit_us": 0,
+        "complete_us": 3347,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008006761000000"
+      },
+      {
+        "submit_frame": 25681,
+        "completion_frame": 25682,
+        "submit_us": 23432,
+        "complete_us": 27348,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008000000000000"
+      },
+      {
+        "submit_frame": 25711,
+        "completion_frame": 25712,
+        "submit_us": 47431,
+        "complete_us": 51348,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008006d65000000"
+      },
+      {
+        "submit_frame": 25713,
+        "completion_frame": 25714,
+        "submit_us": 71424,
+        "complete_us": 75349,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008000000000000"
+      },
+      {
+        "submit_frame": 25715,
+        "completion_frame": 25716,
+        "submit_us": 95426,
+        "complete_us": 99349,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008007369000000"
+      },
+      {
+        "submit_frame": 25747,
+        "completion_frame": 25748,
+        "submit_us": 119429,
+        "complete_us": 123350,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008000000000000"
+      },
+      {
+        "submit_frame": 25749,
+        "completion_frame": 25750,
+        "submit_us": 143431,
+        "complete_us": 147351,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008007261000000"
+      },
+      {
+        "submit_frame": 25751,
+        "completion_frame": 25759,
+        "submit_us": 167429,
+        "complete_us": 171351,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008000000000000"
+      },
+      {
+        "submit_frame": 25783,
+        "completion_frame": 25784,
+        "submit_us": 191431,
+        "complete_us": 195353,
+        "length": 8,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0008007070000000"
+      }
+    ],
+    "remove_us": 420050,
+    "add_us": 1939908,
+    "enumeration_boundary_note": "Host clock mapping from saved physical-port events; limited snapshot precision."
+  },
+  "native_init": {
+    "packets": [
+      {
+        "submit_frame": 19735,
+        "completion_frame": 19736,
+        "submit_us": 0,
+        "complete_us": 840,
+        "length": 5,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0520010100"
+      },
+      {
+        "submit_frame": 19756,
+        "completion_frame": 19757,
+        "submit_us": 52717,
+        "complete_us": 52842,
+        "length": 7,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0a200203000114"
+      },
+      {
+        "submit_frame": 19789,
+        "completion_frame": 19790,
+        "submit_us": 103718,
+        "complete_us": 104851,
+        "length": 6,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "062003020100"
+      },
+      {
+        "submit_frame": 19859,
+        "completion_frame": 19862,
+        "submit_us": 155715,
+        "complete_us": 156891,
+        "length": 64,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0f000402f20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "submit_frame": 19953,
+        "completion_frame": 19956,
+        "submit_us": 207719,
+        "complete_us": 208883,
+        "length": 64,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0f000502f20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "submit_frame": 20047,
+        "completion_frame": 20050,
+        "submit_us": 259725,
+        "complete_us": 260885,
+        "length": 64,
+        "endpoint": 2,
+        "status": 0,
+        "data_hex": "0f000602f20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ],
+    "imu_after_settle": {
+      "complete_us": 312897,
+      "data_hex": "1000ae3ce0808080800f00000000000000fffffffffeffddff3d20f3ff00000000590000ffff00ffff00ffff00ffff6e9f755d7f7e7f830f0000000000000000"
+    },
+    "first_gamepad": {
+      "complete_us": 22391401,
+      "data_hex": "20000120000000000f000000000000000000000000000000000000000000000000000000"
+    }
+  }
+}

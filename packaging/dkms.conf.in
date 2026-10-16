@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: GPL-2.0-only
+PACKAGE_NAME="gamesir-native"
+PACKAGE_VERSION="@VERSION@"
+BUILT_MODULE_NAME[0]="gs_native"
+BUILT_MODULE_LOCATION[0]="kernel"
+DEST_MODULE_LOCATION[0]="/updates/dkms"
+AUTOINSTALL="yes"
+# Preserve kernel/../src and kernel/../include; no duplicated protocol core.
+MAKE[0]="python -B \"${dkms_tree}/${PACKAGE_NAME}/${PACKAGE_VERSION}/build/scripts/kernel_toolchain.py\" --headers \"${kernel_source_dir}\" --module-source \"${dkms_tree}/${PACKAGE_NAME}/${PACKAGE_VERSION}/build/kernel\""
+CLEAN="python -B \"${dkms_tree}/${PACKAGE_NAME}/${PACKAGE_VERSION}/build/scripts/kernel_toolchain.py\" --headers \"${kernel_source_dir}\" --module-source \"${dkms_tree}/${PACKAGE_NAME}/${PACKAGE_VERSION}/build/kernel\" --target clean"

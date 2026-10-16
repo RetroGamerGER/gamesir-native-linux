@@ -1,0 +1,461 @@
+{
+  "schema_version": 2,
+  "offline_device_scope": "3537:109c G7 Pro RF; exact PCB revision unknown",
+  "sensor_chip_identified": false,
+  "manufacturer": "STMicroelectronics",
+  "model": null,
+  "marking": null,
+  "active_gyro_full_scale_dps": null,
+  "firmware_preserves_sensor_register_counts_verified": false,
+  "counts_per_degree_per_second": null,
+  "runtime_calibration_ready": false,
+  "deadband_source_commit": "771b28ae75b0a614a6a7fec9aa606606a27b3b8d",
+  "fcc_internal_photos": {
+    "exhibit_id": 8420178,
+    "fcc_id": "2AF9S-G7PRO",
+    "sha256": "0b5c4e0486197af5c9bedb44ca0e96b610e170d42c854bf26f8e1402e29c0fa4",
+    "path": "docs/sensor-evidence/fcc-g7pro-internal-8420178.pdf",
+    "pages_inspected": [
+      1,
+      2,
+      3
+    ],
+    "finding": "No unambiguous readable IMU part marking; exact unit PCB revision not established",
+    "metadata_url": "https://fccid.io/2AF9SG7PRO/Internal-Photos/Internal-photos-8420178",
+    "original_url": "https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=8420178",
+    "original_access_result": "HTTP 403",
+    "mirror_download_url": "https://fccid.io/2AF9SG7PRO/Internal-Photos/Internal-photos-8420178.pdf",
+    "matches_published_sha256": true
+  },
+  "datasheet_counterexamples_not_G7_BOM": [
+    {
+      "model": "BMI270",
+      "manufacturer": "Bosch Sensortec",
+      "revision": "BST-BMI270-DS000-08",
+      "pages": [
+        12,
+        14
+      ],
+      "sha256": "f68ce3c74f011a80bbe4b0279c4abe9609a71a5dcda75a951381d77112e005fb",
+      "url": "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi270-ds000.pdf",
+      "accel_at_4g_counts_per_g": 8192,
+      "gyro_at_2000dps_counts_per_dps": 16.384
+    },
+    {
+      "model": "LSM6DS3TR-C",
+      "manufacturer": "STMicroelectronics",
+      "revision": "DocID030071 Rev 3",
+      "pages": [
+        21
+      ],
+      "url": "https://www.st.com/resource/en/datasheet/lsm6ds3tr-c.pdf",
+      "evidence_access": "Web PDF text and screenshot; direct local download unavailable",
+      "accel_at_4g_mg_per_lsb": 0.122,
+      "gyro_at_2000dps_mdps_per_lsb": 70
+    }
+  ],
+  "next_required_evidence": [
+    "Complete compact operand/comparison/memory and architectural slot/ABI decoding, then WHO_AM_I -> ID compare -> sensor selection/init -> last effective CTRL2_G -> USB scaling. Expected firmware IDs must remain separate from actual chip ID.",
+    "Exact-variant primary register definitions for LSM6DS3TR-C/LSM6DSO, including optional 125 dps and remaining fields; local Linux expected IDs and four normal gains already verified",
+    "Proof of sensor-register to USB-report scaling, or an independently calibrated angular reference; neither implied by photo identification",
+    "Original photo/QR/vendor reply with PCB context for independent archival review of the accepted user-confirmed identification"
+  ],
+  "g7ctl_channel_identification_is_not_chip_identification": {
+    "commit": "0ea4b5223ba2191c88a3c4d1ff8d34f594bfeb1b",
+    "sha256": "ea87fe0bf0cc8a12be35e722f28b06b564f671c52dcea5951304e74c4d3c3d3b",
+    "line_range": [
+      1073,
+      1126
+    ],
+    "url": "https://github.com/questionablesyntax/g7ctl/blob/0ea4b5223ba2191c88a3c4d1ff8d34f594bfeb1b/PROTOCOL.md"
+  },
+  "ordering_code_reported": "LSM6DSOTR",
+  "identification_status": "reported_photo_identification_exact_variant_reopened_by_user",
+  "independent_identification_verified_by_this_analysis": false,
+  "identification_evidence": {
+    "date": "2026-10-16",
+    "kind": "Direct user-confirmed identification by DigiKey from a photograph of the user G7 Pro",
+    "direct_user_confirmation": "DigiKey hat den Typ zum G7-Pro-Foto bestätigt",
+    "pasted_report_sha256": "1ede922ec0c36adfdd32a7a8084e7feef933c402d0fbe152f19bf1c245737a86",
+    "pasted_report_bytes": 6360,
+    "pasted_report_contains_ai_summaries": true,
+    "original_photo_reviewed_locally": false,
+    "original_vendor_message_reviewed_locally": false,
+    "original_qr_payload_available": false,
+    "footprint_match": "Reported in pasted material, not independently measured here",
+    "scope": "Reported controller identification; exact PCB revision and other G7 Pro/ZZZ units are not established",
+    "primary_datasheet_present_locally": false,
+    "online_verification_performed": false
+  },
+  "supply_chain_alias_reported": {
+    "name": "Samsung1209-002578",
+    "source": "Pasted material",
+    "independently_verified_cross_reference": false,
+    "not_a_device_read_or_gyro_setting": true
+  },
+  "reported_reference_values_not_runtime_calibration": {
+    "source": "Pasted AI-assisted report; numerical inversions checked offline, original ST specification not locally verified",
+    "gyro_sensitivities": [
+      {
+        "full_scale_plus_minus_dps": 125,
+        "reported_mdps_per_lsb": 4.375,
+        "reciprocal_lsb_per_dps_numerator": 1600,
+        "reciprocal_lsb_per_dps_denominator": 7,
+        "reciprocal_lsb_per_dps": 228.57142857142858,
+        "selected": false,
+        "gain_matches_local_linux_reference": false,
+        "range_label_source": "Reported table; local Linux binary stores gains, not nominal range labels"
+      },
+      {
+        "full_scale_plus_minus_dps": 250,
+        "reported_mdps_per_lsb": 8.75,
+        "reciprocal_lsb_per_dps_numerator": 800,
+        "reciprocal_lsb_per_dps_denominator": 7,
+        "reciprocal_lsb_per_dps": 114.28571428571429,
+        "selected": false,
+        "gain_matches_local_linux_reference": true,
+        "range_label_source": "Reported table; local Linux binary stores gains, not nominal range labels"
+      },
+      {
+        "full_scale_plus_minus_dps": 500,
+        "reported_mdps_per_lsb": 17.5,
+        "reciprocal_lsb_per_dps_numerator": 400,
+        "reciprocal_lsb_per_dps_denominator": 7,
+        "reciprocal_lsb_per_dps": 57.142857142857146,
+        "selected": false,
+        "gain_matches_local_linux_reference": true,
+        "range_label_source": "Reported table; local Linux binary stores gains, not nominal range labels"
+      },
+      {
+        "full_scale_plus_minus_dps": 1000,
+        "reported_mdps_per_lsb": 35.0,
+        "reciprocal_lsb_per_dps_numerator": 200,
+        "reciprocal_lsb_per_dps_denominator": 7,
+        "reciprocal_lsb_per_dps": 28.571428571428573,
+        "selected": false,
+        "gain_matches_local_linux_reference": true,
+        "range_label_source": "Reported table; local Linux binary stores gains, not nominal range labels"
+      },
+      {
+        "full_scale_plus_minus_dps": 2000,
+        "reported_mdps_per_lsb": 70.0,
+        "reciprocal_lsb_per_dps_numerator": 100,
+        "reciprocal_lsb_per_dps_denominator": 7,
+        "reciprocal_lsb_per_dps": 14.285714285714286,
+        "selected": false,
+        "gain_matches_local_linux_reference": true,
+        "range_label_source": "Reported table; local Linux binary stores gains, not nominal range labels"
+      }
+    ],
+    "accel_reported_full_scale_g": 4,
+    "accel_reported_mg_per_lsb": 0.122,
+    "implied_accel_lsb_per_g": 8196.72131147541,
+    "difference_from_experimental_8192_percent": 0.057633196721311473,
+    "gyro_range_in_device_read": false,
+    "firmware_count_preservation_proven": false,
+    "runtime_or_sdl_release": false,
+    "local_cross_check": "Four gains 8.75/17.5/35/70 mdps per LSB independently match local Linux-ST gain integers and matching IIO unit macro. 125 mode and active GameSir setting unverified."
+  },
+  "register_hints_not_hardware_commands": {
+    "source": "Local stored Linux in-tree st_lsm6dsx binary, BTF/relocations and matching headers; not a GameSir read, original ST datasheet or hardware command",
+    "WHO_AM_I": {
+      "address_reported": "0x0f",
+      "value_reported": "0x6c",
+      "read_from_device": false,
+      "primary_reference_verified_here": true,
+      "verification_scope": "Linux sensor settings entry and regmap_read code; value 0x6c also used by LSM6DSOX"
+    },
+    "CTRL2_G": {
+      "name_reported": true,
+      "address_verified_here": "0x11",
+      "active_value": null,
+      "read_from_device": false,
+      "full_scale_mask_verified_in_linux_reference": "0x0c",
+      "masked_values_verified_in_linux_reference": [
+        "0x00",
+        "0x04",
+        "0x08",
+        "0x0c"
+      ],
+      "optional_125dps_encoding_verified": false,
+      "other_register_fields_verified": false,
+      "firmware_write_site_verified": false
+    }
+  },
+  "local_linux_reference": {
+    "kind": "Stored in-tree ST driver binary, statically inspected without loading/execution",
+    "kernel_module_version": "7.2.10-1-garuda",
+    "module_path_relative_to_kernel_tree": "kernel/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.ko.zst",
+    "compressed_bytes": 30350,
+    "compressed_sha256": "0cf341a571f830d6c6bc59ee322acac7d7e566e962db7ceadc87a7fb006a72b9",
+    "elf_bytes": 144392,
+    "elf_sha256": "cc460b79659ff53a6fd69db2444f67fe0de87bf0ace5feb3da3648934d2b6669",
+    "modinfo": {
+      "name": "st_lsm6dsx",
+      "description": "STMicroelectronics st_lsm6dsx driver",
+      "intree": true,
+      "license": "GPL v2",
+      "srcversion": "A51C0604930E9B2FC16307F",
+      "vermagic": "7.2.10-1-garuda SMP preempt mod_unload"
+    },
+    "settings_layout_method": "ELF symbol/relocation tables; struct offsets from split module BTF with matching stored vmlinux; probe name formats independently distinguish gyro index 0 versus accel index 1",
+    "settings_struct_bytes": 1200,
+    "settings_symbol_rodata_offset": "0x600",
+    "lsm6dso_group": 4,
+    "lsm6dso_id_rodata_offset": "0x1910",
+    "gyro_fs_table_file_offset": "0x7ee0",
+    "gyro_gain_integers_nanoradians_per_second_per_lsb": [
+      152716,
+      305432,
+      610865,
+      1221729
+    ],
+    "code_evidence": {
+      "coordinate_system": "Section .text offsets in relocatable ELF; .text file offset 0x220, not PE RVAs",
+      "who_am_i": {
+        "register_immediate_offset": "0x927",
+        "register_address": "0x0f",
+        "regmap_read_relocation_offset": "0x92d",
+        "expected_value_from_lsm6dso_settings": "0x6c",
+        "lsm6dso_and_lsm6dsox_share_value": true
+      },
+      "sensor_index0": {
+        "name_format_rodata_offset": "0x20b",
+        "name_format": "%s_gyro",
+        "initial_gain_settings_offset": "0x3a4"
+      },
+      "sensor_index1": {
+        "name_format_rodata_offset": "0x357",
+        "name_format": "%s_accel",
+        "initial_gain_settings_offset": "0x3cc"
+      },
+      "gain_format": {
+        "read_raw_scale_case_offset": "0x1b34",
+        "integer_part": 0,
+        "fractional_gain_offset_in_sensor": "0x30",
+        "return_format": 3,
+        "matching_header_format": "IIO_VAL_INT_PLUS_NANO",
+        "gyro_unit": "rad/s per LSB"
+      },
+      "write_scale": {
+        "table_offset_in_settings": "0x3a0 +40*sensor_index",
+        "gain_match_offset": "0x1d20",
+        "value_load_offset": "0x1dad",
+        "mask_load_offset": "0x1db1",
+        "mask_ctz_offset": "0x1db6",
+        "shift_offset": "0x1dbb",
+        "and_mask_offset": "0x1dbd",
+        "register_address_load_offset": "0x1dc0",
+        "regmap_update_bits_base_relocation_offset": "0x1ded"
+      }
+    },
+    "bounded_source_intervals": [
+      {
+        "label": "lsm6dso_name",
+        "file_offset": "0x6567",
+        "bytes": 8,
+        "sha256": "1d17e26cee905098fc8d875c404f72f75ffb340264f169806f80de93f266fc55",
+        "kind": "rodata"
+      },
+      {
+        "label": "lsm6dso_id_entry",
+        "file_offset": "0x7b90",
+        "bytes": 24,
+        "sha256": "b0c0fb64b1d1bbea7a8718704a3f56942c49b0d3c02aba4e7860cc22268f01c8",
+        "kind": "rodata with unresolved name relocation"
+      },
+      {
+        "label": "gyro_fs_table",
+        "file_offset": "0x7ee0",
+        "bytes": 40,
+        "sha256": "bb2de9ba66e2346e9ae71c20eff0c07a09383f14706cbcb951b8e6a2fe13a3d1",
+        "kind": "rodata"
+      },
+      {
+        "label": "accel_fs_table",
+        "file_offset": "0x7f08",
+        "bytes": 40,
+        "sha256": "f5a72e5b85b620cf02574b91005618d7091cb5e905a4ed7e7c629b8bc8997dee",
+        "kind": "rodata"
+      },
+      {
+        "label": "probe",
+        "file_offset": "0x760",
+        "bytes": 3824,
+        "sha256": "b9316ffbfe975c0db9d977f9903e82b6aba626bc48ee0235bac6a3a46d8b5ba6",
+        "kind": "text; relocations required"
+      },
+      {
+        "label": "read_raw",
+        "file_offset": "0x1ce0",
+        "bytes": 436,
+        "sha256": "f16bbf69530d86c4545b6c653c66d425fb6628d421cff53ee97ca9af16eab2c4",
+        "kind": "text; relocations required"
+      },
+      {
+        "label": "write_raw",
+        "file_offset": "0x1eb0",
+        "bytes": 449,
+        "sha256": "cfb59b7ffa10df64a63564084a86641a2367a28cd045e8b8b78285f2ea410d3a",
+        "kind": "text; relocations required"
+      }
+    ],
+    "matching_headers": [
+      {
+        "relative_to_matching_build_tree": "include/linux/iio/iio.h",
+        "sha256": "67b733bb6ecb54a0241d75c8c58d10d06eb92369f9e4efb95163120e367754c5",
+        "relevant_lines": [
+          1108,
+          1125
+        ]
+      },
+      {
+        "relative_to_matching_build_tree": "include/linux/iio/types.h",
+        "sha256": "a772ff64228d4a39cdadb5e7371ad02a4920cd0dcd23bb18be5ef7e9fb85033a",
+        "relevant_lines": [
+          29
+        ]
+      },
+      {
+        "relative_to_matching_build_tree": "include/uapi/linux/iio/types.h",
+        "sha256": "175f6f2df3302495ed63ab916821d4fee6dbad47fedfbee8153929a0e36f4d49",
+        "relevant_lines": [
+          19
+        ]
+      }
+    ],
+    "private_evidence_directory": ".local/research/20261016-lsm6dso-ctrl2g/reference/",
+    "private_evidence_summary_sha256": "e35e0d11962de8624a1b7bc7dd467fc053ee3812ad9a2b946c1feb614151ac5e",
+    "limits": [
+      "Reference describes Linux st_lsm6dsx configuration, NOT the GameSir firmware active state.",
+      "Four gains independently match 8.75/17.5/35/70 mdps per LSB with matching IIO_DEGREE_TO_RAD macro. Their nominal range labels originate in the reported table, not range labels encoded in the binary.",
+      "The four-entry Linux table does not verify the optional 125 dps encoding, exclude 125 dps, or decode other CTRL2_G fields.",
+      "No local original ST LSM6DSO datasheet, sensor register read or USB count-preservation proof."
+    ]
+  },
+  "firmware_ctrl2g_followup": {
+    "date": "2026-10-16",
+    "source_ufw_files_verified": 12,
+    "flash_payloads_verified": 48,
+    "controller_dv_payloads": 24,
+    "dongle_dg_payloads_as_comparison": 24,
+    "stored_app_content_crcs_pass": 48,
+    "app_metadata_crcs_pass": 48,
+    "full_class_normalized_body_pairs_match": 24,
+    "prior_evidence_retained": true,
+    "search_views": [
+      "stored app body",
+      "class-normalized app body, not verified plaintext",
+      "outer-decoded prefix, not verified machine code"
+    ],
+    "text_anchors": [
+      "lsm6dso",
+      "ctrl2_g",
+      "who_am_i",
+      "gyro_fs",
+      "gyroscope"
+    ],
+    "text_encodings": [
+      "ascii",
+      "utf-16le",
+      "utf-16be"
+    ],
+    "text_hits": 0,
+    "candidate_table_layouts": "Three register,value tuples for 0x10/0x11/0x12; widths 1/2/4, both endiannesses for multi-byte, values limited to byte range",
+    "controller_candidate_table_hits_stored": 8,
+    "controller_candidate_table_hits_normalized": 16,
+    "candidate_table_interpretation": "Two repeated byte sequences in WFF/ZZZ banks and class variants; unassigned without decoded code and xrefs. Not independent initialization observations.",
+    "short_pair_interpretation": "All four 0x0c-masked classes occur after arbitrary 0x11 bytes in both device classes and all scanned views. Neither 0f6c pairs nor table candidates prove register access.",
+    "structured_header_candidates": 36,
+    "structured_header_crc_matches": 0,
+    "structured_span_crc_matches": 0,
+    "structured_probe_scope": "Normalized DV NoKey body offsets 0x20/0x40/0x60, even header lengths 4..32 with CRC16 init 0, field+4/+8 span hypotheses at origins 0/32/64/128, field 0 or 2 as CRC, stored and normalized bounded views. No general format exclusion.",
+    "sensor_initialization_routine_verified": false,
+    "active_gyro_full_scale_dps": null,
+    "active_ctrl2_g_value": null,
+    "firmware_count_preservation_proven": false,
+    "runtime_calibration_changed": false,
+    "network_hardware_driver_actions": false,
+    "remaining_blocker": "Inner application structure/body decode and CRC coverage, then last effective sensor configuration and raw sensor-to-USB dataflow",
+    "private_evidence_directory": ".local/research/20261016-lsm6dso-ctrl2g/",
+    "private_evidence_hashes": {
+      "scan_ctrl2g.py": "b9fef5853b20f771b81c383160fe39de3bbc93acb2be56485b93f2da4570bb09",
+      "firmware-register-anchor-scan.json": "9f16418b2c3e8cf8bd41298b8c22f45e814d91508f378590ea4e0bdeaf21442b",
+      "structured-header-followup.json": "de133dd8b31b3e7e98c8e2df88af70794efc957e4e3f628a15a0d98a7bd07940",
+      "scan-summary.json": "d14ae1718042969e0252f7e92086edb20adc438ec0424f6df8fb8f1839a6046c"
+    },
+    "verification": {
+      "passed": true,
+      "linux_gain_and_field_pairs_verified": 4,
+      "source_ufw_hashes_verified": 12,
+      "flash_hashes_verified": 48,
+      "independent_regex_views_verified": 144,
+      "normalized_body_pairs_verified": 24,
+      "old_evidence_files_unchanged": 709,
+      "sdl_calibration_profile_sha256_unchanged": "a3cf5432ca40da24693d10498d40348df6bf5116380ddcc5b1e32884911a626e",
+      "active_gyro_range_dps": null,
+      "gyro_factor": null,
+      "hardware_network_driver_actions": false,
+      "private_verifier_sha256": "f6690169f0c574c0e78d5593e53c0a55a9e5cc7d6dc7add6090b59261437d2b9",
+      "private_verification_report_sha256": "6110aa77a824c6284a13170decb9e9964d9e33dfbfcbd6353d195d4ef4a9bc9a"
+    },
+    "historical_scope_note": "First register-anchor pass. Its inner-body decode blocker is now solved for app.bin/cfg_tool.bin; see inner_app_structure_followup. Original findings retained."
+  },
+  "inner_app_structure_followup": {
+    "date": "2026-10-16",
+    "application_file_decode_crc_validated": true,
+    "inner_header_crcs_verified": 288,
+    "inner_area_crcs_verified": 48,
+    "file_crcs_verified": 96,
+    "compiled_sensor_names_not_live_identification": [
+      "LSM6DS3TR",
+      "QMI8658"
+    ],
+    "external_lsm6dso_photo_identification_unchanged": true,
+    "instruction_set_verified": false,
+    "sensor_initialization_routine_verified": false,
+    "active_ctrl2_g_value": null,
+    "active_gyro_full_scale_dps": null,
+    "gyro_factor": null,
+    "runtime_calibration_changed": false,
+    "details": "docs/nexus-source-manifest.json:inner_app_structure_20261016",
+    "report": "docs/GAMESIR_NEXUS_RESEARCH.md",
+    "private_verification_sha256": "6232cc1671c8bcca5c9830c9d7bd9c418cb8f24d72b672a8cb95f3921f1e95e1",
+    "remaining_blocker": "Verified MCU instruction encoding/static decoder, then actual sensor selection and initialization, last effective CTRL2_G setting including reconfiguration, then sensor-register to USB dataflow",
+    "historical_scope_note": "Earlier structure pass preserved the original photo report. Exact-model status is now reopened in exact_variant_status_update; not a claimed physical sensor replacement."
+  },
+  "reported_model": "LSM6DSO",
+  "manufacturer_status": "STMicroelectronics reported by external photo identification; no independent actual-unit chip ID read",
+  "exact_variant_status_update": {
+    "date": "2026-10-16",
+    "user_hypothesis": "DigiKey may have identified the family correctly but the wrong exact variant",
+    "user_package_observation": "User says both chips look identical; original images/markings not independently reviewed here",
+    "original_vendor_report_preserved": true,
+    "vendor_report_proven_wrong": false,
+    "lsm6ds3tr_c_installed_verified": false,
+    "actual_unit_who_am_i_read": false,
+    "generic_multi_variant_st_driver": "Plausible hypothesis, unproven",
+    "source_of_expected_ids": "Stored Linux in-tree driver, not a GameSir observation",
+    "reference": "docs/nexus-source-manifest.json:mcu_sensor_followup_20261016"
+  },
+  "mcu_instruction_followup": {
+    "date": "2026-10-16",
+    "limited_empirical_forms_corroborated": 3,
+    "complete_mcu_isa_verified": false,
+    "known_good_literal_transfer_checks": 175,
+    "reader_refusal_controls_passed": 8,
+    "firmware_who_read_verified": false,
+    "firmware_id_compare_verified": false,
+    "ctrl2_g_write_site_verified": false,
+    "active_ctrl2_g_value": null,
+    "active_gyro_full_scale_dps": null,
+    "gyro_factor": null,
+    "runtime_calibration_changed": false,
+    "details": "docs/nexus-source-manifest.json:mcu_sensor_followup_20261016",
+    "private_evidence_hashes": {
+      "main/validated-patterns.json": "ed6fcf1fb1cc2a3bb9da8871643bb87b7f38edea664b6e63923cc0deb05a884a",
+      "main/local-who-reference.json": "57ceef691a92eed61cbe09b5959a40c6a27256ddcb8ca8dd60f80c019417887a",
+      "empirical-review/who-id-findings.json": "b6f8c2e6e02284a9075b6569bddd7709773271ce5e5dbc017a26748517bc3fe0"
+    }
+  }
+}

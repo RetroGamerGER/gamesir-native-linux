@@ -1,0 +1,27 @@
+{
+  "date_utc": "2026-10-12T17:40:23.892443+00:00",
+  "baseline_commit": "4955a15607339109d6ad32839f2352b5af5e7238",
+  "problem": "The adapter incorrectly required dumpcap GID 0; the installed package has a separate capture group.",
+  "fix": "Require root UID; accept a valid explicitly approved group from fresh metadata. Keep the full runtime metadata equality check.",
+  "system_permissions_changed": false,
+  "recording_started": false,
+  "module_or_binding_changed": false,
+  "validation": {
+    "command": "make test-hardware-helper",
+    "exit_status": 0,
+    "helper_tests": 29,
+    "client_cases": 11,
+    "recorder_tests": 34,
+    "synthetic_only": true
+  },
+  "sha256": {
+    "tools/native/native_usb_capture.py": "7b8f11e75428f6e6f96b47ce2df596eed934a2d2663be167fde12bbf91ba698d",
+    "tests/test_native_usb_capture.py": "a2baefc30c547d2515a8fcb0bba26869ff550efac4264aa1334ed6aa75b14c94",
+    "docs/NATIVE_MOTOR_COMPARISON_MANIFEST_TEMPLATE.json": "5c9f29d935f3715ac2e22677d65661c024a2b6d963fe934f047607df36152345"
+  },
+  "local_log": {
+    "path": "build/native-motor-metadata-fix-tests.log",
+    "sha256": "1929d45c257514c54b97acdc22e5983d74c6a350b22e57a4833410ed3c16df89"
+  },
+  "limits": "The original preparation report remains a historical record of 4955a15 sources; this follow-up pins the corrected adapter. Fresh privileged readcheck and separate hardware action approval still pending."
+}

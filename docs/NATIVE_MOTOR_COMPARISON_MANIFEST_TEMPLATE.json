@@ -1,0 +1,45 @@
+{
+  "status": "OFFLINE_TEMPLATE_NOT_EXECUTABLE_NOT_HARDWARE_AUTHORIZATION",
+  "instructions": [
+    "Copy into a new private run directory only after explicit live precheck authorization.",
+    "All null values require fresh read-only evidence and human approval; never reuse a historic device address or cursor.",
+    "Recheck every listed source and build hash against the actual approved build.",
+    "The module srcversion below describes the offline-built file, not a currently loaded module.",
+    "dumpcap_file_metadata must be read freshly including exact mode, owner, SHA256 and capability xattr (null only if absent)."
+  ],
+  "scope": "native-motor-comparison-300-handover-twelve-pulses-capture-end-only",
+  "variant": "motor-comparison-300",
+  "plan": "docs/native-motor-comparison-plan.json",
+  "session_seconds": 300,
+  "target": {
+    "port": "8-6",
+    "busnum": "8",
+    "devnum": null,
+    "devpath": "6"
+  },
+  "journal_cursor": null,
+  "module_srcversion": "D9E7540C9D759A9B4F9F58F",
+  "sha256": {
+    "build/gsnative-ctl": "33550f6afd5acbe96915d558f28c8cc1e4f2fff629e0c334e7a0dcb85be2ada6",
+    "build/kernel/gs_native.ko": "b54a2a76a50b997e90f82cb1003a27f1c4f564a90876a03505562df6c4964127",
+    "docs/native-motor-comparison-plan.json": "561ee8c419af2cd9214989c03f21e0584745cfad3d27e4ce1c589f18316a595c",
+    "tools/native/hardware_test_002.py": "43837109d2e41035324dd738a0862840adc468157dfd10831a37edddcc3b0375",
+    "tools/native/preflight.py": "3c9957acc5fc9baf142ca7ba68b3764b72cbcd4ba2b9806332e8172319647711",
+    "tools/native/native_usb_capture.py": "7b8f11e75428f6e6f96b47ce2df596eed934a2d2663be167fde12bbf91ba698d",
+    "tools/native/usb_capture/setup.sh": "482cd0aac9e63c724efeccf48903fa8e0875f9b170144ad0f3701cfff211ac36",
+    "tools/native/usb_capture/guest-check.py": "fae5cdb9af0be937e89b0c1c2b87d868f25e1a3e61003110bacd3395cb2d2722",
+    "tools/native/usb_capture/identity-check.py": "97b7a2df4c8580f4606125addf197176a8b6a6c60707e57fa4318a14d217d3ba",
+    "tools/native/usb_capture/state-check.py": "081a414833efe5a6c9a1b28a08e8b298608871e0386ba17e5f1bba744ccc8a01"
+  },
+  "usb_capture": {
+    "duration_seconds": 450,
+    "outer_timeout_seconds": 480,
+    "dumpcap_file_metadata": {
+      "uid": 0,
+      "gid": null,
+      "mode": null,
+      "sha256": null,
+      "file_capability_xattr_hex": null
+    }
+  }
+}

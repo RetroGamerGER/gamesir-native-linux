@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-16",
+  "mode": "offline_saved_records_only",
+  "hardware_access": false,
+  "assumed_sensor": "LSM6DS3TR-C",
+  "actual_chip_verified": false,
+  "actual_range_selected": null,
+  "original_input_hashes": {
+    "original-usbmon8.pcapng": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+    "derived/telemetry-raw.json": "9369e9d956876b75f4113dba7599c27d172b9bcc1faab2b6503d82997365c44c",
+    "derived/parser-records.jsonl": "63c928f9347bb3b262197305a2935c7060d9f95309bc690eab6bf34dfa838956"
+  },
+  "wire_samples_compared": 12204,
+  "raw_timestamp_mismatches": 0,
+  "conversion_tool": "tools/imu/gamesir_imu_diagnostic.py",
+  "source_record_counts": {
+    "records": 18257,
+    "other_device_or_endpoint": 2090,
+    "not_successful_completion": 7,
+    "not_full_imu_telemetry": 3956
+  },
+  "profiles": {
+    "125": {
+      "profile": {
+        "assumed_sensor": "LSM6DS3TR-C",
+        "assumed_range_dps": 125,
+        "dps_per_raw_count": {
+          "numerator": 7,
+          "denominator": 1600
+        },
+        "bias_raw_assumption": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "accel_counts_per_g_assumption": 8192,
+        "chip_verified": false,
+        "range_verified": false,
+        "usb_preserves_sensor_counts_verified": false,
+        "bias_verified": false,
+        "axis_order": "wire G0/G1/G2 and A0/A1/A2; physical axes unverified",
+        "source": "user-supplied ST datasheet table; 250..2000 corroborated by stored Linux gain table",
+        "local_primary_125_dps_reference_verified": false,
+        "calibration_verified": false,
+        "sdl_runtime_enable": false
+      },
+      "maximum_absolute_gyro_dps": 22.977500000000003,
+      "gyro_dps_stats": [
+        {
+          "mean": 0.01487191699442806,
+          "std_population": 1.9794951267261038,
+          "min": -16.135,
+          "max": 22.977500000000003
+        },
+        {
+          "mean": 0.13231112749918061,
+          "std_population": 1.056191211642065,
+          "min": -9.00375,
+          "max": 11.178125000000001
+        },
+        {
+          "mean": -0.014704861111111115,
+          "std_population": 2.2850721675915096,
+          "min": -20.142500000000002,
+          "max": 17.854375
+        }
+      ],
+      "calibration_verified": false
+    },
+    "250": {
+      "profile": {
+        "assumed_sensor": "LSM6DS3TR-C",
+        "assumed_range_dps": 250,
+        "dps_per_raw_count": {
+          "numerator": 7,
+          "denominator": 800
+        },
+        "bias_raw_assumption": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "accel_counts_per_g_assumption": 8192,
+        "chip_verified": false,
+        "range_verified": false,
+        "usb_preserves_sensor_counts_verified": false,
+        "bias_verified": false,
+        "axis_order": "wire G0/G1/G2 and A0/A1/A2; physical axes unverified",
+        "source": "user-supplied ST datasheet table; 250..2000 corroborated by stored Linux gain table",
+        "local_primary_125_dps_reference_verified": false,
+        "calibration_verified": false,
+        "sdl_runtime_enable": false
+      },
+      "maximum_absolute_gyro_dps": 45.955000000000005,
+      "gyro_dps_stats": [
+        {
+          "mean": 0.02974383398885612,
+          "std_population": 3.9589902534522077,
+          "min": -32.27,
+          "max": 45.955000000000005
+        },
+        {
+          "mean": 0.26462225499836123,
+          "std_population": 2.11238242328413,
+          "min": -18.0075,
+          "max": 22.356250000000003
+        },
+        {
+          "mean": -0.02940972222222223,
+          "std_population": 4.570144335183019,
+          "min": -40.285000000000004,
+          "max": 35.70875
+        }
+      ],
+      "calibration_verified": false
+    },
+    "500": {
+      "profile": {
+        "assumed_sensor": "LSM6DS3TR-C",
+        "assumed_range_dps": 500,
+        "dps_per_raw_count": {
+          "numerator": 7,
+          "denominator": 400
+        },
+        "bias_raw_assumption": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "accel_counts_per_g_assumption": 8192,
+        "chip_verified": false,
+        "range_verified": false,
+        "usb_preserves_sensor_counts_verified": false,
+        "bias_verified": false,
+        "axis_order": "wire G0/G1/G2 and A0/A1/A2; physical axes unverified",
+        "source": "user-supplied ST datasheet table; 250..2000 corroborated by stored Linux gain table",
+        "local_primary_125_dps_reference_verified": false,
+        "calibration_verified": false,
+        "sdl_runtime_enable": false
+      },
+      "maximum_absolute_gyro_dps": 91.91000000000001,
+      "gyro_dps_stats": [
+        {
+          "mean": 0.05948766797771224,
+          "std_population": 7.917980506904415,
+          "min": -64.54,
+          "max": 91.91000000000001
+        },
+        {
+          "mean": 0.5292445099967225,
+          "std_population": 4.22476484656826,
+          "min": -36.015,
+          "max": 44.712500000000006
+        },
+        {
+          "mean": -0.05881944444444446,
+          "std_population": 9.140288670366038,
+          "min": -80.57000000000001,
+          "max": 71.4175
+        }
+      ],
+      "calibration_verified": false
+    },
+    "1000": {
+      "profile": {
+        "assumed_sensor": "LSM6DS3TR-C",
+        "assumed_range_dps": 1000,
+        "dps_per_raw_count": {
+          "numerator": 7,
+          "denominator": 200
+        },
+        "bias_raw_assumption": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "accel_counts_per_g_assumption": 8192,
+        "chip_verified": false,
+        "range_verified": false,
+        "usb_preserves_sensor_counts_verified": false,
+        "bias_verified": false,
+        "axis_order": "wire G0/G1/G2 and A0/A1/A2; physical axes unverified",
+        "source": "user-supplied ST datasheet table; 250..2000 corroborated by stored Linux gain table",
+        "local_primary_125_dps_reference_verified": false,
+        "calibration_verified": false,
+        "sdl_runtime_enable": false
+      },
+      "maximum_absolute_gyro_dps": 183.82000000000002,
+      "gyro_dps_stats": [
+        {
+          "mean": 0.11897533595542448,
+          "std_population": 15.83596101380883,
+          "min": -129.08,
+          "max": 183.82000000000002
+        },
+        {
+          "mean": 1.058489019993445,
+          "std_population": 8.44952969313652,
+          "min": -72.03,
+          "max": 89.42500000000001
+        },
+        {
+          "mean": -0.11763888888888892,
+          "std_population": 18.280577340732076,
+          "min": -161.14000000000001,
+          "max": 142.835
+        }
+      ],
+      "calibration_verified": false
+    },
+    "2000": {
+      "profile": {
+        "assumed_sensor": "LSM6DS3TR-C",
+        "assumed_range_dps": 2000,
+        "dps_per_raw_count": {
+          "numerator": 7,
+          "denominator": 100
+        },
+        "bias_raw_assumption": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "accel_counts_per_g_assumption": 8192,
+        "chip_verified": false,
+        "range_verified": false,
+        "usb_preserves_sensor_counts_verified": false,
+        "bias_verified": false,
+        "axis_order": "wire G0/G1/G2 and A0/A1/A2; physical axes unverified",
+        "source": "user-supplied ST datasheet table; 250..2000 corroborated by stored Linux gain table",
+        "local_primary_125_dps_reference_verified": false,
+        "calibration_verified": false,
+        "sdl_runtime_enable": false
+      },
+      "maximum_absolute_gyro_dps": 367.64000000000004,
+      "gyro_dps_stats": [
+        {
+          "mean": 0.23795067191084895,
+          "std_population": 31.67192202761766,
+          "min": -258.16,
+          "max": 367.64000000000004
+        },
+        {
+          "mean": 2.11697803998689,
+          "std_population": 16.89905938627304,
+          "min": -144.06,
+          "max": 178.85000000000002
+        },
+        {
+          "mean": -0.23527777777777784,
+          "std_population": 36.56115468146415,
+          "min": -322.28000000000003,
+          "max": 285.67
+        }
+      ],
+      "calibration_verified": false
+    }
+  },
+  "timing": {
+    "timebase": "host_capture",
+    "device_clock_verified": false,
+    "median_interval_ns": 16000000,
+    "max_interval_ns": 200007000,
+    "gap_candidates_over_2x_median": 3,
+    "gap_intervals_excluded_from_integral": 3,
+    "observed_span_ns": 195163454000,
+    "integral_covered_ns": 194871444000,
+    "integral_excluded_ns": 292010000,
+    "integral_coverage_fraction": 0.9985037670013772,
+    "gap_threshold_is_heuristic_not_packet_loss": true,
+    "internal_sensor_rate_hz": null
+  },
+  "packet_loss_known": false,
+  "known_angle_reference": null,
+  "known_six_pose_reference": false,
+  "axis_sign_map_verified": false,
+  "bias_verified": false,
+  "iio_observation": {
+    "six_axis_coherent": false,
+    "device_timestamp_available": false,
+    "sample_counter_available": false,
+    "angle_integration_permitted": false,
+    "control_snapshot_used": false
+  },
+  "private_replay_sha256s": {
+    "observations.jsonl": "baa3281344eba10455f9a46d24be293c0df5b6ad9859e420f7e3660e194fd130",
+    "report.json": "78f69217feb9379ebc0f4b5b6e8a48d94f11b7291cd0d77fb9bbfd6963807c98",
+    "SHA256SUMS": "0f9fe7be4217f4d8aae9cd57bed8931239327c55f0aaa2ff8cfa089ad75f09b9"
+  },
+  "regression": {
+    "diagnostic_synthetic_tests_passed": 44,
+    "full_suite_passed": true,
+    "full_suite_status": "make test passed after document allowlist correction",
+    "sdl_device_free_button_cases_passed": 18,
+    "sdl_device_free_sensor_cases_passed": 12,
+    "logs_sha256": {
+      "experimental-gyro-regression.log": "845703b5efe3ead9589182d9a9b1b23aabf379d56faa73a9389a7b32402c8f69",
+      "experimental-gyro-sdl-regression.log": "c44201c12439cf3a7b8ee8050892b42ea61fb611549f3018a0abd8abccbec270"
+    }
+  },
+  "runtime_calibration_changed": false,
+  "kernel_driver_changed": false,
+  "installed_system_changed": false,
+  "conclusion": "Five numeric hypotheses replay correctly; no data selects the real gyro range. IIO display alone cannot qualify angle calibration.",
+  "tested_tool_sha256": "89c35e8fd3721c32eddeb9c8b9bf15a4d0d173aa00b097b8edf63d8821d845a2",
+  "tested_diagnostic_tests_sha256": "21ab7a93760130a4fc0966153675fac486516972aabe2808de820b599ef8f820"
+}

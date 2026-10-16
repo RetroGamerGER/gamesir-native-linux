@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "hardware_access": false,
+  "kernel_build_or_changes": false,
+  "sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "coverage": [
+    "independent motor stop",
+    "all 15 channel masks",
+    "exact expiry boundaries",
+    "FF preserves trigger pulses",
+    "atomic invalid requests",
+    "deadline overflow",
+    "FF endpoints and quarter values",
+    "zero motor packet",
+    "incomplete frame rejection"
+  ],
+  "limits": "No live transport, competing writers, mechanical motor test or hardware lifecycle validation",
+  "date": "2026-10-11",
+  "stage": "Sprint 003 offline regression",
+  "command": "make test-protocol",
+  "existing_core_changed": false,
+  "combined_make_test_passed": true
+}

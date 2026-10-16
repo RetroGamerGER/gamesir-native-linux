@@ -1,0 +1,206 @@
+{
+  "prepared_utc": "2026-10-12T17:32:38.433214+00:00",
+  "baseline_commit": "b437a1f303e402627c59e668bcb2d47fd33bf655",
+  "passed_offline": true,
+  "hardware_access": false,
+  "module_loaded_or_installed": false,
+  "status": "Offline preparation; new native USB capture and mechanical outcome unvalidated",
+  "requested_timing": {
+    "session_seconds": 300,
+    "motor_blocks": 4,
+    "block_seconds": 60,
+    "pulses_per_motor": 3,
+    "pulse_ms": 1000,
+    "minimum_pause_after_confirmed_stop_seconds": 5
+  },
+  "validation_commands": [
+    {
+      "command": "make test-parser test-sensor test-protocol test-runtime test-fixtures test-tools test-capture",
+      "exit_status": 0
+    },
+    {
+      "command": "make test-hardware-helper",
+      "exit_status": 0
+    },
+    {
+      "command": "make kernel-analyze",
+      "exit_status": 0
+    }
+  ],
+  "validation_counts": {
+    "parser_unittests": 44,
+    "helper_unittests": 29,
+    "capture_adapter_unittests": 31,
+    "native_client_synthetic_cases": 11,
+    "actual_kernel_send_functions_synthetic_cases": 15,
+    "recorded_imu_packets": 12204,
+    "recorded_gamepad_packets_kernel_mapping": 5244
+  },
+  "results": {
+    "kernel-build.json": {
+      "built": true,
+      "kernel_release": "7.2.9-2-garuda",
+      "module_sha256": "b54a2a76a50b997e90f82cb1003a27f1c4f564a90876a03505562df6c4964127",
+      "vermagic": "7.2.9-2-garuda SMP preempt mod_unload",
+      "autoload_aliases": [],
+      "warnings": 0,
+      "compiler": "clang version 23.1.1",
+      "header_compiler": "\"clang version 23.1.1, LLD 23.1.1\"",
+      "dependencies": "industrialio",
+      "loaded_or_installed": false,
+      "hardware_access": false,
+      "module": "build/kernel/gs_native.ko",
+      "flags": [
+        "LLVM=1",
+        "W=1",
+        "-Werror"
+      ]
+    },
+    "kernel-static-analysis.json": {
+      "passed": true,
+      "checkpatch_returncode": 0,
+      "checkpatch_ignored": [
+        "CAMELCASE: kernel USB descriptor members"
+      ],
+      "clang_static_analyzer": [
+        {
+          "translation_unit": "gs_native_usb",
+          "returncode": 0,
+          "diagnostics": 0,
+          "passed": true
+        },
+        {
+          "translation_unit": "gs_protocol",
+          "returncode": 0,
+          "diagnostics": 0,
+          "passed": true
+        },
+        {
+          "translation_unit": "gs_sensor",
+          "returncode": 0,
+          "diagnostics": 0,
+          "passed": true
+        },
+        {
+          "translation_unit": "gs_runtime",
+          "returncode": 0,
+          "diagnostics": 0,
+          "passed": true
+        }
+      ],
+      "sparse": "not installed; not executed",
+      "hardware_access": false,
+      "loaded_module": false,
+      "limits": "Static analysis does not model all kernel allocation/refcount/URB/workqueue concurrency semantics"
+    },
+    "native-motor-output.json": {
+      "passed": true,
+      "hardware_access": false,
+      "sanitizers": [
+        "address",
+        "undefined"
+      ],
+      "method": "Actual gsn_sequence/gsn_fault/gsn_send/gsn_stop/gsn_flush_motors extracted unchanged; own shared C runtime and protocol; synthetic clock/locks/USB",
+      "cases": [
+        "1000-ms LT wire packet",
+        "1000-ms RT wire packet",
+        "1000-ms left-grip wire packet",
+        "1000-ms right-grip wire packet",
+        "500-ms remaining deadline reaches wire",
+        "expiry between flush and send emits zero instead of restarting pulse",
+        "already expired pulse emits zero",
+        "expired session cannot send a new motor packet",
+        "explicit stop emits zero and successful END does not duplicate it",
+        "USB transport error faults runtime and cannot report success",
+        "short USB transfer faults runtime and cannot report success",
+        "failed final stop is retained without retry or false success",
+        "invalid internal send shapes do not reach USB",
+        "clean unexpired state does not resend motor packet",
+        "maintenance and motor packets retain shared sequence"
+      ],
+      "kernel_source_sha256": "6394cc8a1ff1db4755fff6335ce845b079a7cf37b3f86aa41d0cce58d18a56e2",
+      "extracted_functions_sha256": "70a29b6003f99536af71be8e8feaa3c7549b03e60f39258c860de30acd5a126c",
+      "source_sha256": {
+        "src/gs_protocol.c": "ec729e0e6d60cad789a4dcbd810c1854fe59005c26c2ea9f6f18b0d84f623c87",
+        "src/gs_runtime.c": "8fb938ac78fd9994927cc50b954f7f1e0f724a6a1901ba62edddba28154ef3d5",
+        "include/uapi/gs_native.h": "ba3881d5f73d943ebf47bc9af6c89f09f95a0af3b8892c39dfdebf248b3363e7"
+      },
+      "limits": [
+        "No real kernel lock scheduling, DMA, USB device, workqueue or concurrent IRQ execution.",
+        "Simulated clock jump covers expiry between flush and the final send gate; host scheduling after that gate is not a hard realtime guarantee.",
+        "USB replacement records requested bytes and injects completion results; no mechanical effect is measured."
+      ]
+    },
+    "core-capture-validation.json": {
+      "passed": true,
+      "hardware_access": false,
+      "runtime_calibration_ready": false,
+      "counts": {
+        "native_mode_policy_accepted": 17448,
+        "x360_input": 1458,
+        "failed_or_truncated_skipped": 14,
+        "gip_initialization_exact_bytes": 21,
+        "input_unknown": 11,
+        "gip_input_basic": 3786,
+        "maintenance_exact_bytes": 521,
+        "experimental_accel_frames_converted": 12204,
+        "gyro_frames_preserved_raw": 12204,
+        "unverified_sensor_groups_blocked": 24408,
+        "gamesir_telemetry": 12204,
+        "gamesir_read_reply": 62,
+        "gamesir_profile_reply": 49,
+        "gamesir_firmware_reply": 48,
+        "motor_exact_bytes": 10,
+        "handshake_exact_bytes": 9
+      }
+    },
+    "kernel-mapping-capture.json": {
+      "passed": true,
+      "hardware_access": false,
+      "method": "actual gsn_pad function compiled with fake input callbacks, independent Python packet reference",
+      "packets": 5278,
+      "synthetic_packets": 32,
+      "capture_packets": 5244,
+      "limits": "does not execute kernel input core or URB callbacks"
+    }
+  },
+  "build_srcversion": "D9E7540C9D759A9B4F9F58F",
+  "sha256": {
+    "build/gsnative-ctl": "33550f6afd5acbe96915d558f28c8cc1e4f2fff629e0c334e7a0dcb85be2ada6",
+    "build/kernel/gs_native.ko": "b54a2a76a50b997e90f82cb1003a27f1c4f564a90876a03505562df6c4964127",
+    "docs/native-motor-comparison-plan.json": "561ee8c419af2cd9214989c03f21e0584745cfad3d27e4ce1c589f18316a595c",
+    "tools/native/hardware_test_002.py": "43837109d2e41035324dd738a0862840adc468157dfd10831a37edddcc3b0375",
+    "tools/native/preflight.py": "3c9957acc5fc9baf142ca7ba68b3764b72cbcd4ba2b9806332e8172319647711",
+    "tools/native/native_usb_capture.py": "20a19aa67c587aa803a26d2ec0a1abad7de0763e7041abe71884fd3e66a886ec",
+    "tools/native/usb_capture/setup.sh": "482cd0aac9e63c724efeccf48903fa8e0875f9b170144ad0f3701cfff211ac36",
+    "tools/native/usb_capture/guest-check.py": "fae5cdb9af0be937e89b0c1c2b87d868f25e1a3e61003110bacd3395cb2d2722",
+    "tools/native/usb_capture/identity-check.py": "97b7a2df4c8580f4606125addf197176a8b6a6c60707e57fa4318a14d217d3ba",
+    "tools/native/usb_capture/state-check.py": "081a414833efe5a6c9a1b28a08e8b298608871e0386ba17e5f1bba744ccc8a01",
+    "src/gs_protocol.c": "ec729e0e6d60cad789a4dcbd810c1854fe59005c26c2ea9f6f18b0d84f623c87",
+    "src/gs_protocol.h": "e343a249e35c6b501d7194154edba0dfc32002a18cdd0278f3f02eb7d26fe3a7",
+    "src/gs_runtime.c": "8fb938ac78fd9994927cc50b954f7f1e0f724a6a1901ba62edddba28154ef3d5",
+    "kernel/gs_native_usb.c": "6394cc8a1ff1db4755fff6335ce845b079a7cf37b3f86aa41d0cce58d18a56e2",
+    "include/uapi/gs_native.h": "ba3881d5f73d943ebf47bc9af6c89f09f95a0af3b8892c39dfdebf248b3363e7",
+    "tools/native/gsnative-ctl.c": "6b3f28fc3d896890563b83e8676db470321d858a79fe736653362ee9acda0a14",
+    "tests/test_hardware_test_002.py": "6fb5d74e763b015546f00cc0979b60748c40b1cb69b02d546306df652fc827e3",
+    "tests/test_native_usb_capture.py": "70af336c831b1505ea386f0391cc06231bdff03a95251958f78b9beb18042a70",
+    "tests/check_native_motor_output.py": "841e394400c822155d1533dcc1c408b203b7a1981f0aeb7050589dbb7d481837"
+  },
+  "local_log_sha256": {
+    "build/native-motor-preparation-tests.log": "6dcabb3d6b39a3d84125da756b95022cf01eeebd9e9418e4181a0f38cf55f7c8",
+    "build/native-motor-preparation-helpers.log": "6d8ad5d582fed61950e8f62ab419f3bfad5a8728a50178b992ee8815277cbf88",
+    "build/native-motor-preparation-kernel.log": "e422e58b6a4007598e4a1fe4405b9def405cb8c31a899308884399e648391fba"
+  },
+  "preserved_previous_module": {
+    "path": "build/preserved-modules/ae7b6947b391fb11fa82d4d5c0c446bb548687b1f7b2f62ef1d522d374792188/gs_native.ko",
+    "sha256": "ae7b6947b391fb11fa82d4d5c0c446bb548687b1f7b2f62ef1d522d374792188"
+  },
+  "limitations": [
+    "No live device metadata or current driver binding checked.",
+    "Recorder integration tested with synthetic processes; new combined hardware run still requires explicit stepwise permission.",
+    "Legacy 400-ms capture bytes are regression-tested; 1000-ms effect and wire timing remain unmeasured.",
+    "Correct stop acknowledgements and USB completion do not prove mechanical vibration or stopping.",
+    "Missing native left-grip vibration remains unexplained; shared native sequence counter unchanged.",
+    "Gyroscope scale unknown and final sensor-axis calibration incomplete."
+  ]
+}

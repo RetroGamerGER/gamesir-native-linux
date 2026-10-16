@@ -1,0 +1,442 @@
+{
+  "evidence": "synthetic_only",
+  "captures_used": 0,
+  "valid": [
+    {
+      "record": 1,
+      "case": "x360-independent-16-bit-values-0",
+      "disposition": "decoded",
+      "kind": "x360_input",
+      "expected_fields": {
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "sticks_xpad_default_axes": {
+          "lx": -32768,
+          "ly": -32768,
+          "rx": -1,
+          "ry": -1
+        }
+      }
+    },
+    {
+      "record": 2,
+      "case": "telemetry-signed-axes-0",
+      "disposition": "decoded",
+      "kind": "gamesir_telemetry",
+      "expected_fields": {
+        "gyro_raw_i16": [
+          -32768,
+          0,
+          32767
+        ],
+        "accel_raw_i16": [
+          -1234,
+          8192,
+          256
+        ],
+        "device_timestamp": null
+      }
+    },
+    {
+      "record": 3,
+      "case": "x360-independent-16-bit-values-1",
+      "disposition": "decoded",
+      "kind": "x360_input",
+      "expected_fields": {
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "sticks_xpad_default_axes": {
+          "lx": -32768,
+          "ly": -32768,
+          "rx": -1,
+          "ry": -1
+        }
+      }
+    },
+    {
+      "record": 4,
+      "case": "telemetry-signed-axes-1",
+      "disposition": "decoded",
+      "kind": "gamesir_telemetry",
+      "expected_fields": {
+        "gyro_raw_i16": [
+          -32768,
+          0,
+          32767
+        ],
+        "accel_raw_i16": [
+          -1234,
+          8192,
+          256
+        ],
+        "device_timestamp": null
+      }
+    },
+    {
+      "record": 5,
+      "case": "read-reply-big-endian-offset",
+      "disposition": "decoded",
+      "kind": "gamesir_read_reply",
+      "expected_fields": {
+        "category": 1,
+        "offset": 4660,
+        "length": 4,
+        "payload_hex": "deadbeef"
+      }
+    },
+    {
+      "record": 6,
+      "case": "firmware-selector-is-not-a-length",
+      "disposition": "decoded",
+      "kind": "gamesir_firmware_reply",
+      "expected_fields": {
+        "firmware_text": "02440152",
+        "four_character_groups": [
+          "0244",
+          "0152"
+        ]
+      }
+    },
+    {
+      "record": 7,
+      "case": "active-profile-reply",
+      "disposition": "decoded",
+      "kind": "gamesir_profile_reply",
+      "expected_fields": {
+        "active_profile": 3
+      }
+    },
+    {
+      "record": 8,
+      "case": "x360-independent-16-bit-values-2",
+      "disposition": "decoded",
+      "kind": "x360_input",
+      "expected_fields": {
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "sticks_xpad_default_axes": {
+          "lx": -32768,
+          "ly": -32768,
+          "rx": -1,
+          "ry": -1
+        }
+      }
+    },
+    {
+      "record": 9,
+      "case": "telemetry-signed-axes-2",
+      "disposition": "decoded",
+      "kind": "gamesir_telemetry",
+      "expected_fields": {
+        "gyro_raw_i16": [
+          -32768,
+          0,
+          32767
+        ],
+        "accel_raw_i16": [
+          -1234,
+          8192,
+          256
+        ],
+        "device_timestamp": null
+      }
+    },
+    {
+      "record": 10,
+      "case": "x360-independent-16-bit-values-3",
+      "disposition": "decoded",
+      "kind": "x360_input",
+      "expected_fields": {
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        },
+        "sticks_xpad_default_axes": {
+          "lx": -32768,
+          "ly": -32768,
+          "rx": -1,
+          "ry": -1
+        }
+      }
+    },
+    {
+      "record": 11,
+      "case": "motor-layout-left-trigger",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "expected_fields": {
+        "motor_percentages": {
+          "lt": 25,
+          "rt": 0,
+          "left_grip": 0,
+          "right_grip": 0
+        },
+        "all_amplitudes_zero": false
+      }
+    },
+    {
+      "record": 12,
+      "case": "motor-layout-right-trigger",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "expected_fields": {
+        "motor_percentages": {
+          "lt": 0,
+          "rt": 40,
+          "left_grip": 0,
+          "right_grip": 0
+        },
+        "all_amplitudes_zero": false
+      }
+    },
+    {
+      "record": 13,
+      "case": "motor-layout-left-grip",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "expected_fields": {
+        "motor_percentages": {
+          "lt": 0,
+          "rt": 0,
+          "left_grip": 75,
+          "right_grip": 0
+        },
+        "all_amplitudes_zero": false
+      }
+    },
+    {
+      "record": 14,
+      "case": "motor-layout-right-grip",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "expected_fields": {
+        "motor_percentages": {
+          "lt": 0,
+          "rt": 0,
+          "left_grip": 0,
+          "right_grip": 90
+        },
+        "all_amplitudes_zero": false
+      }
+    },
+    {
+      "record": 15,
+      "case": "motor-layout-all-zero",
+      "disposition": "decoded",
+      "kind": "gip_four_motor_output",
+      "expected_fields": {
+        "motor_percentages": {
+          "lt": 0,
+          "rt": 0,
+          "left_grip": 0,
+          "right_grip": 0
+        },
+        "all_amplitudes_zero": true
+      }
+    },
+    {
+      "record": 16,
+      "case": "ordinary-two-motor-output",
+      "disposition": "decoded",
+      "kind": "x360_rumble_output",
+      "expected_fields": {
+        "left_grip_u8": 18,
+        "right_grip_u8": 52
+      }
+    },
+    {
+      "record": 17,
+      "case": "documented-heartbeat-file-bytes-only",
+      "disposition": "decoded",
+      "kind": "gamesir_vendor_output",
+      "expected_fields": {
+        "command_name": "heartbeat"
+      }
+    },
+    {
+      "record": 18,
+      "case": "basic-gip-layout-not-rf-proof-0",
+      "disposition": "decoded",
+      "kind": "gip_input_basic",
+      "expected_fields": {
+        "triggers_raw_u16": {
+          "lt": 0,
+          "rt": 1023
+        },
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        }
+      }
+    },
+    {
+      "record": 19,
+      "case": "basic-gip-layout-not-rf-proof-1",
+      "disposition": "decoded",
+      "kind": "gip_input_basic",
+      "expected_fields": {
+        "triggers_raw_u16": {
+          "lt": 0,
+          "rt": 1023
+        },
+        "sticks_raw_i16": {
+          "lx": -32768,
+          "ly": 32767,
+          "rx": -1,
+          "ry": 0
+        }
+      }
+    }
+  ],
+  "negative": [
+    {
+      "record": 1,
+      "case": "short-x360",
+      "disposition": "malformed",
+      "kind": "x360_input",
+      "expected_fields": {}
+    },
+    {
+      "record": 2,
+      "case": "short-telemetry-fields",
+      "disposition": "malformed",
+      "kind": "gamesir_telemetry",
+      "expected_fields": {}
+    },
+    {
+      "record": 3,
+      "case": "capture-shorter-than-urb-length",
+      "disposition": "truncated",
+      "kind": "capture_truncated",
+      "expected_fields": {}
+    },
+    {
+      "record": 4,
+      "case": "explicit-capture-truncation",
+      "disposition": "truncated",
+      "kind": "capture_truncated",
+      "expected_fields": {}
+    },
+    {
+      "record": 5,
+      "case": "oversized-read-payload",
+      "disposition": "malformed",
+      "kind": "gamesir_read_reply",
+      "expected_fields": {}
+    },
+    {
+      "record": 6,
+      "case": "missing-read-payload",
+      "disposition": "malformed",
+      "kind": "gamesir_read_reply",
+      "expected_fields": {}
+    },
+    {
+      "record": 7,
+      "case": "gip-length-mismatch",
+      "disposition": "malformed",
+      "kind": "gip_input_basic",
+      "expected_fields": {}
+    },
+    {
+      "record": 8,
+      "case": "unsupported-gip-framing",
+      "disposition": "unknown",
+      "kind": "gip_input_unsupported",
+      "expected_fields": {}
+    },
+    {
+      "record": 9,
+      "case": "motor-percent-over-100",
+      "disposition": "malformed",
+      "kind": "gip_four_motor_output",
+      "expected_fields": {}
+    },
+    {
+      "record": 10,
+      "case": "unknown-vendor-marker",
+      "disposition": "unknown",
+      "kind": "gamesir_vendor_unknown",
+      "expected_fields": {}
+    },
+    {
+      "record": 11,
+      "case": "unknown-report-12",
+      "disposition": "unknown",
+      "kind": "input_unknown",
+      "expected_fields": {}
+    },
+    {
+      "record": 12,
+      "case": "hid-interface-not-assumed-imu",
+      "disposition": "ignored",
+      "kind": "unsupported_interface",
+      "expected_fields": {}
+    },
+    {
+      "record": 13,
+      "case": "other-endpoint",
+      "disposition": "ignored",
+      "kind": "unsupported_endpoint",
+      "expected_fields": {}
+    },
+    {
+      "record": 14,
+      "case": "other-vendor",
+      "disposition": "ignored",
+      "kind": "foreign_vendor",
+      "expected_fields": {}
+    },
+    {
+      "record": 15,
+      "case": "submission-not-counted-as-input",
+      "disposition": "ignored",
+      "kind": "transfer_not_complete",
+      "expected_fields": {}
+    },
+    {
+      "record": 16,
+      "case": "failed-completion",
+      "disposition": "ignored",
+      "kind": "transfer_error",
+      "expected_fields": {}
+    },
+    {
+      "record": 17,
+      "case": "empty-successful-completion",
+      "disposition": "malformed",
+      "kind": "empty",
+      "expected_fields": {}
+    },
+    {
+      "record": 18,
+      "case": "oversized-transfer",
+      "disposition": "malformed",
+      "kind": "oversized",
+      "expected_fields": {}
+    },
+    {
+      "record": 19,
+      "case": "more-captured-than-reported",
+      "disposition": "malformed",
+      "kind": "capture_length_mismatch",
+      "expected_fields": {}
+    }
+  ]
+}

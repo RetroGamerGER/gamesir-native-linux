@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "test": "Sprint 003 Hardwaretest 001",
+  "date": "2026-10-12",
+  "status": "completed_with_documented_limits",
+  "scope": {
+    "transport": "2.4 GHz USB dongle",
+    "vid": "3537",
+    "pid": "100a",
+    "interface": 0,
+    "kernel": "7.2.9-2-garuda",
+    "module_source_commit": "4e76ff759595546609db3a708fcf282479e6b453",
+    "module_sha256": "6cf68587aa951d95c84ec8bd30f14dd0a751e034ed10c2865eba208c4cd397d8",
+    "module_parameters": {
+      "test_interface": "8-6:1.0",
+      "test_pid": "0x100a",
+      "enable_output": 0
+    }
+  },
+  "measurement": {
+    "start_utc": "2026-10-12T13:25:07.637507+00:00",
+    "end_utc": "2026-10-12T13:26:07.641497+00:00",
+    "elapsed_s": 60.003987973,
+    "phases_s": [
+      [
+        0,
+        10,
+        "rest_initial"
+      ],
+      [
+        10,
+        50,
+        "manual_inputs"
+      ],
+      [
+        50,
+        60,
+        "rest_final"
+      ]
+    ],
+    "original_12s_proposal_replaced_before_execution": true,
+    "format": "JSONL evdev events, kernel sec/usec, host UTC/monotonic times and snapshots",
+    "access": "O_RDONLY|O_NONBLOCK, ordinary user; no grab, writes or evdev clock change",
+    "events_total": 83475,
+    "event_counts": {
+      "EV_ABS": 65420,
+      "EV_SYN": 17948,
+      "EV_KEY": 107
+    },
+    "syn_dropped_seen": false,
+    "read_errors": false,
+    "native_input_function_demonstrated": true,
+    "axis_stats": {
+      "ABS_RX": {
+        "code": 3,
+        "min": -32768,
+        "max": 32767,
+        "events": 15661,
+        "distinct_values": 12438,
+        "initial": 0,
+        "final": 0
+      },
+      "ABS_RY": {
+        "code": 4,
+        "min": -32768,
+        "max": 32767,
+        "events": 15745,
+        "distinct_values": 13485,
+        "initial": -1,
+        "final": -1
+      },
+      "ABS_X": {
+        "code": 0,
+        "min": -32768,
+        "max": 32767,
+        "events": 16413,
+        "distinct_values": 13087,
+        "initial": 0,
+        "final": 0
+      },
+      "ABS_Y": {
+        "code": 1,
+        "min": -32768,
+        "max": 32767,
+        "events": 16537,
+        "distinct_values": 13688,
+        "initial": -1,
+        "final": -1
+      },
+      "ABS_Z": {
+        "code": 2,
+        "min": 0,
+        "max": 1023,
+        "events": 509,
+        "distinct_values": 203,
+        "initial": 0,
+        "final": 0
+      },
+      "ABS_RZ": {
+        "code": 5,
+        "min": 0,
+        "max": 1023,
+        "events": 491,
+        "distinct_values": 217,
+        "initial": 0,
+        "final": 0
+      },
+      "ABS_HAT0Y": {
+        "code": 17,
+        "min": -1,
+        "max": 1,
+        "events": 36,
+        "distinct_values": 3,
+        "initial": 0,
+        "final": 0
+      },
+      "ABS_HAT0X": {
+        "code": 16,
+        "min": -1,
+        "max": 1,
+        "events": 28,
+        "distinct_values": 3,
+        "initial": 0,
+        "final": 0
+      }
+    },
+    "key_stats": {
+      "304": {
+        "names": [
+          "BTN_A",
+          "BTN_GAMEPAD",
+          "BTN_SOUTH"
+        ],
+        "presses": 7,
+        "releases": 7,
+        "repeats": 0
+      },
+      "305": {
+        "names": [
+          "BTN_B",
+          "BTN_EAST"
+        ],
+        "presses": 7,
+        "releases": 6,
+        "repeats": 0
+      },
+      "307": {
+        "names": [
+          "BTN_NORTH",
+          "BTN_X"
+        ],
+        "presses": 9,
+        "releases": 9,
+        "repeats": 0
+      },
+      "308": {
+        "names": [
+          "BTN_WEST",
+          "BTN_Y"
+        ],
+        "presses": 8,
+        "releases": 8,
+        "repeats": 0
+      },
+      "310": {
+        "names": "BTN_TL",
+        "presses": 7,
+        "releases": 7,
+        "repeats": 0
+      },
+      "311": {
+        "names": "BTN_TR",
+        "presses": 9,
+        "releases": 9,
+        "repeats": 0
+      },
+      "314": {
+        "names": "BTN_SELECT",
+        "presses": 2,
+        "releases": 2,
+        "repeats": 0
+      },
+      "315": {
+        "names": "BTN_START",
+        "presses": 2,
+        "releases": 2,
+        "repeats": 0
+      },
+      "316": {
+        "names": "BTN_MODE",
+        "presses": 1,
+        "releases": 1,
+        "repeats": 0
+      },
+      "317": {
+        "names": "BTN_THUMBL",
+        "presses": 1,
+        "releases": 1,
+        "repeats": 0
+      },
+      "318": {
+        "names": "BTN_THUMBR",
+        "presses": 1,
+        "releases": 1,
+        "repeats": 0
+      }
+    }
+  },
+  "centering": {
+    "initial_10s_stable": true,
+    "initial_and_final_snapshot": {
+      "ABS_X": 0,
+      "ABS_Y": -1,
+      "ABS_RX": 0,
+      "ABS_RY": -1
+    },
+    "y_transform": "bitwise inversion; wire zero maps to -1",
+    "fuzz": 0,
+    "flat": 0,
+    "final_10s_untouched": false,
+    "final_stick_change_counts": {
+      "ABS_X": 6416,
+      "ABS_Y": 6431,
+      "ABS_RX": 5601,
+      "ABS_RY": 5634
+    },
+    "final_rest_key_events": 19,
+    "final_active_keys": [
+      305
+    ],
+    "user_explanation": "Reaction time to the chat phase instruction; chat delivery delay was not measured.",
+    "long_term_drift_or_physical_tmr_calibration_validated": false
+  },
+  "kernel_log_assessment": {
+    "native_bind_input_test_unbind_unload_and_xpad_return_unexpected_warnings_errors": 0,
+    "xpad_unbind_expected_enoent_messages": 1,
+    "out_of_tree_unsigned_module_taint_messages_expected": true,
+    "earlier_hid_usage_warning_part_of_baseline": true
+  },
+  "return_to_xpad": {
+    "cached_binding_and_input_registration_verified": true,
+    "identity": {
+      "idVendor": "3537",
+      "idProduct": "100a",
+      "busnum": "8",
+      "devnum": "8",
+      "devpath": "6",
+      "bConfigurationValue": "1"
+    },
+    "interface_drivers": {
+      "8-6:1.0": "xpad",
+      "8-6:1.1": "usbhid"
+    },
+    "input_name": "Generic X-Box pad",
+    "native_module_unloaded": true,
+    "developer_nodes_removed": true,
+    "normal_function_user_confirmed": true,
+    "confirmation_application": "KDE Center",
+    "confirmation_source": "User statement after return; no automated post-return evdev recording",
+    "industrialio_left_loaded": true,
+    "industrialio_refcount_last_checked": 0,
+    "kernel_taint_last_checked": 12292,
+    "last_machine_snapshot_utc": "2026-10-12T13:39:37.881370+00:00"
+  },
+  "not_validated": [
+    "Native 109c GIP/IMU/motors",
+    "Simultaneous gamepad/IMU/four motors",
+    "USB polling rate from this evdev measurement",
+    "Full final rest window",
+    "Physical button-label correspondence",
+    "Long-term drift and physical TMR calibration",
+    "Native SDL/Steam integration",
+    "Hotplug, suspend/reset and concurrency fault cases"
+  ],
+  "provenance": {
+    "private_sources_not_committed": true,
+    "input_log": {
+      "path": "build/hardware-tests/001-continued-20261012T124928294422Z/input-test-60s.jsonl",
+      "sha256": "8302158c478b2d446220dc6c40a85a0c20b797b1137bb9f357bbfbe63dde04f0"
+    },
+    "reviewed_input_result": {
+      "path": "build/hardware-tests/001-continued-20261012T124928294422Z/input-test-60s-reviewed.json",
+      "sha256": "2a5244110653948792d2c90540647f4fb4d1ef069650173cabda5c6a8bbd7ad5"
+    },
+    "xpad_return_result": {
+      "path": "build/hardware-tests/001-continued-20261012T124928294422Z/xpad-return-bind-20261012T133933972262Z-result.json",
+      "sha256": "df0d1400e6fe3bc10d7e97441b7cca8086e06452a1b8c4c43da685938c096f65"
+    },
+    "user_confirmation": {
+      "path": "build/hardware-tests/001-continued-20261012T124928294422Z/user-return-confirmation.json",
+      "sha256": "a17f6b8d0c250779ef5c97724fb843899a21fb2a35943df6d4bb5806b572c041"
+    },
+    "completion": {
+      "path": "build/hardware-tests/001-continued-20261012T124928294422Z/hardware-test001-completion.json",
+      "sha256": "6ca65c3fdc51954687f0bce49cee4b65c8586892ab9b7452dfcb0a360c628544"
+    },
+    "private_evidence_manifest": {
+      "path": "build/hardware-tests/001-continued-20261012T124928294422Z/SHA256SUMS",
+      "sha256": "1bf55d0cbda6139a980248851180df1544759617734ea7d071cc9a72705daf20"
+    }
+  },
+  "documentation_step_hardware_actions": 0,
+  "documentation_validation": {
+    "make_test": "passed",
+    "python_tests": 44,
+    "other_checks": [
+      "C sensor contract",
+      "C motor/protocol states",
+      "C runtime under sanitizers",
+      "kernel mapping with fake callbacks",
+      "saved protocol fixtures",
+      "developer client self-test"
+    ],
+    "hardware_access": false,
+    "kernel_module_rebuilt": false
+  }
+}

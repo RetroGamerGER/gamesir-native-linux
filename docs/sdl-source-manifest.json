@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "project": "SDL3",
+  "release": "3.4.18",
+  "commit": "829a65d769d935c4852f8159e964312c0957260a",
+  "verified_offline_date": "2026-10-15",
+  "provenance": "Portable subset of the preserved local source manifest from 2026-10-11; all six local file hashes rechecked. Commit and URLs derive from that manifest; no network or current upstream HEAD verification. Original machine-specific manifest remains unchanged and excluded from Git/package.",
+  "files": [
+    {
+      "path": "src/joystick/linux/SDL_sysjoystick.c",
+      "url": "https://github.com/libsdl-org/SDL/blob/829a65d769d935c4852f8159e964312c0957260a/src/joystick/linux/SDL_sysjoystick.c",
+      "sha256": "4c787e35305b959a680c19aedc661e90000259d0f6d2a520a169dc6821067178"
+    },
+    {
+      "path": "src/core/linux/SDL_evdev_capabilities.c",
+      "url": "https://github.com/libsdl-org/SDL/blob/829a65d769d935c4852f8159e964312c0957260a/src/core/linux/SDL_evdev_capabilities.c",
+      "sha256": "dc3e9c9c1f672b70ea671bdf75f0eb88b4ae399655bb35a87dfe2e029dae5106"
+    },
+    {
+      "path": "src/sensor/SDL_sensor.c",
+      "url": "https://github.com/libsdl-org/SDL/blob/829a65d769d935c4852f8159e964312c0957260a/src/sensor/SDL_sensor.c",
+      "sha256": "a3919d4bf150cf1c049af7acd78a91eb580790f08658c0222a86e255546006fb"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "url": "https://github.com/libsdl-org/SDL/blob/829a65d769d935c4852f8159e964312c0957260a/CMakeLists.txt",
+      "sha256": "fe0499e8e269b9a6354b7000ba8b980b93fb138fb14f0891263abd77f2745662"
+    },
+    {
+      "path": "src/hidapi/SDL_hidapi.c",
+      "url": "https://github.com/libsdl-org/SDL/blob/829a65d769d935c4852f8159e964312c0957260a/src/hidapi/SDL_hidapi.c",
+      "sha256": "08ce58e11087f1174b3fe81b083f843292798ff7d074911d3c96142e5e75fb3d"
+    },
+    {
+      "path": "src/hidapi/libusb/hid.c",
+      "url": "https://github.com/libsdl-org/SDL/blob/829a65d769d935c4852f8159e964312c0957260a/src/hidapi/libusb/hid.c",
+      "sha256": "8ed97d4710100397ca4ed03ce49cb6211922e9f3f5ccc3a89b81dc382a9ccbce"
+    }
+  ]
+}

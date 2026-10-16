@@ -1,0 +1,134 @@
+{
+  "date": "2026-10-12",
+  "scope": "offline helper review and unprivileged cached metadata precheck only",
+  "live_execution_authorized": false,
+  "hardware_test_executed": false,
+  "hardware_device_opened": false,
+  "hardware_or_system_changes": false,
+  "sudo_invoked": false,
+  "offline": {
+    "started_utc": "2026-10-12T15:18:20.746633+00:00",
+    "completed_utc": "2026-10-12T15:18:21.640818+00:00",
+    "make_test_returncode": 0,
+    "show_plan_returncode": 0,
+    "parser_test_count": 44,
+    "helper_test_count": 17,
+    "real_client_synthetic_syscall_cases": 3,
+    "c_asan_ubsan": true,
+    "hardware_device_opened": false,
+    "privileged_commands": false,
+    "source_and_artifact_sha256": {
+      "tools/native/hardware_test_002.py": "145e4370fea56b0f2eb7ff68d520870fc41f362b5517a2219d016d79012fddab",
+      "tools/native/preflight.py": "3c9957acc5fc9baf142ca7ba68b3764b72cbcd4ba2b9806332e8172319647711",
+      "tools/native/gsnative-ctl.c": "808f1cb4e088f023a1955711281c3f4a3f0a349d5db05434d7f98acdbefef2db",
+      "tests/test_hardware_test_002.py": "01a5a8bb7d392e0ae26fcffc6b62390c68d8f3b6fc3acb1007624e527080cbdd",
+      "tests/native_client_fake.c": "fca104066414f0bd205fd98ac2d52dcbec1e124bc0b52683f531006b701ddc51",
+      "tests/check_native_client_output.py": "4097891f1a98ea59f8740d00e88cb545843aca596c3818f829cb7bdc906d9fcc",
+      "build/gsnative-ctl": "77347b4a0db825f007986eda93ead52f7d2834b0a9d4e630aa70edf14b9f6faf",
+      "build/kernel/gs_native.ko": "10bf827f05cdbff4a5389b47e2fb514a69cdbf604010d5d6439f0cf55eddf0ca",
+      "docs/HARDWARE_TEST_002_PHASES.json": "618a260101d0a412e606f9fb4a5dbf9757472672ec9eb58b8f5d543a46b779cd"
+    },
+    "limitations": [
+      "Live backend was never executed",
+      "Synthetic tests do not verify USB timing or mechanical stop",
+      "IMU path contains latest snapshots, not full packet stream",
+      "Return to xpad from native 109c remains untested"
+    ]
+  },
+  "precheck": {
+    "utc": "2026-10-12T15:14:25.534875+00:00",
+    "private_evidence_path": "build/hardware-tests/002-precheck-20261012T151425513553Z",
+    "identity": {
+      "idVendor": "3537",
+      "idProduct": "100a",
+      "busnum": "8",
+      "devnum": "14",
+      "devpath": "6",
+      "bConfigurationValue": "1"
+    },
+    "interfaces": {
+      "8-6:1.0": {
+        "bInterfaceNumber": "00",
+        "bAlternateSetting": "0",
+        "bInterfaceClass": "ff",
+        "bInterfaceSubClass": "5d",
+        "bInterfaceProtocol": "01",
+        "driver": "xpad",
+        "endpoints": {
+          "ep_02": {
+            "bEndpointAddress": "02",
+            "bmAttributes": "03",
+            "wMaxPacketSize": "0020",
+            "bInterval": "08"
+          },
+          "ep_82": {
+            "bEndpointAddress": "82",
+            "bmAttributes": "03",
+            "wMaxPacketSize": "0020",
+            "bInterval": "01"
+          }
+        }
+      },
+      "8-6:1.1": {
+        "bInterfaceNumber": "01",
+        "bAlternateSetting": "0",
+        "bInterfaceClass": "03",
+        "bInterfaceSubClass": "00",
+        "bInterfaceProtocol": "00",
+        "driver": "usbhid",
+        "endpoints": {
+          "ep_04": {
+            "bEndpointAddress": "04",
+            "bmAttributes": "03",
+            "wMaxPacketSize": "0040",
+            "bInterval": "05"
+          },
+          "ep_84": {
+            "bEndpointAddress": "84",
+            "bmAttributes": "03",
+            "wMaxPacketSize": "0040",
+            "bInterval": "01"
+          }
+        }
+      }
+    },
+    "kernel": "7.2.9-2-garuda",
+    "header_kernel_release": "7.2.9-2-garuda",
+    "module": {
+      "vermagic": "7.2.9-2-garuda SMP preempt mod_unload",
+      "srcversion": "871C78F248057A94E1D682A",
+      "depends": "industrialio",
+      "alias": "",
+      "parm": "session_ms:One output session per binding, default 30000 ms, hard limit 1..135000 ms (uint)\naccel_counts_per_g_den: (uint)\naccel_counts_per_g_num:EXPERIMENTAL replaceable acceleration counts/g numerator (uint)\nenable_output:Permit explicitly started bounded OUT session; only 109c; default false (bool)\ntest_pid:Exact expected PID: 0x100a or 0x109c; required (ushort)\ntest_interface:Exact sysfs interface (e.g. 8-6:1.0); required, single binding only (charp)"
+    },
+    "gs_native_loaded": false,
+    "industrialio_loaded": true,
+    "normal_baseline_matches": true,
+    "stable_during_check": true,
+    "metadata_precheck_passed": true,
+    "controller_connection": "user-confirmed, not inferred from PID",
+    "unprivileged_process_scan_complete": false,
+    "unreadable_process_count": 497,
+    "visible_deadband_processes": 0,
+    "visible_target_usb_handles": 0,
+    "journal_read_unprivileged": true,
+    "baseline_warning": "hid-generic ignoring exceeding usage max at 15:12:25.741499 UTC, before precheck; also present on earlier 100a enumerations",
+    "free_bytes": 416882065408,
+    "user_directory_write_check": true
+  },
+  "evidence": {
+    "offline_path": "build/results/hardware-test002-offline-20261012T151820746633Z",
+    "precheck_manifest_sha256": "2053625281704ada735803e4cc527052b1ad48df061b7f69594eb7be89a530d4",
+    "offline_manifest_sha256": "56be88571971ed3232c3509fe9d012f06fe80e489a37efd4462d219d6b125811",
+    "sha256_verified": true,
+    "original_earlier_109c_precheck_preserved": "build/hardware-tests/002-precheck-20261012T145101322045Z/"
+  },
+  "native_109c_validated": false,
+  "native_109c_return_validated": false,
+  "gyro_si_calibrated": false,
+  "remaining": [
+    "Fresh metadata/connection and complete process-handle check immediately before an authorized handover",
+    "Separate explicit approvals for Deadband transition, module load, exact handover/session sequence and return operations",
+    "Actual evdev/IMU coexistence, motor perception and xpad return require hardware evidence"
+  ]
+}

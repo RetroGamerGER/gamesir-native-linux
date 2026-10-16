@@ -1,0 +1,88 @@
+{
+  "prepared_utc": "2026-10-12T16:49:26.261372+00:00",
+  "executed_hardware": false,
+  "approval_status": "previous two launcher attempts stopped before capture; new attempt after metadata correction requires new approval",
+  "legacy_launcher_executed_or_imported": false,
+  "new_launcher_executed_or_imported": true,
+  "checks": {
+    "python_ast_and_compile_only": true,
+    "setup_bash_syntax_only": true,
+    "twelve_cues_four_separate_windows": true,
+    "existing_guard_boundaries_unchanged": true,
+    "fresh_monotonic_latency_guard_boundaries": true,
+    "make_test_exit_status": 0,
+    "setup_guest_identity_byte_identical_to_prior_capture": true,
+    "state_check_uses_dynamic_kernel_registration": true,
+    "synthetic_metadata_cases_passed": 13,
+    "actual_host_identity_process_metadata_read_only_passed": true
+  },
+  "workspace_relative_sha256": {
+    "work/measurement-b-code/setup.sh": "482cd0aac9e63c724efeccf48903fa8e0875f9b170144ad0f3701cfff211ac36",
+    "work/measurement-b-code/guest-check.py": "105216872466430161aac6ae01e2399b54a1edd37149effcfac1cb721004e5db",
+    "work/measurement-b-code/identity-check.py": "0de36993528e3125a2351c568024072539f3ad64c398279196b253606d9c1d17",
+    "work/measurement-b-code/state-check.py": "605faefc63632171c7368647b0eda421adcc4ae3b1a1c6edde49e725c43dc86d",
+    "work/motor-comparison-code/setup.sh": "482cd0aac9e63c724efeccf48903fa8e0875f9b170144ad0f3701cfff211ac36",
+    "work/motor-comparison-code/guest-check.py": "105216872466430161aac6ae01e2399b54a1edd37149effcfac1cb721004e5db",
+    "work/motor-comparison-code/identity-check.py": "0de36993528e3125a2351c568024072539f3ad64c398279196b253606d9c1d17",
+    "work/motor-comparison-code/state-check.py": "081a414833efe5a6c9a1b28a08e8b298608871e0386ba17e5f1bba744ccc8a01",
+    "work/run-measurement-b.py": "d565fb835406c9f2bcbf9c51731f97f28ced4f30dd3ec91b59e32f5d81c1b2b7",
+    "work/run-motor-comparison.py": "ed16eae2bfaac40add273571468807e9ac759d6707f3de0a9ffacb000f5e38ae",
+    "work/measurement-b-file-observer.py": "2f3e30cf280dc0b1faf485c3e834ce947a7e760ed31daa549da8a5c5861fb591"
+  },
+  "pulse_cues_seconds": [
+    [
+      100,
+      "pulse_left_grip_1"
+    ],
+    [
+      110,
+      "pulse_left_grip_2"
+    ],
+    [
+      120,
+      "pulse_left_grip_3"
+    ],
+    [
+      130,
+      "pulse_right_grip_1"
+    ],
+    [
+      140,
+      "pulse_right_grip_2"
+    ],
+    [
+      150,
+      "pulse_right_grip_3"
+    ],
+    [
+      160,
+      "pulse_lt_1"
+    ],
+    [
+      170,
+      "pulse_lt_2"
+    ],
+    [
+      180,
+      "pulse_lt_3"
+    ],
+    [
+      190,
+      "pulse_rt_1"
+    ],
+    [
+      200,
+      "pulse_rt_2"
+    ],
+    [
+      210,
+      "pulse_rt_3"
+    ]
+  ],
+  "limitations": [
+    "Two prior host prechecks aborted; no recorder or USB capture started. Corrected launcher not yet run.",
+    "Manual actions and motor perception require packet evidence and user report.",
+    "Previous native run has no raw USB capture."
+  ],
+  "scope_note": "This field refers to the recorder: never opened. usbmon was separately approved and loaded; see progress report."
+}

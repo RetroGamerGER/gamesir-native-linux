@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: GPL-2.0-only
+pkgname=gamesir-native-steam-gamescope
+pkgver=@VERSION@
+pkgrel=1
+pkgdesc='Optional GameSir Paddle mapping for the CachyOS Gamescope Steam launcher'
+arch=('any')
+license=('GPL-2.0-only')
+depends=('gamesir-native-steam>=0.1.0.alpha2' 'gamescope-session-cachyos')
+makedepends=('python')
+source=("gamesir-native-steam-gamescope-${pkgver}.tar.gz")
+sha256sums=('@SOURCE_SHA256@')
+
+check() {
+  cd "$srcdir/gamesir-native-steam-gamescope-$pkgver"
+  python -B tests/test_packaging_gamescope.py
+}
+
+package() {
+  cd "$srcdir/gamesir-native-steam-gamescope-$pkgver"
+  python -B scripts/package_steam.py stage --component gamescope --dest "$pkgdir"
+}

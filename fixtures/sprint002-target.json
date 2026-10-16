@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "origin": "real_saved_target_only_excerpt_not_synthetic",
+  "privacy": "No bus/address/serial/absolute timestamps or other devices included",
+  "source_capture_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+  "source_records_sha256": "63c928f9347bb3b262197305a2935c7060d9f95309bc690eab6bf34dfa838956",
+  "cases": [
+    {
+      "name": "xinput",
+      "source_record_line": 1,
+      "record": {
+        "endpoint": "82",
+        "stage": "complete",
+        "status": 0,
+        "reported_length": 20,
+        "capture_truncated": false,
+        "data_hex": "0014000000000c00010000000000000000000000",
+        "device": {
+          "vid": "3537",
+          "pid": "100a",
+          "interface": 0
+        }
+      },
+      "expected": {}
+    },
+    {
+      "name": "gip",
+      "source_record_line": 286,
+      "record": {
+        "endpoint": "82",
+        "stage": "complete",
+        "status": 0,
+        "reported_length": 36,
+        "capture_truncated": false,
+        "data_hex": "200001200000000000000000000000000000000000000000000000000000000000000000",
+        "device": {
+          "vid": "3537",
+          "pid": "109c",
+          "interface": 0
+        }
+      },
+      "expected": {}
+    },
+    {
+      "name": "imu_nonzero",
+      "source_record_line": 300,
+      "record": {
+        "endpoint": "82",
+        "stage": "complete",
+        "status": 0,
+        "reported_length": 64,
+        "capture_truncated": false,
+        "data_hex": "1000473ce0808080800f00000000000000ffffffff02000501122090ff00000000620000ffff00ffff00ffff00ffff00a13a5d807e7f840f0000000000000000",
+        "device": {
+          "vid": "3537",
+          "pid": "109c",
+          "interface": 0
+        }
+      },
+      "expected": {
+        "gyro_raw": [
+          -1,
+          -1,
+          2
+        ],
+        "accel_raw": [
+          261,
+          8210,
+          -112
+        ]
+      }
+    },
+    {
+      "name": "left_grip",
+      "source_record_line": 15545,
+      "record": {
+        "endpoint": "02",
+        "stage": "complete",
+        "status": 0,
+        "reported_length": 13,
+        "capture_truncated": false,
+        "data_hex": "09000109000f00006400280000",
+        "device": {
+          "vid": "3537",
+          "pid": "109c",
+          "interface": 0
+        }
+      },
+      "expected": {}
+    },
+    {
+      "name": "right_grip",
+      "source_record_line": 15859,
+      "record": {
+        "endpoint": "02",
+        "stage": "complete",
+        "status": 0,
+        "reported_length": 13,
+        "capture_truncated": false,
+        "data_hex": "09000309000f00000064280000",
+        "device": {
+          "vid": "3537",
+          "pid": "109c",
+          "interface": 0
+        }
+      },
+      "expected": {}
+    },
+    {
+      "name": "left_trigger",
+      "source_record_line": 16231,
+      "record": {
+        "endpoint": "02",
+        "stage": "complete",
+        "status": 0,
+        "reported_length": 13,
+        "capture_truncated": false,
+        "data_hex": "09000509000f64000000280000",
+        "device": {
+          "vid": "3537",
+          "pid": "109c",
+          "interface": 0
+        }
+      },
+      "expected": {}
+    },
+    {
+      "name": "right_trigger",
+      "source_record_line": 16772,
+      "record": {
+        "endpoint": "02",
+        "stage": "complete",
+        "status": 0,
+        "reported_length": 13,
+        "capture_truncated": false,
+        "data_hex": "09000909000f00640000280000",
+        "device": {
+          "vid": "3537",
+          "pid": "109c",
+          "interface": 0
+        }
+      },
+      "expected": {}
+    }
+  ],
+  "transition_packets": [
+    {
+      "step": 0,
+      "data_hex": "0008006761000000"
+    },
+    {
+      "step": 1,
+      "data_hex": "0008000000000000"
+    },
+    {
+      "step": 2,
+      "data_hex": "0008006d65000000"
+    },
+    {
+      "step": 3,
+      "data_hex": "0008000000000000"
+    },
+    {
+      "step": 4,
+      "data_hex": "0008007369000000"
+    },
+    {
+      "step": 5,
+      "data_hex": "0008000000000000"
+    },
+    {
+      "step": 6,
+      "data_hex": "0008007261000000"
+    },
+    {
+      "step": 7,
+      "data_hex": "0008000000000000"
+    },
+    {
+      "step": 8,
+      "data_hex": "0008007070000000"
+    }
+  ],
+  "limits": "Small regression selection; complete capture remains private outside Git. Raw gyro units unknown.",
+  "gip_initialization_packets": [
+    {
+      "step": 0,
+      "source_record_line": 277,
+      "data_hex": "0520000100",
+      "status": 0,
+      "vid": "3537",
+      "pid": "109c",
+      "endpoint": "02"
+    },
+    {
+      "step": 1,
+      "source_record_line": 278,
+      "data_hex": "0a200103000114",
+      "status": 0,
+      "vid": "3537",
+      "pid": "109c",
+      "endpoint": "02"
+    },
+    {
+      "step": 2,
+      "source_record_line": 279,
+      "data_hex": "062002020100",
+      "status": 0,
+      "vid": "3537",
+      "pid": "109c",
+      "endpoint": "02"
+    }
+  ]
+}
