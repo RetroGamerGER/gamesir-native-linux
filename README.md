@@ -46,9 +46,10 @@ licenses remain their own; see the [provenance and licensing audit](docs/LICENSI
 
 ## Project Status and Supported Scope
 
-**Publication stage: PRE-ALPHA.** Existing module/package version identifiers
-such as `0.1.0.alpha3` do not change this status. No public release is tagged
-by this preparation work.
+**Publication stage: PRE-ALPHA.** The source code is published in the
+[public GitHub repository](https://github.com/RetroGamerGER/gamesir-native-linux).
+Existing module/package version identifiers such as `0.1.0.alpha3` do not
+change this status. An officially tagged PRE-ALPHA release is still pending.
 
 | Device / environment | Evidence and limits |
 | --- | --- |
@@ -170,10 +171,9 @@ and the requirements for considering a future Linux-kernel submission.
 
 ## Release Policy
 
-Any first public release must be explicitly labeled **PRE-ALPHA**, with known
-limitations and the exact source/package versions. Publication and a GitHub
-push require explicit maintainer approval. This preparation is not that
-approval and creates no remote repository or public release.
+An officially tagged **PRE-ALPHA** release is still pending. It must state
+the known limitations and exact source/package versions. Future releases
+and GitHub pushes continue to require explicit maintainer approval.
 
 The [publication/privacy check](docs/PUBLIC_RELEASE_CHECK.md) requires a
 separate sanitized source snapshot. The private development history is not
