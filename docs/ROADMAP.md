@@ -55,7 +55,8 @@ Die neue Fassung ergänzt eindeutige Instanz-/Quellzuordnung, versionierten
 Transport, Frischeprüfung, Stopbarrieren und Geräteersatz-Abbruch sowie einen
 getrennten Paketquellhelfer. Offline-Regressionen und die separat freigegebene
 lokale Installation sind abgeschlossen. Xodus-Startzusatz vorbereitet;
-Benutzerberechtigung und integrierte Spielabnahme noch offen. Keine neuen
+effektive Benutzerberechtigung und native Brokerzuordnung geprüft.
+Integrierte Spielabnahme noch offen. Keine neuen
 Motor-/Hardwaretests bisher. Bestehende Eingaben,
 Paddles, Griff-FF und Roh-IMU erhalten. [Umfang](TRIGGER_BRIDGE.md).
 

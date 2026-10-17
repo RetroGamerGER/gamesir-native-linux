@@ -12,8 +12,12 @@ Archiv überein. Der native Dienst läuft nach dem vom Benutzer ausgeführten
 Start mit erfolgreichem Bootstrap unter `109c`, Name `GameSir G7 Pro`;
 keine Dienstneustarts während der Bridge-Installation. Nur Forzas vorhandener
 Xodus-Startzusatz wurde bei geschlossenen Anwendungen ersetzt und gesichert.
-Die einmalige Benutzerberechtigung zur Haptikgruppe fehlt noch; keine
-Gruppen-/Socketrechte geändert und kein integrierter Forza-Lauf gestartet.
+Der Benutzer hat die einmalige Mitgliedschaft in der Haptikgruppe gesetzt.
+Nach regulärem PC-Neustart sind die effektiven Gruppenrechte auch im normal
+gestarteten Nexus vorhanden; unprivilegiertes Broker-Listing und eindeutige
+native Gerätezuordnung bestanden. Ein bloßer Desktop-Neulogin hatte den
+weiterlaufenden Benutzer-Manager hier nicht mit neuen Gruppen versehen.
+Keine Socketrechte aufgeweitet; integrierte Spielabnahme weiter offen.
 Gyrokalibrierung pausiert, kein Push oder Release.
 [Installation und nächste Testgrenze](TRIGGER_BRIDGE.md#local-installation-and-prepared-xodus-test).
 

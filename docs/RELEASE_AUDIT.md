@@ -9,10 +9,11 @@ installation, activation, hardware acceptance and publication remain separate.
 Update 2026-10-17: the sanitized source baseline was published as
 `v0.1.0-pre-alpha.1`. The historical preparation audit below retains its
 original scope. The new optional [trigger bridge](TRIGGER_BRIDGE.md) is a
-subsequent local offline change, not part of that tag and not installed or
-hardware-accepted. Its separate provenance check precedes source integration;
-its eventual publication/installation requires explicit approval. No kernel,
-manager, paddle, IMU calibration or running-system change is implied.
+subsequent offline-tested change, not part of that tag. It was installed
+locally under separate authorization; its integrated hardware acceptance is
+still pending. Its separate provenance check precedes source integration;
+publication remains conditional on the approved test and release review.
+The optional package does not change kernel, manager, paddle or IMU sources.
 
 Date: 2026-10-16. This is a local readiness assessment, not a published release
 or permission to install, activate, test hardware, create a remote, or push.

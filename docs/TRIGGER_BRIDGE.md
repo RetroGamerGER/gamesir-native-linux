@@ -109,6 +109,13 @@ new login can remove per-game password prompts. Membership permits the
 account's processes to use the bounded four-motor API, not only this relay;
 it grants no USB/root/manager rights. This work changes no memberships.
 
+Check the effective groups of the actual desktop/launcher process. On a
+system whose user manager survives desktop logout, logging in again can
+leave desktop-launched applications with their old groups. A regular PC
+reboot refreshes that process tree; changing socket permissions or repeatedly
+restarting the controller service is not the remedy. An account-database
+membership listing alone does not prove a running process can connect.
+
 This optional version never edits Nexus JSON, Steam settings, shared
 Wine/Proton files, global environment, services or Steam paddle integration.
 Existing preloads/inherited bridge sessions are rejected for explicit review.
@@ -198,7 +205,7 @@ configuration was compared structurally before/after: every other profile
 value was preserved. This is an explicit local test setup, not automatic
 configuration for all games or a change to Nexus binaries.
 
-At this checkpoint the account lacks `gamesir-native-haptics` membership.
+At the initial installation checkpoint the account lacked `gamesir-native-haptics` membership.
 No membership, socket permissions or launcher process credentials were
 changed. One-time group enrollment and a fresh login are required before
 ordinary unprivileged launches can access the broker. Installation and the
@@ -206,3 +213,12 @@ device-free `plan` command do not establish working trigger effects.
 No integrated Forza run has started, and no push or new release has occurred.
 Keep original transaction and verification logs private; the integrated
 hardware result must be documented separately after the actual test.
+
+The user subsequently performed the one-time group enrollment and authorized
+a regular reboot. Afterwards the ordinary desktop, Nexus and broker preflight
+had effective group access without sudo. Exactly one native evdev/USB/broker
+instance passed the existing discovery and verification guards. A successful
+native bootstrap was observed between fresh checks, without any agent-issued
+resume, mode packet or recovery action. The integrated Forza launch was then
+cued; its mechanical effect/stop acceptance is still pending. No game launch
+or effect is inferred from the permission or discovery checks alone.
