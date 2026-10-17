@@ -202,6 +202,33 @@ fresh hardware acceptance; activation requires a new explicit approval.
 [Sanitized verification record](evidence/CORE_UPDATE_CACHYOS_20261017.json).
 Private before/after inventories, logs and checksums remain outside Git.
 
+## Subsequent native activation — read-only corroboration
+
+Later on 2026-10-17, a fresh activation precheck first found an unowned
+`109c/xpad` instance with the service stopped. It was not adopted or reset by
+the checking tools. After the user's completion message, the service and
+module were already running. A separately approved read of the protected
+state then showed pause false, one active lease and a successful bootstrap
+from a newer `100a` instance to `109c`: return code zero, state 7, error zero,
+and accepted gamepad/IMU data with runtime handover recorded.
+
+A subsequent fresh, unprivileged sysfs check matched the saved active
+session's USB identity/address to IF0 bound to `gs_native`. The registered
+input device was named `GameSir G7 Pro` and exposed all four paddle codes
+704–707. The service was active/running, enabled, with zero restarts and no
+pending job. The saved state and current USB metadata corroborate startup;
+the state file is not a fresh direct runtime probe or proof of continued
+sensor delivery.
+
+This follow-up issued no start, resume, release, binding write, USB command
+or input/motor test. Registered capabilities alone do not prove new physical
+button events. No new reconnect, suspend, boot, Steam-paddle or motor
+acceptance is inferred. Gyro calibration remains paused; the optional
+trigger bridge remains excluded.
+
+[Sanitized activation record](evidence/CORE_ACTIVATION_CACHYOS_20261017.json).
+Original protected state and host-specific metadata remain private.
+
 See [installation and removal](INSTALLATION.md), [runtime ownership](ALPHA_RUNTIME.md),
 [prior conflict handling](MANAGER_CONFLICT_FIX.md), and the separate
 [trigger-bridge acceptance boundary](TRIGGER_BRIDGE.md).

@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-17",
+  "scope": "Read-only corroboration following user completion message; activation commands were not issued by this check",
+  "package": "gamesir-native-dkms 0.1.0.alpha3-6",
+  "kernel": "7.2.9-2-cachyos-deckify",
+  "service": {
+    "active": true,
+    "enabled": true,
+    "restarts": 0,
+    "pending_job": false
+  },
+  "saved_state": {
+    "paused": false,
+    "lease_count": 1,
+    "phase": "active",
+    "origin_pid": "100a",
+    "runtime_pid": "109c",
+    "bootstrap_returncode": 0,
+    "bootstrap_status": {
+      "state": 7,
+      "error": 0,
+      "failed_stage": 0,
+      "pad": 1,
+      "imu": 1,
+      "handover": 1,
+      "port_token": 1,
+      "instance_token": 2
+    }
+  },
+  "fresh_sysfs": {
+    "identity": "3537:109c",
+    "matches_saved_session_identity_and_address": true,
+    "interface_0": "gs_native",
+    "input_name": "GameSir G7 Pro",
+    "registered_paddle_codes": [
+      704,
+      705,
+      706,
+      707
+    ]
+  },
+  "not_performed_by_check": [
+    "Service start or resume",
+    "Release, reset or rebinding",
+    "USB commands",
+    "Input or motor test",
+    "Installation or Steam changes",
+    "Gyro calibration",
+    "Push or release"
+  ],
+  "limits": [
+    "Saved state is not a fresh direct runtime/sensor probe",
+    "Registered input capabilities do not prove new physical button events",
+    "No new boot, reconnect, suspend, Steam paddle or motor acceptance",
+    "Host-specific originals remain private"
+  ],
+  "loaded_module": {
+    "version": "0.1.0.alpha3",
+    "srcversion": "71D6C2E25BA80E69BB4818D",
+    "matches_prebuilt_candidate": true,
+    "protected_parameters": "Not read; no privilege escalation attempted for optional parameters"
+  }
+}

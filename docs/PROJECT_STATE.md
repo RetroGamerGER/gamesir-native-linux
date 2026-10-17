@@ -5,6 +5,17 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Nachfolgende native Aktivierung auf CachyOS lesend bestätigt:** Bei der
+Kontrolle nach Rückmeldung des Benutzers liefen Dienst und Modul bereits;
+dieser Prüfschritt führte weder Dienststart noch Resume aus. Der gespeicherte
+Managerzustand meldete Pause aus, eine aktive Sitzung und erfolgreichen
+Bootstrap. Die anschließend frisch gelesene `109c`-Instanz stimmte mit dieser
+Sitzung überein und war an `gs_native` gebunden. Das registrierte Input-Gerät
+heißt `GameSir G7 Pro` und enthält die vier Paddle-Codes 704–707. Dienst aktiv,
+Autostart aktiviert, keine Dienstneustarts. Dies ist eine Zustandsbestätigung,
+kein neuer Eingabe-, Motor-, Reconnect- oder Boot-Test. Gyrokalibrierung bleibt
+pausiert. [Nachweis und Grenzen](MANAGER_RECONNECT_FIX.md#subsequent-native-activation--read-only-corroboration).
+
 **Kernpaket auf dem CachyOS-/Gamescope-Testsystem angeglichen:** Nach gesonderter
 Freigabe wurde ausschließlich `gamesir-native-dkms` von `0.1.0.alpha3-4` auf
 `0.1.0.alpha3-6` aktualisiert. Der vorherige gerätefreie Modulbau und der
