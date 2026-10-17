@@ -1,7 +1,7 @@
-# Optional game trigger bridge — offline integration
+# Optional game trigger bridge — integration and local acceptance
 
-Status: 2026-10-17, PRE-ALPHA. This integrated revision is **offline-only**,
-not installed or hardware-accepted. Gyroscope calibration remains paused.
+Status: 2026-10-17, PRE-ALPHA. This integrated revision is offline-tested and
+installed locally, **not yet hardware-accepted**. Gyroscope calibration remains paused.
 Kernel, manager, paddle mapping, firmware and controller settings are unchanged.
 [Provenance and licensing](TRIGGER_BRIDGE_PROVENANCE.md) were checked first.
 
@@ -173,3 +173,36 @@ trigger effects/stops, process crash, reconnect, suspend and multiple devices.
 Steam/Proton needs its own supported launch hook, container/ABI tests and real
 game acceptance. Automatic launcher setup without per-game configuration
 remains a future adapter task, not a completed feature of this offline phase.
+
+## Local installation and prepared Xodus test
+
+The maintainer separately authorized installation and a subsequent integrated
+Forza/Xodus test. Only `gamesir-native-trigger-bridge 0.1.0.alpha1-1` was
+installed. The transaction completed successfully; package checking reported
+27 entries and zero altered files, and all 14 regular payload files matched
+the reviewed archive. Its SHA256 is
+`801e17786cecae38d7e80c318ffa48a8bc3bbf0c110d70f5096b9b4efe960528`.
+There are no package-specific activation hooks, services or kernel modules.
+The running native service retained its process and zero restart count;
+core package `0.1.0.alpha3-6` and Steam integration were unchanged.
+
+After Forza and Nexus were closed, only Forza's existing launch option was
+replaced with the installed adapter:
+
+```text
+/usr/bin/gamesir-native-trigger-bridge run --adapter nexus-sdl2 --profile forza-horizon-6 -- %command%
+```
+
+The former launch-tools field was backed up privately with mode 0600. The
+configuration was compared structurally before/after: every other profile
+value was preserved. This is an explicit local test setup, not automatic
+configuration for all games or a change to Nexus binaries.
+
+At this checkpoint the account lacks `gamesir-native-haptics` membership.
+No membership, socket permissions or launcher process credentials were
+changed. One-time group enrollment and a fresh login are required before
+ordinary unprivileged launches can access the broker. Installation and the
+device-free `plan` command do not establish working trigger effects.
+No integrated Forza run has started, and no push or new release has occurred.
+Keep original transaction and verification logs private; the integrated
+hardware result must be documented separately after the actual test.

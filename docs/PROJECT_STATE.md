@@ -5,7 +5,19 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Reconnect-Korrektur als PRE-ALPHA-Update lokal installiert:** Der belegte Fehler
+**Integrierte Trigger-Bridge lokal installiert, Spielabnahme offen:** Das
+separat freigegebene Zusatzpaket `gamesir-native-trigger-bridge 0.1.0.alpha1-1`
+ist installiert; alle 14 regulären Paketdateien stimmen mit dem geprüften
+Archiv überein. Der native Dienst läuft nach dem vom Benutzer ausgeführten
+Start mit erfolgreichem Bootstrap unter `109c`, Name `GameSir G7 Pro`;
+keine Dienstneustarts während der Bridge-Installation. Nur Forzas vorhandener
+Xodus-Startzusatz wurde bei geschlossenen Anwendungen ersetzt und gesichert.
+Die einmalige Benutzerberechtigung zur Haptikgruppe fehlt noch; keine
+Gruppen-/Socketrechte geändert und kein integrierter Forza-Lauf gestartet.
+Gyrokalibrierung pausiert, kein Push oder Release.
+[Installation und nächste Testgrenze](TRIGGER_BRIDGE.md#local-installation-and-prepared-xodus-test).
+
+**Vorheriger Prüfpunkt: Reconnect-Korrektur als PRE-ALPHA-Update lokal installiert:** Der belegte Fehler
 `Device changed during native status access` konnte eine neue 100a/xpad-
 Instanz dauerhaft als `released`/bereits versucht blockieren. Gesunde veraltete
 Getter werden jetzt getrennt von echten Runtime-/Bootstrapfehlern behandelt.

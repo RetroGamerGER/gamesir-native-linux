@@ -11,10 +11,12 @@ Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 
 Lokal installiert: Manager-Reconnect-Korrektur in Paketrevision 6,
 unverändertes Kernelmodul/ABI. Nach bestandenen Offline-Regressionen wurde das
-ausdrücklich freigegebene Update installiert und lesend geprüft; Dienst
-inaktiv, Verwaltung pausiert. Als Nächstes pausierten Start/Resume und
-kontrollierte reale Wiederverbindung getrennt freigeben und abnehmen,
-bevor die integrierte Forza-/Xodus-Bridge getestet wird. Alter Fehlerzustand
+ausdrücklich freigegebene Update installiert und lesend geprüft. Danach wurde
+der Dienst vom Benutzer gestartet; ein erfolgreicher nativer Bootstrap ist
+inzwischen beobachtet. Kontrollierte reale Wiederverbindung weiterhin
+getrennt freigeben und abnehmen. Der freigegebene integrierte Forza-/Xodus-Test
+nutzt zunächst die bestehende Verbindung und ersetzt diese Reconnect-Abnahme
+nicht. Alter Fehlerzustand
 wird nicht automatisch entsperrt. [Korrektur und Rückweg](MANAGER_RECONNECT_FIX.md).
 
 Öffentliche Fassung ausdrücklich als **PRE-ALPHA** vorbereiten. Vollständigen
@@ -51,8 +53,10 @@ Belege: [Gamescope](STEAM_GAMESCOPE.md),
 optionale Userspace-Komponente integriert, nicht in den Kernel verschoben.
 Die neue Fassung ergänzt eindeutige Instanz-/Quellzuordnung, versionierten
 Transport, Frischeprüfung, Stopbarrieren und Geräteersatz-Abbruch sowie einen
-getrennten Paketquellhelfer. Zunächst ausschließlich Offline-Regressionen;
-keine Installation oder neue Motor-/Hardwaretests. Bestehende Eingaben,
+getrennten Paketquellhelfer. Offline-Regressionen und die separat freigegebene
+lokale Installation sind abgeschlossen. Xodus-Startzusatz vorbereitet;
+Benutzerberechtigung und integrierte Spielabnahme noch offen. Keine neuen
+Motor-/Hardwaretests bisher. Bestehende Eingaben,
 Paddles, Griff-FF und Roh-IMU erhalten. [Umfang](TRIGGER_BRIDGE.md).
 
 Nächste getrennte Schritte: integrierten Xodus-Pfad ausdrücklich freigeben

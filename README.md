@@ -102,8 +102,8 @@ computer.
   experimental application API do not automatically enable impulse triggers
   in SDL, Steam or Proton games. A separate Forza/Xodus bridge recorded felt
   LT/RT game effects; the [reviewed integration](docs/TRIGGER_BRIDGE.md) is
-  offline-only and still needs its own hardware acceptance. Steam/Proton
-  integration and automatic launcher setup remain unvalidated.
+  offline-tested and installed locally, awaiting its own hardware acceptance.
+  Steam/Proton integration and automatic launcher setup remain unvalidated.
 - **Steam paddles do not extend XInput.** Steam Input can map four independent
   sources, but a game's input API determines whether it can bind additional
   controller buttons directly. Universal in-game binding is not promised.

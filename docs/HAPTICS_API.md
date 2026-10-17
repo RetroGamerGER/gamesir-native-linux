@@ -11,7 +11,8 @@ bestimmte endliche Dauer, einzelne Kanalstopps, Verbindungsbesitz, Wiederverbind
 schutz und begrenzte Hardwarebefehle. Die integrierte Anwendungskette benötigt
 noch ihre eigene Hardwareabnahme. Eine getrennte projektinterne Forza-/Xodus-
 SDL2-Bridge meldet inzwischen fühlbare LT-/RT-Spieleffekte über diesen Broker.
-Ihre abgesicherte [Integration](TRIGGER_BRIDGE.md) ist nur offline geprüft;
+Ihre abgesicherte [Integration](TRIGGER_BRIDGE.md) ist offline geprüft und lokal
+installiert; die integrierte Spielabnahme steht noch aus.
 Steam/Proton, Reconnect und Suspend sind dadurch nicht belegt. Die früheren
 manuellen Viermotor-Nachweise belegen die zugrunde liegenden USB-Pakete.
 
