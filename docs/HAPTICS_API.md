@@ -8,9 +8,12 @@ Ein Spiel oder Adapter muss diese API ausdrücklich integrieren.
 
 Implementiert und offline getestet: vier unabhängige Amplituden, vom Programm
 bestimmte endliche Dauer, einzelne Kanalstopps, Verbindungsbesitz, Wiederverbindungs-
-schutz und begrenzte Hardwarebefehle. Die neue Anwendungskette wurde noch nicht
-auf echter Hardware ausgeführt. Die früheren manuellen Viermotor-Nachweise
-belegen ihre zugrunde liegenden USB-Pakete, nicht diese neue Broker-Integration.
+schutz und begrenzte Hardwarebefehle. Die integrierte Anwendungskette benötigt
+noch ihre eigene Hardwareabnahme. Eine getrennte projektinterne Forza-/Xodus-
+SDL2-Bridge meldet inzwischen fühlbare LT-/RT-Spieleffekte über diesen Broker.
+Ihre abgesicherte [Integration](TRIGGER_BRIDGE.md) ist nur offline geprüft;
+Steam/Proton, Reconnect und Suspend sind dadurch nicht belegt. Die früheren
+manuellen Viermotor-Nachweise belegen die zugrunde liegenden USB-Pakete.
 
 ## Zugriff
 

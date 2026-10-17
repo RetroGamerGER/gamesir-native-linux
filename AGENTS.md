@@ -32,6 +32,17 @@ XInput/GIP/IMU formats and hardware-confirmed four-motor packet support.
 is unknown; calibration is paused and calibrated SDL output is not approved.
 No universal trigger-game support or general stability guarantee.
 
+## Optional trigger bridge
+
+Keep game/Wine/SDL adapters and per-game gains in userspace. Use the existing
+broker; never open USB/input nodes or bypass native ownership guards. Require
+exact evdev-to-native-instance association and preserve zero/stop barriers.
+Reject stale sessions rather than adopting replacement devices. Read
+docs/TRIGGER_BRIDGE.md and its provenance audit before extending this path.
+The integrated revision is offline-only; Steam/Proton is plan-only until its
+runtime is separately validated. Never globally preload the hook into Steam
+or a desktop session. Existing paddle mapping remains independent.
+
 ## Public snapshot
 
 This export omits private development-session instructions and consumed

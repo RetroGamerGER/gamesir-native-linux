@@ -37,6 +37,7 @@ DOCUMENT_FILES = (
     'docs/imu-calibration-analysis.json', 'docs/sdl-source-manifest.json',
     'docs/ARCHITECTURE.md', 'docs/G7_PRO_VARIANTS.md', 'docs/FOUR_MOTOR_KERNEL.md',
     'docs/GIT_SETUP_VALIDATION.md', 'docs/HAPTICS_API.md',
+    'docs/TRIGGER_BRIDGE.md', 'docs/TRIGGER_BRIDGE_PROVENANCE.md',
     'docs/HARDWARE_TEST_001.md', 'docs/HARDWARE_TEST_002.md',
     'docs/HARDWARE_TEST_002_OFFLINE_CHECK.md', 'docs/HARDWARE_TEST_002_PROGRESS.md',
     'docs/HARDWARE_TEST_003.md', 'docs/HARDWARE_TEST_PLAN.md',

@@ -10,6 +10,13 @@ Userspace-Code, Parser, Tests, Build-/Pakethelfer und eigene Dokumentation.
 Externe Referenzen, fremde Inhalte und die unten bezeichnete UAPI-Ausnahme
 behalten ihre jeweiligen Bedingungen.
 
+Nachtrag 17. Oktober 2026: Die optionale projektinterne Forza-/Xodus-Trigger-
+Bridge wurde vor selektiver Integration gesondert geprüft. Die ausdrückliche
+Projektentscheidung gilt für ihren eigenen Beitrag; kein fremder Laufzeitcode
+oder private Git-Historie wurde übernommen. Referenzen, Originalhashes,
+Vergleichsmethode und ihre begrenzte Aussage stehen im
+[Trigger-Herkunftsbericht](TRIGGER_BRIDGE_PROVENANCE.md).
+
 ## Lizenztext, SPDX und UAPI
 
 `COPYING` enthält unverändert den vollständigen GPL-v2-Text aus dem

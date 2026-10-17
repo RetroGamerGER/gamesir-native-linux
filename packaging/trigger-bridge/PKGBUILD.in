@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: GPL-2.0-only
+pkgname=gamesir-native-trigger-bridge
+pkgver=@VERSION@
+pkgrel=1
+pkgdesc='Optional experimental userspace GameSir trigger-rumble adapter'
+arch=('x86_64')
+license=('GPL-2.0-only')
+depends=('python' 'glibc' 'libusb' 'gamesir-native-dkms>=0.1.0.alpha3')
+makedepends=('gcc')
+optdepends=('sdl2: compatible SDL2 runtime selected by a supported launcher')
+source=("gamesir-native-trigger-bridge-${pkgver}.tar.gz")
+sha256sums=('@SOURCE_SHA256@')
+
+build() {
+  cd "$srcdir/gamesir-native-trigger-bridge-$pkgver"
+  python -B scripts/package_trigger_bridge.py build --dest build/trigger_bridge
+}
+
+check() {
+  cd "$srcdir/gamesir-native-trigger-bridge-$pkgver"
+  python -B tests/test_packaging_trigger_bridge.py
+}
+
+package() {
+  cd "$srcdir/gamesir-native-trigger-bridge-$pkgver"
+  python -B scripts/package_trigger_bridge.py stage --dest "$pkgdir" \
+    --shim build/trigger_bridge/libgamesir-trigger-sdl2.so
+}

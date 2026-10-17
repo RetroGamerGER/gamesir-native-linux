@@ -2,7 +2,7 @@
 
 # GameSir Native Linux: Roadmap
 
-Stand: 16. Oktober 2026. Prioritäten ergänzen den
+Stand: 17. Oktober 2026. Prioritäten ergänzen den
 [aktuellen Projektstand](PROJECT_STATE.md); historische Tests behalten ihren
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
@@ -38,6 +38,21 @@ Belege: [Gamescope](STEAM_GAMESCOPE.md),
 [Bootstrap-Korrektur](BOOTSTRAP_CACHYOS_FIX.md).
 
 ## 2. Spielintegration und kalibrierte Sensoren
+
+**Trigger-Bridge:** Der geprüfte eigenständige Forza-/Xodus-Nachweis wird als
+optionale Userspace-Komponente integriert, nicht in den Kernel verschoben.
+Die neue Fassung ergänzt eindeutige Instanz-/Quellzuordnung, versionierten
+Transport, Frischeprüfung, Stopbarrieren und Geräteersatz-Abbruch sowie einen
+getrennten Paketquellhelfer. Zunächst ausschließlich Offline-Regressionen;
+keine Installation oder neue Motor-/Hardwaretests. Bestehende Eingaben,
+Paddles, Griff-FF und Roh-IMU erhalten. [Umfang](TRIGGER_BRIDGE.md).
+
+Nächste getrennte Schritte: integrierten Xodus-Pfad ausdrücklich freigeben
+und abnehmen, dann Steam-/Proton-Ausgabepfad/ABI/Container prüfen. Unterstützte
+Launcher-Hooks für automatische Nutzung entwickeln; keine globale Preload-
+Umgebung oder unkontrollierten Konfigurationsänderungen. Fehlende getrennte
+Spiel-Triggerbefehle nicht aus Achsen/Griff-Rumble erfinden. Reconnect, PM und
+mehrere Geräte gesondert belegen. Forza-RT3x nicht global übernehmen.
 
 **Referenzkalibrierung pausiert:** [tester] hat derzeit keinen geeigneten
 Anschlagwinkel. Die vorbereitete IIO-Puffertransaktion und der einzelne

@@ -126,6 +126,16 @@ vor veralteten Befehlen. Die vorhandene private ABI erhält eine bedingte
 Kanal-Cancel-Variante; sie ist kein erfundener Linux-FF-Effekttyp.
 [Genaue Kernel-/Besitzersemantik](FOUR_MOTOR_KERNEL.md).
 
+Die optionale [Trigger-Bridge](TRIGGER_BRIDGE.md) bleibt im Userspace:
+selektiver SDL2-/Wine-Hook, privater sitzungsgebundener Transport und Relay
+auf vorhandener Broker-API1. Kernel/Manager/Standard-FF bleiben unverändert.
+Die Quelle wird über evdev→native IF0→USB-Metadaten mit einer konkreten
+Brokerinstanz verbunden; Port/Adresse sind nur aktuelle Sitzungsdaten, keine
+globale Identität. Neue Null-/Stoppzustände sind Warteschlangenbarrieren.
+Geräteersatz/EOF/Überlast beenden die Lease statt alte Befehle neu abzuspielen.
+Die integrierte Fassung benötigt eine eigene Hardwareabnahme; Steam/Proton
+ist zunächst nur Planmodus, nicht schon eine universelle Spielanbindung.
+
 Codes 704–707 bleiben unverändert. Die gerätefreie SDL-Prüfung bestätigt vier
 getrennte Paddle-Ereignisse mit explizitem Mapping, zusätzlich zu allen normalen
 Tasten. Automatisches SDL-Mapping allein ordnet sie nicht zu.

@@ -1,0 +1,4 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-only
+# Explicit launch adapter only; no global environment or configuration changes.
+exec /usr/bin/python -B /usr/lib/gamesir-native/trigger_bridge/launch.py "$@"

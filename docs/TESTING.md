@@ -4,6 +4,25 @@ Alle Make-Ziele sind offline. Keine Installation, erhöhten
 Rechte, USB-Kommandos, Modulaktivierung oder Treiberwechsel sind Bestandteil.
 Voraussetzung: vorhandenes Python ≥ 3.11, Make und clang mit ASan/UBSan.
 
+## Optionale Trigger-Bridge
+
+`make test-trigger-bridge` baut nur den Userspace-SDL2-Hook und prüft ihn
+mit künstlichen SDL-/libusb-Bibliotheken. Temporäre Unix-Sockets, Fake-sysfs,
+künstliche Character-Node-Metadaten und der Repository-Broker mit Fakebackend
+ersetzen alle realen Geräte. Kein Wine/Steam, kein installierter Broker-/Client-
+Import, kein Gruppenwechsel und keine Installation. Die Suite gehört zu
+`make test`; die Buildvoraussetzungen cc/glibc/libusb-Header müssen bereits
+vorhanden sein. Kein automatischer Paketnachbezug.
+
+Regressionen prüfen genaue Quellen-/Instanzzuordnung, Geräteersatz am selben
+Port, Manifestrechte, Wire-Version/Sequenz/Zeit/Session, volle und teilweise
+Nullbarrieren, verspätete/überlastete Daten, EOF/CLOSE, lange Effekte, nur
+Triggerkanäle bei erhaltenen Griffen sowie SDL3-/Fremdgeräte-Durchreichen,
+Mehrfach-SDL, Threads/Fork und Transportfehler. Launcherprozesse sind gemockt.
+Pakettests bauen/stagen nur in leere temporäre Verzeichnisse, prüfen Inhalte,
+Rechte, Lizenz und reproduzierbare Quellen. Die frühere Forza-Hardwarebestätigung
+und heutige Offline-Prüfung bleiben getrennt. [Details](TRIGGER_BRIDGE.md).
+
 ## Öffentliche README und allgemeine Nutzeranleitung
 
 `make test-public-readme` bewahrt den vollständigen vorgegebenen Warnblock,

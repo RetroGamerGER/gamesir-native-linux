@@ -2,8 +2,39 @@
 
 # Projektstand
 
-Stand: 16. Oktober 2026. Dies ist die aktuelle Übersicht; ältere RST-Berichte
-und Parserberichte belegen ihre jeweiligen Prüfläufe.
+Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
+Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
+
+**Optionale Trigger-Bridge offline integriert:** Ausgangsbasis ist die getrennte
+projektinterne Forza-/Xodus-Bridge bis `3a78390`, deren LT-/RT-Spieleffekte
+fühlbar bestätigt wurden. Herkunft/Lizenz wurden vor selektiver Übernahme
+geprüft; GPL-2.0-only gemäß Projektentscheidung, keine private Historie oder
+Rohlogs übernommen. Die Prüfung ist begrenzt, keine vollständige Rechtegarantie.
+
+Der neue Userspace-Pfad bindet SDL-Quelle, aktuelle evdev-/USB-Metadaten und
+Brokerinstanz an eine zufällige Sitzung. Kein fester Port und keine Auswahl
+des ersten Geräts. Versionierter Transport mit Ursprungszeit/Sequenz, erhaltenen
+Null-/Stoppbarrieren und begrenzten Warteschlangen; bei Instanzwechsel/Fehler
+endet die Lease. Bestehender Kernel/Broker unverändert, Griffe `null`, STOP
+Maske 3. Forza-RT3x ist ein explizites Profil; andere Profile bleiben 1x.
+
+Optionaler Paketquell-/Staginghelfer ohne Installation, Hooks oder Gruppen-
+änderungen vorbereitet. Bereits berechtigte Benutzer benötigen keine erneute
+Passwortabfrage. Xodus-SDL2 ist für eine spätere gesonderte Abnahme vorbereitet;
+Steam/Proton bewusst nur Planmodus. Automatische Launcher-Konfiguration,
+Reconnect/PM und Mehrcontrollerbetrieb sind noch keine bestätigten Features.
+Gyrokalibrierung bleibt pausiert. [Implementierung und Grenzen](TRIGGER_BRIDGE.md),
+[Herkunftsprüfung](TRIGGER_BRIDGE_PROVENANCE.md).
+
+Validierung: vollständiges `make test` bestanden (791 Python-unittest-Fälle
+in 29 Batches plus bestehende C-/statische Prüfungen), darunter 64 neue Bridge-
+Fälle. Neuer C→Unix→Python→Broker-Durchstich verwendet ausschließlich künstliche
+Motoren. Paketquellen und unprivilegiertes Staging geprüft, nichts installiert.
+Öffentliche Identität für den lokalen Commit; kein Push oder neuer Release.
+
+Die folgenden Release-Vorbereitungsabschnitte beschreiben den historischen
+privaten Ausgangsstand. Der bereinigte öffentliche Quellstand wurde inzwischen
+als `v0.1.0-pre-alpha.1` veröffentlicht; die neue Bridge ist noch nicht gepusht.
 
 **Letzter öffentlicher Release-Check:** Bis `3e620f3` alle 93 erreichbaren
 Commits/1.037 Blobs und 237 aktuelle Dateien geprüft. Keine erkannten echten

@@ -1,5 +1,13 @@
 # Public pre-alpha release audit
 
+Update 2026-10-17: the sanitized source baseline was published as
+`v0.1.0-pre-alpha.1`. The historical preparation audit below retains its
+original scope. The new optional [trigger bridge](TRIGGER_BRIDGE.md) is a
+subsequent local offline change, not part of that tag and not installed or
+hardware-accepted. Its separate provenance check precedes source integration;
+its eventual publication/installation requires explicit approval. No kernel,
+manager, paddle, IMU calibration or running-system change is implied.
+
 Date: 2026-10-16. This is a local readiness assessment, not a published release
 or permission to install, activate, test hardware, create a remote, or push.
 The licensing baseline is commit `6abb83e`, following the paused-calibration

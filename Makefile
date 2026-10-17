@@ -1,9 +1,24 @@
 # SPDX-License-Identifier: GPL-2.0-only
 PYTHON ?= python
 
-.PHONY: test test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-capture test-sdl test-sdl-buttons analyze-imu manifest kernel kernel-analyze tools test-tools test-hardware-helper test-alpha alpha-source test-steam steam-source
+.PHONY: test test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-capture test-sdl test-sdl-buttons analyze-imu manifest kernel kernel-analyze tools test-tools test-hardware-helper test-alpha alpha-source test-steam steam-source test-trigger-bridge trigger-bridge trigger-bridge-source
 
-test: test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-tools test-hardware-helper test-alpha test-steam
+test: test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-tools test-hardware-helper test-alpha test-steam test-trigger-bridge
+
+# Optional userspace shim only; never start Wine, contact a live broker or install.
+trigger-bridge:
+	mkdir -p build/trigger_bridge
+	$(CC) -std=c11 -Wall -Wextra -Werror -O2 -fPIC -shared tools/trigger_bridge/sdl2_hook.c -o build/trigger_bridge/libgamesir-trigger-sdl2.so -ldl -pthread -Wl,-z,relro,-z,now
+
+test-trigger-bridge: trigger-bridge
+	$(PYTHON) -B tests/test_trigger_hook.py
+	$(PYTHON) -B tests/test_trigger_relay.py
+	$(PYTHON) -B tests/test_trigger_pipeline.py
+	$(PYTHON) -B tests/test_trigger_launcher.py
+	$(PYTHON) -B tests/test_packaging_trigger_bridge.py
+
+trigger-bridge-source:
+	$(PYTHON) -B scripts/package_trigger_bridge.py source --dest build/trigger-bridge-source
 
 test-licensing:
 	$(PYTHON) -B tests/test_licensing.py

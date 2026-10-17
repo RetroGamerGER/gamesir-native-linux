@@ -100,8 +100,10 @@ computer.
   Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,
   with game-specified effect duration. Four-channel hardware support and the
   experimental application API do not automatically enable impulse triggers
-  in SDL, Steam or Proton games. A complete application-to-motor acceptance
-  test is still outstanding.
+  in SDL, Steam or Proton games. A separate Forza/Xodus bridge recorded felt
+  LT/RT game effects; the [reviewed integration](docs/TRIGGER_BRIDGE.md) is
+  offline-only and still needs its own hardware acceptance. Steam/Proton
+  integration and automatic launcher setup remain unvalidated.
 - **Steam paddles do not extend XInput.** Steam Input can map four independent
   sources, but a game's input API determines whether it can bind additional
   controller buttons directly. Universal in-game binding is not promised.
@@ -136,6 +138,9 @@ The optional packages are separate from the kernel driver:
 - `gamesir-native-steam` — Steam paddle mapping for supported session starts.
 - `gamesir-native-steam-gamescope` — additional integration for the tested
   CachyOS Gamescope session layout.
+- `gamesir-native-trigger-bridge` — optional, offline-prepared SDL2 trigger
+  adapter; no automatic activation or launcher edits. See its
+  [scope and validation boundaries](docs/TRIGGER_BRIDGE.md).
 
 Installation and service activation are separate decisions. A successful
 package transaction alone is not proof that DKMS built a loadable module.
