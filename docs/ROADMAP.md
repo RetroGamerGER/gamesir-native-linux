@@ -70,6 +70,16 @@ Umgebung oder unkontrollierten Konfigurationsänderungen. Fehlende getrennte
 Spiel-Triggerbefehle nicht aus Achsen/Griff-Rumble erfinden. Reconnect, PM und
 mehrere Geräte gesondert belegen. Forza-RT3x nicht global übernehmen.
 
+Die [Offline-Machbarkeit für Steam/Proton](STEAM_PROTON_TRIGGER_BRIDGE.md)
+ist inzwischen untersucht: SDL2-Einstieg in Proton vorhanden, aber aktuelle
+Startvalidierung, Container-Pfade/Peer-PID und virtuelle Steam-Input-Geräte
+verhindern eine pauschale Freischaltung. Als Nächstes einen separaten
+geschlossenen Adapter mit Fake-Runtime/IPC-Tests entwickeln. Danach eine
+ausdrücklich freigegebene technische Proton-Probe mit eigenem API-Test und
+Fake-Ausgabe durchführen; dafür ist kein Trigger-Spiel erforderlich. Ein
+solches Spiel steht derzeit nicht bereit, reale Spieleabnahme bleibt offen.
+Paddles, Griffe und normale Eingaben erhalten; keine neuen Kernel-Patches.
+
 **Referenzkalibrierung pausiert:** [tester] hat derzeit keinen geeigneten
 Anschlagwinkel. Die vorbereitete IIO-Puffertransaktion und der einzelne
 KDE-geführte 90°-Linkslauf bleiben als offline geprüfter Zwischenstand

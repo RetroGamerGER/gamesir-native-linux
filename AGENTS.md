@@ -52,6 +52,11 @@ multiple devices or other games. Further live actions require new approval.
 Steam/Proton is plan-only until its runtime is separately validated. Never
 globally preload the hook into Steam
 or a desktop session. Existing paddle mapping remains independent.
+Read docs/STEAM_PROTON_TRIGGER_BRIDGE.md before implementing that adapter.
+Prove host/container placement, peer-PID namespace mapping, exact source
+identity and preload composition; never drop those guards to enable Steam.
+Synthetic API tests are not game acceptance. No supporting game is currently
+available for the planned Steam trigger test.
 
 ## Public snapshot
 

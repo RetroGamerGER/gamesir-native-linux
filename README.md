@@ -111,6 +111,9 @@ computer.
   and an offline-tested correction. Steam/Proton integration, other game
   backends and automatic launcher setup remain unvalidated. Reconnect,
   suspend, process-crash and multi-device bridge acceptance remain open.
+  The [offline Steam/Proton feasibility study](docs/STEAM_PROTON_TRIGGER_BRIDGE.md)
+  identifies an SDL2 entry point and the remaining container, identity and
+  Steam Input constraints; it does not enable the Steam adapter.
 - **Steam paddles do not extend XInput.** Steam Input can map four independent
   sources, but a game's input API determines whether it can bind additional
   controller buttons directly. Universal in-game binding is not promised.

@@ -5,6 +5,19 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Steam-/Proton-Triggerpfad ausschließlich offline untersucht:** Der
+Quellrelease `v0.1.0-pre-alpha.2` auf Commit `947790b` ist veröffentlicht;
+der nachfolgende Untersuchungsstand bleibt lokal. Installiertes Proton
+Experimental enthält einen passenden SDL2-Triggeraufruf. Bestehender
+Nexus-Launcher, Container-/PID-Grenzen, Preloads und Steam-Input-Quellen
+erfordern jedoch einen eigenen Adapter; Liveausführung bleibt gesperrt.
+82 bestehende Bridge-Tests bestanden ausschließlich gegen künstliche
+Bibliotheken/Metadaten/Broker. Steam, Proton, Wine und Hardware wurden dabei
+nicht gestartet oder angesprochen. Kein geeignetes Steam-Spiel steht zur
+Trigger-Abnahme bereit; technische API-/Runtime-Proben sind künftig auch
+ohne Spiel möglich, benötigen aber eine getrennte Freigabe und ersetzen
+keinen Spielenachweis. [Befunde und nächster Entwicklungsschritt](STEAM_PROTON_TRIGGER_BRIDGE.md).
+
 **Korrigierter integrierter Forza-/Xodus-Test bestanden, begrenzter Umfang:**
 Das separat freigegebene Bridge-Update `0.1.0.alpha1-2` ist installiert und
 geprüft: 14 Paketdateien stimmen, 97 Dateien des Kernpakets unverändert.

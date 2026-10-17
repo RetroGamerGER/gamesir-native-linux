@@ -13,7 +13,8 @@ künstlichen sysfs-/Prozessbaum für die realen Guardfunktionen. Die anfänglich
 unter anderem die dauerhaft falsche `released`-Sperre. Der aktuelle Bestand
 enthält 34 gezielte Fälle und gehört zu `make test-alpha`/`make test`. Zusammen
 mit den bestehenden 139 Managerfällen sind 173 bestanden; die komplette Suite
-enthält jetzt 825 Python-Testfälle in 30 Teilprüfungen plus C-/statische Prüfungen.
+enthielt zu diesem Manager-Prüfpunkt 825 Python-Testfälle in 30 Teilprüfungen
+plus C-/statische Prüfungen.
 
 Geprüft werden Neuanmeldung während/vor/nach Getter-Abschluss, Busy-Guard,
 zweite schnelle Geräteersetzung, Einzelverbrauch gepufferter Ergebnisse,
@@ -43,6 +44,13 @@ Mehrfach-SDL, Threads/Fork und Transportfehler. Launcherprozesse sind gemockt.
 Pakettests bauen/stagen nur in leere temporäre Verzeichnisse, prüfen Inhalte,
 Rechte, Lizenz und reproduzierbare Quellen. Die frühere Forza-Hardwarebestätigung
 und heutige Offline-Prüfung bleiben getrennt. [Details](TRIGGER_BRIDGE.md).
+
+Bei der anschließenden reinen Steam-/Proton-Machbarkeitsprüfung wurden die
+82 bestehenden Bridge-Fälle in sechs Teilprüfungen erneut ausgeführt. Kein
+Steam-/Proton-/Wine-Prozess, Container oder realer Broker wurde verwendet.
+Das bestätigt weiterhin den vorhandenen synthetischen Pfad und die gesperrte
+Steam-Liveausführung, keinen funktionierenden Steam-Adapter.
+[Statische Befunde und getrennte künftige Abnahme](STEAM_PROTON_TRIGGER_BRIDGE.md).
 
 ## Öffentliche README und allgemeine Nutzeranleitung
 
