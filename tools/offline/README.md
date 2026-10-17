@@ -2,6 +2,16 @@
 
 **Historischer Sprint-001-Komponentenbericht.** Diese Kopie gehört jetzt zum gemeinsamen Git-Projekt. Die folgenden Grenzen beschreiben den damaligen PoC. Aktuell: [Projektstand](../../docs/PROJECT_STATE.md) und [README](../../README.md).
 
+**Neuer separater Offline-HID-Prototyp (17. Oktober 2026):**
+`python -B -m gamesir_offline hid-replay fixtures/captured_hid_returns.jsonl --strict`
+wertet 14 kleine echte Telemetrieausschnitte und drei LED-Submits aus.
+`fixtures/synthetic_hid_companion.jsonl` bleibt ausdrücklich künstlich.
+Herkunft, Anonymisierung und Grenzen stehen im
+[HID-Prototypbericht](../../docs/XPAD_HID_PROTOTYPE.md). Keine Hardwareanbindung
+oder bestätigte Aktivierung; das bisherige `replay` lehnt IF1 weiterhin ab.
+Die folgenden Angaben zu ausschließlich 38 künstlichen Datensätzen beschreiben
+den ursprünglichen Sprint-001-Bestand, nicht diese Erweiterung.
+
 Der Prototyp dekodiert gespeicherte Paketdaten und prüft die dokumentierten
 Protokollstrukturen. Er enthält keinen USB-Transport und keinen Kernelcode.
 Alle 38 mitgelieferten Datensätze sind **künstlich**. Es wurde kein echter

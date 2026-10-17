@@ -1,0 +1,361 @@
+{
+  "schema": 1,
+  "scope": "Static offline inspection of eight existing regular captures; no device access or execution of hardware commands",
+  "coverage": [
+    {
+      "capture_label": "20261011T124333963714488Z-stage4-5s",
+      "verified_original_sha256": "8dbe77e235c2ff5666964c6241a642be3f508d813ee947fbe00af5ac52ff0230",
+      "100a_epoch_count": 1,
+      "ep04_completed_commands": [],
+      "observed_if1_set_report_transfers": 0,
+      "observed_if1_0ff2_submissions": 0,
+      "ep84_successful_data_prefix_counts": {},
+      "input_report12_seen": false
+    },
+    {
+      "capture_label": "20261011T133916365243Z-measurement-B-deadband",
+      "verified_original_sha256": "192200c431e8ef767ed872f79a658803418a68b991a60474aeac071575226628",
+      "100a_epoch_count": 1,
+      "ep04_completed_commands": [],
+      "observed_if1_set_report_transfers": 0,
+      "observed_if1_0ff2_submissions": 0,
+      "ep84_successful_data_prefix_counts": {},
+      "input_report12_seen": false
+    },
+    {
+      "capture_label": "20261011T134320608606Z-measurement-B-deadband",
+      "verified_original_sha256": "d9613598e5a22a7e3732a5bcda295c97df5f67890db47ec196c67ff7c805ed17",
+      "100a_epoch_count": 1,
+      "ep04_completed_commands": [],
+      "observed_if1_set_report_transfers": 0,
+      "observed_if1_0ff2_submissions": 0,
+      "ep84_successful_data_prefix_counts": {},
+      "input_report12_seen": false
+    },
+    {
+      "capture_label": "20261011T140000665674Z-measurement-B-deadband",
+      "verified_original_sha256": "280d1fc3b06e80f7767a80a6263c589e8edaa8a869f5efb8834378c28f733159",
+      "100a_epoch_count": 1,
+      "ep04_completed_commands": [],
+      "observed_if1_set_report_transfers": 0,
+      "observed_if1_0ff2_submissions": 0,
+      "ep84_successful_data_prefix_counts": {},
+      "input_report12_seen": false
+    },
+    {
+      "capture_label": "20261011T141131938846Z-measurement-B-deadband",
+      "verified_original_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "100a_epoch_count": 2,
+      "ep04_completed_commands": [
+        {
+          "submission_frame_original": 174164,
+          "completion_frame_original": 174165,
+          "status": 0,
+          "hex": "0301"
+        }
+      ],
+      "observed_if1_set_report_transfers": 0,
+      "observed_if1_0ff2_submissions": 0,
+      "ep84_successful_data_prefix_counts": {
+        "00": 1,
+        "10": 1,
+        "03": 1
+      },
+      "input_report12_seen": false,
+      "post_return_telemetry_count": 1,
+      "burst_span_us": 0,
+      "led_submission_after_first_telemetry_us": 107855,
+      "last_previous109c_command": {
+        "hex": "06200b020100",
+        "status": 0,
+        "completion_frame_original": 171098
+      },
+      "post_telemetry_tail_observation_ms": 26571.399
+    },
+    {
+      "capture_label": "20261012T165154770784Z-motor-comparison-deadband",
+      "verified_original_sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954",
+      "100a_epoch_count": 2,
+      "ep04_completed_commands": [
+        {
+          "submission_frame_original": 177509,
+          "completion_frame_original": 177510,
+          "status": 0,
+          "hex": "0301"
+        }
+      ],
+      "observed_if1_set_report_transfers": 0,
+      "observed_if1_0ff2_submissions": 0,
+      "ep84_successful_data_prefix_counts": {
+        "00": 1,
+        "10": 2,
+        "03": 1
+      },
+      "input_report12_seen": false,
+      "post_return_telemetry_count": 2,
+      "burst_span_us": 1000,
+      "led_submission_after_first_telemetry_us": 109335,
+      "last_previous109c_command": {
+        "hex": "062005020100",
+        "status": 0,
+        "completion_frame_original": 175355
+      },
+      "post_telemetry_tail_observation_ms": 30037.689
+    },
+    {
+      "capture_label": "20261011T105132490089957Z-test-A",
+      "verified_original_sha256": "891f20d5d61fcd1e58a5c53487a50cc50d7ee1bc92badb8f993b076e5c118622",
+      "100a_epoch_count": 1,
+      "ep04_completed_commands": [],
+      "observed_if1_set_report_transfers": 0,
+      "observed_if1_0ff2_submissions": 0,
+      "ep84_successful_data_prefix_counts": {},
+      "input_report12_seen": false
+    },
+    {
+      "capture_label": "native300s-motor-comparison",
+      "verified_original_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+      "100a_epoch_count": 1,
+      "ep04_completed_commands": [
+        {
+          "submission_frame_original": 298728,
+          "completion_frame_original": 298729,
+          "status": 0,
+          "hex": "0301"
+        }
+      ],
+      "observed_if1_set_report_transfers": 0,
+      "observed_if1_0ff2_submissions": 0,
+      "ep84_successful_data_prefix_counts": {
+        "00": 1,
+        "10": 11,
+        "03": 1
+      },
+      "input_report12_seen": false,
+      "post_return_telemetry_count": 11,
+      "burst_span_us": 10001,
+      "led_submission_after_first_telemetry_us": 90779,
+      "last_previous109c_command": {
+        "hex": "0f00bb02f20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "status": 0,
+        "completion_frame_original": 295297
+      },
+      "post_telemetry_tail_observation_ms": 26834.705
+    }
+  ],
+  "shared_descriptor": {
+    "hex": "05010906a1018503050719e029e715002501750195088102750895018101050719002aff00150026ff007508950a8100050819012903250175019503910295059101c0060c000901a101850219002bffff0000150027ffff0000751095028100c005010902a10185090901a1000509190129051500250195057501810295017503810105010930093116018026ff7f75109502810609381581257f75089501810695018103c0c006f0ff0940a1010600ff09008510150026ff00350046ff007508953f810285120921953f8102850f0922953f9102c0",
+    "length": 214,
+    "sha256": "8dc43b12e016a9e71059620ff503b825b77355001b8054cee876f4b88d64c516"
+  },
+  "findings": {
+    "confirmed_activation_command": null,
+    "if1_0ff2_seen": false,
+    "if1_set_report_seen": false,
+    "observed_ep04_0301_classification": "Report ID03 output with one LED byte in keyboard collection; follows input bursts, not an activator",
+    "known_shape_input_reports_total": 14,
+    "continuous_stream_proven": false,
+    "real100a_paddle_bits_proven": false
+  },
+  "limits": [
+    "Initial100a enumeration/activation predates some recording windows; missing commands do not prove unsupported activation.",
+    "No host IF1 vendor activation appears in three fully recorded post109c-return epochs.",
+    "Firmware-internal pretransition queueing remains possible; fresh USB submit/completion is not fresh sensor acquisition.",
+    "0x12 is declared but never observed; no captured full-model heartbeat candidate.",
+    "Prior109c IF0 heartbeat is not a tested100a IF1 command; framing differs from Panda0f f2.",
+    "Raw original captures and host-specific attribution remain private.",
+    "Tail duration is measured after the last telemetry report; keyboard report03 completions also occur after telemetry and are not sensor data."
+  ],
+  "fixture": {
+    "path": "tools/offline/fixtures/captured_hid_returns.jsonl",
+    "sha256": "aa2fb9921ee37cff9c78305fa1227c5627155a377a71a64f48ff1072a4afb1dc",
+    "records": 17,
+    "telemetry_reports": 14,
+    "keyboard_LED_submissions": 3,
+    "transformations": [
+      "USB payload bytes preserved exactly; no other devices or full captures included",
+      "Each source has a single documented post-return 100a enumeration epoch",
+      "Timestamps rebased per source to its first report10 completion; within-source arrival differences preserved",
+      "bus=1/address=1 are anonymized placeholders, NOT observed coordinates or a physical identity",
+      "Three LED records retain submission stage; success is documented only by original matched URB provenance below",
+      "No URB IDs, personal paths, hostnames, serials or absolute timestamps exported"
+    ],
+    "records_provenance": [
+      {
+        "fixture_line": 1,
+        "source_id": "owned-hid-return-oct11",
+        "original_capture_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+        "completion_frame_original": 174103,
+        "submission_frame_original": 174102,
+        "payload_sha256": "6192ce5dbaa5afe7af0ece0bea4e2d1a4c0a10f9b625755af7e47bab5f2997f5",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 2,
+        "source_id": "owned-hid-return-oct11",
+        "original_capture_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+        "submission_frame_original": 174164,
+        "paired_successful_completion_frame_original": 174165,
+        "paired_completion_status": 0,
+        "payload_sha256": "67294d0eff78c6dbf4ae91576d495f81ca8f9967119cff318132f79d41285dfc",
+        "classification": "keyboard_LED_report03_submission; not_vendor_activation"
+      },
+      {
+        "fixture_line": 3,
+        "source_id": "owned-hid-return-oct12-deadband",
+        "original_capture_sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954",
+        "completion_frame_original": 177440,
+        "submission_frame_original": 177439,
+        "payload_sha256": "f329bddbc8d4d4d3d8f599f4ad4da3c40e1e563074ba4dd8967f31161241cbd2",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 4,
+        "source_id": "owned-hid-return-oct12-deadband",
+        "original_capture_sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954",
+        "completion_frame_original": 177442,
+        "submission_frame_original": 177441,
+        "payload_sha256": "46eaea73e07306dc2cd90b2d74fd53a45771885d2ca44fb41f6179d6d95e09d9",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 5,
+        "source_id": "owned-hid-return-oct12-deadband",
+        "original_capture_sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954",
+        "submission_frame_original": 177509,
+        "paired_successful_completion_frame_original": 177510,
+        "paired_completion_status": 0,
+        "payload_sha256": "67294d0eff78c6dbf4ae91576d495f81ca8f9967119cff318132f79d41285dfc",
+        "classification": "keyboard_LED_report03_submission; not_vendor_activation"
+      },
+      {
+        "fixture_line": 6,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298667,
+        "submission_frame_original": 298666,
+        "payload_sha256": "a140481015c78e20d8cde3ec44f4091d3b13b095990c0cf8b1bba78a0274b3cb",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 7,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298669,
+        "submission_frame_original": 298668,
+        "payload_sha256": "28b87cd88dfea0175a9b1fd0b08a40921de9988241ac9fbf1c634428740a9326",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 8,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298671,
+        "submission_frame_original": 298670,
+        "payload_sha256": "863537267db0ef2fb3204a6a121c56d703f957e112426b80a89e1f1e0dafc43a",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 9,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298673,
+        "submission_frame_original": 298672,
+        "payload_sha256": "b96e544711765e72973103f384a8ae6fd8597b248956a025df7143a2e3cd8dbc",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 10,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298675,
+        "submission_frame_original": 298674,
+        "payload_sha256": "43e0fbdfbbdb70dfb4d404400bc1fb0d07fbe76c586452937780c3f39affca92",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 11,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298677,
+        "submission_frame_original": 298676,
+        "payload_sha256": "7be32965ebd911356228a78955ebc1a71589dc0ce8206bc14816b82eda48236d",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 12,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298679,
+        "submission_frame_original": 298678,
+        "payload_sha256": "75ea9a43403e1c5338b5a93268e2a23fdd82a13a0ec4fce3f0a66bb91867c951",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 13,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298681,
+        "submission_frame_original": 298680,
+        "payload_sha256": "1bfd274ebc4fb847fac4633b998cc32be1313fa8d1ac6bdac92cc3b635ff99d4",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 14,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298683,
+        "submission_frame_original": 298682,
+        "payload_sha256": "8059367bd784c580e9fb3208029cb462b332e9898db14d302f136f5039428074",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 15,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298685,
+        "submission_frame_original": 298684,
+        "payload_sha256": "d5189ea40ec1eea41f672a9abec42790eab80e207ad199b00bdab0762d224224",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 16,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "completion_frame_original": 298687,
+        "submission_frame_original": 298686,
+        "payload_sha256": "68d847b2b234639d064d2a620dfe5c80da2e903b5aee24a8a1519de0bb07fd00",
+        "classification": "observed_10_3c_e0_shape_only"
+      },
+      {
+        "fixture_line": 17,
+        "source_id": "owned-hid-return-oct12-native",
+        "original_capture_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+        "submission_frame_original": 298728,
+        "paired_successful_completion_frame_original": 298729,
+        "paired_completion_status": 0,
+        "payload_sha256": "67294d0eff78c6dbf4ae91576d495f81ca8f9967119cff318132f79d41285dfc",
+        "classification": "keyboard_LED_report03_submission; not_vendor_activation"
+      }
+    ]
+  },
+  "validation": {
+    "baseline_commit": "3a52765",
+    "make_test_exit_code": 0,
+    "python_test_cases": 874,
+    "python_test_batches": 31,
+    "offline_parser_test_cases": 75,
+    "new_test_cases": 31,
+    "hardware_access": false,
+    "kernel_runtime_modified": false,
+    "third_party_code_imported": false,
+    "limitations": "Software regression tests and saved-file evidence only; no live HID activation, sensor freshness or motor parity validation",
+    "source_sha256": {
+      "tools/offline/gamesir_offline/hid_companion.py": "4e0b5d7883874cdb8fd6fc319207649e22939a9ee908f06b24ff18c01288e877",
+      "tools/offline/gamesir_offline/cli.py": "e36bee4ef728ca2b07a7287e962b570f49aa217f55558fac0b3414ee88fab2b6",
+      "tools/offline/tests/test_hid_companion.py": "67ebd30628fa58c3086380acb160e6a911b60eba779897edd777a5c7be8cefd6",
+      "tools/offline/tests/test_hid_cli.py": "c6f8f954f5aed1ef7ea3135d2c62af0bbe8d97f6e79c5ef41bcd087528912684",
+      "tools/offline/tests/test_records.py": "7be4fbac36060dd049e748289b8cb388a178623e2e68b7b2f2c2189c9f2b3b3c"
+    }
+  }
+}

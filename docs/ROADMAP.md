@@ -59,6 +59,15 @@ Ein gemeinsames Input-Gerät und koordinierte Motorstopps müssen beim
 Entwurf erhalten bleiben. Kein Austausch der funktionierenden Runtime,
 kein neuer USB-Befehl oder Hardwaretest aus diesem Analyseauftrag.
 
+Der [separate Dateiprototyp](XPAD_HID_PROTOTYPE.md) ist inzwischen umgesetzt:
+acht vorhandene Mitschnitte, 14 strukturell passende IF1-Berichte in drei kurzen
+Rückkehr-Bursts, aber kein belegter Aktivierungsbefehl. Keyboard-LED-Ausgabe
+`03 01`, framed IF0-Heartbeat und Pandas `0f f2` bleiben getrennt. Nächste
+offene Hürde ist ein belastbarer normaler G7-Pro-IF1-Aktivierungsvertrag;
+danach separat freigegebene Dauerstrom-/Paddle-/Release-/Reconnect-Nachweise.
+Keine laufende Architektur ersetzen, bevor Input-Zusammenführung und alle
+vier Motoren samt Besitz/Stopps gleichwertig gelöst sind. Kalibrierung pausiert.
+
 **Trigger-Bridge:** Der geprüfte eigenständige Forza-/Xodus-Nachweis wird als
 optionale Userspace-Komponente integriert, nicht in den Kernel verschoben.
 Die neue Fassung ergänzt eindeutige Instanz-/Quellzuordnung, versionierten

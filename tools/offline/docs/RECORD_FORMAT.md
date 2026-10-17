@@ -71,3 +71,21 @@ kontinuierlichen gleichzeitigen Hardwarebetriebs.
 
 Ein leerer oder vollständig gefilterter Datensatz ergibt einen leeren Bericht,
 keinen Hardware-Nachweis. Nicht vorhandene Zählerschlüssel entsprechen null.
+
+## Separater HID-Dateiprototyp
+
+`hid-replay` verwendet dasselbe Schema, erweitert aber nicht die Transportfreigabe
+des bisherigen `replay`. Es beobachtet ausschließlich normale `100a`-IF0/`82`-
+und IF1/`84`-Pakete sowie gespeicherte IF1/`04`-Ausgaben. Für diese getrennten
+Kanäle bildet es eine gemeinsame Instanzgruppe ohne Interface/Endpunkt im
+Schlüssel; Quelle, Sitzung, Zeitbasis, VID/PID, Bus und Adresse bleiben getrennt.
+Bei jeder Neuanmeldung ist eine eigene `session` nötig, auch bei wiederverwendeter
+Adresse. Metadatenzuordnung ist keine vom Parser bewiesene Geräteidentität.
+
+Letzte Kanalbeobachtungen behalten eigene Zeitwerte. Das begrenzte Anzeigealter
+und die Sperre bei Zeitrücksprung verhindern irreführende Zusammenführung;
+sie beweisen keine frischen Sensorsamples. `capture_excerpt`-Fixtures dürfen
+relativierte Hostzeiten und anonymisierte Bus-/Adresslabels enthalten, wenn
+diese Umformungen und die ursprünglichen Hash-/Framebezüge explizit dokumentiert
+sind. Schema 1 enthält weiterhin keine URB-IDs oder Control-Setup-Felder.
+[Implementierung, Fixture-Herkunft und Grenzen](../../../docs/XPAD_HID_PROTOTYPE.md).

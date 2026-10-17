@@ -4,6 +4,11 @@ Date: 2026-10-17. Static source review and replay of existing owned-device
 captures only. No SSH, controller access, application execution, module,
 binding, Steam or installed-file change. Gyro calibration remains paused.
 
+Follow-up: the [offline activation review and file-only prototype](XPAD_HID_PROTOTYPE.md)
+expand coverage from the two captures below to eight originals and 14 matching
+reports in three return epochs. No activating IF1 command or sustained stream
+was established. The original evidence below retains its earlier scope.
+
 ## Assessment
 
 **A smaller xpad/HID architecture deserves investigation for the ordinary

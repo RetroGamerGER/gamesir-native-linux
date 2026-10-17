@@ -32,6 +32,13 @@ XInput/GIP/IMU formats and hardware-confirmed four-motor packet support.
 is unknown; calibration is paused and calibrated SDL output is not approved.
 No universal trigger-game support or general stability guarantee.
 
+The optional `tools/offline` HID companion is file-only research, not runtime
+authority. Read docs/XPAD_HID_PROTOTYPE.md before extending it. Existing captures
+show brief 100a/IF1 telemetry but no proven activation or continuous stream.
+Do not transmit the 8K heartbeat, apply report12 offsets, merge enumeration
+epochs or loosen native IF0 gates from that evidence. Keep keyboard/mouse data
+private and raw sensor units uncalibrated. Hardware transport requires new approval.
+
 Passive getter results are observations of one instance, never authority over
 a replacement. Reconnect fixes must preserve actual faults, unknown-metadata
 quarantine, parent/instance checks and start budgets. Read

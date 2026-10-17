@@ -5,11 +5,30 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Vereinfachung über xpad plus HID-Zusatzpfad untersucht:** Der PandaPro8K-
+**Gerätefreier xpad-/HID-Prototyp ergänzt:** Acht vorhandene Originalmitschnitte
+wurden offline geprüft. In drei Rückkehr-Epochen nach `100a` liegen insgesamt
+14 IF1-Berichte mit bekannter `10/3c/e0`-Form vor, darunter ein neuer kurzer
+Elf-Paket-Burst. Kein belegter IF1-Aktivierungsbefehl: weder `0f f2` noch
+passendes HID-`SET_REPORT`. Die drei beobachteten `03 01`-Ausgaben gehören zu
+Tastatur-LEDs und folgen den Telemetriepaketen. Dauerstrom und physische
+Paddle-Zuordnung in `100a` bleiben offen.
+
+Der separate Dateiprototyp `hid-replay` erhält normale 16-Bit-XInput-Werte und
+tentative HID-Rohfelder getrennt, sperrt veraltete/zeitlich widersprüchliche
+Zusammenführung und schützt Quellen-/Anmeldegrenzen. Kleine echte Ausschnitte
+mit Hash-/Frame-Herkunft und ausdrücklich künstliche Tests sind enthalten.
+Keine Hardwareanbindung, Aktivierung, Kernel-/Systemänderung oder neuer
+Gyrofaktor. Der laufende Treiber und bisherige IF0-Filter bleiben unverändert;
+Kalibrierung pausiert. 75 Parser-Tests bestehen; vollständige Offline-Suite:
+874 Python-Fälle in 31 Batches sowie bestehende C-/statische Prüfungen.
+[Befunde, Prototyp und offene Aktivierung](XPAD_HID_PROTOTYPE.md).
+
+**Vorheriger Prüfpunkt – Vereinfachung über xpad plus HID untersucht:** Der PandaPro8K-
 Ansatz betrifft ein anderes Modell, hat aber einen konkreten Anknüpfungspunkt
 in unseren normalen G7-Pro-Mitschnitten: `100a`-IF1 deklariert die 64-Byte-
-Berichte `10`/`12` und Ausgabe `0f`; nach Rückkehr aus `109c` wurden dort drei
-einzelne Berichte mit bekannter IMU-Signatur aufgezeichnet. Kein beobachteter
+Berichte `10`/`12` und Ausgabe `0f`; im damaligen Zwei-Capture-Umfang wurden
+nach Rückkehr aus `109c` dort drei einzelne Berichte mit bekannter IMU-Signatur
+aufgezeichnet. Kein beobachteter
 `12`-Bericht, kein belegter dauerhafter Stream oder Viermotor-Ausgabepfad auf
 IF1. Bisherige IF0-Filter beweisen keine Unbrauchbarkeit des Nebenkanals.
 Eine kleinere Architektur ist deshalb ernsthaft zu prüfen; der laufende

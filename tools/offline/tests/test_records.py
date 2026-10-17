@@ -18,11 +18,16 @@ def example():
 
 
 class RecordTests(unittest.TestCase):
-    def test_fixture_evidence_is_explicitly_synthetic(self):
-        for path in (ROOT / "fixtures").glob("*.jsonl"):
+    def test_fixture_evidence_matches_explicit_provenance_inventory(self):
+        kinds = {"synthetic_valid.jsonl": ("synthetic", "synthetic"),
+                 "synthetic_negative.jsonl": ("synthetic", "synthetic"),
+                 "synthetic_hid_companion.jsonl": ("synthetic", "synthetic"),
+                 "captured_hid_returns.jsonl": ("capture_excerpt", "host_capture")}
+        paths = list((ROOT / "fixtures").glob("*.jsonl"))
+        self.assertEqual({path.name for path in paths}, set(kinds))
+        for path in paths:
             for record in read_records(path):
-                self.assertEqual(record.source_kind, "synthetic")
-                self.assertEqual(record.timebase, "synthetic")
+                self.assertEqual((record.source_kind, record.timebase), kinds[path.name])
 
     def test_metadata_bool_is_not_an_integer(self):
         value = example()
