@@ -68,6 +68,13 @@ danach separat freigegebene Dauerstrom-/Paddle-/Release-/Reconnect-Nachweise.
 Keine laufende Architektur ersetzen, bevor Input-Zusammenführung und alle
 vier Motoren samt Besitz/Stopps gleichwertig gelöst sind. Kalibrierung pausiert.
 
+Der [passive 300-Sekunden-Adapter](HID_PASSIVE_CAPTURE.md) ist nun separat
+vorbereitet; zuerst nach eigener Freigabe den lesend belegten blockierten
+`109c`-Zustand kontrolliert auflösen und eine saubere `100a`-Ausgangsinstanz
+bestätigen. Manager pausiert/ohne Besitz, usbmon-Verfügbarkeit und frische
+Hash-/Instanzmetadaten bleiben Aufnahmevoraussetzungen. Offline-Tests ersetzen
+keine neue Aufnahmefreigabe; Aktivierungsbefehle bleiben unbestätigt/gesperrt.
+
 **Trigger-Bridge:** Der geprüfte eigenständige Forza-/Xodus-Nachweis wird als
 optionale Userspace-Komponente integriert, nicht in den Kernel verschoben.
 Die neue Fassung ergänzt eindeutige Instanz-/Quellzuordnung, versionierten

@@ -21,6 +21,11 @@ signal.signal(signal.SIGINT, interrupted)
 
 try:
     host = json.loads(sys.argv[1])
+    profile = host.get('capture_profile')
+    need(profile in (None, 'passive-hid-100a-300'), 'Unknown capture profile')
+    duration = 300 if profile == 'passive-hid-100a-300' else 450
+    if profile == 'passive-hid-100a-300':
+        r['scope'] = 'passive HID 100a one isolated dumpcap capture, maximum duration 300 seconds'
     outer_mnt = sys.argv[2]
     names = ("mnt", "pid", "net", "ipc", "uts", "user")
     r["ns"] = {n: os.readlink("/proc/self/ns/" + n) for n in names}
@@ -136,11 +141,12 @@ try:
     need(os.access("/usr/bin/dumpcap", os.X_OK), "dumpcap not executable in final sandbox")
     r["dumpcap_argv"] = [
         "/usr/bin/dumpcap", "-i", "usbmon8", "-y", "USB_LINUX_MMAPPED",
-        "-s", "0", "-F", "pcapng", "-a", "duration:450", "-a", "filesize:2000000", "-q", "-w", "-",
+        "-s", "0", "-F", "pcapng", "-a", "duration:" + str(duration), "-a", "filesize:2000000", "-q", "-w", "-",
     ]
     audit("MEASUREMENT_B_PREFLIGHT_JSON", r)
     r["capture_start_request_utc"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     capture_started = time.monotonic()
+    capture_started_monotonic_ns = time.monotonic_ns()
     p = subprocess.Popen(r["dumpcap_argv"], close_fds=True)
     r["dumpcap_started"] = True
     r["dumpcap_pid_in_namespace"] = p.pid
@@ -175,6 +181,7 @@ try:
                 r["dumpcap_process_snapshot"] = {
                     "checked_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                     "checked_monotonic_ns": time.monotonic_ns(),
+                    "capture_started_monotonic_ns": capture_started_monotonic_ns,
                     "exe": "/usr/bin/dumpcap", "rights": child_rights,
                     "namespaces": child_ns, "fds": child_fds,
                     "monitor_fds": monitor_fds, "raw_usb_absent": True,
@@ -187,7 +194,7 @@ try:
         time.sleep(0.001)
 
     need("dumpcap_process_snapshot" in r, "No verified dumpcap snapshot with monitor FD")
-    r["dumpcap_exit_status"] = p.wait(timeout=max(0.1, 455 - (time.monotonic() - capture_started)))
+    r["dumpcap_exit_status"] = p.wait(timeout=max(0.1, duration + 5 - (time.monotonic() - capture_started)))
     r["capture_end_utc"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     r["dumpcap_reaped"] = True
     need(r["dumpcap_exit_status"] == 0, "dumpcap failed")

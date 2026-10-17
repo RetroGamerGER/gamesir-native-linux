@@ -5,6 +5,25 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Passiver 100a-HID-Test offline vorbereitet, Hardware-Go gesperrt:** Der
+Recorder hat jetzt ein eigenes 300-Sekunden-Profil mit separatem Einstieg,
+30-Sekunden-Vorbereitungsfenster, Reaktionspuffern und geschützter PCAPNG-
+Ausgabe. Es verlangt dieselbe frisch bestätigte `100a`-Instanz, IF0 `xpad`,
+IF1 `usbhid`, pausierten Manager und leeren Besitzstand. Der alte 450-Sekunden-
+Motorvergleich bleibt ein anderes Profil. Keine Aufnahme oder Änderung am
+installierten Treiber; geänderte Hilfsquellen brauchen neue Freigabemanifeste.
+46 neue und 34 bisherige Recorder-Tests bestehen; vollständige Offline-Suite:
+920 Python-Fälle in 32 Batches plus bestehende C-/Sanitizer-/statische Prüfungen.
+
+Die zugleich freigegebene lesende Managerdiagnose belegt einen echten
+ungelösten Zustand der vorhandenen Instanz: Übergang nach `109c` und sechs
+Initialisierungstransfers abgeschlossen, anschließend Timeout in VERIFY ohne
+angenommenen IMU-Bericht. END wurde bestätigt; ein Wechsel zurück nach `100a`
+blieb aus. Manager-Lease und aktuelle sysfs-/Boot-Identität stimmen überein;
+die Sperre wird nicht automatisch gelöscht. Ursache der ausbleibenden
+passenden Eingangsdaten noch unbekannt. Kein Release/Resume oder neuer Versuch.
+[Diagnose, Adapter, Messablauf und Freigabegrenzen](HID_PASSIVE_CAPTURE.md).
+
 **Gerätefreier xpad-/HID-Prototyp ergänzt:** Acht vorhandene Originalmitschnitte
 wurden offline geprüft. In drei Rückkehr-Epochen nach `100a` liegen insgesamt
 14 IF1-Berichte mit bekannter `10/3c/e0`-Form vor, darunter ein neuer kurzer

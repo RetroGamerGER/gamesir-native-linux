@@ -8,6 +8,12 @@ test has followed it. Gyroscope calibration remains paused. Core package:
 The optional trigger bridge is a separate package and was not installed by this
 update.
 
+Later read-only checkpoint: [passive HID preparation](HID_PASSIVE_CAPTURE.md)
+documents a distinct, current failed VERIFY attempt and unresolved `109c`
+return. Do not confuse that real bootstrap fault with the stale-getter race
+corrected below, or clear its latch by matching error text. No manager or
+kernel correction, runtime reset or new hardware attempt was made in that work.
+
 ## Observed defect
 
 A previously authorized read-only status query showed a running, unpaused

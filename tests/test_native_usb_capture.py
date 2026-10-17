@@ -415,9 +415,18 @@ class CaptureTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(original.encode()).hexdigest(), provenance['files'][name]['validated_source_sha256'])
         for path in assets.glob('*.py'):
             ast.parse(path.read_text(), filename=str(path))  # never exec hardware guards
-        text = (assets / 'guest-check.py').read_text().removeprefix(license_comment)
-        original = text.replace('maximum duration 450 seconds', 'nominal duration 270 seconds').replace('duration:450', 'duration:270').replace('455 - (time.monotonic() - capture_started)', '275 - (time.monotonic() - capture_started)')
-        self.assertEqual(hashlib.sha256(original.encode()).hexdigest(), provenance['files']['guest-check.py']['validated_source_sha256'])
+        # The source now has a separate, offline-only passive profile. Keep
+        # the actual historical hashes rather than pretending a text rewrite
+        # reconstructs that previously validated guest. Current behavior is
+        # checked by both legacy synthetic tests and the passive profile suite.
+        self.assertEqual(provenance['files']['guest-check.py']['validated_source_sha256'],
+                         '105216872466430161aac6ae01e2399b54a1edd37149effcfac1cb721004e5db')
+        self.assertEqual(provenance['files']['guest-check.py']['pre_passive_profile_source_sha256'],
+                         'd09a529639c1ec4df84f8ba779f33480983810e8a5ae6b649b6c806dced6b7b1')
+        self.assertEqual(provenance['files']['identity-check.py']['pre_passive_profile_source_sha256'],
+                         'd768288ff45675b91c7c9676c120bb30c6afbf54d11791e187b50e7c3bc9369a')
+        self.assertFalse(provenance['profile_validation']['passive_hardware_validated'])
+        self.assertFalse(provenance['profile_validation']['setup_mount_and_state_guards_changed'])
 
 
 if __name__ == '__main__':

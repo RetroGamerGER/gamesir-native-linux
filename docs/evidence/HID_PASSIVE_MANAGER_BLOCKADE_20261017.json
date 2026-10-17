@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-17",
+  "scope": "Read-only local manager state, kernel/service journals, cached sysfs and source review. No release/resume, control-device open, capture or runtime changes.",
+  "kernel": "7.2.11-1-garuda",
+  "observed_usb": {
+    "vid": "3537",
+    "pid": "109c",
+    "if0_driver": "gs_native",
+    "if1_driver": null
+  },
+  "instance_comparison": {
+    "same_boot": true,
+    "same_target_inode": true,
+    "same_parent_inode": true,
+    "pid_matches": true,
+    "bus_matches": true,
+    "address_matches": true,
+    "driver_matches": true
+  },
+  "manager": {
+    "paused": false,
+    "lease_phase": "blocked",
+    "error": "Return deadline: still 109c; manual attention required",
+    "end_attempted": true,
+    "end_succeeded": true,
+    "cleanup_attempted": false,
+    "original_bootstrap": {
+      "returncode": 1,
+      "manager_child_timed_out": false,
+      "reported_kernel_status": {
+        "state": 8,
+        "error": -110,
+        "failed_stage": 5,
+        "pad": 0,
+        "imu": 0,
+        "handover": 0,
+        "port_token": 2,
+        "instance_token": 3
+      }
+    }
+  },
+  "kernel_bootstrap_log_fields": {
+    "returncode": -110,
+    "failed_stage": 5,
+    "step": 6,
+    "pending": 0,
+    "transition": 1,
+    "tx_count": 21,
+    "tx_step": 6,
+    "tx_status": 0,
+    "tx_actual": 64,
+    "tx_expected": 64,
+    "first_rx_status": 0,
+    "first_rx_source": 0,
+    "first_rx_stage": 0,
+    "first_rx_step": 0,
+    "first_rx_pid": "0000",
+    "first_rx_us": 0,
+    "first_rx_deferred": 0,
+    "old_rx_quiesced": 1
+  },
+  "timeline_since_boot_seconds": {
+    "native_100a_bound": 10375.711049,
+    "native_109c_bound": 10382.670034,
+    "kernel_bootstrap_finished": 10386.023012,
+    "manager_bootstrap_result": 10386.039835,
+    "manager_return_deadline": 10416.513597
+  },
+  "interpretation": {
+    "stage_5": "GS_BOOT_VERIFY",
+    "state_8": "GS_BOOT_FAILED",
+    "mode_transition_observed": true,
+    "six_initialization_transfers_completed": true,
+    "matching_IMU_observed_during_attempt": false,
+    "matching_GIP_pad_observed_during_attempt": false,
+    "underlying_reason_no_matching_input": "unknown; no saved packet-level evidence for this attempt",
+    "current_latch_matches_present_instance": true,
+    "state_not_merely_an_old_other_boot_record": true,
+    "END_returncode_does_not_prove_USB_identity_return": true,
+    "automatic_retry_permitted": false
+  },
+  "private_evidence_sha256": {
+    "manager-state.json": "b181614f617476298b0ceb767e152a35de297f6e6bdbb71d39f8ae96bd0388d3",
+    "kernel-native.log": "a30aecd731f87fc9f9004368fc135db5a168f473924d54d98eb463cc3171a49e",
+    "manager-journal.log": "d7d17d10e624a122d9e65fad2979c5a26ecf38530d09f5bed5df278ed52fa228",
+    "kernel-target.log": "933e61c4cb8db17de3e9af7656b9dba90cfbeaf9e4cdea13fa2e7a7083e3d70d",
+    "instance-comparison.json": "546ac26120233934d31091d0d50d161d610484fe5a94bd6f2998f2e400e37684"
+  },
+  "source_sha256": {
+    "tools/service/gamesir_native.py": "311b41bbab5310220a869d8b1dd98898c844b26eaed00b8d4f0e6d267fcdfbcc",
+    "kernel/gs_native_usb.c": "98407efec2630ae4cff99009a4c557166b394d49dbb23995435dcb98dc4abd94"
+  },
+  "installed_manager_equals_reviewed_source": true,
+  "privacy": "Raw journals, serials, boot IDs, full device-lifetime tokens, physical paths and process details stay outside Git."
+}

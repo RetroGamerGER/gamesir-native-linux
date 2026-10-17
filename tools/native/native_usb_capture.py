@@ -13,6 +13,7 @@ import json
 import math
 import os
 from pathlib import Path
+import re
 import shutil
 import select
 import signal
@@ -24,6 +25,8 @@ ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / 'tools/native/usb_capture'
 SCOPE = 'native-motor-comparison-300-handover-twelve-pulses-capture-end-only'
 DURATION, OUTER_TIMEOUT, TAIL = 450, 480, 30
+PASSIVE_SCOPE = 'passive-hid-100a-300'
+PASSIVE_DURATION, PASSIVE_OUTER_TIMEOUT = 300, 330
 GIB, MAX_LOG = 1024 ** 3, 16 * 1024 ** 2
 ASSET_NAMES = ('setup.sh', 'guest-check.py', 'identity-check.py', 'state-check.py')
 
@@ -50,9 +53,37 @@ def regular(path):
     need(stat.S_ISREG(path.lstat().st_mode), 'Expected regular non-symlink file: ' + str(path))
 
 
+def validate_passive_target(target):
+    """Validate approved cached metadata, without collecting any host metadata."""
+    need(isinstance(target, dict) and set(target) == {
+        'port', 'busnum', 'devnum', 'devpath', 'vid', 'pid', 'interfaces', 'sysfs_identity', 'boot_id'},
+        'Explicit passive target metadata required')
+    need(target['vid'] == '3537' and target['pid'] == '100a',
+         'Passive profile supports only 3537:100a')
+    need(isinstance(target['boot_id'], str) and re.fullmatch(
+        r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', target['boot_id']),
+        'Current boot identity required')
+    need(target['port'] == '8-6' and target['busnum'] == '8' and target['devpath'] == '6'
+         and isinstance(target['devnum'], str) and re.fullmatch(r'[1-9][0-9]{0,2}', target['devnum'])
+         and int(target['devnum']) <= 127, 'Only fresh bus 8 / port 8-6 target supported')
+    need(target['interfaces'] == {
+        '0': {'driver': 'xpad', 'endpoints': [2, 130]},
+        '1': {'driver': 'usbhid', 'endpoints': [4, 132]}},
+        'Expected xpad IF0 and usbhid IF1 with exact endpoints')
+    value = target['sysfs_identity']
+    need(isinstance(value, dict) and set(value) == {
+        'st_dev', 'st_ino', 'parent_st_dev', 'parent_st_ino'}
+        and all(type(v) is int and v >= (1 if k.endswith('ino') else 0) for k, v in value.items()),
+        'Fresh sysfs device and parent instance metadata required')
+    return target
+
+
 def verify_sources(manifest):
     result = {}
-    for path in [Path(__file__).absolute()] + [ASSETS / name for name in ASSET_NAMES]:
+    paths = [Path(__file__).absolute()] + [ASSETS / name for name in ASSET_NAMES]
+    if manifest.get('scope') == PASSIVE_SCOPE:
+        paths.append(ROOT / 'tools/native/hid_sidechannel_capture.py')
+    for path in paths:
         regular(path)
         relative, value = str(path.relative_to(ROOT)), digest(path)
         need(manifest.get('sha256', {}).get(relative) == value,
@@ -119,9 +150,13 @@ def validate_ready(records, baseline, launched, now):
 class Capture:
     def __init__(self, manifest, output):
         self.manifest, self.parent = manifest, Path(output)
-        need(manifest.get('scope') == SCOPE, 'Wrong native capture scope')
+        need(manifest.get('scope') in (SCOPE, PASSIVE_SCOPE), 'Wrong native capture scope')
+        self.passive = manifest['scope'] == PASSIVE_SCOPE
+        self.duration = PASSIVE_DURATION if self.passive else DURATION
+        self.outer_timeout = PASSIVE_OUTER_TIMEOUT if self.passive else OUTER_TIMEOUT
+        self.tail = 0 if self.passive else TAIL
         conf = manifest.get('usb_capture', {})
-        need((conf.get('duration_seconds'), conf.get('outer_timeout_seconds')) == (DURATION, OUTER_TIMEOUT),
+        need((conf.get('duration_seconds'), conf.get('outer_timeout_seconds')) == (self.duration, self.outer_timeout),
              'Unexpected recording time limits')
         ref = conf.get('dumpcap_file_metadata', {})
         need(set(ref) == {'uid', 'gid', 'mode', 'sha256', 'file_capability_xattr_hex'}
@@ -130,6 +165,8 @@ class Capture:
              and isinstance(ref.get('sha256'), str) and len(ref['sha256']) == 64,
              'Fresh dumpcap provenance required')
         target = manifest['target']
+        if self.passive:
+            validate_passive_target(target)
         need(target['port'] == '8-6' and str(target['busnum']) == '8'
              and str(target['devpath']) == '6' and str(target['devnum']).isdigit()
              and 1 <= int(target['devnum']) <= 127, 'Only fresh bus 8 / port 8-6 identity supported')
@@ -149,6 +186,8 @@ class Capture:
         self.dumpcap = None
         self.dumpcap_fd = self.capture_namespaces = None
         self.sources = None
+        self.capture_started = None
+        self.next_identity_check = 0
 
     def _file(self, name):
         fd = os.open(self.directory / name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
@@ -221,8 +260,13 @@ class Capture:
         try:
             self._object('capture-manifest.json', self.manifest)
             host = self._metadata('state-check.py')
-            ident = self._metadata('identity-check.py', {'target': self.manifest['target']})
+            identity_argument = {'target': self.manifest['target']}
+            if self.passive:
+                identity_argument['capture_profile'] = PASSIVE_SCOPE
+            ident = self._metadata('identity-check.py', identity_argument)
             self.baseline = dict(host, identity=ident, target=self.manifest['target'])
+            if self.passive:
+                self.baseline['capture_profile'] = PASSIVE_SCOPE
             self._object('host-before.json', host)
             self._object('identity-before.json', ident)
             self._object('dumpcap-file-metadata.json', self.manifest['usb_capture']['dumpcap_file_metadata'])
@@ -231,20 +275,21 @@ class Capture:
                 stream.write(self.sources[name].encode())
                 stream.close()
             self._object('source-hashes.json', self.source_hashes)
-            argv = ['/usr/bin/timeout', '--signal=TERM', '--kill-after=2s', str(OUTER_TIMEOUT) + 's',
+            argv = ['/usr/bin/timeout', '--signal=TERM', '--kill-after=2s', str(self.outer_timeout) + 's',
                 '/usr/bin/env', '-i', 'PATH=/usr/bin', 'LANG=C', 'TZ=UTC', 'HOME=/',
                 '/usr/bin/unshare', '--mount', '--propagation', 'private',
-                '/usr/bin/bash', '-euc', self.sources['setup.sh'], 'native-motor-comparison',
+                '/usr/bin/bash', '-euc', self.sources['setup.sh'],
+                PASSIVE_SCOPE if self.passive else 'native-motor-comparison',
                 json.dumps(self.baseline, sort_keys=True), self.sources['guest-check.py'],
                 self.sources['identity-check.py']]
             self._object('command-argv.json', argv)
             self.observer = subprocess.Popen(['/usr/bin/timeout', '--signal=TERM', '--kill-after=2s',
-                str(OUTER_TIMEOUT) + 's', '/usr/bin/udevadm', 'monitor', '--kernel', '--udev',
+                str(self.outer_timeout) + 's', '/usr/bin/udevadm', 'monitor', '--kernel', '--udev',
                 '--property', '--subsystem-match=usb'], stdin=subprocess.DEVNULL,
                 stdout=self._file('usb-udev-events.log'), stderr=self._file('udev-stderr.log'),
                 close_fds=True, start_new_session=True)
             self.launched = time.monotonic()
-            self.deadline = self.launched + DURATION
+            self.deadline = self.launched + self.duration
             self.process = subprocess.Popen(argv, stdin=subprocess.DEVNULL,
                 stdout=self._file('original-usbmon8.pcapng'), stderr=self._file('capture.log'),
                 close_fds=True, start_new_session=True)
@@ -255,6 +300,11 @@ class Capture:
                 need(self.observer.poll() is None, 'Passive epoch observer exited before readiness')
                 if 'MEASUREMENT_B_DUMPCAP_JSON' in records:
                     self.ready = validate_ready(records, self.baseline, self.launched, time.monotonic())
+                    if self.passive:
+                        self.capture_started = records['MEASUREMENT_B_DUMPCAP_JSON'].get('capture_started_monotonic_ns', 0) / 1e9
+                        need(self.launched <= self.capture_started <= self.ready,
+                             'Missing/future passive capture clock origin')
+                        self.deadline = self.capture_started + self.duration
                     self.supervisor = self._supervisor_identity()
                     need(records.get('MEASUREMENT_B_SUPERVISOR_JSON') == self.supervisor,
                          'Sandbox supervisor differs from own recorder process')
@@ -265,8 +315,10 @@ class Capture:
                     self.dumpcap = candidate
                     self._object('host-dumpcap-process.json', self.dumpcap)
                     self._object('recorder-ready.json', records)
-                    self.check(300 + TAIL + 15, 'initial-ready')
-                    print('USB-AUFNAHME LÄUFT und Isolation geprüft. Es folgt der native Countdown.', flush=True)
+                    self.check(0 if self.passive else 300 + TAIL + 15, 'initial-ready')
+                    print(('USB-AUFNAHME LÄUFT und Isolation geprüft. Vorbereitung läuft seit Recorderstart.'
+                           if self.passive else
+                           'USB-AUFNAHME LÄUFT und Isolation geprüft. Es folgt der native Countdown.'), flush=True)
                     return
                 time.sleep(.02)
             raise CaptureHalt('No verified isolated recorder readiness within five seconds')
@@ -287,6 +339,11 @@ class Capture:
         poller = select.poll()
         poller.register(self.dumpcap_fd, select.POLLIN | select.POLLHUP | select.POLLERR)
         need(not poller.poll(0), 'dumpcap exited before supervisor at ' + stage)
+        if self.passive and now >= self.next_identity_check:
+            identity = self._metadata('identity-check.py', {
+                'target': self.manifest['target'], 'capture_profile': PASSIVE_SCOPE})
+            need(identity == self.baseline['identity'], 'Passive target instance/bindings changed at ' + stage)
+            self.next_identity_check = time.monotonic() + 1
         if now >= self.last_check:
             need(shutil.disk_usage(self.parent).free >= GIB, 'Less than 1 GiB free at ' + stage)
             for name, limit in (('capture.log', MAX_LOG), ('usb-udev-events.log', MAX_LOG),
@@ -321,14 +378,18 @@ class Capture:
         self.process.wait(timeout=5)
 
     def finish(self):
-        """Call after native END/cleanup, never while the native client can send."""
-        return self._finalize(tail=True)
+        """Finalize passive recording, or legacy capture after native END/cleanup."""
+        return self._finalize(tail=not self.passive)
+
+    def abort(self, reason):
+        """Stop only this recorder; preserve the failed capture and all evidence."""
+        return self._finalize(tail=False, failure=str(reason))
 
     def _finalize(self, tail, failure=None):
         if self.result is not None:
             return self.result
         result = {'passed': False, 'failure': failure, 'finalization_started_utc': utc(),
-                  'duration_ceiling_seconds': DURATION, 'post_end_tail_seconds': TAIL if tail else 0}
+                  'duration_ceiling_seconds': self.duration, 'post_end_tail_seconds': self.tail if tail else 0}
         try:
             if tail and self.ready is not None and self.process is not None:
                 until = time.monotonic() + TAIL
@@ -371,9 +432,15 @@ class Capture:
             if self.baseline is not None:
                 after = self._metadata('state-check.py')
                 self._object('host-after.json', after)
-                expected = {key: value for key, value in self.baseline.items() if key not in ('identity', 'target')}
+                expected = {key: value for key, value in self.baseline.items() if key not in ('identity', 'target', 'capture_profile')}
                 result['host_mounts_namespaces_node_unchanged'] = after == expected
                 need(after == expected, 'Host mount/node/namespace changed')
+                if self.passive:
+                    identity = self._metadata('identity-check.py', {
+                        'target': self.manifest['target'], 'capture_profile': PASSIVE_SCOPE})
+                    self._object('identity-after.json', identity)
+                    need(identity == self.baseline['identity'], 'Passive target changed before final audit')
+                    result['target_identity_bindings_pause_unchanged'] = True
             original = self.directory / 'original-usbmon8.pcapng'
             need(original.exists(), 'Missing original capture')
             if original.exists():
@@ -389,16 +456,27 @@ class Capture:
             try:
                 after = self._metadata('state-check.py')
                 self._object('host-after.json', after)
-                expected = {key: value for key, value in self.baseline.items() if key not in ('identity', 'target')}
+                expected = {key: value for key, value in self.baseline.items() if key not in ('identity', 'target', 'capture_profile')}
                 result['host_mounts_namespaces_node_unchanged'] = after == expected
             except BaseException as error:
                 result['host_after_error'] = str(error)
                 result['passed'] = False
         for stream in self.streams:
             if not stream.closed:
-                stream.flush()
-                os.fsync(stream.fileno())
-                stream.close()
+                try:
+                    stream.flush()
+                    os.fsync(stream.fileno())
+                except BaseException as error:
+                    result.setdefault('stream_sync_errors', []).append(str(error))
+                    result['failure'] = (result.get('failure') or '') + '; evidence sync: ' + str(error)
+                    result['passed'] = False
+                finally:
+                    try:
+                        stream.close()
+                    except BaseException as error:
+                        result.setdefault('stream_close_errors', []).append(str(error))
+                        result['failure'] = (result.get('failure') or '') + '; evidence close: ' + str(error)
+                        result['passed'] = False
         if self.dumpcap_fd is not None:
             os.close(self.dumpcap_fd)
             self.dumpcap_fd = None

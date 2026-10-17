@@ -1,5 +1,5 @@
 {
-  "basis": "Successful isolated Deadband comparison, 20261012T165154770784Z; original sources retained unchanged",
+  "basis": "Successful isolated Deadband comparison, 20261012T165154770784Z; historical hashes retained. The additional passive 100a profile is offline-tested only, not hardware-validated.",
   "files": {
     "setup.sh": {
       "validated_source_sha256": "482cd0aac9e63c724efeccf48903fa8e0875f9b170144ad0f3701cfff211ac36",
@@ -7,11 +7,13 @@
     },
     "guest-check.py": {
       "validated_source_sha256": "105216872466430161aac6ae01e2399b54a1edd37149effcfac1cb721004e5db",
-      "current_source_sha256": "d09a529639c1ec4df84f8ba779f33480983810e8a5ae6b649b6c806dced6b7b1"
+      "current_source_sha256": "cdb534b4002648893c0527b652d94c27bc0716738ff80e2fe66ba5ba2c5a0a0d",
+      "pre_passive_profile_source_sha256": "d09a529639c1ec4df84f8ba779f33480983810e8a5ae6b649b6c806dced6b7b1"
     },
     "identity-check.py": {
       "validated_source_sha256": "0de36993528e3125a2351c568024072539f3ad64c398279196b253606d9c1d17",
-      "current_source_sha256": "d768288ff45675b91c7c9676c120bb30c6afbf54d11791e187b50e7c3bc9369a"
+      "current_source_sha256": "30d14504f4fdade58754b7bce645c5cb91b1b21ff3b93dea51f1d2d567c722e1",
+      "pre_passive_profile_source_sha256": "d768288ff45675b91c7c9676c120bb30c6afbf54d11791e187b50e7c3bc9369a"
     },
     "state-check.py": {
       "validated_source_sha256": "081a414833efe5a6c9a1b28a08e8b298608871e0386ba17e5f1bba744ccc8a01",
@@ -21,13 +23,22 @@
   "adaptations": {
     "setup.sh": "unchanged; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged",
     "state-check.py": "unchanged; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged",
-    "identity-check.py": "fresh manifest target, exclusive Deadband 109c preparation state; no hardware writes; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged",
-    "guest-check.py": "450 s ceiling and 455 s reap timeout only; original signal handling and all post-capture audits retained; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged"
+    "identity-check.py": "Legacy 109c/usbfs preparation guard retained; explicit passive-hid-100a-300 branch requires exact 100a/xpad/usbhid endpoints, same boot and cached sysfs device/parent instance, paused empty manager state, and no foreign raw USB/hidraw/Deadband access. Cached metadata reads only; no device open or writes. Character-device rdev metadata checks reject aliases/bind-mounted USB or hidraw nodes; no descriptor is opened by the check.",
+    "guest-check.py": "Legacy 450 s capture and 455 s reap contract retained. Explicit passive-hid-100a-300 branch selects 300 s ceiling / 305 s reap and records the monotonic recorder-request origin. All original namespace, capability, mount, FD, and post-capture audit guards retained; stdout remains the sole capture output."
   },
   "license_annotation": {
     "spdx": "GPL-2.0-only",
     "historical_validated_source_sha256_preserved": true,
     "current_source_sha256_covers_license_comment": true,
-    "comment_only": true
+    "comment_only": false,
+    "historical_comment_only_changes_preserved": true
+  },
+  "profile_validation": {
+    "legacy_scope": "native-motor-comparison-300-handover-twelve-pulses-capture-end-only",
+    "legacy_duration_seconds": 450,
+    "passive_scope": "passive-hid-100a-300",
+    "passive_duration_seconds": 300,
+    "passive_hardware_validated": false,
+    "setup_mount_and_state_guards_changed": false
   }
 }

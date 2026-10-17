@@ -63,6 +63,7 @@ test-hardware-helper:
 	$(PYTHON) -B tests/test_bootstrap_observation.py
 	$(PYTHON) -B tests/check_native_client_output.py
 	$(PYTHON) -B tests/test_native_usb_capture.py
+	$(PYTHON) -B tests/test_hid_sidechannel_capture.py
 
 kernel:
 	$(PYTHON) -B scripts/build_kernel.py

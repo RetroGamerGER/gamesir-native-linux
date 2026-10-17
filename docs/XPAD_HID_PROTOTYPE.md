@@ -5,6 +5,10 @@ No hardware access, new capture, application execution, SSH, privileged command,
 module/binding change, installation or push. Gyro calibration remains paused.
 The working native runtime and its existing transport restrictions are unchanged.
 
+Follow-up: [passive 100a capture preparation](HID_PASSIVE_CAPTURE.md) adds an
+offline-tested recorder profile and a separately authorized read-only manager
+diagnosis. No live capture or return operation has been performed by that work.
+
 ## Result
 
 The saved ordinary-G7-Pro traffic supports investigating a companion to xpad:
