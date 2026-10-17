@@ -111,6 +111,10 @@ computer.
   dongles and long-term operation are not comprehensively hardware-tested.**
   A pre-existing unowned `109c` session is intentionally not seized. There
   are documented race limits during initial takeover and fallback binding.
+- A manager race could latch a newly reconnected `100a/xpad` instance as
+  released after an obsolete status query. The local revision-6
+  [reconnect correction](docs/MANAGER_RECONNECT_FIX.md) is offline-tested;
+  its installation and real reconnect acceptance are still pending.
 - Earlier development included system freezes. A confirmed force-feedback
   teardown memory bug was corrected and regression-tested; that does not
   explain every earlier freeze or establish complete stability. An earlier

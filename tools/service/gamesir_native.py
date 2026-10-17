@@ -89,6 +89,17 @@ class StatusBusy(Unsafe):
     """A getter cannot acquire the exclusive control FD; no runtime fault."""
 
 
+class StatusChanged(Unsafe):
+    """A passive getter's exact instance changed; never cleanup authority."""
+
+
+class StatusUnavailable(Unsafe):
+    """Incomplete observation metadata, not proven absence or runtime failure."""
+    def __init__(self, message, *, global_scan=False):
+        super().__init__(message)
+        self.global_scan = global_scan
+
+
 def checked_diagnostic(value):
     """Fail closed on corrupt new state fields; never stringify arbitrary data."""
     if type(value) is not dict:
@@ -184,6 +195,7 @@ class Entry:
     end_succeeded: bool = False
     absent_since: float | None = None
     bootstrap_diagnostic: dict = field(default_factory=dict)
+    pending_status: tuple | None = None
 
 
 class Manager:
@@ -210,6 +222,7 @@ class Manager:
         self.scan_error = ""
         self.port_errors = {}
         self.normal_since = None
+        self.discovery_deferred = set()
         for port, record in self.leases.items():
             # Historical records contain only Device metadata. They have no
             # kernel attestation and must never authorize a new 109c END.
@@ -336,6 +349,34 @@ class Manager:
         entry.status_conflict = ""
         entry.status_conflicts = 0
 
+    def defer_observation(self, entry, message, *, global_scan=False):
+        """Unknown metadata neither proves absence nor permits new mutations."""
+        self.normal_since = None
+        if global_scan:
+            self.scan_error = str(message)
+            for known in self.entries.values():
+                known.absent_since = None
+        else:
+            entry.absent_since = None
+            self.port_errors[entry.device.port] = str(message)
+
+    def merge_scan_errors(self, fresh):
+        """Quarantine every newly uncertain port for the rest of this tick.
+
+        A getter for A may discover unreadable metadata for B. B's earlier
+        snapshot then cannot authorize discovery, cleanup or handoff. Pending
+        jobs still drain their results and retain their original diagnostics.
+        """
+        errors = getattr(fresh, "errors", {})
+        self.port_errors.update(errors)
+        if isinstance(self.observed, Scan):
+            self.observed.errors.update(errors)
+        for port in errors:
+            if port in self.entries:
+                self.entries[port].absent_since = None
+        if any(port in self.entries or port in self.leases for port in errors):
+            self.normal_since = None
+
     def remember(self, entry):
         record = {
             "device": asdict(entry.device), "phase": entry.phase,
@@ -441,7 +482,8 @@ class Manager:
         expected_instance = (current and
             ((entry.origin_pid == "105e" and current.pid == "105e" and current.token == entry.device.token) or
              (entry.origin_pid == "100a" and current.pid == "109c" and current.token != entry.device.token)))
-        if (entry.device.port not in getattr(devices, "errors", {}) and expected_instance and
+        if (entry.device.port not in self.port_errors and
+                entry.device.port not in getattr(devices, "errors", {}) and expected_instance and
                 current.driver == "gs_native" and current.parent == entry.device.parent):
             entry.candidate = current
             entry.phase = "attesting"
@@ -451,8 +493,61 @@ class Manager:
             self.fail(entry, "Attested bootstrap finished but candidate not validated; manual attention required", "blocked")
             self.remember(entry)
 
+    def retire_obsolete_status(self, entry, current):
+        """Retire only an old healthy session, never act on its replacement.
+
+        A getter can finish after a normal radio reconnect has produced a new
+        xpad-owned 100a. That instance must pass ordinary discovery and its
+        start budget; the old kernel tokens do not authorize any command on it.
+        Faulted sessions, bootstrap handoffs and changed hubs stay fail-closed.
+        """
+        if (entry.phase != "active" or entry.error or entry.timed_out or
+                entry.origin_pid != "100a" or entry.device.pid != "109c" or
+                not entry.kernel_tokens):
+            return False
+        if current is None:
+            # A complete scan proves only current absence. Keep the old lease
+            # until the normal continuous-absence/replacement policy retires it.
+            self.status_available(entry)
+            entry.next_check = self.clock() + 1
+            return True
+        if (current.token == entry.device.token or current.parent != entry.device.parent or
+                current.pid != "100a" or current.driver != "xpad"):
+            return False
+        self.notice("session_replaced", entry.device,
+                    "Obsolete passive status discarded; new xpad instance requires fresh discovery")
+        self.leases.pop(entry.device.port, None)
+        self.entries.pop(entry.device.port, None)
+        # The tick's first snapshot may already be obsolete too. Discovery
+        # must enumerate again rather than claiming that earlier replacement.
+        self.discovery_deferred.add(entry.device.port)
+        self.save()
+        return True
+
+    def info_failure(self, entry, rc, output):
+        """Record a completed getter failure before any uncertain rescan.
+
+        A fault report concerns its pinned old FD, even if enumeration is now
+        incomplete. Persist it immediately so restart cannot erase the primary
+        failure. This grants no permission to operate on a replacement.
+        """
+        if entry.timed_out:
+            return "Native status client exceeded deadline"
+        if rc == STATUS_BUSY_EXIT:
+            return None
+        match = INFO.search(output)
+        if not match or match[1] != entry.device.pid:
+            return "Unrecognized native status"
+        state, error, enabled, session = map(int, match.group(2, 3, 4, 5))
+        if entry.device.pid == "100a":
+            if rc or error or state != 1 or enabled or session or not PAD.search(output):
+                return "Invalid passive 100a status"
+        elif rc or error or (state != 3 and (state != 1 or not enabled or not session)):
+            return "Native runtime fault; END and verified return only"
+        return None
+
     def poll_job(self, entry, devices):
-        result = self.host.poll(entry.job)
+        result = entry.pending_status if entry.pending_status is not None else self.host.poll(entry.job)
         if result is None:
             if self.clock() >= entry.deadline and not entry.cancel_requested:
                 self.host.cancel(entry.job)
@@ -460,20 +555,38 @@ class Manager:
                 entry.timed_out = True
                 self.fail(entry, "Client deadline; cancellation requested, no retry")
             return
-        entry.job = None
-        operation, entry.operation = entry.operation, ""
+        operation = entry.operation
         rc, output = result
         current = devices.get(entry.device.port)
         if operation in READ_ONLY:
             # The process may complete after the tick's initial enumeration.
             # Its passive result never authorizes action on a replacement.
-            current = self.host.scan().get(entry.device.port)
-            if rc == STATUS_BUSY_EXIT and self.clock() >= entry.deadline:
+            if entry.pending_status is None and rc == STATUS_BUSY_EXIT and self.clock() >= entry.deadline:
                 entry.timed_out = True
+            if operation == "info":
+                failure = self.info_failure(entry, rc, output)
+                if failure:
+                    entry.job, entry.operation, entry.pending_status = None, "", None
+                    self.fail(entry, failure)
+                    return
+            try:
+                fresh = self.host.scan()
+            except (OSError, Unsafe) as error:
+                entry.pending_status = result
+                self.defer_observation(entry, error, global_scan=True)
+                return
+            self.merge_scan_errors(fresh)
+            if entry.device.port in self.port_errors:
+                entry.pending_status = result
+                self.defer_observation(entry, self.port_errors[entry.device.port])
+                return
+            current = fresh.get(entry.device.port)
+        entry.job, entry.operation, entry.pending_status = None, "", None
         if operation in READ_ONLY and not entry.timed_out and rc == STATUS_BUSY_EXIT:
             expected = entry.candidate if operation == "boot-info" else entry.device
             if not expected or current != expected or current.driver != "gs_native":
-                self.fail(entry, "Device changed during deferred status access", "blocked")
+                if operation != "info" or not self.retire_obsolete_status(entry, current):
+                    self.fail(entry, "Device changed during deferred status access", "blocked")
             else:
                 self.defer_status(entry, "Native control FD busy; status deferred")
             return
@@ -494,7 +607,8 @@ class Manager:
                     entry.error = "Direct bootstrap result missing; recovering cleanup proof only"
                     self.record_failure(entry)
                     self.remember(entry)
-                    self.start(entry, "boot-info", current)
+                    if entry.device.port not in self.port_errors:
+                        self.start(entry, "boot-info", current)
                 else:
                     self.fail(entry, "Bootstrap incomplete; no second bootstrap on this instance")
                 return
@@ -513,8 +627,10 @@ class Manager:
             self.remember(entry)
             try:
                 fresh = self.host.scan()
-            except (OSError, Unsafe):
+            except (OSError, Unsafe) as error:
+                self.defer_observation(entry, error, global_scan=True)
                 return  # Keep the proof; bounded locating continues next tick.
+            self.merge_scan_errors(fresh)
             self.locate_handoff(entry, fresh)
         elif operation == "boot-info":
             proof = boot_proof(output)
@@ -549,7 +665,8 @@ class Manager:
                 self.fail(entry, "Native status client exceeded deadline")
                 return
             if current != entry.device or current.driver != "gs_native":
-                self.fail(entry, "Device changed during native status access", "blocked")
+                if not self.retire_obsolete_status(entry, current):
+                    self.fail(entry, "Device changed during native status access", "blocked")
                 return
             match = INFO.search(output)
             if not match or match[1] != entry.device.pid:
@@ -710,7 +827,15 @@ class Manager:
         entry.cleanup_attempted = True
         self.remember(entry)
         self.host.restore(current)
-        restored = self.host.scan().get(current.port)
+        try:
+            fresh = self.host.scan()
+        except (OSError, Unsafe) as error:
+            self.defer_observation(entry, error, global_scan=True)
+            return  # The persisted one-shot restore is not repeated.
+        self.merge_scan_errors(fresh)
+        if current.port in self.port_errors:
+            return  # Uncertain metadata cannot verify the persisted restore.
+        restored = fresh.get(current.port)
         if (not restored or restored.token != current.token or restored.parent != current.parent or
                 restored.pid != "105e" or restored.driver != "xpad"):
             self.fail(entry, "105e xpad return not verified", "blocked")
@@ -723,8 +848,12 @@ class Manager:
         self.save()
 
     def tick(self):
+        self.discovery_deferred.clear()
         try:
-            devices = self.host.scan()
+            fresh = self.host.scan()
+            devices = Scan()
+            devices.update(fresh)
+            devices.errors.update(getattr(fresh, "errors", {}))
             self.scan_error = ""
         except (OSError, Unsafe) as error:
             self.scan_error = str(error)
@@ -747,6 +876,7 @@ class Manager:
             self.budget_boot = live_boot
             self.save()
         self.port_errors = getattr(devices, "errors", {})
+        self.merge_scan_errors(devices)
         now = self.clock()
         if self.managed_returned(devices):
             if self.normal_since is None:
@@ -763,6 +893,8 @@ class Manager:
                         # Keep the operation so its handoff proof is not lost.
                         entry.cancel_requested = True
                     self.poll_job(entry, devices)
+                    if self.scan_error:
+                        return  # The global view became unknown after the initial scan.
                     continue
                 if port in self.port_errors:
                     # Keep this instance quarantined; it is not proven absent.
@@ -804,10 +936,13 @@ class Manager:
                     # Start inhibition is not cleanup inhibition. Known 100a
                     # ownership still authorizes one bounded xpad return.
                     self.return_one(entry, current)
+                    if self.scan_error:
+                        return
                     continue
                 if not same:
                     if entry.status_conflict:
-                        self.fail(entry, "Device changed during deferred status access", "blocked")
+                        if not self.retire_obsolete_status(entry, current):
+                            self.fail(entry, "Device changed during deferred status access", "blocked")
                         continue
                     # Re-enumeration after a running session is a fresh device.
                     # No handover follows a port or hub replacement implicitly.
@@ -826,11 +961,26 @@ class Manager:
                     self.start(entry, "resume")
             except StatusBusy:
                 self.defer_status(entry, "Native control FD busy; status deferred")
+            except StatusUnavailable as error:
+                self.defer_observation(entry, error, global_scan=error.global_scan)
+                if error.global_scan:
+                    return
+            except StatusChanged as error:
+                try:
+                    fresh = self.host.scan()
+                except (OSError, Unsafe) as observation_error:
+                    self.defer_observation(entry, observation_error, global_scan=True)
+                    return
+                self.merge_scan_errors(fresh)
+                if port in self.port_errors:
+                    self.defer_observation(entry, self.port_errors[port])
+                elif not self.retire_obsolete_status(entry, fresh.get(port)):
+                    self.fail(entry, str(error), "blocked")
             except (OSError, Unsafe) as error:
                 self.fail(entry, str(error), "blocked")
 
         for port, device in devices.items():
-            if port in self.entries:
+            if port in self.entries or port in self.discovery_deferred or port in self.port_errors:
                 continue
             if self.inhibited or device.pid not in START_PIDS or device.token in self.attempted:
                 continue
@@ -844,7 +994,13 @@ class Manager:
             try:
                 self.remember(entry)  # Claim intent survives a partial bind/crash.
                 self.host.claim(device)
-                current = self.host.scan().get(port)
+                try:
+                    fresh = self.host.scan()
+                except (OSError, Unsafe) as error:
+                    self.defer_observation(entry, error, global_scan=True)
+                    raise
+                self.merge_scan_errors(fresh)
+                current = fresh.get(port)
                 if not current or current.token != device.token or current.driver != "gs_native":
                     raise Unsafe("Instance changed while acquiring native driver")
                 entry.device = current
@@ -855,8 +1011,17 @@ class Manager:
                     self.start(entry, "info")
             except StatusBusy:
                 self.defer_status(entry, "Native control FD busy; status deferred")
+            except StatusUnavailable as error:
+                if entry.device.driver != "gs_native":
+                    self.fail(entry, str(error))  # Partial claim has no fresh native proof.
+                else:
+                    self.defer_observation(entry, error, global_scan=error.global_scan)
+                if error.global_scan:
+                    return
             except (OSError, Unsafe) as error:
                 self.fail(entry, str(error))
+                if self.scan_error:
+                    return
 
 
 @dataclass
@@ -987,9 +1152,20 @@ class Host:
         self.check_access(expected, observation=True)
 
     def check_access(self, expected, *, observation):
-        actual = self.scan().get(expected.port)
+        def observe():
+            try:
+                result = self.scan()
+            except (OSError, Unsafe) as error:
+                if observation:
+                    raise StatusUnavailable(str(error), global_scan=True) from error
+                raise
+            if observation and expected.port in getattr(result, "errors", {}):
+                raise StatusUnavailable(result.errors[expected.port])
+            return result.get(expected.port)
+
+        actual = observe()
         if actual != expected:
-            raise Unsafe("Device identity/binding changed before operation")
+            raise (StatusChanged if observation else Unsafe)("Device identity/binding changed before operation")
         if observation and expected.driver != "gs_native":
             raise Unsafe("Native status requires the exact native binding")
         target = f"/dev/bus/usb/{expected.bus:03d}/{expected.address:03d}"
@@ -1012,8 +1188,8 @@ class Host:
             except PermissionError as error:
                 raise Unsafe("Cannot exclude foreign device ownership") from error
         # Check again after a potentially long process scan.
-        if self.scan().get(expected.port) != expected:
-            raise Unsafe("Device changed during ownership check")
+        if observe() != expected:
+            raise (StatusChanged if observation else Unsafe)("Device changed during ownership check")
         if control_busy:
             raise StatusBusy("Native control FD busy; status deferred")
 

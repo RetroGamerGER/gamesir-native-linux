@@ -1,6 +1,6 @@
 # Alpha-Laufzeit und Besitzregeln
 
-PRE-ALPHA-Architekturstand: 16. Oktober 2026, Modul `0.1.0.alpha3`.
+PRE-ALPHA-Architekturstand: 17. Oktober 2026, Modul `0.1.0.alpha3`.
 Dieser Text beschreibt Besitz- und Laufzeitregeln, keinen aktuellen Zustand
 eines bestimmten Rechners. Der Standardpfad ist in begrenzten Hardwareläufen
 mit eigenständigem Start, Eingaben und Roh-IMU bestätigt; ein Boot mit späterem
@@ -13,6 +13,16 @@ Boot-, Hotplug-, Suspend-/Resume- und Langzeitzuverlässigkeit sind nicht belegt
 [INSTALLATION.md](INSTALLATION.md). Die älteren Aktivierungs-, Statuskonflikt-
 und Rückwegberichte bleiben als zeitgebundene Nachweise erhalten; sie gelten
 nicht als aktuelle globale Betriebszustände. Gyrokalibrierung bleibt pausiert.
+
+Die lokale Paketrevision 6 korrigiert den [Reconnect-Statuslauf](MANAGER_RECONNECT_FIX.md)
+offline. Ein veralteter passiver Getter einer gesunden 109c-Sitzung darf eine
+frisch erkannte 100a/xpad-Instanz nicht als bereits abgegeben blockieren. Das
+alte Ergebnis gewährt keinerlei Besitz am Ersatzgerät; die nächste frische
+Enumeration, normale Guards und das Startbudget bleiben erforderlich.
+Unvollständige Metadaten werden zurückgestellt, globale Beobachtungsfehler
+stoppen weitere Aktionen im selben Tick. Echte Fehler bleiben persistent
+verriegelt. Bereits vom alten Manager gespeicherte Fehler werden nicht allein
+anhand ihrer Meldung automatisch gelöscht. Noch keine neue Hardwareabnahme.
 
 ## Aktivierung und Gerätezuordnung
 

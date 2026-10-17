@@ -23,6 +23,7 @@ DOCUMENT_FILES = (
     'tools/offline/docs/source-map.json',
     'docs/ALPHA_INSTALLATION.md', 'docs/ALPHA_RUNTIME.md', 'docs/ALPHA_INSTALL_AUDIT.md',
     'docs/MANAGER_CONFLICT_FIX.md',
+    'docs/MANAGER_RECONNECT_FIX.md',
     'docs/BOOTSTRAP_CACHYOS_FIX.md',
     'docs/evidence/CACHYOS_BOOTSTRAP_20261015.json',
     'docs/DUALSENSE_SENSOR_COMPARISON.md',

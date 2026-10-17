@@ -29,6 +29,7 @@ test-public-readme:
 test-alpha:
 	$(PYTHON) -B tests/test_kernel_toolchain.py
 	$(PYTHON) -B tests/test_service_manager.py
+	$(PYTHON) -B tests/test_manager_reconnect.py
 	$(PYTHON) -B tests/test_service_client.py
 	$(PYTHON) -B tests/test_service_haptics.py
 	$(PYTHON) -B tests/test_packaging_alpha.py

@@ -4,6 +4,27 @@ Alle Make-Ziele sind offline. Keine Installation, erhöhten
 Rechte, USB-Kommandos, Modulaktivierung oder Treiberwechsel sind Bestandteil.
 Voraussetzung: vorhandenes Python ≥ 3.11, Make und clang mit ASan/UBSan.
 
+## Manager-Reconnect und veraltete Getter
+
+`python -B tests/test_manager_reconnect.py` verwendet die vorhandenen
+Repository-Fakes für Geräte, Zeit und Kindprozesse, ergänzt durch einen
+künstlichen sysfs-/Prozessbaum für die realen Guardfunktionen. Die anfängliche
+16-Fälle-Version schlug vor der Korrektur in acht Fällen fehl und reproduzierte
+unter anderem die dauerhaft falsche `released`-Sperre. Der aktuelle Bestand
+enthält 34 gezielte Fälle und gehört zu `make test-alpha`/`make test`. Zusammen
+mit den bestehenden 139 Managerfällen sind 173 bestanden; die komplette Suite
+enthält jetzt 825 Python-Testfälle in 30 Teilprüfungen plus C-/statische Prüfungen.
+
+Geprüft werden Neuanmeldung während/vor/nach Getter-Abschluss, Busy-Guard,
+zweite schnelle Geräteersetzung, Einzelverbrauch gepufferter Ergebnisse,
+global/per-Port unvollständige Metadaten, Clientfristen, Fehlererhalt über
+Managerneustart, fremde Instanzen/Hubwechsel, Pause und das unveränderte
+Drei-Starts-Budget. Globale zweite Scanfehler dürfen auch an einem anderen
+Port keine weiteren Aktionen mit dem alten Snapshot auslösen. Echte Fehler
+bleiben verriegelt; unbekanntes EIO erlaubt keinen Neustart. Kein installierter
+Manager, USB-/Input-Node, sudo, Dienst oder echter Reconnect wird verwendet.
+[Korrektur und Abnahmegrenzen](MANAGER_RECONNECT_FIX.md).
+
 ## Optionale Trigger-Bridge
 
 `make test-trigger-bridge` baut nur den Userspace-SDL2-Hook und prüft ihn

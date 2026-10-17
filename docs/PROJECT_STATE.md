@@ -5,7 +5,28 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Optionale Trigger-Bridge offline integriert:** Ausgangsbasis ist die getrennte
+**Reconnect-Korrektur als PRE-ALPHA-Update vorbereitet:** Der belegte Fehler
+`Device changed during native status access` konnte eine neue 100a/xpad-
+Instanz dauerhaft als `released`/bereits versucht blockieren. Gesunde veraltete
+Getter werden jetzt getrennt von echten Runtime-/Bootstrapfehlern behandelt.
+Eine neue Instanz wird erst nach frischer Enumeration/Guard/Budgetprüfung
+übernommen, kein END oder Restore am unbekannten Ersatzgerät. Temporäre
+Metadatenfehler behalten abgeschlossene Leseergebnisse; globale Fehler stoppen
+weitere Geräteaktionen im aktuellen Durchlauf. Echte Fehler bleiben erhalten.
+
+34 neue gerätefreie Regressionen ergänzen die bestehenden 139 Managerfälle.
+Vollständiges `make test` bestanden: 825 Python-Testfälle in 30 Teilprüfungen
+plus bestehende C-/statische Prüfungen. Offline-Modulbau für `7.2.11-1-garuda`
+bestanden, keine Codewarnungen, bekannter Clang-Umgebungshinweis 23.1.1→23.1.3.
+Kandidat `gamesir-native-dkms 0.1.0.alpha3-6`, sichtbarer Installationsdateiname
+mit PRE-ALPHA, interne Modul-/DKMS-Version bleibt `0.1.0.alpha3`. Keine Änderung
+an Kernel/ABI/Broker/Trigger-Bridge/Paddles/IMU, keine Installation oder
+Aktivierung; Gyrokalibrierung pausiert, kein Push. Das Drei-Starts-Budget in
+zehn Minuten bleibt bestehen. Der alte installierte Fehlerzustand erfordert
+später einen separat freigegebenen kontrollierten Start/Resume, keine
+automatische Migration per Fehlermeldung. [Befund und Updateplan](MANAGER_RECONNECT_FIX.md).
+
+**Vorheriger Bridge-Zwischenstand 0a4012b, offline integriert:** Ausgangsbasis ist die getrennte
 projektinterne Forza-/Xodus-Bridge bis `3a78390`, deren LT-/RT-Spieleffekte
 fühlbar bestätigt wurden. Herkunft/Lizenz wurden vor selektiver Übernahme
 geprüft; GPL-2.0-only gemäß Projektentscheidung, keine private Historie oder

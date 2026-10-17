@@ -32,6 +32,12 @@ XInput/GIP/IMU formats and hardware-confirmed four-motor packet support.
 is unknown; calibration is paused and calibrated SDL output is not approved.
 No universal trigger-game support or general stability guarantee.
 
+Passive getter results are observations of one instance, never authority over
+a replacement. Reconnect fixes must preserve actual faults, unknown-metadata
+quarantine, parent/instance checks and start budgets. Read
+docs/MANAGER_RECONNECT_FIX.md before changing this lifecycle. No automatic
+error-text migration or repeated resume/rebind attempts on the running system.
+
 ## Optional trigger bridge
 
 Keep game/Wine/SDL adapters and per-game gains in userspace. Use the existing

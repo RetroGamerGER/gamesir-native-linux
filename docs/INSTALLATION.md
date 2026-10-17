@@ -4,7 +4,10 @@
 procedure before enabling this experimental out-of-tree driver. This guide describes commands; it
 does not execute or authorize installation.
 
-The current package recipe is `gamesir-native-dkms 0.1.0.alpha3-5` for Arch-family `x86_64` systems.
+The current local update candidate is `gamesir-native-dkms 0.1.0.alpha3-6` for Arch-family `x86_64`
+systems. The published first source tag retains its original revision-5 recipe. Revision 6 adds an
+offline-tested manager reconnect correction; it is not installed or hardware-accepted. Read the
+[reconnect update scope and approval plan](MANAGER_RECONNECT_FIX.md) before updating.
 This is a preparation guide, not an available public binary release. Build the reviewed source;
 older local packages do not contain newly added licensing files merely because their name matches.
 Garuda KDE and CachyOS Gamescope have limited real-hardware evidence; this is not a promise for
@@ -61,7 +64,7 @@ computed hash checks recorded bytes; it does not authenticate an untrusted downl
 ## 3. Review and install the package, with the service inactive
 
 ```sh
-GS_PACKAGE=./gamesir-native-dkms-0.1.0.alpha3-5-x86_64.pkg.tar.zst
+GS_PACKAGE=./GameSir-Native-Linux-PRE-ALPHA-0.1.0.alpha3-6-x86_64.pkg.tar.zst
 sha256sum "$GS_PACKAGE"
 pacman -Qip "$GS_PACKAGE"
 pacman -Qlp "$GS_PACKAGE"
@@ -86,7 +89,7 @@ systemctl is-enabled gamesir-native.service
 ```
 
 Require DKMS `installed` for the intended kernel, module version `0.1.0.alpha3` (the package adds
-revision `-5`), matching vermagic, and inactive/disabled service on first installation. Investigate
+revision `-6`), matching vermagic, and inactive/disabled service on first installation. Investigate
 differences before activation. Installing files does not replace an older loaded module; do not
 force its removal.
 

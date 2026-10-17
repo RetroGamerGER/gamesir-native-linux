@@ -1,5 +1,11 @@
 # Public pre-alpha release audit
 
+Local candidate, 2026-10-17: core package revision `0.1.0.alpha3-6` adds a
+userspace manager reconnect correction. Kernel sources/ABI, haptics broker,
+paddles and IMU calibration are unchanged. Offline regressions and an update
+plan are recorded in [MANAGER_RECONNECT_FIX.md](MANAGER_RECONNECT_FIX.md);
+installation, activation, hardware acceptance and publication remain separate.
+
 Update 2026-10-17: the sanitized source baseline was published as
 `v0.1.0-pre-alpha.1`. The historical preparation audit below retains its
 original scope. The new optional [trigger bridge](TRIGGER_BRIDGE.md) is a
