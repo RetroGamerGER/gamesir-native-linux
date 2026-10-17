@@ -15,6 +15,16 @@ still pending. Its separate provenance check precedes source integration;
 publication remains conditional on the approved test and release review.
 The optional package does not change kernel, manager, paddle or IMU sources.
 
+Later local test on 2026-10-17: the first installed integrated Forza/Xodus
+trial failed trigger acceptance, although normal input and grip rumble worked.
+The relay disappeared before its first recorded output. A manager-busy versus
+identity-loss defect was reproduced offline and a correction is being prepared;
+the live exit cause was not conclusively logged. This does not invalidate the
+older separate bridge result, and that older result cannot validate the new
+integration. The maintainer's condition for the next push/release is therefore
+**not met**. Require an approved corrected-package test and its real outcome;
+see [the failed trial and correction](TRIGGER_BRIDGE.md#first-integrated-forza-test--trigger-acceptance-failed).
+
 Date: 2026-10-16. This is a local readiness assessment, not a published release
 or permission to install, activate, test hardware, create a remote, or push.
 The licensing baseline is commit `6abb83e`, following the paused-calibration

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 pkgname=gamesir-native-trigger-bridge
 pkgver=@VERSION@
-pkgrel=1
+pkgrel=2
 pkgdesc='Optional experimental userspace GameSir trigger-rumble adapter'
 arch=('x86_64')
 license=('GPL-2.0-only')

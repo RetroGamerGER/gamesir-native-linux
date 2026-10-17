@@ -22,10 +22,10 @@ import time
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from trigger_bridge.devices import read_manifest, verify
+    from trigger_bridge.devices import IdentityError, read_manifest, verify
     from trigger_bridge.protocol import CLOSE, SIZE, ProtocolError, decode
 else:
-    from .devices import read_manifest, verify
+    from .devices import IdentityError, read_manifest, verify
     from .protocol import CLOSE, SIZE, ProtocolError, decode
 
 # Each update consumes list + play/stop; 20/s leaves room for 2/s heartbeat.
@@ -35,6 +35,53 @@ MAX_SOURCE_RATE = 512
 MAX_BUFFER = SIZE * 32
 MAX_AGE_NS = 500_000_000
 MAX_FUTURE_NS = 1_000_000
+MAX_LOG_RECORDS = 1000
+
+
+class _Diagnostics:
+    """Bounded, best-effort records with two slots reserved for error/exit.
+
+    Call sites supply fixed event/reason values and numeric counters only.
+    Never log exceptions, arguments, paths, credentials or session material.
+    A broken log must not interrupt cleanup or hide the original failure.
+    """
+    def __init__(self, stream):
+        self.stream, self.regular, self.critical = stream, 0, 0
+        self.dropped, self.unavailable = 0, False
+
+    def _write(self, data):
+        if self.unavailable:
+            return
+        try:
+            self.stream.write(json.dumps({"monotonic_ns": time.monotonic_ns(), **data}) + "\n")
+            self.stream.flush()
+        except (OSError, ValueError):
+            self.unavailable = True
+
+    def __call__(self, **data):
+        if self.regular >= MAX_LOG_RECORDS - 2:
+            self.dropped += 1
+            return
+        self.regular += 1
+        self._write(data)
+
+    def terminal(self, **data):
+        if self.critical < 2:
+            self.critical += 1
+            self._write(data)
+
+
+def _error_kind(error):
+    # Fixed public categories only: exception text can contain private paths.
+    if isinstance(error, IdentityError):
+        return "IdentityError"
+    if isinstance(error, ProtocolError):
+        return "ProtocolError"
+    if isinstance(error, OSError):
+        return "OSError"
+    if type(error).__name__ == "HapticsError":
+        return "HapticsError"
+    return "Exception"
 
 
 def percent(value, gain=1.0):
@@ -78,7 +125,13 @@ class Forwarder:
     def _fail(self):
         self.failed = True
         self.queue.clear()
-        self.client.close()
+        try:
+            self.client.close()
+        except Exception:
+            # receive()/flush() must re-raise their original protocol/identity
+            # failure. serve() retries connection cleanup in finally and records
+            # a persistent cleanup failure without replacing that diagnosis.
+            pass
 
     def receive(self, payload):
         try:
@@ -185,37 +238,38 @@ def serve(path, manifest, ready, log, *, broker_path=None, right_gain=1.0,
     allow_root only bypasses the UID guard in in-process synthetic unit tests;
     it is deliberately not exposed by the command line.
     """
-    if os.geteuid() == 0 and not allow_root:
-        raise RuntimeError("Relay must run as the ordinary desktop user")
-    path, ready = Path(path), Path(ready)
-    directory = path.parent.lstat()
-    if (not stat.S_ISDIR(directory.st_mode) or directory.st_uid != os.geteuid() or
-            stat.S_IMODE(directory.st_mode) != 0o700 or path.parent.resolve() != path.parent):
-        raise RuntimeError("Relay directory must be a private real user directory, mode 0700")
-    target, session = read_manifest(manifest)
-    client = client_factory(broker_path)
-    forwarder, connection = None, None
+    diagnostics = _Diagnostics(log)
+    client = forwarder = connection = None
     old_signals = {}
     stopped = False
-    count = 0
-
-    def report(**data):
-        nonlocal count
-        if count < 1000:
-            log.write(json.dumps({"monotonic_ns": time.monotonic_ns(), **data}) + "\n")
-            log.flush()
-            count += 1
+    stage, reason = "preflight", "error"
+    failure = None
 
     def stop(*_args):
-        nonlocal stopped
+        nonlocal stopped, reason
+        reason = "signal"
         stopped = True
 
     bound = False
     ready_created = False
     try:
+        if os.geteuid() == 0 and not allow_root:
+            raise RuntimeError("Relay must run as the ordinary desktop user")
+        path, ready = Path(path), Path(ready)
+        directory = path.parent.lstat()
+        if (not stat.S_ISDIR(directory.st_mode) or directory.st_uid != os.geteuid() or
+                stat.S_IMODE(directory.st_mode) != 0o700 or path.parent.resolve() != path.parent):
+            raise RuntimeError("Relay directory must be a private real user directory, mode 0700")
+        stage = "manifest"
+        target, session = read_manifest(manifest)
+        stage = "broker_connect"
+        client = client_factory(broker_path)
+        stage = "initial_identity"
         validator(target, client.devices())
+        stage = "signals"
         for signum in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
             old_signals[signum] = signal.signal(signum, stop)
+        stage = "listen"
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server, selectors.DefaultSelector() as selector:
             server.bind(str(path))
             bound = True
@@ -226,14 +280,17 @@ def serve(path, manifest, ready, log, *, broker_path=None, right_gain=1.0,
             with ready.open("x", encoding="ascii") as output:
                 output.write("ready\n")
             ready_created = True
+            diagnostics(event="relay_ready")
             data = bytearray()
             next_health = time.monotonic_ns() + 1_000_000_000
             while not stopped:
                 # Existing client exposes asynchronous failure through its
                 # normal public heartbeat request; list before each output also
                 # surfaces it. No access to Client._stop/_error internals.
+                stage = "receive"
                 for key, _events in selector.select(0.01):
                     if key.fileobj is server:
+                        stage = "accept"
                         peer, _address = server.accept()
                         pid, uid, _gid = struct.unpack("3i", peer.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
                         if uid != os.geteuid() or connection is not None:
@@ -243,12 +300,15 @@ def serve(path, manifest, ready, log, *, broker_path=None, right_gain=1.0,
                         peer.setblocking(False)
                         selector.register(peer, selectors.EVENT_READ)
                         forwarder = Forwarder(client, target, session, pid, validator=validator,
-                                              right_gain=right_gain, report=report)
+                                              right_gain=right_gain, report=diagnostics)
+                        diagnostics(event="producer_connected")
                     else:
+                        stage = "receive"
                         chunk = connection.recv(MAX_BUFFER)
                         if not chunk:
                             if data:
                                 raise ProtocolError("Truncated producer frame")
+                            reason = "producer_eof"
                             stopped = True
                             break
                         data.extend(chunk)
@@ -257,28 +317,52 @@ def serve(path, manifest, ready, log, *, broker_path=None, right_gain=1.0,
                         while len(data) >= SIZE:
                             payload = bytes(data[:SIZE])
                             del data[:SIZE]
+                            stage = "decode"
                             forwarder.receive(payload)
                 if not stopped and forwarder is not None:
+                    stage = "forward"
                     forwarder.flush()
                     if forwarder.close_received and not forwarder.queue:
+                        reason = "producer_close"
                         stopped = True
                 now = time.monotonic_ns()
                 if not stopped and now >= next_health:
+                    stage = "health"
                     validator(target, client.devices())
                     next_health = now + 1_000_000_000
+    except BaseException as error:
+        failure = error
+        diagnostics.terminal(event="relay_error", stage=stage, error_type=_error_kind(error))
+        raise
     finally:
+        cleanup_errors = []
+
+        def cleanup(action):
+            try:
+                action()
+            except Exception as error:
+                cleanup_errors.append(error)
+
         if connection is not None:
-            connection.close()
+            cleanup(connection.close)
         if forwarder is not None:
-            forwarder.close()
-        else:
-            client.close()
+            cleanup(forwarder.close)
+        elif client is not None:
+            cleanup(client.close)
         if bound:
-            path.unlink(missing_ok=True)
+            cleanup(lambda: path.unlink(missing_ok=True))
         if ready_created:
-            ready.unlink(missing_ok=True)
+            cleanup(lambda: ready.unlink(missing_ok=True))
         for signum, handler in old_signals.items():
-            signal.signal(signum, handler)
+            cleanup(lambda signum=signum, handler=handler: signal.signal(signum, handler))
+        if cleanup_errors and failure is None:
+            diagnostics.terminal(event="relay_error", stage="cleanup", error_type=_error_kind(cleanup_errors[0]))
+        diagnostics.terminal(event="relay_exit", reason="error" if failure is not None else (
+            "cleanup_error" if cleanup_errors else reason), frames=forwarder.calls if forwarder else 0,
+            outputs=forwarder.sent if forwarder else 0, dropped_records=diagnostics.dropped,
+            cleanup_failed=bool(cleanup_errors))
+        if cleanup_errors and failure is None:
+            raise cleanup_errors[0]
 
 
 def main():

@@ -160,12 +160,48 @@ class IdentityTests(FixtureCase):
         self.assertEqual(len(candidates), 2)
         self.assertEqual({item.instance for item in candidates}, {INSTANCE, "b" * 64})
 
-    def test_busy_duplicate_and_replaced_broker_identity(self):
-        for entries in ([{**self.entries[0], "busy": True}],
-                        [{**self.entries[0], "instance": "b" * 64}],
-                        self.entries * 2):
+    def test_busy_is_availability_not_device_identity(self):
+        entries = [{**self.entries[0], "busy": True}]
+        self.assertEqual(self.metadata.discover(entries), [])
+        self.assertEqual(devices.discover(entries, self.metadata.sys, self.metadata.dev,
+                                         self.metadata.stat, include_busy=True), [self.target])
+        self.metadata.verify(self.target, entries)
+        self.metadata.verify(self.target, self.entries)
+
+    def test_duplicate_or_replaced_broker_identity_rejected_even_when_busy(self):
+        for entries in ([{**self.entries[0], "instance": "b" * 64}],
+                        self.entries * 2,
+                        [{**self.entries[0], "instance": "b" * 64, "busy": True}],
+                        [{**self.entries[0], "busy": True}] * 2,
+                        [{**self.entries[0], "busy": "true"}]):
             with self.subTest(entries=entries), self.assertRaises(devices.IdentityError):
                 self.metadata.verify(self.target, entries)
+
+    def test_busy_target_still_requires_matching_usb_address_and_event_inode(self):
+        entries = [{**self.entries[0], "busy": True}]
+        usb = Path(self.target.sysfs_usb)
+        (usb / "devnum").write_text("10\n")
+        with self.assertRaises(devices.IdentityError):
+            self.metadata.verify(self.target, entries)
+        (usb / "devnum").write_text("9\n")
+        self.metadata.nodes[str(self.metadata.dev / "input/event13")].st_ino += 1
+        with self.assertRaises(devices.IdentityError):
+            self.metadata.verify(self.target, entries)
+
+    def test_busy_does_not_authorize_missing_metadata_or_foreign_driver(self):
+        entries = [{**self.entries[0], "busy": True}]
+        name = Path(self.target.sysfs_input) / "name"
+        name.unlink()
+        with self.assertRaises(devices.IdentityError):
+            self.metadata.verify(self.target, entries)
+        name.write_text("GameSir G7 Pro\n")
+        driver = Path(self.target.sysfs_interface) / "driver"
+        driver.unlink()
+        xpad = self.metadata.sys / "bus/usb/drivers/xpad"
+        xpad.mkdir()
+        driver.symlink_to(xpad)
+        with self.assertRaises(devices.IdentityError):
+            self.metadata.verify(self.target, entries)
 
     def test_replaced_device_address_or_event_node_never_adopted(self):
         usb = Path(self.target.sysfs_usb)
@@ -239,6 +275,38 @@ class ForwardingTests(ForwardingCase):
         self.send(10000, 10000)
         self.forwarder.flush()
         self.assertEqual(self.outputs()[0], ("play", INSTANCE, [15, 46, None, None], 1000))
+
+    def test_busy_manager_preserves_session_and_leaves_grips_untouched(self):
+        self.client.entries = [{**self.entries[0], "busy": True}]
+        self.send(duration=5000)
+        self.assertTrue(self.forwarder.flush())
+        self.assertEqual(self.outputs(), [("play", INSTANCE, [15, 92, None, None], 5000)])
+        self.assertFalse(self.client.closed)
+        self.assertFalse(self.forwarder.failed)
+        self.client.entries = self.entries
+        self.send(0, 0)
+        self.advance()
+        self.assertEqual(self.outputs()[-1], ("stop", INSTANCE, 3))
+
+    def test_busy_preserves_stop_barrier_and_expired_restart_stays_stopped(self):
+        self.send()
+        self.forwarder.flush()
+        self.client.entries = [{**self.entries[0], "busy": True}]
+        self.send(0, 0)
+        self.send(5000, 6000, duration=20)
+        self.advance()
+        self.assertEqual(self.outputs()[-1], ("stop", INSTANCE, 3))
+        self.advance()
+        self.assertEqual(self.outputs()[1:], [("stop", INSTANCE, 3), ("stop", INSTANCE, 3)])
+        self.assertFalse(self.client.closed)
+
+    def test_replacement_while_busy_still_closes_without_output(self):
+        self.send()
+        self.client.entries = [{**self.entries[0], "instance": "b" * 64, "busy": True}]
+        with self.assertRaises(devices.IdentityError):
+            self.forwarder.flush()
+        self.assertTrue(self.client.closed)
+        self.assertEqual(self.outputs(), [])
 
     def test_full_stop_barrier_survives_immediate_restart(self):
         self.send()
@@ -377,6 +445,46 @@ class ForwardingTests(ForwardingCase):
 
 
 class ExistingBrokerTests(ForwardingCase):
+    def test_manager_busy_does_not_replay_effect_that_expired_before_hardware_apply(self):
+        api = load("trigger_busy_broker", "tools/service/haptics_broker.py")
+        current = {INSTANCE: {"name": "GameSir G7 Pro", "port": self.target.port, "busy": True}}
+        commands = []
+        def apply(_identity, values):
+            if current[INSTANCE]["busy"]:
+                raise api.Busy("Synthetic passive manager job")
+            commands.extend(values)
+        broker = api.Broker(SimpleNamespace(devices=lambda: current, apply=apply),
+                            clock=lambda: self.now / 1e9)
+        peer = broker.connect(os.getuid())
+        class Adapter(FakeClient):
+            def devices(self):
+                return broker.request(peer, {"version": 1, "op": "list"})["devices"]
+            def play(self, instance, amplitudes, duration):
+                broker.request(peer, {"version": 1, "op": "play", "instance": instance,
+                                     "amplitudes": amplitudes, "duration_ms": duration})
+                broker.tick()
+            def close(self):
+                broker.disconnect(peer)
+                broker.tick()
+                self.closed = True
+        self.client = Adapter(self.entries)
+        self.forwarder = relay.Forwarder(self.client, self.target, SESSION, 99,
+            clock_ns=lambda: self.now, validator=self.metadata.verify)
+        self.send(duration=20)
+        self.assertTrue(self.forwarder.flush())
+        self.assertEqual(commands, [])
+        self.assertFalse(self.client.closed)
+        self.now += 100_000_000
+        broker.tick()
+        current[INSTANCE]["busy"] = False
+        broker.tick()
+        self.assertEqual(commands, [], "Expired effects must not start after manager work ends")
+        self.send(duration=250)
+        self.assertTrue(self.forwarder.flush())
+        self.assertEqual({command[0] for command in commands}, {0, 1})
+        self.assertTrue(all(command[2] <= 250 for command in commands))
+        self.forwarder.close()
+
     def test_repository_broker_keeps_grips_independent(self):
         api = load("trigger_test_broker", "tools/service/haptics_broker.py")
         class Backend:

@@ -118,11 +118,15 @@ def _snapshot(event, instance, sysfs_root, dev_root, node_stat):
         usb_inode=usb_stat.st_ino, usb_device=usb_stat.st_dev))
 
 
-def discover(devices, sysfs_root=Path("/sys"), dev_root=Path("/dev"), node_stat=os.stat):
+def discover(devices, sysfs_root=Path("/sys"), dev_root=Path("/dev"), node_stat=os.stat,
+             *, include_busy=False):
     """Return all verified candidates; callers must reject zero/multiple results.
 
     Incomplete/unrelated events are ignored, but duplicate broker identities or
     duplicate ports are errors. No ordering preference is an authorization.
+    Busy means that the manager temporarily uses its control FD, not that the
+    device identity changed. Callers that need exact identity independently of
+    immediate output availability can include those instances explicitly.
     """
     if type(devices) is not list:
         raise IdentityError("Broker list must be an array")
@@ -137,7 +141,8 @@ def discover(devices, sysfs_root=Path("/sys"), dev_root=Path("/dev"), node_stat=
             raise IdentityError("Ambiguous broker instance or port")
         identities.add(device["instance"])
         ports.add(device["port"])
-    by_port = {device["port"]: device for device in devices if not device["busy"]}
+    by_port = {device["port"]: device for device in devices
+               if include_busy or not device["busy"]}
     candidates = []
     for entry in sorted((Path(sysfs_root) / "class/input").glob("event*")):
         if not EVENT_PATH.fullmatch(f"/dev/input/{entry.name}"):
@@ -154,11 +159,17 @@ def discover(devices, sysfs_root=Path("/sys"), dev_root=Path("/dev"), node_stat=
 
 
 def verify(target, devices, sysfs_root=Path("/sys"), dev_root=Path("/dev"), node_stat=os.stat):
+    """Verify the exact live identity; temporary manager work is not replacement.
+
+    Output serialization and finite effect deadlines remain the broker's job.
+    Accepting busy here grants neither a new device nor access to its control FD.
+    """
     try:
-        matches = [candidate for candidate in discover(devices, sysfs_root, dev_root, node_stat)
+        matches = [candidate for candidate in discover(devices, sysfs_root, dev_root, node_stat,
+                                                      include_busy=True)
                    if candidate.source_path == target.source_path]
         if matches != [target]:
-            raise IdentityError("Target changed, disappeared, became busy or is ambiguous; restart explicitly")
+            raise IdentityError("Target changed, disappeared or is ambiguous; restart explicitly")
     except (OSError, ValueError) as error:
         raise IdentityError("Target metadata is unavailable; no automatic replacement") from error
 

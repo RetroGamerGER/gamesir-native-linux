@@ -1,7 +1,9 @@
 # Optional game trigger bridge — integration and local acceptance
 
 Status: 2026-10-17, PRE-ALPHA. This integrated revision is offline-tested and
-installed locally, **not yet hardware-accepted**. Gyroscope calibration remains paused.
+installed locally. The first integrated Forza test failed trigger acceptance;
+an offline correction is being prepared, **not yet hardware-accepted**.
+Gyroscope calibration remains paused.
 Kernel, manager, paddle mapping, firmware and controller settings are unchanged.
 [Provenance and licensing](TRIGGER_BRIDGE_PROVENANCE.md) were checked first.
 
@@ -40,7 +42,11 @@ never evdev or USB nodes. Exactly one eligible native target is required;
 zero/multiple candidates stop the adapted launch rather than choosing first.
 Selection verifies name `GameSir G7 Pro`, input/USB `3537:109c`, native IF0
 ownership, matching character-device number, inode/device metadata, and a
-unique non-busy opaque broker instance at the current physical USB path.
+unique active opaque broker instance at the current physical USB path.
+Temporary manager `busy` is availability, not identity loss: the same exact
+instance remains valid, and the existing broker serializes and defers hardware
+work while retaining finite effect deadlines. Missing metadata, a replaced
+instance or a foreign binding still terminates the launch/lease.
 There is no configured port, address or per-machine game-prefix hash.
 
 The current topology is frozen only for this launch. SDL's actual event path
@@ -175,7 +181,7 @@ allowlist adds only the new linked documentation so installed README links
 continue to resolve. Existing public-export metadata describes its historical
 snapshot and is not relabeled as a new audit; current SHA256SUMS is regenerated.
 
-Next gates: separately approved integrated Xodus test, simultaneous grip and
+Next gates: separately approved corrected Xodus test, simultaneous grip and
 trigger effects/stops, process crash, reconnect, suspend and multiple devices.
 Steam/Proton needs its own supported launch hook, container/ABI tests and real
 game acceptance. Automatic launcher setup without per-game configuration
@@ -222,3 +228,69 @@ native bootstrap was observed between fresh checks, without any agent-issued
 resume, mode packet or recovery action. The integrated Forza launch was then
 cued; its mechanical effect/stop acceptance is still pending. No game launch
 or effect is inferred from the permission or discovery checks alone.
+
+## First integrated Forza test — trigger acceptance failed
+
+On 2026-10-17, the installed bridge `0.1.0.alpha1-1` was started through the
+prepared Nexus launch option. The user confirmed that Forza was drivable,
+normal inputs and grip rumble worked, but no trigger vibration was felt.
+Forza was then ended normally; no error was visible in Nexus or its terminal.
+This is a failed integrated trigger test, not a successful four-motor result.
+
+Read-only process metadata confirmed the installed launcher and hook inside
+Wine device services and the actual game. The sampled game processes used
+the ordinary account with effective capabilities zero and the dedicated
+haptics group. The older workspace hook was absent from their mappings.
+The relay was initially present, then absent before its first recorded motor
+operation. Its copied effect log remained empty. The native service retained
+its process and zero restart count through this test.
+
+There was no lifecycle/error record or retained relay traceback, so the live
+exit cause is **not conclusively identified**. Empty effect logs can mean a
+failure before forwarding, or a producer that connected and closed without
+a frame. They do not establish whether a stop reached the physical triggers.
+
+Two independent device-free reproductions identified a concrete integration
+defect: the periodic manager status job reports the unchanged active instance
+as temporarily `busy`. Discovery excluded busy entries, and ongoing identity
+verification consequently treated that state as target loss. The relay's
+idle health check could then terminate it before any effect. A synthetic
+unchanged target toggling only `busy` reproduced the exit and empty effect
+log. Clean producer EOF was separately reproduced and remains a distinct
+possible explanation of the incomplete live evidence.
+
+The targeted offline correction separates identity from availability. The
+same attested instance must still satisfy all metadata, parent, driver,
+device-number and opaque-instance checks. Temporary manager use must not
+authorize a replacement or bypass broker ownership; the existing broker
+remains responsible for deferring hardware commands while busy and expiring
+finite effects. Bounded lifecycle diagnostics are added for a future test.
+The candidate optional package is revision `0.1.0.alpha1-2`; core module,
+manager, broker, C hook and installed revision 1 are not changed by this
+offline work. No automatic reinstallation or hardware retry,
+push or new release follows this failed test.
+
+### Offline correction validation
+
+The complete `make test` run passed: **843 Python unittest cases in 31
+batches**, plus the existing native C, sanitizer and static checks. Eighteen
+additional cases cover busy identity/start selection, broker-side expiry and
+stop barriers, idle health, actual identity loss, clean EOF versus CLOSE,
+startup/cleanup failures (including preservation of a forwarding failure),
+private-data exclusion and the bounded diagnostic
+log. The existing real ELF-to-Unix-to-fake-broker pipeline also passed.
+All backends and metadata in these regressions are synthetic.
+
+The revised logger records fixed lifecycle/error categories and counters,
+never raw exception text, arguments, prefixes or session tokens. Its maximum
+1,000 records include two reserved error/exit slots. No producer/identity,
+age, STOP, CLOSE, device-replacement or broker-ownership guard was removed.
+The broker still serializes actual hardware access and expires finite effects
+during temporary manager work; the bridge does not open control or USB nodes.
+
+The optional revision-2 package is built from the reviewed correction commit
+without dependency installation or root. Its private build/transaction
+preview must contain only `gamesir-native-trigger-bridge 0.1.0.alpha1-2`.
+It requires no new group membership, login, core update or Nexus launch edit.
+Installation and exactly one corrected Forza run remain separate explicit
+approvals; offline success does not establish a live fix.

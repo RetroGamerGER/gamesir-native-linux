@@ -122,7 +122,9 @@ def launch(command, *, adapter="nexus-sdl2", profile="neutral", hook=None,
     factory = client_factory or client_type()
     with factory() as client:
         devices = client.devices()
-        targets = discoverer(devices)
+        # Periodic passive manager jobs briefly mark a healthy instance busy.
+        # Select by exact identity; the broker serializes any later motor work.
+        targets = discoverer(devices, include_busy=True)
         if len(targets) != 1:
             raise RuntimeError("Expected exactly one unambiguous native target; no game launched")
         target = targets[0]

@@ -5,7 +5,25 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Integrierte Trigger-Bridge lokal installiert, Spielabnahme offen:** Das
+**Erster integrierter Forza-Test: Trigger-Abnahme fehlgeschlagen.** Normale
+Eingaben und Griff-Rumble funktionierten laut Benutzer, Trigger-Vibration war
+nicht spürbar. Die installierte Bridge wurde in Wine und Spiel nachgewiesen;
+ihr Relay verschwand vor dem ersten protokollierten Motorauftrag. Kein Fehler
+war in Nexus sichtbar. Der tatsächliche Live-Exitgrund ist nicht abschließend
+belegt, weil der alte Logger keine Lifecycle-/Fehlerereignisse erfasste.
+
+Ein konkreter Fehler ist unabhängig offline reproduziert: Eine normale kurze
+Statusabfrage des Managers setzt `busy`; die Bridge verwechselte das mit
+Identitätsverlust. Die gezielte Korrektur trennt Identität/Verfügbarkeit und
+ergänzt begrenzte Diagnoseereignisse. Die vollständige Offline-Suite besteht:
+843 Python-Testfälle in 31 Batches plus bestehende C-/statische Prüfungen,
+darunter 18 zusätzliche Regressionen. Optionales Update `0.1.0.alpha1-2` wird
+aus dem geprüften Commit gebaut; installierte Bridge `0.1.0.alpha1-1`, Kerneltreiber
+und Broker unverändert. Kein automatischer neuer Hardwarelauf, Push oder
+Release. Gyrokalibrierung bleibt pausiert.
+[Befund und Korrektur](TRIGGER_BRIDGE.md#first-integrated-forza-test--trigger-acceptance-failed).
+
+**Vorheriger Prüfpunkt: Integrierte Trigger-Bridge lokal installiert:** Das
 separat freigegebene Zusatzpaket `gamesir-native-trigger-bridge 0.1.0.alpha1-1`
 ist installiert; alle 14 regulären Paketdateien stimmen mit dem geprüften
 Archiv überein. Der native Dienst läuft nach dem vom Benutzer ausgeführten

@@ -56,8 +56,10 @@ Transport, Frischeprüfung, Stopbarrieren und Geräteersatz-Abbruch sowie einen
 getrennten Paketquellhelfer. Offline-Regressionen und die separat freigegebene
 lokale Installation sind abgeschlossen. Xodus-Startzusatz vorbereitet;
 effektive Benutzerberechtigung und native Brokerzuordnung geprüft.
-Integrierte Spielabnahme noch offen. Keine neuen
-Motor-/Hardwaretests bisher. Bestehende Eingaben,
+Der erste integrierte Forza-Test zeigte normale Eingaben/Griff-Rumble, jedoch
+keine Trigger-Vibration. Der konkrete Busy-/Identitätsfehler wird mit Offline-
+Regressionen korrigiert; Live-Ursache und erneute Spielabnahme bleiben offen.
+Update und neuer Test werden nicht automatisch ausgeführt. Bestehende Eingaben,
 Paddles, Griff-FF und Roh-IMU erhalten. [Umfang](TRIGGER_BRIDGE.md).
 
 Nächste getrennte Schritte: integrierten Xodus-Pfad ausdrücklich freigeben

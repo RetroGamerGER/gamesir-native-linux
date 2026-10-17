@@ -13,6 +13,7 @@ trigger-bridge:
 test-trigger-bridge: trigger-bridge
 	$(PYTHON) -B tests/test_trigger_hook.py
 	$(PYTHON) -B tests/test_trigger_relay.py
+	$(PYTHON) -B tests/test_trigger_relay_lifecycle.py
 	$(PYTHON) -B tests/test_trigger_pipeline.py
 	$(PYTHON) -B tests/test_trigger_launcher.py
 	$(PYTHON) -B tests/test_packaging_trigger_bridge.py

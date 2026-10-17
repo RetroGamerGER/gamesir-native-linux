@@ -80,14 +80,14 @@ class Launcher(unittest.TestCase):
         self.assertEqual(env["LD_PRELOAD"], str(self.hook))
         self.assertEqual(self.env.keys(), {"WINEPREFIX", "XDG_RUNTIME_DIR"})
 
-    def fake_client(self):
+    def fake_client(self, entries=None):
         class Client:
             def __enter__(client):
                 return client
             def __exit__(client, *_):
                 pass
             def devices(client):
-                return [{"synthetic": True}]
+                return [{"synthetic": True}] if entries is None else entries
         return Client
 
     def test_reversible_ephemeral_launch_without_root_or_configuration_edits(self):
@@ -107,7 +107,7 @@ class Launcher(unittest.TestCase):
                 patch.object(launch.signal, "signal", return_value=None):
             result = launch.launch([str(self.wine), "private-argument"], hook=self.hook,
                                    environ=self.env, client_factory=self.fake_client(),
-                                   discoverer=lambda _: [self.target],
+                                   discoverer=lambda _, **_kw: [self.target],
                                    verifier=lambda *a: verifier.append(a), popen=popen)
         self.assertEqual(result, 0)
         self.assertEqual(len(verifier), 2)
@@ -123,12 +123,36 @@ class Launcher(unittest.TestCase):
         self.assertNotIn("GSN_TRIGGER_SESSION", calls[0][1]["env"])
         self.assertEqual(calls[1][1]["env"]["GSN_TRIGGER_SESSION"], manifest[0][1]["session"])
 
+    def test_periodic_manager_busy_does_not_randomly_block_launch(self):
+        entries = [{"instance": "a" * 64, "port": "2-3", "busy": True}]
+        discovery, checked, calls = [], [], []
+        relay = Child()
+        def discoverer(current, *, include_busy=False):
+            discovery.append((current, include_busy))
+            return [self.target] if include_busy else []
+        def popen(args, **kw):
+            calls.append(args)
+            if "--ready" in args:
+                Path(args[args.index("--ready") + 1]).write_text("synthetic-ready")
+                return relay
+            return Child(0)
+        with patch.object(launch, "validate", return_value=self.server), \
+                patch.object(launch.signal, "signal", return_value=None):
+            result = launch.launch([str(self.wine)], hook=self.hook, environ=self.env,
+                                   client_factory=self.fake_client(entries), discoverer=discoverer,
+                                   verifier=lambda *args: checked.append(args), popen=popen)
+        self.assertEqual(result, 0)
+        self.assertEqual(discovery, [(entries, True)])
+        self.assertEqual(checked, [(self.target, entries), (self.target, entries)])
+        self.assertEqual(len(calls), 3)
+        self.assertTrue(relay.terminated)
+
     def test_ambiguous_or_stale_identity_never_launches_game(self):
         for targets in ([], [self.target, self.target]):
             with self.subTest(count=len(targets)), patch.object(launch, "validate", return_value=self.server):
                 with self.assertRaisesRegex(RuntimeError, "exactly one"):
                     launch.launch([str(self.wine)], hook=self.hook, environ=self.env,
-                                  client_factory=self.fake_client(), discoverer=lambda _: targets,
+                                  client_factory=self.fake_client(), discoverer=lambda _, **_kw: targets,
                                   verifier=lambda *_: None,
                                   popen=lambda *_a, **_k: self.fail("game launched"))
 
@@ -150,7 +174,7 @@ class Launcher(unittest.TestCase):
                 patch.object(launch.signal, "signal", return_value=None):
             with self.assertRaisesRegex(RuntimeError, "replaced device"):
                 launch.launch([str(self.wine)], hook=self.hook, environ=self.env,
-                              client_factory=self.fake_client(), discoverer=lambda _: [self.target],
+                              client_factory=self.fake_client(), discoverer=lambda _, **_kw: [self.target],
                               verifier=verify, popen=popen)
         self.assertEqual(len(calls), 1)
         self.assertTrue(relay.terminated)
@@ -160,7 +184,7 @@ class Launcher(unittest.TestCase):
                 patch.object(launch.signal, "signal", return_value=None):
             with self.assertRaisesRegex(RuntimeError, "relay could not start"):
                 launch.launch([str(self.wine)], hook=self.hook, environ=self.env,
-                              client_factory=self.fake_client(), discoverer=lambda _: [self.target],
+                              client_factory=self.fake_client(), discoverer=lambda _, **_kw: [self.target],
                               verifier=lambda *_: None, popen=lambda *_a, **_k: Child(1))
 
 
