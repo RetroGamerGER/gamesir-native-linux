@@ -56,14 +56,15 @@ Transport, Frischeprüfung, Stopbarrieren und Geräteersatz-Abbruch sowie einen
 getrennten Paketquellhelfer. Offline-Regressionen und die separat freigegebene
 lokale Installation sind abgeschlossen. Xodus-Startzusatz vorbereitet;
 effektive Benutzerberechtigung und native Brokerzuordnung geprüft.
-Der erste integrierte Forza-Test zeigte normale Eingaben/Griff-Rumble, jedoch
-keine Trigger-Vibration. Der konkrete Busy-/Identitätsfehler wird mit Offline-
-Regressionen korrigiert; Live-Ursache und erneute Spielabnahme bleiben offen.
-Update und neuer Test werden nicht automatisch ausgeführt. Bestehende Eingaben,
+Der erste integrierte Forza-Test zeigte keine Trigger-Vibration. Nach
+Offline-Korrektur und gesondert freigegebenem Update/Lauf hat Revision 2
+beide Trigger samt Pausen/Neustart und ruhigem regulärem Spielende bestätigt;
+normale Eingaben und Griff-Rumble blieben erhalten. Die genaue Live-Ursache
+des ersten Fehlversuchs bleibt unbekannt. Bestehende Eingaben,
 Paddles, Griff-FF und Roh-IMU erhalten. [Umfang](TRIGGER_BRIDGE.md).
 
-Nächste getrennte Schritte: integrierten Xodus-Pfad ausdrücklich freigeben
-und abnehmen, dann Steam-/Proton-Ausgabepfad/ABI/Container prüfen. Unterstützte
+Nächste getrennte Schritte: weitere Xodus-Lifecycle-Fälle und den
+Steam-/Proton-Ausgabepfad/ABI/Container prüfen. Unterstützte
 Launcher-Hooks für automatische Nutzung entwickeln; keine globale Preload-
 Umgebung oder unkontrollierten Konfigurationsänderungen. Fehlende getrennte
 Spiel-Triggerbefehle nicht aus Achsen/Griff-Rumble erfinden. Reconnect, PM und

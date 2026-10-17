@@ -49,8 +49,8 @@ licenses remain their own; see the [provenance and licensing audit](docs/LICENSI
 **Publication stage: PRE-ALPHA.** The source code is published in the
 [public GitHub repository](https://github.com/RetroGamerGER/gamesir-native-linux).
 Existing module/package version identifiers such as `0.1.0.alpha3` do not
-change this status. The first tagged PRE-ALPHA source release is
-[`v0.1.0-pre-alpha.1`](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.1).
+change this status. [Tagged PRE-ALPHA source snapshots](https://github.com/RetroGamerGER/gamesir-native-linux/releases)
+record their exact source and component-package versions.
 
 | Device / environment | Evidence and limits |
 | --- | --- |
@@ -83,6 +83,12 @@ separates hardware results, offline tests and outstanding validation.
   not universal game integration.
 - **Raw motion data:** all six gyro/accelerometer channels were observed.
   Physical sensor axes, bias and the gyro scaling factor are not calibrated.
+- **Forza Horizon 6 through Xodus Nexus:** one controlled run of the optional
+  trigger bridge `0.1.0.alpha1-2` produced felt effects on both impulse
+  triggers, pauses between effects and renewed vibration on later effects.
+  Normal inputs and grip rumble remained usable; both triggers were quiet
+  after normal game exit. The explicit Forza profile uses LT 1x / RT 3x.
+  This is a specific game/launcher result, not universal Steam/Proton support.
 
 Individual evidence and its limits are linked from the
 [release audit](docs/RELEASE_AUDIT.md). Historical reports remain available;
@@ -100,13 +106,11 @@ computer.
   Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,
   with game-specified effect duration. Four-channel hardware support and the
   experimental application API do not automatically enable impulse triggers
-  in SDL, Steam or Proton games. A separate Forza/Xodus bridge recorded felt
-  LT/RT game effects; the [reviewed integration](docs/TRIGGER_BRIDGE.md) is
-  offline-tested and installed locally. Its first Forza/Xodus trial retained
-  normal inputs and grip rumble but produced no felt trigger vibration; the
-  relay exited before any logged effect. A targeted offline correction is
-  prepared; integrated hardware acceptance remains open. Steam/Proton
-  integration and automatic launcher setup remain unvalidated.
+  in SDL, Steam or Proton games. The [reviewed optional bridge](docs/TRIGGER_BRIDGE.md)
+  has one successful integrated Forza/Xodus test after a failed first trial
+  and an offline-tested correction. Steam/Proton integration, other game
+  backends and automatic launcher setup remain unvalidated. Reconnect,
+  suspend, process-crash and multi-device bridge acceptance remain open.
 - **Steam paddles do not extend XInput.** Steam Input can map four independent
   sources, but a game's input API determines whether it can bind additional
   controller buttons directly. Universal in-game binding is not promised.
@@ -146,8 +150,8 @@ The optional packages are separate from the kernel driver:
 - `gamesir-native-steam` — Steam paddle mapping for supported session starts.
 - `gamesir-native-steam-gamescope` — additional integration for the tested
   CachyOS Gamescope session layout.
-- `gamesir-native-trigger-bridge` — optional, offline-prepared SDL2 trigger
-  adapter; no automatic activation or launcher edits. See its
+- `gamesir-native-trigger-bridge` — optional SDL2 trigger adapter with a
+  limited Forza/Xodus hardware test; no automatic activation or launcher edits. See its
   [scope and validation boundaries](docs/TRIGGER_BRIDGE.md).
 
 Installation and service activation are separate decisions. A successful

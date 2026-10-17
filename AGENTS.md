@@ -45,9 +45,10 @@ broker; never open USB/input nodes or bypass native ownership guards. Require
 exact evdev-to-native-instance association and preserve zero/stop barriers.
 Reject stale sessions rather than adopting replacement devices. Read
 docs/TRIGGER_BRIDGE.md and its provenance audit before extending this path.
-The integrated revision is installed locally but awaits hardware acceptance;
-the first Forza trial failed trigger acceptance. The busy/identity correction
-and bounded lifecycle diagnostics require a separately approved update/retest.
+Revision 2 passed one approved Forza/Xodus run after a failed first trial:
+both triggers, effect pauses/restarts, normal input/grip rumble and quiet
+normal exit were confirmed. This does not validate reconnect, PM, crashes,
+multiple devices or other games. Further live actions require new approval.
 Steam/Proton is plan-only until its runtime is separately validated. Never
 globally preload the hook into Steam
 or a desktop session. Existing paddle mapping remains independent.

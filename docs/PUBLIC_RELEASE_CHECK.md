@@ -1,7 +1,16 @@
 # PRE-ALPHA publication check and artifact policy
 
-Date: 2026-10-16. This document records offline publication preparation,
-not a release announcement or permission to install, activate or push.
+Historical initial preparation: 2026-10-16. The counts, versions and pending
+decisions below describe that checkpoint, not the present public repository.
+The sanitized history was subsequently published as `v0.1.0-pre-alpha.1`.
+For candidate `v0.1.0-pre-alpha.2`, see the [current release audit](RELEASE_AUDIT.md):
+review all newly reachable public commits/blobs and the exact final source
+commit, regenerate source-only assets and checksums, and test the frozen
+export. Include the separately reviewed optional trigger-bridge source.
+Never upload the private original history, captures, installed inventories,
+local build logs or binary-package build metadata. Historical export manifests
+remain historical; each release has its own exact artifact manifest.
+Publication approval never authorizes system installation or hardware work.
 
 ## Privacy decision
 
@@ -58,7 +67,7 @@ Do not represent this snapshot as an anonymization of the Git history.
 Publishing the existing history, rewriting it, creating a replacement public
 history or selecting a public author identity requires a separate decision.
 
-## PRE-ALPHA artifacts
+## Historical first-release PRE-ALPHA artifacts
 
 The intended source release candidate contains:
 
@@ -104,7 +113,7 @@ unexpected or additional warnings still fail the helper; Kbuild failure,
 module identity and alias checks are preserved. `W=1` and `-Werror` remain
 enabled. This is a build-reporting change, not a loaded-driver change.
 
-## Remaining approval and validation boundaries
+## Historical approval and validation boundaries
 
 The artifact inventory must record the actual source commit and results;
 the source-only candidate is not an installed or hardware-tested build.

@@ -1,5 +1,20 @@
 # Public pre-alpha release audit
 
+Current candidate `v0.1.0-pre-alpha.2`, 2026-10-17: the corrected optional
+bridge `0.1.0.alpha1-2` passed one approved Forza Horizon 6 / Xodus Nexus run.
+Both triggers were felt with pauses/restarts; normal inputs and grip rumble
+remained usable and normal exit left the triggers quiet. The relay recorded
+171 play/498 stop acceptances, no error, and clean producer EOF. Native
+ownership and service remained unchanged. [Evidence and limits](TRIGGER_BRIDGE.md#corrected-integrated-forza-test--limited-acceptance-passed).
+
+The maintainer's conditional authorization for the next push/release now
+applies, subject to final source/history/artifact checks. The release remains
+source-only and PRE-ALPHA: core `0.1.0.alpha3-6`, Steam `0.1.0.alpha2-1`,
+Gamescope `0.1.0.alpha1-1`, bridge `0.1.0.alpha1-2`. Private binary builds,
+logs, original captures and development history are excluded. Other bridge
+games/runtimes, reconnect, suspend, crashes and multiple devices remain open.
+No additional live action or gyro calibration is part of publication.
+
 Local candidate, 2026-10-17: core package revision `0.1.0.alpha3-6` adds a
 userspace manager reconnect correction. Kernel sources/ABI, haptics broker,
 paddles and IMU calibration are unchanged. Offline regressions and an update
@@ -15,14 +30,14 @@ still pending. Its separate provenance check precedes source integration;
 publication remains conditional on the approved test and release review.
 The optional package does not change kernel, manager, paddle or IMU sources.
 
-Later local test on 2026-10-17: the first installed integrated Forza/Xodus
+Earlier local test on 2026-10-17: the first installed integrated Forza/Xodus
 trial failed trigger acceptance, although normal input and grip rumble worked.
 The relay disappeared before its first recorded output. A manager-busy versus
 identity-loss defect was reproduced offline and a correction is being prepared;
 the live exit cause was not conclusively logged. This does not invalidate the
 older separate bridge result, and that older result cannot validate the new
-integration. The maintainer's condition for the next push/release is therefore
-**not met**. Require an approved corrected-package test and its real outcome;
+integration. The maintainer's condition for the next push/release was
+**not met at that checkpoint**. The corrected-package test above now records its real outcome;
 see [the failed trial and correction](TRIGGER_BRIDGE.md#first-integrated-forza-test--trigger-acceptance-failed).
 
 Date: 2026-10-16. This is a local readiness assessment, not a published release

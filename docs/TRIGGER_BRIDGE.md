@@ -1,8 +1,10 @@
 # Optional game trigger bridge — integration and local acceptance
 
-Status: 2026-10-17, PRE-ALPHA. This integrated revision is offline-tested and
-installed locally. The first integrated Forza test failed trigger acceptance;
-an offline correction is being prepared, **not yet hardware-accepted**.
+Status: 2026-10-17, PRE-ALPHA. Optional revision `0.1.0.alpha1-2` passed
+one approved integrated Forza/Xodus test after correction of a failed first
+trial. Both triggers, effect pauses/restarts and quiet normal exit were felt;
+normal input and grip rumble remained usable. This is limited acceptance,
+not general game, reconnect, suspend or crash validation.
 Gyroscope calibration remains paused.
 Kernel, manager, paddle mapping, firmware and controller settings are unchanged.
 [Provenance and licensing](TRIGGER_BRIDGE_PROVENANCE.md) were checked first.
@@ -181,8 +183,9 @@ allowlist adds only the new linked documentation so installed README links
 continue to resolve. Existing public-export metadata describes its historical
 snapshot and is not relabeled as a new audit; current SHA256SUMS is regenerated.
 
-Next gates: separately approved corrected Xodus test, simultaneous grip and
-trigger effects/stops, process crash, reconnect, suspend and multiple devices.
+Next gates: broader simultaneous-channel coverage, process crash, reconnect,
+suspend and multiple devices. The later corrected Xodus run below confirms
+both triggers and preserved normal input/grip rumble for one game session.
 Steam/Proton needs its own supported launch hook, container/ABI tests and real
 game acceptance. Automatic launcher setup without per-game configuration
 remains a future adapter task, not a completed feature of this offline phase.
@@ -288,9 +291,44 @@ age, STOP, CLOSE, device-replacement or broker-ownership guard was removed.
 The broker still serializes actual hardware access and expires finite effects
 during temporary manager work; the bridge does not open control or USB nodes.
 
-The optional revision-2 package is built from the reviewed correction commit
-without dependency installation or root. Its private build/transaction
-preview must contain only `gamesir-native-trigger-bridge 0.1.0.alpha1-2`.
-It requires no new group membership, login, core update or Nexus launch edit.
-Installation and exactly one corrected Forza run remain separate explicit
-approvals; offline success does not establish a live fix.
+The optional revision-2 package was built from reviewed commit `e264c1f`
+without dependency installation or root. Its exact one-package update and
+one corrected Forza run were subsequently approved; see the outcome below.
+It required no new group membership, login, core update or Nexus launch edit.
+Offline success alone did not establish the live outcome.
+
+## Corrected integrated Forza test — limited acceptance passed
+
+On 2026-10-17, only `gamesir-native-trigger-bridge 0.1.0.alpha1-2` was
+updated. All 14 regular installed payload files matched the reviewed archive;
+all 97 regular core-package files, the Nexus launch option, running service
+and native target identity were unchanged. Normal Garuda package hooks made
+pre/post snapshots; no DKMS, module, service or binding action was performed.
+
+Forza Horizon 6 was manually launched through Xodus Nexus with the existing
+explicit `forza-horizon-6` profile: LT gain 1, RT gain 3. The user confirmed
+felt vibration on each trigger, intentional quiet intervals and renewed
+effects afterwards. Normal input and grip rumble remained uninterrupted.
+Forza was ended normally and both triggers became completely quiet.
+
+The ordinary-user passive observer captured 2,337 producer frames and
+669 accepted broker operations: 171 play and 498 stop. Of the recorded play
+operations, 66 had nonzero LT and 100 nonzero RT; none had both nonzero.
+This does not establish simultaneous nonzero LT/RT output in this run.
+The 672 lifecycle/effect records contained no error or dropped records.
+The relay ended on producer EOF with `cleanup_failed=false`; the launcher
+then exited. Installed-hook mappings were observed in Wine and the game,
+with no old workspace hook and effective capabilities zero. The same native
+instance and service remained active with no service restart afterwards.
+
+The producer connects on its first eligible trigger call, so readiness
+without a producer connection during loading or menus is expected. It is not
+by itself evidence of failure. The successful corrected trial supports the
+busy/identity correction; the first trial's exact exit cause remains unknown.
+
+This is one real game/launcher acceptance, not a USB capture or mechanical
+latency measurement. Broker acceptance is not physical confirmation by
+itself; the separate user report supplies the tactile result. Crash cleanup,
+reconnect, suspend, multiple devices, Steam/Proton runtimes and automatic
+launcher setup still need their own review and explicit tests. No new
+hardware action is implied by documentation or source publication.

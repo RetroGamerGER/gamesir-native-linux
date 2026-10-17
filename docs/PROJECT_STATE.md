@@ -5,7 +5,30 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Erster integrierter Forza-Test: Trigger-Abnahme fehlgeschlagen.** Normale
+**Korrigierter integrierter Forza-/Xodus-Test bestanden, begrenzter Umfang:**
+Das separat freigegebene Bridge-Update `0.1.0.alpha1-2` ist installiert und
+geprüft: 14 Paketdateien stimmen, 97 Dateien des Kernpakets unverändert.
+Dienst und native Geräteinstanz blieben während Update und Spiel unverändert,
+ohne Dienstneustart. Beide Trigger waren spürbar, stoppten zwischen Effekten
+und starteten bei neuen Effekten erneut. Normale Eingaben und Griff-Rumble
+blieben ohne Aussetzer; nach regulärem Spielende waren beide Trigger ruhig.
+
+Die passive Beobachtung sicherte 2.337 Producer-Frames, 171 angenommene
+Play- und 498 Stoppaufträge. 66 Play-Aufträge enthielten LT, 100 RT;
+gleichzeitig von null verschiedene LT/RT wurden in diesem Lauf nicht
+aufgezeichnet. 672 Logeinträge, keine verworfenen Einträge und kein
+Relayfehler; reguläres Producer-EOF, Aufräumen ohne gemeldeten Fehler.
+Brokerannahme ist keine USB- oder mechanische Zeitmessung; die fühlbare
+Wirkung bestätigt der Benutzer. Nur der installierte Hook wurde beobachtet,
+Spiel/Bridge liefen unprivilegiert. [Auswertung](TRIGGER_BRIDGE.md#corrected-integrated-forza-test--limited-acceptance-passed).
+
+Die vom Maintainer an diesen erfolgreichen Spieltest gebundene Vorbereitung
+von Push und neuem PRE-ALPHA-Release ist nun möglich, nach abschließendem
+Quell-/Historien-/Artefaktaudit. Kein zusätzlicher Hardwarelauf oder
+Systemeingriff folgt daraus. Steam-/Proton-Bridge, Reconnect, Suspend,
+Prozessabbruch und Mehrgerätebetrieb bleiben unbestätigt. Gyrokalibrierung pausiert.
+
+**Vorheriger Prüfpunkt: Erster integrierter Forza-Test fehlgeschlagen.** Normale
 Eingaben und Griff-Rumble funktionierten laut Benutzer, Trigger-Vibration war
 nicht spürbar. Die installierte Bridge wurde in Wine und Spiel nachgewiesen;
 ihr Relay verschwand vor dem ersten protokollierten Motorauftrag. Kein Fehler
@@ -17,8 +40,8 @@ Statusabfrage des Managers setzt `busy`; die Bridge verwechselte das mit
 Identitätsverlust. Die gezielte Korrektur trennt Identität/Verfügbarkeit und
 ergänzt begrenzte Diagnoseereignisse. Die vollständige Offline-Suite besteht:
 843 Python-Testfälle in 31 Batches plus bestehende C-/statische Prüfungen,
-darunter 18 zusätzliche Regressionen. Optionales Update `0.1.0.alpha1-2` wird
-aus dem geprüften Commit gebaut; installierte Bridge `0.1.0.alpha1-1`, Kerneltreiber
+darunter 18 zusätzliche Regressionen. Optionales Update `0.1.0.alpha1-2` wurde
+aus Commit `e264c1f` gebaut; zu diesem Prüfpunkt war Bridge `0.1.0.alpha1-1` installiert, Kerneltreiber
 und Broker unverändert. Kein automatischer neuer Hardwarelauf, Push oder
 Release. Gyrokalibrierung bleibt pausiert.
 [Befund und Korrektur](TRIGGER_BRIDGE.md#first-integrated-forza-test--trigger-acceptance-failed).
