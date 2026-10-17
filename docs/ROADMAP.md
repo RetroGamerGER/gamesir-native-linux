@@ -9,10 +9,11 @@ Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 
 ## 1. Stabile Alpha und Release-Abnahme
 
-Aktueller lokaler Updatekandidat: Manager-Reconnect-Korrektur in Paketrevision 6,
-unverändertes Kernelmodul/ABI. Nach bestandenen Offline-Regressionen Paket
-prüfen und ausdrücklich freigeben; noch keine Installation. Danach pausierter
-Start/Resume und kontrollierte reale Wiederverbindung getrennt abnehmen,
+Lokal installiert: Manager-Reconnect-Korrektur in Paketrevision 6,
+unverändertes Kernelmodul/ABI. Nach bestandenen Offline-Regressionen wurde das
+ausdrücklich freigegebene Update installiert und lesend geprüft; Dienst
+inaktiv, Verwaltung pausiert. Als Nächstes pausierten Start/Resume und
+kontrollierte reale Wiederverbindung getrennt freigeben und abnehmen,
 bevor die integrierte Forza-/Xodus-Bridge getestet wird. Alter Fehlerzustand
 wird nicht automatisch entsperrt. [Korrektur und Rückweg](MANAGER_RECONNECT_FIX.md).
 

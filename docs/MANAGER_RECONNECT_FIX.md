@@ -1,10 +1,11 @@
-# Manager reconnect correction — offline update candidate
+# Manager reconnect correction — local update and acceptance status
 
-Date: 2026-10-17. PRE-ALPHA, local preparation only. No installation, service
-operation, module change, controller command or live reconnect test is part
-of this work. Gyroscope calibration remains paused. Core package candidate:
+Date: 2026-10-17. PRE-ALPHA. The correction was developed and tested offline,
+then installed locally under separate explicit authorization. Installation
+verification is recorded below; no resume, bootstrap, live reconnect or Forza
+test has followed it. Gyroscope calibration remains paused. Core package:
 `gamesir-native-dkms 0.1.0.alpha3-6`; module version/ABI remain `0.1.0.alpha3`.
-The optional trigger bridge is a separate package and is not installed by this
+The optional trigger bridge is a separate package and was not installed by this
 update.
 
 ## Observed defect
@@ -80,7 +81,7 @@ The local ignored logs are `build/reconnect-manager-tests-final.log` and
 kernel, ABI, broker/client, bridge, paddle, IMU and existing system hooks are
 unchanged; runtime code changes are confined to the userspace manager.
 
-## Candidate build and future update approval
+## Reviewed build and update procedure
 
 Build source archives and any local binary from the reviewed commit only.
 The normal dependency check must pass; do not install dependencies, refresh
@@ -102,7 +103,7 @@ only `gamesir-native-dkms 0.1.0.alpha3-6`, and retain the verified revision-5
 rollback package. Abort if another package, upgrade, conflict or unresolved
 ownership appears. No package command is run automatically from this guide.
 
-The future separately approved transaction has this shape:
+The separately approved transaction has this shape:
 
 ```sh
 GS_PACKAGE=/absolute/path/to/GameSir-Native-Linux-PRE-ALPHA-0.1.0.alpha3-6-x86_64.pkg.tar.zst
@@ -122,6 +123,35 @@ saved pause/ownership. Installation is not activation. A paused service start,
 then one resume/native bootstrap and controlled reconnect acceptance each
 require the appropriate separate approval. No Forza session starts as a side
 effect of this update.
+
+## Authorized local installation verification
+
+On 2026-10-17, only `gamesir-native-dkms` was upgraded from revision 5 to 6.
+The complete transaction was reviewed before confirmation. The approved
+upgrade guard reported a verified release and absence of the native module;
+DKMS and normal/fallback initramfs generation completed with transaction
+exit status zero. No dependency installation or package database refresh was
+performed. DKMS emitted a deprecation notice for the existing `CLEAN` setting;
+no repair or configuration change was attempted.
+
+| Read-only check | Observed result |
+| --- | --- |
+| Candidate archive SHA256 | `9783b49dc32f7eed372215d02a8b2c0a30f72ec2922cc8e36ff1559a2ec6aef0` |
+| Installed package | `gamesir-native-dkms 0.1.0.alpha3-6`; package check: 127 entries, zero altered files. |
+| Payload comparison | All 97 regular payload files match the reviewed archive byte for byte. |
+| Installed manager SHA256 | `311b41bbab5310220a869d8b1dd98898c844b26eaed00b8d4f0e6d267fcdfbcc` |
+| DKMS/module metadata | `gamesir-native/0.1.0.alpha3` installed for `7.2.11-1-garuda`; module version `0.1.0.alpha3`, matching vermagic. |
+| Running state | Service inactive/dead, successful exit, no process; native module absent and no native USB bindings. |
+| Saved administration state | Root-owned private state, `paused: true`, empty leases. Existing service enablement retained. |
+| Dongle state | Unmanaged `3537:109c`, interface 0 still bound to `xpad`, interface 1 unbound; unchanged across installation. This is not a verified return to `100a`. |
+| Scope exclusions | No start/resume, bootstrap, input or motor test; optional bridge not installed, Steam integration unchanged, no push. |
+
+The unmanaged dongle was outside the empty managed-return scope. Successful
+package removal preparation therefore does not establish its normal XInput
+identity or prove the reconnect correction on hardware. Private transaction
+and before/after logs are retained locally with checksums; they are not public
+release assets. A fresh device check and separate approval remain necessary
+before activation and real reconnect acceptance.
 
 Rollback requires stopping games, a verified release/return and an explicitly
 approved transaction with the saved `0.1.0.alpha3-5` package, followed by the

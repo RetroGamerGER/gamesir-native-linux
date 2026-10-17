@@ -6,7 +6,8 @@ does not execute or authorize installation.
 
 The current local update candidate is `gamesir-native-dkms 0.1.0.alpha3-6` for Arch-family `x86_64`
 systems. The published first source tag retains its original revision-5 recipe. Revision 6 adds an
-offline-tested manager reconnect correction; it is not installed or hardware-accepted. Read the
+offline-tested manager reconnect correction, installed locally with management paused but not yet
+hardware-accepted. Read the
 [reconnect update scope and approval plan](MANAGER_RECONNECT_FIX.md) before updating.
 This is a preparation guide, not an available public binary release. Build the reviewed source;
 older local packages do not contain newly added licensing files merely because their name matches.
