@@ -49,6 +49,16 @@ Belege: [Gamescope](STEAM_GAMESCOPE.md),
 
 ## 2. Spielintegration und kalibrierte Sensoren
 
+**Architekturvereinfachung offline bewerten:** Den
+[xpad-/HID-Vergleich mit PandaPro8K](XPAD_HID_FEASIBILITY.md) weiterverfolgen.
+Gespeicherte normale `100a`-Deskriptoren und einzelne IF1-Telemetriepakete
+stützen einen möglichen Zusatzpfad bei erhaltenem XInput. Zuerst den
+behaupteten Linux-Patch und die modellspezifische Aktivierung prüfen;
+keine dauerhafte Ausgabe von Paddles/IMU oder vier Motoren daraus ableiten.
+Ein gemeinsames Input-Gerät und koordinierte Motorstopps müssen beim
+Entwurf erhalten bleiben. Kein Austausch der funktionierenden Runtime,
+kein neuer USB-Befehl oder Hardwaretest aus diesem Analyseauftrag.
+
 **Trigger-Bridge:** Der geprüfte eigenständige Forza-/Xodus-Nachweis wird als
 optionale Userspace-Komponente integriert, nicht in den Kernel verschoben.
 Die neue Fassung ergänzt eindeutige Instanz-/Quellzuordnung, versionierten

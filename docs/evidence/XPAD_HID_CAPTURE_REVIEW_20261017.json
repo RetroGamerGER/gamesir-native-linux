@@ -1,0 +1,108 @@
+{
+  "date": "2026-10-17",
+  "scope": "Offline analysis of existing owned-device captures; no USB, SSH, root or running-system operation",
+  "model": "Standard GameSir G7 Pro RF dongle",
+  "identity": "3537:100a",
+  "interfaces": {
+    "0": {
+      "type": "ff/5d/01",
+      "input_endpoint": "82",
+      "output_endpoint": "02",
+      "max_packet_bytes": 32,
+      "normal_xinput_report_bytes": 20
+    },
+    "1": {
+      "type": "03/00/00",
+      "input_endpoint": "84",
+      "output_endpoint": "04",
+      "max_packet_bytes": 64
+    }
+  },
+  "generic_if1_hid_descriptor": {
+    "bytes": 214,
+    "sha256": "8dc43b12e016a9e71059620ff503b825b77355001b8054cee876f4b88d64c516",
+    "hex": "05010906a1018503050719e029e715002501750195088102750895018101050719002aff00150026ff007508950a8100050819012903250175019503910295059101c0060c000901a101850219002bffff0000150027ffff0000751095028100c005010902a10185090901a1000509190129051500250195057501810295017503810105010930093116018026ff7f75109502810609381581257f75089501810695018103c0c006f0ff0940a1010600ff09008510150026ff00350046ff007508953f810285120921953f8102850f0922953f9102c0",
+    "vendor_reports": [
+      {
+        "id": "10",
+        "direction": "input",
+        "wire_bytes_including_id": 64
+      },
+      {
+        "id": "12",
+        "direction": "input",
+        "wire_bytes_including_id": 64
+      },
+      {
+        "id": "0f",
+        "direction": "output",
+        "wire_bytes_including_id": 64
+      }
+    ]
+  },
+  "captures": [
+    {
+      "capture_date": "20261011",
+      "recorded_original_capture_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "verified_owned_capture_sha256": "2cf3fdcb52c9880ea58e17b8549a4201633529a409dd94d80adf18233d30b64e",
+      "descriptor_frame_owned": 34146,
+      "matching_telemetry_frames_owned": [
+        34150
+      ],
+      "matching_telemetry_sha256": [
+        "6192ce5dbaa5afe7af0ece0bea4e2d1a4c0a10f9b625755af7e47bab5f2997f5"
+      ],
+      "pid_attribution": "New100a epoch identified by saved device-add event; fresh84 submissions before completions",
+      "report_12_observed": false,
+      "observed_payload_prefixes_and_counts": {
+        "00": 1,
+        "10": 1,
+        "03": 1
+      }
+    },
+    {
+      "capture_date": "20261012",
+      "recorded_original_capture_sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954",
+      "verified_owned_capture_sha256": "26aa761616b178038f378877d953c3f54e227702bc0374863a420d31c9820192",
+      "descriptor_frame_owned": 26630,
+      "matching_telemetry_frames_owned": [
+        26634,
+        26636
+      ],
+      "matching_telemetry_sha256": [
+        "f329bddbc8d4d4d3d8f599f4ad4da3c40e1e563074ba4dd8967f31161241cbd2",
+        "46eaea73e07306dc2cd90b2d74fd53a45771885d2ca44fb41f6179d6d95e09d9"
+      ],
+      "pid_attribution": "New100a epoch identified by saved device-add event; fresh84 submissions before completions",
+      "report_12_observed": false,
+      "observed_payload_prefixes_and_counts": {
+        "00": 1,
+        "10": 2,
+        "03": 1
+      }
+    }
+  ],
+  "interpretation": {
+    "known_imu_shape_reports": 3,
+    "normal_xinput_and_hid_same_configuration": true,
+    "continuous_hid_telemetry_proven": false,
+    "independent_paddle_bits_in100a_proven": false,
+    "panda_heartbeat_valid_for_normal_model_proven": false,
+    "four_motor_output_on_if1_proven": false
+  },
+  "limitations": [
+    "Single/two reports occur just after return from extended mode",
+    "Internal firmware samples queued across mode transition cannot be excluded",
+    "Descriptor declaration does not prove report12 or command activation works",
+    "Input descriptor and brief telemetry do not prove output-command equivalence",
+    "Earlier IF0-only replay filters intentionally excluded this channel",
+    "Host identifiers, serials, raw bus captures and unrelated traffic are excluded"
+  ],
+  "offline_validation": {
+    "owned_capture_hashes_recomputed": true,
+    "descriptor_length_and_hash_verified": true,
+    "payload_only_vendor_decoder_matches": 3,
+    "existing_endpoint84_gate": "still ignored, unchanged",
+    "transport_authorized_for_runtime": false
+  }
+}

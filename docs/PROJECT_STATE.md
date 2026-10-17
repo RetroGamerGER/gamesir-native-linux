@@ -5,6 +5,17 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Vereinfachung über xpad plus HID-Zusatzpfad untersucht:** Der PandaPro8K-
+Ansatz betrifft ein anderes Modell, hat aber einen konkreten Anknüpfungspunkt
+in unseren normalen G7-Pro-Mitschnitten: `100a`-IF1 deklariert die 64-Byte-
+Berichte `10`/`12` und Ausgabe `0f`; nach Rückkehr aus `109c` wurden dort drei
+einzelne Berichte mit bekannter IMU-Signatur aufgezeichnet. Kein beobachteter
+`12`-Bericht, kein belegter dauerhafter Stream oder Viermotor-Ausgabepfad auf
+IF1. Bisherige IF0-Filter beweisen keine Unbrauchbarkeit des Nebenkanals.
+Eine kleinere Architektur ist deshalb ernsthaft zu prüfen; der laufende
+Treiber bleibt unverändert. Kein neuer Gyrofaktor, Kalibrierung pausiert.
+[Vergleich, Belege und nächster Offline-Schritt](XPAD_HID_FEASIBILITY.md).
+
 **Nachfolgende native Aktivierung auf CachyOS lesend bestätigt:** Bei der
 Kontrolle nach Rückmeldung des Benutzers liefen Dienst und Modul bereits;
 dieser Prüfschritt führte weder Dienststart noch Resume aus. Der gespeicherte
