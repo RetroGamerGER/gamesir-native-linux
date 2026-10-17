@@ -5,6 +5,23 @@
 Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Kernpaket auf dem CachyOS-/Gamescope-Testsystem angeglichen:** Nach gesonderter
+Freigabe wurde ausschließlich `gamesir-native-dkms` von `0.1.0.alpha3-4` auf
+`0.1.0.alpha3-6` aktualisiert. Der vorherige gerätefreie Modulbau und der
+installierte DKMS-Build für `7.2.9-2-cachyos-deckify` bestanden ohne
+Codewarnungen. Alle 97 regulären Paketdateien stimmen mit dem geprüften
+Archiv überein; die Paketprüfung meldet 127 Einträge ohne Änderungen.
+Die Modul-/DKMS-Version bleibt `0.1.0.alpha3`.
+
+Der Update-Hook bestätigte die Rückgabe, stoppte den Dienst und entlud das
+unbenutzte Modul. Abschließend: Dienst inaktiv, Autostart weiterhin aktiviert,
+gespeicherte Pause aktiv und Besitzstand leer; die beobachtete
+`100a/xpad`-/`usbhid`-Instanz blieb unverändert. Steam-/Gamescope-Pakete,
+Dateien und laufende Steam-Unit blieben unverändert. Keine Trigger-Bridge
+installiert, kein Resume oder Hardwaretest. Der ebenfalls enthaltene
+kohärente IIO-Puffer wurde nicht aktiviert; Gyrokalibrierung pausiert.
+[Installationsnachweis und Grenzen](MANAGER_RECONNECT_FIX.md#cachyosgamescope-core-update--installation-only).
+
 **Steam-/Proton-Triggerpfad ausschließlich offline untersucht:** Der
 Quellrelease `v0.1.0-pre-alpha.2` auf Commit `947790b` ist veröffentlicht;
 der nachfolgende Untersuchungsstand bleibt lokal. Installiertes Proton

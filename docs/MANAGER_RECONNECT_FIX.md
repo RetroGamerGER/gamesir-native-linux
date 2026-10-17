@@ -159,6 +159,49 @@ same read-only checks. It is a return to the earlier manager, **including this
 known reconnect defect**, not a fix. If release/return is unresolved, stop and
 request the documented manual recovery rather than forcing removal or reboot.
 
+## CachyOS/Gamescope core update — installation only
+
+On 2026-10-17 the separately authorized CachyOS/Gamescope test system was
+updated from core revision 4 to 6 using the same reviewed archive hash listed
+above. The full interactive transaction contained exactly one package;
+no dependency installation, database refresh or running-kernel update occurred.
+The optional trigger bridge was explicitly excluded.
+
+Before confirmation, the manager had no leases or pending operation, the
+native module was unbound with reference count zero, and the current dongle
+was `3537:100a`, IF0 `xpad`, IF1 `usbhid`. A historical released-entry error
+was recorded before the update. The existing upgrade guard then confirmed
+release, paused administration, stopped the service and unloaded the unused
+module. Historical failure records remained intact.
+
+- The unprivileged prebuild and installed DKMS build for
+  `7.2.9-2-cachyos-deckify` passed without code warnings. Module version remains
+  `0.1.0.alpha3`, with matching vermagic, expected source version and no
+  automatic USB aliases. The installed tool's device-free self-test passed.
+- Package verification found 127 entries, zero altered files; all 97 regular
+  payload files matched the reviewed archive, including ownership and modes.
+- Post-state: service inactive/dead with successful exit, existing enablement
+  retained, saved pause true, empty leases, module absent and no native
+  binding. The observed USB instance and `xpad`/`usbhid` bindings were unchanged.
+- Steam `0.1.0.alpha2-1` and Gamescope integration `0.1.0.alpha1-1`, their
+  regular files and the running Steam unit were unchanged. No bridge was
+  installed; no client permission or launcher configuration was changed.
+- Complete transaction and DKMS logs were inspected beyond their exit codes.
+  The only diagnostic was the known deprecated DKMS `CLEAN` setting.
+  Initramfs generation succeeded; Snapper created pre/post snapshots and
+  three Limine/snapshot metadata files changed. The kernel journal contained
+  only native-driver deregistration during the observed update window.
+
+Revision 4 to 6 also includes the earlier coherent-IIO-buffer work; this is
+not a claim that every kernel source stayed unchanged. The buffer was not
+activated and gyro calibration remains paused. No service start, resume,
+bootstrap, input/motor test or reconnect acceptance followed the update.
+The other test system was not changed. Installation parity does not establish
+fresh hardware acceptance; activation requires a new explicit approval.
+
+[Sanitized verification record](evidence/CORE_UPDATE_CACHYOS_20261017.json).
+Private before/after inventories, logs and checksums remain outside Git.
+
 See [installation and removal](INSTALLATION.md), [runtime ownership](ALPHA_RUNTIME.md),
 [prior conflict handling](MANAGER_CONFLICT_FIX.md), and the separate
 [trigger-bridge acceptance boundary](TRIGGER_BRIDGE.md).

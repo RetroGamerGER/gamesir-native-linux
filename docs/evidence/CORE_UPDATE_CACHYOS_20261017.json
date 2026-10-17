@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-17",
+  "scope": "Authorized core package update on the CachyOS/Gamescope test system; installation verification only",
+  "kernel": "7.2.9-2-cachyos-deckify",
+  "package": {
+    "name": "gamesir-native-dkms",
+    "from": "0.1.0.alpha3-4",
+    "to": "0.1.0.alpha3-6",
+    "sha256": "9783b49dc32f7eed372215d02a8b2c0a30f72ec2922cc8e36ff1559a2ec6aef0",
+    "transaction_package_count": 1,
+    "verified_entries": 127,
+    "altered_entries": 0,
+    "regular_payload_matches": 97
+  },
+  "build": {
+    "prebuild": "passed, no warnings",
+    "dkms": "installed for the running kernel; make exit 0, no code warnings",
+    "module_version": "0.1.0.alpha3",
+    "srcversion": "71D6C2E25BA80E69BB4818D",
+    "vermagic": "7.2.9-2-cachyos-deckify SMP preempt mod_unload",
+    "usb_aliases": [],
+    "device_free_tool_selftest": "passed"
+  },
+  "post_state": {
+    "service": "inactive/dead, successful exit",
+    "enabled": true,
+    "paused": true,
+    "leases_empty": true,
+    "module_loaded": false,
+    "native_bindings": [],
+    "usb_identity": "3537:100a",
+    "interface_0": "xpad",
+    "interface_1": "usbhid",
+    "observed_usb_instance_unchanged": true,
+    "historical_failures_preserved": true
+  },
+  "preserved": {
+    "steam_package": "0.1.0.alpha2-1",
+    "gamescope_package": "0.1.0.alpha1-1",
+    "regular_integration_files_unchanged": true,
+    "running_steam_unit_unchanged": true,
+    "other_test_system_unchanged": true
+  },
+  "hooks": {
+    "guard_return_confirmed": true,
+    "initramfs_generation": "successful",
+    "snapshots": "pre and post created",
+    "boot_metadata_files_changed": 3,
+    "diagnostics": [
+      "Known DKMS CLEAN deprecation notice; no repair attempted"
+    ],
+    "kernel_messages": [
+      "gs_native interface-driver deregistration only"
+    ]
+  },
+  "not_performed": [
+    "Trigger-bridge installation",
+    "Service start or resume",
+    "Bootstrap or reconnect test",
+    "Input or motor test",
+    "IIO buffer activation",
+    "Gyro calibration",
+    "Steam or launcher changes",
+    "Push or release"
+  ],
+  "limitations": [
+    "Package revision 4 to 6 includes earlier coherent IIO work, not only manager changes",
+    "No fresh runtime or hardware acceptance is established",
+    "Private original evidence and checksums are retained outside Git"
+  ]
+}
