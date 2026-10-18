@@ -1,10 +1,17 @@
 # Passive 100a HID sidechannel test — preparation only
 
-Updated: 2026-10-18. PRE-ALPHA. Recorder changes and tests are offline only.
-Today's diagnostic read process metadata with approved elevated rights; it did
+Updated: 2026-10-18. PRE-ALPHA. Code preparation was offline; the subsequent
+captures had separate, one-time approval.
+**Subsequent hardware update:** two separately authorized 90-second captures
+have now completed. The second verified real XInput and short nonvendor HID;
+vendor IMU telemetry was not observed. See the
+[results and qualification of the first run](HID_PASSIVE_CAPTURE_RESULTS.md).
+No additional capture or recovery is authorized by those completed runs.
+
+The earlier diagnostic read process metadata with approved elevated rights; it did
 not open any referenced device. No capture, release/resume, module operation,
 driver binding, USB command, application start or installed-file change occurred
-in this work. Historical recovery steps below had separate, consumed approvals.
+during that earlier diagnostic. Historical recovery steps below had separate, consumed approvals.
 Gyro calibration remains paused. This document is not permission to run a test.
 
 ## Access-check failure: what is and is not known
@@ -36,7 +43,7 @@ changed to make this test pass.
 the observation and its limits. Private source/output/checksums remain under the
 ignored persistent `build/hid-access-diagnosis-20261018/` directory.
 
-## Proposed 90-second smoke test — not run
+## 90-second smoke-test profile
 
 The new scope `passive-hid-100a-90` has its own exact **90-second capture ceiling**
 and **120-second outer startup/cleanup limit**. The established 300/330-second
@@ -65,7 +72,10 @@ Before a future run, freshly verify `100a`, IF0 `xpad`, IF1 `usbhid`, manager
 pause/empty ownership, source hashes, free storage and complete process access.
 Inspect usbmon availability without loading it; a missing module needs separate
 approval. Present the exact fresh manifest and execution command for approval.
-There is no current hardware Go, new approved manifest or automatic retry.
+Also confirm the KDE controller test or another ordinary input consumer is open
+for this exact IF0 instance, visibly reacts and remains open during capture.
+Binding alone is insufficient. Both later one-time approvals are consumed;
+there is no automatic retry or continuing hardware Go.
 
 ### Current offline validation — 18 October
 
@@ -77,7 +87,8 @@ static checks. Fake clocks, processes and in-memory metadata cover exact
 permission-denied diagnostics, disappearing entries and forbidden device aliases.
 Current asset hashes were rechecked; setup/mount and state guards are unchanged.
 No real sandbox, recorder, USB interface or installed driver was exercised by
-these tests. The separate read-only root diagnostic is the observation above,
+these offline tests. The separately authorized real runs are documented in
+the results linked above. The earlier read-only root diagnostic is the observation above,
 not a hardware test or clearance of the historical unknown error.
 
 ## Historical read-only manager diagnosis — 17 October
@@ -259,9 +270,10 @@ SUDO_ASKPASS=/usr/bin/ksshaskpass /usr/bin/sudo -A \
 ```
 
 `GS_HID_RUN` must designate a new, reviewed, private run directory beneath
-this checkout's `build/hardware-tests/`. No current approved hardware manifest
-was created, no capture command above was run, and the source flag is not user
-authorization. End-of-test release/resume remains outside this adapter.
+this checkout's `build/hardware-tests/`. The completed runs used their own fresh
+private manifests; their approvals are consumed. These examples do not authorize
+another run, and the source flag is not user authorization. End-of-test
+release/resume remains outside this adapter.
 
 ## Evaluation boundary
 

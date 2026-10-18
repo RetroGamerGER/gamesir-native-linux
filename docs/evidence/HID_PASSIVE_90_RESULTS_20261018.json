@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "target": {
+    "vid": "3537",
+    "pid": "100a",
+    "interface0_driver": "xpad",
+    "interface1_driver": "usbhid"
+  },
+  "runtime": {
+    "kernel": "7.2.11-1-garuda",
+    "dumpcap": "4.7.4",
+    "linktype": 220,
+    "timestamp_resolution": "host microseconds"
+  },
+  "authorization": {
+    "separately_approved_runs": 2,
+    "usbmon_load_count": 1,
+    "resume_count": 0,
+    "driver_rebindings": 0,
+    "automatic_retries": 0
+  },
+  "runs": [
+    {
+      "run": "005",
+      "source_commit": "29b3f8f",
+      "scope": "passive-hid-100a-90",
+      "recorder_audit_passed": true,
+      "original_bytes": 350452008,
+      "original_sha256": "6c93e41d81fe50bd6d6f92a52a7605cc9659a9323a656be506d0024e96af21ce",
+      "packet_span_seconds": 88.912305,
+      "all_bus_events": 55956,
+      "target_events": 32,
+      "target_distribution": [
+        {
+          "stage": "C",
+          "transfer_type": 1,
+          "endpoint": "84",
+          "status": 0,
+          "urb_length": 13,
+          "data_length": 13,
+          "count": 16
+        },
+        {
+          "stage": "S",
+          "transfer_type": 1,
+          "endpoint": "84",
+          "status": -115,
+          "urb_length": 64,
+          "data_length": 0,
+          "count": 16
+        }
+      ],
+      "if1_report10_3ce0": 0,
+      "if1_report12": 0,
+      "truncated_frames": 0,
+      "target_payload_shortfalls": 0,
+      "statistics": [
+        {
+          "ifrecv": 55956,
+          "ifdrop": 0,
+          "osdrop": null
+        }
+      ],
+      "six_namespaces_isolated": true,
+      "all_five_capability_sets_zero": true,
+      "no_new_privs": 1,
+      "only_monitor_device_visible": true,
+      "no_raw_usb_or_hidraw_exposed": true,
+      "host_and_target_state_unchanged": true,
+      "capture_outcome_sha256": "fed3875dd2ec5735016d6bac5226ed5769e1d435aea83a28de656ba969ce2adc",
+      "target_only_parser_counts": {
+        "records_total": 16,
+        "ignored": 16
+      },
+      "target_only_parser_kinds": {
+        "hid_nonvendor_ignored": 16
+      }
+    },
+    {
+      "run": "006",
+      "source_commit": "29b3f8f",
+      "scope": "passive-hid-100a-90",
+      "recorder_audit_passed": true,
+      "original_bytes": 351350096,
+      "original_sha256": "85cc7d24dc98069e345348cfddf6f2ecefd3de2e7241f7a600a458be046ca125",
+      "packet_span_seconds": 88.975048,
+      "all_bus_events": 70262,
+      "target_events": 21614,
+      "target_distribution": [
+        {
+          "stage": "C",
+          "transfer_type": 1,
+          "endpoint": "82",
+          "status": 0,
+          "urb_length": 20,
+          "data_length": 20,
+          "count": 10787
+        },
+        {
+          "stage": "C",
+          "transfer_type": 1,
+          "endpoint": "84",
+          "status": 0,
+          "urb_length": 13,
+          "data_length": 13,
+          "count": 20
+        },
+        {
+          "stage": "S",
+          "transfer_type": 1,
+          "endpoint": "82",
+          "status": -115,
+          "urb_length": 64,
+          "data_length": 0,
+          "count": 10787
+        },
+        {
+          "stage": "S",
+          "transfer_type": 1,
+          "endpoint": "84",
+          "status": -115,
+          "urb_length": 64,
+          "data_length": 0,
+          "count": 20
+        }
+      ],
+      "if1_report10_3ce0": 0,
+      "if1_report12": 0,
+      "truncated_frames": 0,
+      "target_payload_shortfalls": 0,
+      "statistics": [
+        {
+          "ifrecv": 70262,
+          "ifdrop": 0,
+          "osdrop": null
+        }
+      ],
+      "six_namespaces_isolated": true,
+      "all_five_capability_sets_zero": true,
+      "no_new_privs": 1,
+      "only_monitor_device_visible": true,
+      "no_raw_usb_or_hidraw_exposed": true,
+      "host_and_target_state_unchanged": true,
+      "capture_outcome_sha256": "6523938576fc65791b3b6fe3d4cc7d928682b4ed654de492a6d7f68bee792ed4",
+      "target_only_parser_counts": {
+        "records_total": 10807,
+        "decoded": 10787,
+        "ignored": 20
+      },
+      "target_only_parser_kinds": {
+        "x360_input": 10787,
+        "hid_nonvendor_ignored": 20
+      }
+    }
+  ],
+  "second_run": {
+    "fresh_input_consumer_count": 1,
+    "user_confirmed_visible_kde_inputs_before_during_after": true,
+    "xinput_lengths": [
+      20
+    ],
+    "normal_trigger_u8_ranges": {
+      "lt": [
+        0,
+        255
+      ],
+      "rt": [
+        0,
+        255
+      ]
+    },
+    "normal_stick_i16_ranges": {
+      "lx": [
+        -32768,
+        32767
+      ],
+      "ly": [
+        -32768,
+        32767
+      ],
+      "rx": [
+        -32768,
+        32767
+      ],
+      "ry": [
+        -32768,
+        32767
+      ]
+    },
+    "normal_button_report_counts": {
+      "up": 0,
+      "down": 0,
+      "left": 0,
+      "right": 0,
+      "menu": 6,
+      "view": 6,
+      "ls": 426,
+      "rs": 418,
+      "lb": 3,
+      "rb": 2,
+      "home": 3,
+      "a": 367,
+      "b": 303,
+      "x": 200,
+      "y": 117
+    },
+    "dpad_activity_observed": false,
+    "ep82_intervals": {
+      "samples": 10787,
+      "intervals": 10786,
+      "positive_intervals": 10786,
+      "zero_intervals": 0,
+      "negative_intervals": 0,
+      "span_us": 31581526,
+      "min_positive_us": 774,
+      "median_positive_us": 1000.0,
+      "p95_positive_nearest_rank_us": 2000,
+      "p99_positive_nearest_rank_us": 44991,
+      "max_positive_us": 1778038,
+      "within_900_1100_us": 10110,
+      "within_900_1100_fraction_of_positive": 0.9373261635453366,
+      "intervals_ge_2000_us": 598,
+      "observation_rate_hz": 341.5287785650383,
+      "meaning": "host successful USB completion cadence, not sensor rate, RF rate, sample freshness or latency"
+    },
+    "phase_counts": {
+      "mixed_action": {
+        "C:ep82:status0": 8094,
+        "S:ep82:status-115": 8094,
+        "C:ep84:status0": 14,
+        "S:ep84:status-115": 14
+      },
+      "final_rest": {
+        "C:ep82:status0": 2693,
+        "S:ep82:status-115": 2693,
+        "C:ep84:status0": 6,
+        "S:ep84:status-115": 6
+      }
+    },
+    "clean_final_rest_established": false,
+    "all_target_stages_strict_parser": {
+      "records": 21614,
+      "x360_input": 10787,
+      "transfer_not_complete": 10807,
+      "hid_nonvendor_ignored": 20,
+      "independent_tshark_metadata_agrees": true
+    }
+  },
+  "conclusions": {
+    "recorder": "Two separately approved captures completed and finalized; private checksum chains verified.",
+    "first_run": "Inconclusive for concurrent XInput/HID: no verified input consumer and no EP82 packets.",
+    "second_run": "Normal XInput present; only report03/13-byte HID observed. Vendor IMU/report12 absent in this window.",
+    "activation_mechanism_proven": false,
+    "physical_paddle_mapping_proven": false,
+    "gyro_calibrated": false,
+    "universal_1000hz_guarantee": false
+  },
+  "limits": [
+    "Normal non-wireless xpad input open/start path in local 7.2.9 reference supports a missing-client explanation for run005; exact running 7.2.11 path and historical FD state were not attested.",
+    "Reported ifdrop=0 does not make missing osdrop statistics known.",
+    "No standalone continuous IMU, sensor freshness, motor parity, general stability or absence-of-future-activation claim.",
+    "Raw bus captures, short nonvendor HID payloads, host IDs, process/FD identities and local paths remain private.",
+    "Continued activity in the final-rest window is not a clean rest or centering/calibration measurement."
+  ],
+  "xpad_reference": {
+    "version": "local Linux 7.2.9 reference",
+    "path": "drivers/input/joystick/xpad.c",
+    "sha256": "19dd00fc4b0341ef18575a87b9b3fbd5f809e4588ff2909e2c357af2f2358517",
+    "open_callback_line": 1887,
+    "input_start_line": 1784,
+    "exact_running_7_2_11_source_attested": false
+  }
+}

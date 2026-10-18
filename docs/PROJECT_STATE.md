@@ -5,6 +5,25 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Zwei freigegebene 90-Sekunden-Aufnahmen abgeschlossen:** Recorder,
+Isolation und Prüfsummen bestanden. Der erste Lauf ohne bestätigten offenen
+Eingabeclient hatte keine XInput-Berichte. Nach ausdrücklicher Wiederholungs-
+freigabe wurden offene IF0-Eingaben lesend geprüft und der KDE-Test offen
+gehalten: 10.787 erfolgreiche 20-Byte-XInput-Berichte und 20 erfolgreiche
+13-Byte-HID-Berichte (`03`). Streamingauswertung, TShark und vorhandener Parser
+stimmen überein. Keine 64-Byte-`10/3c/e0`-Telemetrie, kein Report `12`.
+Normale Eingaben im KDE-Test vor/während/nach dem zweiten Lauf bestätigt;
+volle Stick-/Triggerbereiche beobachtet, keine D-Pad-Aktivität belegt.
+
+Originale bleiben privat, unverändert und dauerhaft gespeichert; keine
+Rohmitschnitte oder HID-Tasteninhalte in Git. usbmon einmal geladen, danach
+kein Resume, Treiberwechsel oder weiterer Modulladevorgang. Manager weiterhin
+pausiert, dieselbe `100a`-/`xpad`-/`usbhid`-Instanz bestätigt. Kein Beleg für
+Paddle-Zuordnung oder passive IMU-Nutzbarkeit unter XInput; Gyrokalibrierung
+pausiert. Beide einmaligen Freigaben verbraucht, keine weitere Hardwareaktion.
+[Ergebnisse, Grenzen und Prüfsummen](HID_PASSIVE_CAPTURE_RESULTS.md).
+
+**Vorbereitungsstand vor den beiden Aufnahmen:**
 **90-Sekunden-HID-Kurztest offline ergänzt, nicht gestartet:** Eigenes Profil
 mit 30 Sekunden Vorbereitung, 10 Sekunden Ruhe, 10 Sekunden Reaktionspuffer,
 30 Sekunden Mischtest und 10 Sekunden Schlussruhe einschließlich Abschlussreserve.

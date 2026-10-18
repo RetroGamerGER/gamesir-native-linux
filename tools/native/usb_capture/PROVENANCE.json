@@ -1,5 +1,5 @@
 {
-  "basis": "Successful isolated Deadband comparison, 20261012T165154770784Z; historical hashes retained. The additional passive 100a profiles (300 s and 90 s) are offline-tested only, not hardware-validated.",
+  "basis": "Successful isolated Deadband comparison, 20261012T165154770784Z; historical hashes retained. The passive 300-second profile remains offline-tested only. The separate 90-second recorder completed two separately approved captures on 2026-10-18; isolation/finalization passed. Vendor HID telemetry was not established.",
   "files": {
     "setup.sh": {
       "validated_source_sha256": "482cd0aac9e63c724efeccf48903fa8e0875f9b170144ad0f3701cfff211ac36",
@@ -45,6 +45,12 @@
     "short_passive_scope": "passive-hid-100a-90",
     "short_passive_duration_seconds": 90,
     "short_passive_outer_timeout_seconds": 120,
-    "short_passive_hardware_validated": false
+    "short_passive_hardware_validated": true,
+    "short_passive_validation_scope": "Recorder isolation, bounded capture, finalization and retained identity/bindings only. Run005 lacked verified input consumer; run006 verified normal XInput plus short nonvendor HID, without vendor IMU telemetry.",
+    "short_passive_source_commit": "29b3f8f",
+    "short_passive_capture_sha256": [
+      "6c93e41d81fe50bd6d6f92a52a7605cc9659a9323a656be506d0024e96af21ce",
+      "85cc7d24dc98069e345348cfddf6f2ecefd3de2e7241f7a600a458be046ca125"
+    ]
   }
 }

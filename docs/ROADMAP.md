@@ -73,8 +73,13 @@ offline vorbereitet. Der spätere, eigens freigegebene Rückweg bestätigte eine
 saubere `100a`-Ausgangsinstanz; der erste Aufnahmeversuch brach vor Modulladen
 an der Prozesszugriffsprüfung ab. Die lesende Diagnose vom 18. Oktober konnte
 diesen Fehler nicht reproduzieren. Genaue künftige Fehlerdiagnostik ist ergänzt;
-Zugriffsfehler werden nicht ignoriert. Als nächstes kommt ein gesondert
-freigegebener 90-Sekunden-Nebenkanal-Kurztest, noch kein Einzeltasten-Nachweis.
+Zugriffsfehler werden nicht ignoriert. Zwei später separat freigegebene
+90-Sekunden-Läufe sind abgeschlossen. Erst der zweite mit geprüft offenem
+Eingabeclient zeigte normale XInput-Berichte; IF1 lieferte nur kurze andere
+HID-Berichte. Kein beobachteter Vendor-IMU-Strom oder Einzeltasten-Nachweis.
+[Auswertung und Grenzen](HID_PASSIVE_CAPTURE_RESULTS.md).
+Nächster Schritt ist gezielte Offline-Arbeit am belegbaren Aktivierungsvertrag,
+ohne das 8K-Protokoll auf Verdacht zu senden oder den nativen Treiber zu ersetzen.
 Manager pausiert/ohne Besitz, vollständige Zugriffsprüfung, usbmon-Verfügbarkeit
 und frische Hash-/Instanzmetadaten bleiben Voraussetzungen. Offline-Tests ersetzen
 keine Aufnahmefreigabe; Aktivierungsbefehle bleiben unbestätigt/gesperrt.
