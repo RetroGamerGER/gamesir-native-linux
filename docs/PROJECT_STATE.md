@@ -20,6 +20,14 @@ Keine Profilwahl, Treiberänderung oder Freigabe kalibrierter SDL-Ausgabe.
 Die Gyrokalibrierung bleibt pausiert; eine spätere bekannte Winkelreferenz
 mit kohärenten Zeitstempeln, Bias- und Achsenprüfung benötigt neue Freigabe.
 
+**Späterer Meilenstein aufgenommen: Linux-Firmware-Updater für Controller und
+Dongle.** Die [Roadmap](ROADMAP.md#4-spätere-firmwareunterstützung-eigene-entscheidung-erforderlich)
+hält Ziel, Userspace-Architektur, offene Protokoll-/Kompatibilitätsfragen,
+Wiederherstellung und getrennte Abnahmekriterien fest. Noch kein implementierter
+oder hardwarevalidierter Linux-Updater; keine neue Firmware- oder Hardwarefreigabe.
+Laufender Treiber, pausierte Gyrokalibrierung und zurückgestellte Funkanalyse
+bleiben unverändert.
+
 **Zwölf Sensorbytes bis zum Berichtskonstruktor verfolgt:** Der ST-Pfad
 ordnet die Registerachsen um und zieht bedingt sechs gespeicherte Offsets ab.
 Die Folge `Gy,Gz,Gx,Ay,Az,Ax` passt über die vorbereitete Kopiergeometrie

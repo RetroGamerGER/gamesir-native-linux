@@ -315,17 +315,70 @@ Weiterverteilung von Herstellerpaketen aus diesem Auftrag.
 
 ## 4. Spätere Firmwareunterstützung: eigene Entscheidung erforderlich
 
+**Späterer Meilenstein: optionaler Linux-Firmware-Updater für Controller und
+USB-Dongle.** Geplant, noch nicht als Linux-Updater implementiert oder an
+Hardware validiert. Diese Aufnahme in die Roadmap beauftragt keine weiteren
+Geräteversuche. Die Gyrokalibrierung bleibt pausiert, die untere Funkanalyse
+zurückgestellt; beides wird durch diesen Meilenstein nicht wieder aufgenommen.
+
+Ziel ist, beide Komponenten und ihre Firmwareversionen eindeutig anzuzeigen,
+passende offizielle Firmwaredateien vorab zu prüfen und erst nach ausdrücklicher
+Bestätigung zu aktualisieren. Anschließend sind die tatsächliche Version und
+der normale Controllerbetrieb zu überprüfen. Controller und Dongle erhalten
+jeweils eigene Kompatibilitäts- und Abnahmenachweise.
+
+Vorhandene Grundlage: Die [statische Nexus-Analyse](GAMESIR_NEXUS_RESEARCH.md)
+belegt getrennte Controller-/Dongle-Paketmodelle, Firmwarevarianten,
+Containerstrukturen und Prüfsummen sowie Teile des Updatecodes. Sie belegt
+weder einen vollständigen Linux-Updateablauf noch dessen sicheren Rückweg.
 Ein Offline-Containerprüfer oder erkannter CRC ist keine Flashfreigabe.
-Vor einem Linux-Updater fehlen vollständige Transport-/Antwortkorrelation,
-Versions-/Hardware-/Paketprüfung, Authentizitäts-/Integritätsbewertung,
-Bootloaderidentitäten, Abbruch-/Stromausfallbehandlung und ein belastbarer
-Rückweg für Controller **und** Dongle. Ein geprüfter Entwicklerplan und eine
-gesonderte konkrete Freigabe sind Voraussetzung für jeden realen Versuch.
+
+Vor der Implementierung eines schreibenden Updaters zu klären:
+
+- **Geräte- und Paketzuordnung:** Hardware-Revisionen, tatsächliche
+  Versionsabfragen und die Kompatibilität der Standard-, WFF- und ZZZ-Pakete;
+  Controller-/Dongle-Versionspaarung und gegebenenfalls Update-Reihenfolge.
+  Ähnliche Hardware, PID oder Dateiname allein erlauben keinen Paketwechsel.
+- **Transport und Bestätigungen:** vollständige Anfrage-/Antwortfolge,
+  Blockadressen, Größen, Bestätigungen, Zeitlimits und zulässige Wiederholungen.
+  Gesondert nachweisen, ob Controllerupdates per Kabel, über den Dongle oder
+  per Funk möglich sind; kein drahtloses Update voraussetzen.
+- **Bootloader und Besitz:** Ein-/Austritt, USB-Identitäten und Zuordnung nach
+  Neuanmeldung; exklusiver Zugriff auf genau die gewählte Geräteinstanz.
+- **Herkunft und Integrität:** offizielle Bezugsquelle, Paketformat,
+  Signatur-/Authentizitätsprüfung und Vertrauensbasis. CRC-Prüfungen erkennen
+  bestimmte Beschädigungen, beweisen aber keine Herstellerherkunft.
+  Download-Endpunkte und Weiterverteilungsrechte sind nicht geklärt.
+- **Unterbrechung und Wiederherstellung:** Verhalten bei Stromausfall,
+  Abziehen, Funkverlust, Abbruch und fehlerhafter Übertragung für beide
+  Komponenten. Dual-Bank, Rollback oder Wiederaufnahme nicht aus gefundenen
+  Funktionsnamen als vorhanden ableiten. Eine xpad-Rückbindung ist keine
+  Wiederherstellung beschädigter Firmware.
+- **Erhalt vorhandener Daten:** Auswirkungen auf Kopplung, Profile und
+  Kalibrierungsdaten untersuchen; Sicherung oder Wiederherstellung nur dann
+  zusagen, wenn das jeweilige Verfahren tatsächlich nachgewiesen ist.
 
 Architekturziel: separate optionale Userspace-Anwendung mit exklusiver,
 expliziter Übergabe durch den nativen Manager. Kein Flashen im Kernel oder
 Alpha-Autostart, keine automatischen Firmwareupdates und keine parallelen
-USB-Besitzer. Keine proprietäre Firmware in Repository oder Linux-Paket;
-die Bezugsmöglichkeit und Rechte müssen vor einer Veröffentlichung geklärt
-sein. Firmwareforschung blockiert den bereits funktionierenden Spielbetrieb
-oder die unabhängige Entwicklung der Sensor-/Spielintegration nicht.
+USB-Besitzer. Die Update-Übergabe ist ein zukünftiger Vertrag, keine bereits
+validierte Managerfunktion. Keine proprietäre Firmware in Repository oder
+Linux-Paket; die Bezugsmöglichkeit und Rechte müssen vor einer Veröffentlichung
+geklärt sein.
+
+Geplante Reihenfolge nach gesondertem Entwicklungsauftrag:
+
+1. Vorhandene statische Befunde zu einer belegten Protokoll- und
+   Kompatibilitätsspezifikation zusammenführen; offene Stellen kennzeichnen.
+2. Offline-Prüfer und simulierten Updateablauf einschließlich beschädigter
+   Pakete, falscher Gerätezuordnung, Zeitüberschreitungen und Abbrüchen testen.
+3. Erst mit dokumentiertem Update- und Wiederherstellungsplan einen begrenzten
+   Hardwareversuch zur konkreten Freigabe vorlegen. Kein Flashen auf Verdacht,
+   keine automatische Wiederholung und keine behauptete Rückkehr ohne Nachweis.
+4. Abnahme je unterstützter Hardware-/Firmwarekombination: passende Datei,
+   bestätigte Übertragung und Prüfung, erwartete neue Version, funktionsfähige
+   Kopplung und normaler Spielbetrieb. Grenzen der Wiederherstellung offen
+   dokumentieren; keine allgemeine Updategarantie aus einem einzelnen Erfolg.
+
+Dieser spätere Meilenstein blockiert weder den stabilen Spielbetrieb noch
+die unabhängige Entwicklung der Sensor-/Spielintegration.
