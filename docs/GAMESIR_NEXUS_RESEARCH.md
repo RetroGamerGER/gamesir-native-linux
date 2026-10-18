@@ -14,6 +14,15 @@ aber noch kein vollständiges, sicher verwendbares Updateprotokoll und keinen
 bestätigten Gyrofaktor. Laufzeit, Kalibrierungswerte und installierte Alpha
 bleiben unverändert. Die Release-Abnahme hat Vorrang vor Firmwareentwicklung.
 
+**Neuer Sensorbefund vom 18. Oktober:** Zusammengesetzte Textadressen führen
+in drei App-Versionen zu einer WHO_AM_I-/Initialisierungskette mit
+Vergleich `0x6a` sowie vorbereiteten Transfers `0x11 ← 0x6c` und
+`0x10 ← 0x68`. Unter der ST-Arbeitshypothese ist das ein konkreter Kandidat
+für ±2000 Grad/s und 0,07 Grad/s je Sensorzählwert. Aktive Hardware,
+Busabschluss und unveränderte Übernahme in USB sind noch nicht bewiesen.
+[Fundstellen, Decoderkorrekturen, Tests und Grenzen](JIELI_SENSOR_INITIALIZATION.md).
+Die folgenden älteren Suchpässe dokumentieren ihre damalige Erkenntnisgrenze.
+
 **Innerer Strukturfolgepass vom 16. Oktober:** `app.bin` und `cfg_tool.bin`
 sind inzwischen für alle 48 Flashdateien vollständig und mit gültigen
 Dateiprüfsummen extrahiert. Sensor-/Kalibrierungsmeldungen sind erstmals
@@ -955,21 +964,21 @@ Tabellen, weitere Adressierungsformen oder nicht erkannte Referenzen nicht
 aus.
 
 Die Sensoranker bleiben außerhalb des bestätigten Load-/Run-Suffixbereichs;
-die dortige Adressumrechnung wird nicht auf sie übertragen. Trotz der
-validierten Teilregeln ist keine belastbare WHO_AM_I-Lesekette, kein
-Sensorwahlpfad und kein Schreibdatenfluss zu Register `0x11` nachgewiesen.
+die dortige Adressumrechnung wird nicht auf sie übertragen. In diesem
+damaligen Suchpass war trotz validierter Teilregeln noch keine belastbare
+WHO_AM_I-Lesekette oder Schreibvorbereitung für Register `0x11` nachgewiesen.
 Ein numerischer Treffer für `0x11` wäre weiterhin kein `CTRL2_G`-Schreibbeleg.
-**Aktiver `CTRL2_G`-Wert, tatsächlicher Messbereich und Gyrofaktor bleiben
-unbekannt.** Keine Firmwareausführung oder Emulation, Hardwareaktion oder
-Änderung am laufenden Treiber erfolgte.
+Dieser frühere Suchpass fand noch keinen Initialisierungskandidaten; der
+[anschließende Basis-plus-Versatz-Pass](JIELI_SENSOR_INITIALIZATION.md) löst
+diese Suchlücke teilweise. Aktive Gerätekonfiguration und USB-Gyrofaktor
+bleiben offen. Keine Firmwareausführung, Emulation oder Hardwareaktion.
 
-Der erneut dekodierte kurze Ausschnitt nach dem Kalibrierungslog lädt
-`r4 = 0x115`, setzt `r8 = 0` und speichert ein 16-Bit-Nullwort an der
-P-Code-Adresse `((r0 + 0x115) << 1)`. Danach folgen ein `RETURN` und die
-architekturspezifisch noch nicht vollständig eingeordnete Folgeinstruktion.
-`r0` und die Bedeutung des adressierten Objekts sind nicht aufgelöst. Das ist
-ein Speicherzugriff im generischen Firmware-Code, aber kein erkannter
-I²C-/SPI-/USB-Sensorschreibzugriff und kein `CTRL2_G`-Nachweis.
+**Kontrollflusskorrektur:** Der Kalibrierungslog endet mit einem unbedingten
+Sprung zum Logger. Der linear dahinter dekodierte Ausschnitt mit einem
+16-Bit-Nullwort-Store ist keine nachgewiesene Fortsetzung dieses Pfads.
+Seine P-Code-Registerraum-Offsets `0x4` und `0x8` bezeichnen `r1` und `r2`,
+nicht die zuvor genannten `r4` und `r8`. Objektbedeutung und genauer
+Adressausdruck bleiben ungeprüft; daraus folgt kein Sensorwrite.
 
 **Korrektur der ADC-/EEPROM-Zuordnung:** Der frühere Bericht identifizierte
 den Code bei `0x10730` (DV209) beziehungsweise `0x10738` (DV515/DV608)
@@ -989,12 +998,12 @@ Der tatsächliche Text `adc scan not over!!` liegt separat in den Appdaten
 (DV209 `0x23108`, DV515 `0x231e0`, DV608 `0x231de`). Ein eigener direkter
 Literalzeiger steht in allen drei Varianten bei Codeoffset `0x7426`; der
 folgende relative Transfer führt zum gemeinsamen Textlogger (`0x44d38` in
-DV209, `0x44e18` in DV515/DV608). Im begrenzten Ausschnitt folgen P-Code-
-Stores an Ausdrücken mit Basis `r0` sowie eine Verzweigung und ein Aufruf
-`0x2dfe`. Da Rückgabewerte, Call-Clobbers, Registerprovenienz und ABI nicht
-modelliert sind, bleiben diese Ausdrücke semantisch unbestimmt. Im dekodierten
-Fenster folgt kein `CALLIND`; kein Sensorbuszugriff oder IMU-Bezug ist
-nachgewiesen. Der isolierte statische Decode lief über 40 Instruktionen je
+DV209, `0x44e18` in DV515/DV608). Auch hier endet der Logpfad mit einem
+unbedingten Sprung. Linear folgende Stores und Schleifen gehören ohne
+weiteren Kontrollflussbeleg nicht zu seiner Fortsetzung. Rückgabewerte,
+Call-Clobbers, Registerprovenienz und ABI bleiben unbestimmt. Im dekodierten
+Fenster steht kein `CALLIND`; kein IMU-Bezug dieses ADC-Logs ist nachgewiesen.
+Der isolierte statische Decode lief über 40 Datensätze je
 Appversion ohne Decodefehler; alle drei Eingabedateien blieben hashgleich.
 
 Eine byte-ausgerichtete Suche über alle drei vollständigen Appdateien fand
@@ -1015,10 +1024,10 @@ Nexus-Prozess bilden noch keine durchgehende Datenflusskette:
 
 | Ausgangspunkt | Nachgewiesene Kante | Offene Verbindung |
 |---|---|---|
-| `Enter Sensor Cal Mode!` | Literal laden → gemeinsamer Textlogger; danach Nullwort-Store an `((r0 + 0x115) << 1)` | `r0`/Objektsemantik und Sensorkontext unbekannt; kein Sensorbus-Schreibzugriff |
-| `adc scan not over!!` | Literalzeiger bei `0x7426` → gemeinsamer Textlogger; danach begrenzte Speicher-/Schleifenausdrücke | ABI/Call-Clobbers ungeklärt; kein belegter IMU-Bezug oder `CALLIND` im dekodierten Fenster |
+| `Enter Sensor Cal Mode!` | Literal laden → unbedingter Sprung zum Textlogger | Lineare Nachbar-Stores sind keine belegte Fortsetzung; kein Sensorbus-Schreibzugriff |
+| `adc scan not over!!` | Literalzeiger bei `0x7426` → unbedingter Sprung zum Textlogger | Kein belegter IMU-Bezug; Nachbarcode separat betrachten |
 | `eeprom read/write over` | Zwei EEPROM-Logblöcke → Statusbyte und bedingter `CALLIND` über Ausdruck `((0xf140 + 0x298) << 2)` | Callback-Tabelleninhalt/-ursprung und Zielcode ungelöst; kein belegter Sensorbezug |
-| Sieben weitere Sensor-/Kalibrierungstexte | Keine direkten Zeiger in den geprüften Literal-/Splitformen | Indirekte Tabellen und weitere Adressierungsformen |
+| Weitere Sensor-/Kalibrierungstexte | Keine direkten Zeiger in den damaligen Literal-/Splitformen; neuer Basis-plus-Versatz-Pass findet Sensoranker | [Initialisierungskandidat und offene USB-Verbindung](JIELI_SENSOR_INITIALIZATION.md) |
 | 16 Maskeneinträge pro App | Je Eintrag kurzer Sprung zum lokalen AND-/Write-Block | Kein eingehender Treffer in der Datei für die geprüften kurzen und 22-Bit-Sprungformen; indirekte Erreichbarkeit ungeklärt |
 | Sprint-002 IMU-Capture | 64 Byte IN `0x82`; Gyro bei 17/19/21, Beschleunigung bei 23/25/27 | Kein Firmwarecodeort des Berichtsproduzenten identifiziert |
 | Nexus-E0-Sensorpfade | Zwei E0-Parser lesen 60 Byte; die sechs `KeyState`-Sensorfelder bleiben ungesetzt | Bei hypothetischem Abzug von vier Headerbytes werden die Capture-Sensorfenster nicht gelesen |
@@ -1040,11 +1049,10 @@ Speicher-/Schleifenausdrücke und einen direkten Hilfsaufruf, aber keinen
 nachgewiesenen Sensorbezug. Der `CALLIND` gehört zu den separat liegenden
 EEPROM-Lese-/Schreibblöcken, nicht zum ADC-Textanker. Unvollständige
 ISA-/Code-Datensegmentierung bedeutet, dass fehlende Treffer keine
-Unerreichbarkeit beweisen. Nächster Schritt ist, die Abbildung und den
-Ursprung des EEPROM-Callback-Slots beziehungsweise die konkrete
-USB-Sensor-Kalibrierungsdispatcher-Kette getrennt zu identifizieren. Eine
-Sensorinitialisierung oder Skala wird erst behauptet, wenn eine Kante bis zu
-einem nachgewiesenen Sensorbuszugriff führt.
+Unerreichbarkeit beweisen. Der neue Sensorpfad hat jetzt Vorrang vor dem
+ungeklärten EEPROM-Callback: Transportabschluss, letzte Registerkonfiguration
+und Sensorpuffer → Verarbeitung → USB-Report verfolgen. Der dokumentierte
+Initialisierungswert ist noch keine bestätigte Skala der USB-Rohwerte.
 
 Der private lokale REA-/Ghidra-Aufbau enthält den Pi32v2-Beschreiber nun
 wiederverwendbar für weitere statische Analysen. Die Herstellersoftware und

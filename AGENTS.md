@@ -107,8 +107,10 @@ masked-update helper, not a sensor-register path. A byte-aligned scan for
 the tested compact and 22-bit branch encodings found no incoming branch to
 these entries; indirect-table reachability remains open. The sole direct
 reference to `Enter Sensor Cal Mode!` still reaches the shared text logger.
-Its decoded follow-on stores a zero halfword at `((r0 + 0x115) << 1)`; the
-base object and meaning are unknown, and this is not a proven sensor-bus write.
+That log ends in an unconditional branch: the linearly following zero
+halfword store is not a proven continuation. P-code register-space offsets
+are not register numbers (offset 4 means r1, not r4). Do not infer execution
+order from linear decode, especially across branches, delay slots or tables.
 Correction: the code at `0x10730`/`0x10738` refers to `eeprom read over:`,
 not `adc scan not over`; its EEPROM read/write neighbors conditionally call
 an unresolved indirect target. The actual ADC log literal is at `0x7426` and
@@ -116,6 +118,16 @@ reaches the shared text logger, with no proven IMU link. Neither path proves
 sensor initialization. Tested direct-branch and exact-pointer scans found no
 incoming candidate to the calibration/EEPROM log blocks; other addressing
 forms and indirect-table reachability remain open.
+New base-plus-offset string references identify a much stronger sensor path;
+read docs/JIELI_SENSOR_INITIALIZATION.md before continuing. Three app images
+prepare a read argument 0x0f followed by comparison with 0x6a, then pass
+buffer byte 0x6c for register argument 0x11 and 0x68 for 0x10 to a shared
+write helper. This supports an ST initialization candidate: under the
+LSM6DS3TR-C assumption, +/-2000 dps and 0.07 dps per sensor count. It does
+not prove the active sensor, successful bus completion, the last effective
+configuration or unchanged USB scaling. Keep the QMI branch separate.
+Next trace the twelve-byte read and downstream processing, including the
+indirect table at DV209 offset 0x10ad4; never decode its data as fallthrough.
 The captured 64-byte IMU report has not been linked to a firmware producer or
 to Nexus's 60-byte parsers; those parser paths leave the six sensor fields
 unset. The decoder is incomplete; never infer code/data boundaries, sensor

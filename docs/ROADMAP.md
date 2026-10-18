@@ -239,31 +239,26 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    (Laden, AND mit Maske, Zurückschreiben). Das ist kein Sensorpfad.
    Ein Scan der getesteten kompakten und 22-Bit-Sprungformen fand keine
    eingehenden direkten Sprünge zu diesen Einträgen; indirekte Tabellen und
-   die Erreichbarkeit bleiben offen. Der Kalibrierungslog erreicht den
-   gemeinsamen Textlogger und wird gefolgt von einem Nullwort-Store an
-   `((r0 + 0x115) << 1)` mit ungeklärter Basis-/Objektsemantik. **Korrektur
-   vom 18. Oktober:** Der Code bei `0x10730`/`0x10738` referenziert
-   `eeprom read over:`, nicht den ADC-Text; die EEPROM-Lese-/Schreibblöcke
-   enthalten bedingte indirekte Aufrufe über einen ungeklärten Slot. Der echte
-   `adc scan not over!!`-Text wird bei `0x7426` direkt geladen und zum
-   Textlogger geführt; die folgenden Speicher-/Schleifenausdrücke haben
-   ungeklärte ABI-/Registerwirkung und keinen belegten IMU-Bezug. Geprüfte
-   direkte Sprung- und Zeigerformen fanden keine eingehenden Kandidaten zu den
-   Kalibrierungs- und EEPROM-Lese-Logblöcken. Nächster Schritt ist die
-   Zuordnung der Adressraum-/Codeabbildung und des EEPROM-Callback-Slot-Ursprungs,
-   ohne diesen Aufruf als Sensorfunktion zu etikettieren.
-   Die 64-Byte-Capture-IMU ist nicht mit einem Firmwareproduzenten oder den
-   60-Byte-Nexus-Parsern verbunden; deren untersuchte Pfade lassen die
-   Sensorfelder ungesetzt. WHO_AM_I, Sensorwahl, letzter CTRL2_G-Schreibwert
-   und IMU-Reportpfad bleiben unbelegt. Der Beschreiber sowie Code-/Daten-
-   segmentierung sind weiterhin unvollständig.
-   [Werkzeugstand und neue Primärreferenzen](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
-   Der MCU-Folgepass vom 18. Oktober belegt zusätzlich begrenzte kompakte
-   Zielfelder/Maskenoperanden und eine getrennte Suffix-Adressabbildung.
-   Darauf aufbauen, ohne eine vollständige ISA anzunehmen. Sensoranker
-   liegen außerhalb des Suffix; fehlende Speicher-/Vergleichs-/Argument-
-   semantik und eine belastbare Bytekodierungsreferenz bleiben die konkrete
-   Grenze. Keine weiteren beliebigen Zahlenfunde als Registerwriter ausgeben.
+   die Erreichbarkeit bleiben offen. Die Kalibrierungs-/ADC-Loganker enden
+   jeweils mit unbedingtem Sprung zum Logger; die vorher behaupteten
+   nachfolgenden Stores sind keine bewiesene Fortsetzung. Die getrennten
+   EEPROM-Callbacks bleiben ungelöst und sind kein Sensorbeleg.
+
+   **Neuer Stand:** Basis-plus-Versatz-Textadressen führen in DV209/515/608
+   zu Lesevorbereitung `0x0f`, Vergleich `0x6a` und Schreibvorbereitung
+   `0x11 ← 0x6c`, `0x10 ← 0x68`. Der ST-Kandidat entspricht ±2000 Grad/s
+   und 0,07 Grad/s je Sensorzählwert; kein bewiesener USB-Gyrofaktor.
+   15 Forschungstests und unabhängige Jieli-Listingkontrollen bestanden.
+   Als Nächstes den gefundenen Zwölf-Byte-Lesepfad, die sechs 16-Bit-Felder
+   und den indirekten Tabellensprung bei DV209 `0x10ad4` bis zur
+   USB-Reportkopie verfolgen. Mögliche Bias-/Skalierungsänderungen sowie
+   Busabschluss und letzte wirksame Registerkonfiguration prüfen.
+   Aktive Hardwarevariante und Firmwareversion sind dadurch nicht bestimmt.
+   [Sensorinitialisierung und konkrete Grenzen](JIELI_SENSOR_INITIALIZATION.md).
+   Der bekannte 64-Byte-Capture bleibt von den untersuchten 60-Byte-Nexus-
+   Parsern getrennt; deren Sensorfelder werden weiterhin nicht gesetzt.
+   Code-/Datengrenzen, Kontext-/Parallelsemantik und Speicheradressierung
+   des unvollständigen Decoders nicht pauschal als bestätigt behandeln.
    Globale Bank-/Modellauswahl und der DV-Inhalt hinter dem
    inneren Appbereich bleiben getrennt offen. MCU-Label
    AC695X und Flashversatz EOFFSET sind keine IMU-Kalibrierung. Key-/No-Key-/Kompatibilitäts- und

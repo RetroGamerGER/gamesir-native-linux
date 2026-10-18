@@ -5,50 +5,36 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**REA lokal wiederverwendbar eingerichtet:** REA 6.5.0, separates Node,
-Ghidra 12.1.4 und JDK21 liegen im Benutzerverzeichnis. Der Starthelfer lässt
-nur fünf statische Analysewege zu, mit privater Eingabekopie, Hashkontrolle,
-Netzwerk-/Geräteisolation und lokalen Ergebnisdateien. Gerätefreie Probe
-und alle fünf echten CLI-Wege an eigenen synthetischen JS-/PE-/ELF-/CLI-
-Dateien bestanden; keine Testdatei ausgeführt. .NET-Metadatenprüfung ist
-keine vollständige C#-Dekompilierung. Keine MCP-Konfiguration, Systempakete,
-Treiber-/Hardwareänderung oder Hersteller-Upload. Die Gyrokalibrierung
-bleibt pausiert. [Werkzeuge, Abnahme und Grenzen](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
-Der lokale Pi32v2-Beschreiber aus Quarkslab-Commit
-`e1bd0707874b77b759401555d24839ad43af1267` wurde an drei App-Versionen
-statisch gegengeprüft: 150 Literalstellen und 150 relative Transferstellen
-passen zu den bekannten Text-/Kontrollflussankern. Die Transferbasis mit
-`inst_next` erklärt den gemeinsamen Logging-Prolog; das frühere Modell lag
-vier Bytes davor. **Korrektur vom 18. Oktober:** Der ursprüngliche
-Quarkslab-Beschreiber behandelt `E040` als Nullerweiterung, aber die
-unabhängige offizielle Jieli-Pi32v2-ROM-Liste widerspricht dem: 44/44
-geprüfte Immediate-Werte passen zur Vorzeichenerweiterung; 14 negative Werte
-schließen Nullerweiterung aus. Eine isolierte private Decoder-Variante mit
-dieser Korrektur dekodiert in allen drei App-Versionen je 16 Masken-Einträge
-zum gleichen versionsinternen Helfer. Dessen P-Code liest einen Wert,
-verknüpft ihn mit dem Maskenregister per AND und schreibt ihn zurück. Das
-stützt einen allgemeinen maskierten Feld-Update-Helfer, aber keinen Bezug zu
-IMU oder Sensorregistern. Eine byte-ausgerichtete Suche nach eingehenden
-kurzen und 22-Bit-Sprüngen fand keinen Treffer zu diesen Einträgen;
-indirekte Tabellen bleiben offen. Der Kalibrierungs-Loganker führt in allen
-drei geprüften Images zum Textlogger; danach setzt der Ausschnitt ein
-16-Bit-Nullwort an `((r0 + 0x115) << 1)`, wobei Basisobjekt und Bedeutung
-unbekannt bleiben. **Korrektur vom 18. Oktober:** Der früher als ADC-Block
-bezeichnete Code bei `0x10730`/`0x10738` referenziert tatsächlich
-`eeprom read over:`; zusammen mit `eeprom write over` folgt dort ein bedingter
-`CALLIND` über einen ungeklärten globalen Slot. Der echte
-`adc scan not over!!`-Text besitzt einen direkten Literalverweis bei `0x7426`
-und erreicht den gemeinsamen Logger; folgende Stores bleiben wegen
-ungeklärter ABI/Register-Clobbers semantisch offen. Für keinen dieser Pfade
-ist eine IMU-Verbindung belegt. Eingehende direkte Sprung-/Zeigerkandidaten
-auf den Kalibrierungs- und EEPROM-Lese-Logblock wurden in den geprüften Formen
-nicht gefunden. Der bekannte 64-Byte-IMU-Capture
-ist nicht mit einem Firmware-Produzenten oder den 60-Byte-Nexus-Parsern
-verbunden; die untersuchten Parser lassen die sechs Sensorfelder ungesetzt.
-Der Beschreiber bleibt unvollständig; Code- und Datengrenzen sind nicht
-global bewiesen. Kein WHO_AM_I-Pfad, CTRL2_G-Wert oder Gyrofaktor gewonnen;
-keine Firmwareausführung, Hardware- oder Treiberänderung. Gyrokalibrierung
-pausiert.
+**Sensorinitialisierung offline eingegrenzt:** In den drei gehashten Apps
+DV209, DV515 und DV608 führen zusammengesetzte Textadressen zu einem
+ST-Sensorpfad: Registerargument `0x0f`, Vergleich mit `0x6a`, anschließend
+Datenbyte `0x6c` für Registerargument `0x11` und `0x68` für `0x10`.
+Die Argumentvorbereitung und Aufrufe sind statisch belegt; die vollständige
+Busübertragung und aktive Auswahl im konkreten Controller bleiben offen.
+Unter der LSM6DS3TR-C-Annahme ergibt sich ein Kandidat von ±2000 Grad/s
+und 0,07 Grad/s je **Sensor**zählwert. Das ist noch kein bestätigter
+Skalierungsfaktor der GameSir-USB-Daten. Ein Zwölf-Byte-Leseaufruf und ein
+Block zur Zusammensetzung von sechs 16-Bit-Feldern sind als nächste Anker
+gefunden; weitere Verarbeitung und Reportkopie fehlen noch.
+[Codeanker, Beweisgrenzen und nächster Schritt](JIELI_SENSOR_INITIALIZATION.md).
+
+15 lokale Forschungstests bestanden; die neuen Teilformen wurden zusätzlich
+gegen das gespeicherte offizielle Jieli-ROM-Listing geprüft. Der
+Drei-Versionen-Sandboxlauf erzeugte 436 begrenzte Decode-Datensätze ohne
+Decodefehler und mit unveränderten Dateien. Keine vollständige
+ISA-/Kontrollflussvalidierung oder Hardwareabnahme. Frühere Formulierungen
+über Stores „nach“ dem Kalibrierungs-/ADC-Log wurden korrigiert: Unbedingte
+Sprünge erlauben keinen solchen Fallthrough-Schluss. Der EEPROM-Callback
+bleibt unabhängig davon ungeklärt. Keine Netzwerk-/Hardwarezugriffe,
+Firmwareausführung, Installation, Treiberänderung oder Kalibrierungsfreigabe.
+
+**REA lokal wiederverwendbar eingerichtet:** Fünf begrenzte statische Wege
+mit privater Kopie, Hashkontrolle und Netzwerk-/Geräteisolation. REA 6.5.0
+hat keinen eigenen Jieli-Rohcode-Backend; der private Quarkslab-Pi32v2-
+Beschreiber wurde nur in Teilformen validiert, einschließlich der anhand
+des Jieli-Listings korrigierten E040-Vorzeichenerweiterung.
+[Werkzeugstand und historische Befunde](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
+Gyrokalibrierung bleibt pausiert; kein automatischer Profilwechsel.
 
 **Normaler nativer Dauerbetrieb nach den HID-Aufnahmen wieder bestätigt:**
 Der Maintainer führte Resume selbst aus. Die anschließende rein lesende
