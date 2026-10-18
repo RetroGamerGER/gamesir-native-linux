@@ -248,13 +248,21 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    zu Lesevorbereitung `0x0f`, Vergleich `0x6a` und Schreibvorbereitung
    `0x11 ← 0x6c`, `0x10 ← 0x68`. Der ST-Kandidat entspricht ±2000 Grad/s
    und 0,07 Grad/s je Sensorzählwert; kein bewiesener USB-Gyrofaktor.
-   15 Forschungstests und unabhängige Jieli-Listingkontrollen bestanden.
-   Als Nächstes den gefundenen Zwölf-Byte-Lesepfad, die sechs 16-Bit-Felder
-   und den indirekten Tabellensprung bei DV209 `0x10ad4` bis zur
-   USB-Reportkopie verfolgen. Mögliche Bias-/Skalierungsänderungen sowie
-   Busabschluss und letzte wirksame Registerkonfiguration prüfen.
+   Der Folgepass verfolgt den Zwölf-Byte-Lesepfad, die sechs 16-Bit-Felder
+   und den Tabellensprung `0x10ad4` bis zur vorbereiteten Reportkopie:
+   bedingter sechsfacher Offset-Abzug, ST-Reihenfolge `Gy,Gz,Gx,Ay,Az,Ax`,
+   keine zusätzliche Gyro-Verstärkung in diesem ST-Abschnitt. Die
+   Kopiergeometrie trifft die bekannten Positionen 17–27. Andere Sensor-/
+   Ausgabezweige skalieren oder negieren; nicht vermischen.
+   25 Forschungstests und 15 Protokollparsertests bestanden, außerdem
+   Versions- und unabhängige Jieli-Listingkontrollen.
+   Als Nächstes externen Kopierhelfer und Transport-/Endpointauswahl
+   unabhängig auflösen, indizierte Halfword-/Vorzeichenoperationen weiter
+   absichern sowie weitere Offsetschreiber, Busabschluss und letzte
+   wirksame Registerkonfiguration prüfen.
    Aktive Hardwarevariante und Firmwareversion sind dadurch nicht bestimmt.
    [Sensorinitialisierung und konkrete Grenzen](JIELI_SENSOR_INITIALIZATION.md).
+   [Datenfluss bis zum Berichtskonstruktor](JIELI_SENSOR_REPORT_DATAFLOW.md).
    Der bekannte 64-Byte-Capture bleibt von den untersuchten 60-Byte-Nexus-
    Parsern getrennt; deren Sensorfelder werden weiterhin nicht gesetzt.
    Code-/Datengrenzen, Kontext-/Parallelsemantik und Speicheradressierung

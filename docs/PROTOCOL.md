@@ -122,23 +122,37 @@ oder Varianten sind dadurch nicht identifiziert.
 **Offline-Registerreferenz:** Das gespeicherte Linux-ST-Modul belegt für
 LSM6DSO WHO_AM_I `0x0f`/`0x6c`, Gyroregister `0x11` mit Maske `0x0c` und
 vier Gewinne passend zu 8,75/17,5/35/70 mdps/LSB. Das sind Linux-Referenzwerte,
-keine GameSir-Registermessung oder USB-Befehle. Die Firmware-Suche bestätigt
-noch keinen Initialisierungspfad/aktiven Wert; der gesonderte ±125-Modus
+keine GameSir-Registermessung oder USB-Befehle. Zum damaligen Suchstand war
+kein Initialisierungspfad/aktiver Wert belegt; der gesonderte ±125-Modus
 ist in dieser Vierertabelle nicht abgedeckt. [Fundstellen und Grenzen](IMU-STATISTIK-UND-SENSORIDENTIFIKATION.rst).
 
-**Innere Firmware jetzt lesbar:** Positionsabhängige Dateidekodierung und
+**Vorheriger Strukturpass:** Positionsabhängige Dateidekodierung und
 288 Header-/48 Bereichs-/96 Datei-CRC bestätigen `app.bin`/`cfg_tool.bin`.
 Lesbare Sensorwahl-/Kalibriermeldungen sind neue statische Anker. Weder
 LSM6DS3TR-/QMI8658-Namen noch `gyro factory` belegen den real ausgewählten
-Sensor, einen aktiven CTRL2_G-Wert oder eine USB-Skalierung. MCU-Befehle
-und ausgeführter Datenfluss bleiben offen. [Format- und CRC-Nachweise](GAMESIR_NEXUS_RESEARCH.md).
+Sensor, einen aktiven CTRL2_G-Wert oder eine USB-Skalierung. Damals blieben
+MCU-Befehle und Datenfluss offen. [Format- und CRC-Nachweise](GAMESIR_NEXUS_RESEARCH.md).
 
-Der weitere MCU-Pass erhärtet nur drei Teilformen und einen gemeinsamen
+Der damalige MCU-Pass erhärtete nur drei Teilformen und einen gemeinsamen
 Textausgabe-Zielkandidaten; keine vollständige ISA oder Sensor-Schreibroutine.
 Die lokale Linux-Referenz bestätigt WHO_AM_I `0x0f`→`0x6a` für TR-C und
-`0x6c` für DSO, bei gleichen Referenzgewinnen. Kein tatsächlicher GameSir-
-ID-Lese-/Vergleichspfad oder aktiver CTRL2_G-Wert gewonnen. Byte-/Namens-
-treffer sind keine Chipidentifikation.
+`0x6c` für DSO, bei gleichen Referenzgewinnen. Dabei wurde noch kein
+GameSir-ID-Lese-/Vergleichspfad oder aktiver CTRL2_G-Wert gewonnen.
+Byte-/Namenstreffer sind keine Chipidentifikation.
+
+**Aktueller statischer Firmwarebefund:** Die spätere
+[Initialisierungsanalyse](JIELI_SENSOR_INITIALIZATION.md) identifiziert in
+drei Apps einen ST-Kandidaten mit Vergleich `0x6a` und Schreibvorbereitung
+`0x11 ← 0x6c`, `0x10 ← 0x68`. Der
+[Datenflusspass](JIELI_SENSOR_REPORT_DATAFLOW.md) stützt Achsenumordnung,
+bedingten Offset-Abzug und die Zuordnung zu den Positionen 17–27 eines
+`10/3c/e0`-Berichtskonstruktors. Im untersuchten ST-Ausgabeabschnitt keine
+zusätzliche Gyro-Verstärkung. Kopierhelfer, Teile der Decodersemantik,
+vollständiger USB-Transport und tatsächlich aktive Konfiguration bleiben
+offen. Unter der ST-Annahme ist `0,07 Grad/s je Sensorzählwert` weiterhin
+ein Kandidat, kein bestätigter USB-Faktor. Die unten genannten Unbekannten
+beziehen sich auf den realen Controller; der Parser und seine Rohachsen
+werden durch diese statischen Erkenntnisse nicht umgestellt.
 
 **Unbekannt:** aktiver Gyro-Messbereich und Gyro-LSB/(°/s) am USB-Report,
 vollständige Achsen-/Vorzeichenabbildung, bestätigte Offsets, Geräteuhr und

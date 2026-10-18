@@ -21,6 +21,13 @@ Vergleich `0x6a` sowie vorbereiteten Transfers `0x11 ← 0x6c` und
 für ±2000 Grad/s und 0,07 Grad/s je Sensorzählwert. Aktive Hardware,
 Busabschluss und unveränderte Übernahme in USB sind noch nicht bewiesen.
 [Fundstellen, Decoderkorrekturen, Tests und Grenzen](JIELI_SENSOR_INITIALIZATION.md).
+Die [Zwölf-Byte-Fortsetzung](JIELI_SENSOR_REPORT_DATAFLOW.md) stützt nun
+eine Kette aus ST-Empfang, Achsenumordnung, bedingtem Offset-Abzug und
+`10/3c/e0`-Berichtskonstruktor. Seine Kopiergeometrie trifft die bekannten
+Sensorpositionen 17–27. Keine zusätzliche Gyro-Verstärkung im untersuchten
+ST-Ausgabeabschnitt; andere Zweige skalieren oder negieren. Externer
+Kopierhelfer, Teile der Decodersemantik und vollständiger USB-Transport
+bleiben offen, ebenso aktive Konfiguration und physische Achsen.
 Die folgenden älteren Suchpässe dokumentieren ihre damalige Erkenntnisgrenze.
 
 **Innerer Strukturfolgepass vom 16. Oktober:** `app.bin` und `cfg_tool.bin`
@@ -58,10 +65,12 @@ Kalibrierungsframing bleiben offen. Die folgenden Grenzen der
 ersten Namens-/UI-Prüfung werden dadurch präzisiert, keine globale
 Abwesenheit anderer Sensorpfade behauptet.
 
-**Nächste Priorität:** Sensorwahl und letzte wirksame Initialisierung in
-der bereits extrahierten Controller-`app.bin`, anschließend die mögliche
-Nachskalierung bis zum USB-Bericht. Ein aktiver Messbereich allein ist
-noch kein Faktor für unsere USB-Rohwerte. Bestehende Werkzeuge werden
+**Nächste Priorität:** Die verbleibenden Lücken zwischen Sensorpfad und
+USB-Ausgabe schließen: externe Kopie, indizierte Speicher-/Vorzeichenformen,
+Transport-/Endpointauswahl und weitere Schreiber der Offsets sowie
+Sensorregister. Sensorwahl und letzte wirksame Initialisierung bleiben
+unbestätigt. Ein aktiver Messbereich allein ist noch kein Faktor für
+unsere USB-Rohwerte. Bestehende Werkzeuge werden
 weiterverwendet. Nach gesonderter Freigabe ist REA jetzt als getrenntes,
 wiederverwendbares lokales Analysewerkzeug eingerichtet; der unten
 beschriebene Jieli-Backend-Abgleich bleibt davon getrennt.

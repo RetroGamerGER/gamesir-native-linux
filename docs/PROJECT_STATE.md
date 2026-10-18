@@ -5,6 +5,27 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Zwölf Sensorbytes bis zum Berichtskonstruktor verfolgt:** Der ST-Pfad
+ordnet die Registerachsen um und zieht bedingt sechs gespeicherte Offsets ab.
+Die Folge `Gy,Gz,Gx,Ay,Az,Ax` passt über die vorbereitete Kopiergeometrie
+exakt zu den bekannten Reportpositionen 17–27. In diesem ST-Ausgabeabschnitt
+keine zusätzliche Gyro-Verstärkung; andere Sensor-/Ausgabezweige verwenden
+`976/1000`, Negationen oder Halbierung. Diese Zweige bleiben getrennt.
+Der externe Kopierhelfer und der letzte Transport bis zum USB-Endpunkt
+sind noch nicht unabhängig aufgelöst. Auch indizierte Speicherzugriffe
+haben eine dokumentierte Decodergrenze. Kein bestätigter USB-Gyrofaktor
+oder physischer Achsennachweis; keine Änderung am Parser oder Treiber.
+[Datenfluss, Codeanker und Grenzen](JIELI_SENSOR_REPORT_DATAFLOW.md).
+
+25 lokale Forschungstests (zehn neu) und 15 vorhandene Protokollparsertests
+bestanden. Zehn Codeblöcke sind in drei Apps eindeutig bytegleich; vier
+Halfword-Loads, sechs Stores, 23 Byte-Loads und elf Adressadditionen wurden
+gegen das gespeicherte Jieli-Listing geprüft. Der abschließende begrenzte
+Sandboxlauf liefert 501 Decode-Datensätze ohne Fehler. Explorative
+Decodeabbrüche sind privat dokumentiert und kein positiver Codebeleg.
+Firmwaredateien unverändert; keine Ausführung, Netzwerk-/Hardwarezugriffe
+oder Treiberänderungen. Gyrokalibrierung bleibt pausiert.
+
 **Sensorinitialisierung offline eingegrenzt:** In den drei gehashten Apps
 DV209, DV515 und DV608 führen zusammengesetzte Textadressen zu einem
 ST-Sensorpfad: Registerargument `0x0f`, Vergleich mit `0x6a`, anschließend
@@ -13,13 +34,13 @@ Die Argumentvorbereitung und Aufrufe sind statisch belegt; die vollständige
 Busübertragung und aktive Auswahl im konkreten Controller bleiben offen.
 Unter der LSM6DS3TR-C-Annahme ergibt sich ein Kandidat von ±2000 Grad/s
 und 0,07 Grad/s je **Sensor**zählwert. Das ist noch kein bestätigter
-Skalierungsfaktor der GameSir-USB-Daten. Ein Zwölf-Byte-Leseaufruf und ein
-Block zur Zusammensetzung von sechs 16-Bit-Feldern sind als nächste Anker
-gefunden; weitere Verarbeitung und Reportkopie fehlen noch.
+Skalierungsfaktor der GameSir-USB-Daten. Der damals gefundene Zwölf-Byte-
+Leseaufruf und die sechs zusammengesetzten Felder sind Ausgangspunkte
+der oben dokumentierten Fortsetzung.
 [Codeanker, Beweisgrenzen und nächster Schritt](JIELI_SENSOR_INITIALIZATION.md).
 
-15 lokale Forschungstests bestanden; die neuen Teilformen wurden zusätzlich
-gegen das gespeicherte offizielle Jieli-ROM-Listing geprüft. Der
+Im Initialisierungspass bestanden 15 lokale Forschungstests; die Teilformen
+wurden zusätzlich gegen das gespeicherte offizielle Jieli-ROM-Listing geprüft. Der
 Drei-Versionen-Sandboxlauf erzeugte 436 begrenzte Decode-Datensätze ohne
 Decodefehler und mit unveränderten Dateien. Keine vollständige
 ISA-/Kontrollflussvalidierung oder Hardwareabnahme. Frühere Formulierungen

@@ -126,12 +126,20 @@ write helper. This supports an ST initialization candidate: under the
 LSM6DS3TR-C assumption, +/-2000 dps and 0.07 dps per sensor count. It does
 not prove the active sensor, successful bus completion, the last effective
 configuration or unchanged USB scaling. Keep the QMI branch separate.
-Next trace the twelve-byte read and downstream processing, including the
-indirect table at DV209 offset 0x10ad4; never decode its data as fallthrough.
-The captured 64-byte IMU report has not been linked to a firmware producer or
-to Nexus's 60-byte parsers; those parser paths leave the six sensor fields
-unset. The decoder is incomplete; never infer code/data boundaries, sensor
-writes, or `CTRL2_G` from numeric matches alone. No target execution/emulation,
+The twelve-byte follow-up now links the ST selector, byte assembly, conditional
+six-offset subtraction and a report-construction candidate. Read
+docs/JIELI_SENSOR_REPORT_DATAFLOW.md. Under the documented addressing/copy
+assumptions, the 10/3c/e0 report carries Gy,Gz,Gx,Ay,Az,Ax after optional bias
+subtraction at offsets 17..27, without extra ST gyro gain in that section.
+Other output/sensor branches negate, divide or use 976/1000; keep them separate.
+The external copy helper, indexed-halfword semantics, final transport/endpoint
+and last effective sensor configuration remain unresolved. This is not a
+confirmed USB scale or physical axis calibration. Never treat the 0x10ad4
+table as code, trust the known-broken extended-byte/indexed/sextra P-code, or
+count parallel members twice. Nexus's separate 60-byte parser paths still
+leave their sensor fields unset. The decoder is incomplete; never infer
+code/data boundaries, sensor writes, or `CTRL2_G` from numeric matches alone.
+No target execution/emulation,
 hardware access, or driver edit. Calibration remains paused and the driver
 unchanged.
 

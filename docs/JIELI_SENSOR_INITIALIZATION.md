@@ -105,11 +105,15 @@ für die weitere Sensor-/Reportanalyse, noch kein Beleg für unveränderte
 Weitergabe an den bekannten 64-Byte-USB-Report.
 
 Bei `0x10ad4` folgt ein indirekter Tabellensprung. Die Tabelle und ihre
-Ziele müssen als solche rekonstruiert werden; die unmittelbar folgenden
-Bytes dürfen nicht pauschal als fortlaufender Programmcode gelten.
-Bias, Achsenreihenfolge, Vorzeichen, weitere Verarbeitung und Reportkopie
-bleiben offen. Die frühere Annahme, Nexus selbst müsse den Skalierungsfaktor
-enthalten, ist für diesen Firmwarepfad nicht erforderlich.
+vier Ziele wurden im [anschließenden Datenflusspass](JIELI_SENSOR_REPORT_DATAFLOW.md)
+rekonstruiert; die unmittelbar folgenden Tabellenbytes sind kein Code.
+Dieser Folgepass belegt bedingten Offset-Abzug und stützt die ST-Reihenfolge
+`Gy,Gz,Gx,Ay,Az,Ax` bis zur vorbereiteten Reportkopie, ohne zusätzlichen
+Gyro-Gain in diesem ST-Ausgabeabschnitt. Externer Kopierhelfer,
+indizierte Halfword-Semantik und letzter USB-Transport bleiben begrenzende
+offene Stellen. Andere Ausgabezweige verändern Maßstab und Vorzeichen.
+Die frühere Annahme, Nexus selbst müsse den Skalierungsfaktor enthalten,
+ist für diesen Firmwarepfad nicht erforderlich.
 
 ## Decoderkorrekturen und unabhängige Kontrollen
 
@@ -151,10 +155,11 @@ vollständige Disassemblies werden nicht veröffentlicht.
 
 ## Nächster begrenzter Offline-Schritt
 
-Die Empfangspuffer und sechs zusammengesetzten Felder bis zum
-64-Byte-Report verfolgen, dabei zuerst den Tabellensprung und weitere
-Verarbeitung klären. Parallel die Transportzustandsmaschine vervollständigen
-und spätere Registeränderungen prüfen. Erst diese Kette kann den Kandidaten
+Nach dem [Datenflusspass](JIELI_SENSOR_REPORT_DATAFLOW.md) den externen
+Kopierhelfer und die Transport-/Endpointauswahl unabhängig auflösen,
+indizierte Speicher- und Vorzeichenoperationen gegen weitere lokale
+Referenzen prüfen sowie weitere Offsetschreiber und spätere Registeränderungen
+untersuchen. Erst diese Kette kann den Kandidaten
 `0,07 Grad/s je Sensorzählwert` mit unseren USB-Rohwerten verbinden.
 Ein tatsächlicher Hardware-/Winkeltest und jede Änderung der produktiven
 Skalierung benötigen weiterhin eine eigene Freigabe.
