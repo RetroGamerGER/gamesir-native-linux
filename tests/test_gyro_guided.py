@@ -620,8 +620,8 @@ class EndToEndFakeRun(unittest.TestCase):
     def tearDown(self):
         self.temporary.cleanup()
 
-    def execute(self, answers, *, cue_failure=None, restored=True, corrupt_capture=False, axis_only=False):
-        output = self.home / "repetition-2"
+    def execute(self, answers, *, cue_failure=None, restored=True, corrupt_capture=False, axis_only=False, direction=None):
+        output = self.home / ("repetition-2" if direction is None else direction)
         clock, links = self.clock, self.links
         fake_process = SimpleNamespace(wait=lambda **kwargs: 0)
         popen_calls = []
@@ -679,7 +679,8 @@ class EndToEndFakeRun(unittest.TestCase):
                 stack.enter_context(patch.object(guided, "reference_metadata", side_effect=AssertionError("no angle metadata")))
                 stack.enter_context(patch.object(guided, "analyze_reference", side_effect=AssertionError("no angle analysis")))
             result = guided.run_measurement(self.home / "manifest.json", 2,
-                                           None if axis_only else "external paper square", output, axis_only=axis_only)
+                                           None if axis_only else "external paper square", output,
+                                           axis_only=axis_only, direction=direction)
         return result, output, json.loads((output / "report.json").read_text()), popen_calls
 
     def test_axis_run_is_one_go_no_angle_profile_or_reference_file(self):
@@ -698,6 +699,24 @@ class EndToEndFakeRun(unittest.TestCase):
         self.assertFalse(analysis["physical_axis_mapping_verified"])
         self.assertNotIn("90°", (output / "cues.jsonl").read_text())
         self.assertEqual(self.clock.now, 1_153_000_000_000)
+
+    def test_each_direction_uses_fixed_worker_one_go_and_excluded_return(self):
+        for direction, labels in guided.AXIS_DIRECTIONS.items():
+            with self.subTest(direction=direction):
+                code, output, report, calls = self.execute([True, True], axis_only=True, direction=direction)
+                self.assertEqual(code, 0)
+                self.assertEqual(report['direction'], direction)
+                self.assertEqual(len(calls), 1)
+                self.assertEqual(self.links[-1].sent, ['GO', 'STOP'])
+                cues = [json.loads(x) for x in (output/'cues.jsonl').read_text().splitlines()]
+                motion = next(x for x in cues if x['event']=='motion')
+                putdown = next(x for x in cues if x['event']=='put_down_buffer')
+                self.assertIn(labels[0], motion['instruction'])
+                self.assertIn('MESSBEWEGUNG VORBEI', putdown['instruction'])
+                analysis = json.loads((output/'analysis.json').read_text())
+                self.assertEqual(analysis['human_confirmed_motion'], labels[1])
+                self.assertEqual(analysis['windows']['motion']['cue_bounds_ns'][1], putdown['monotonic_ns'])
+                self.assertFalse((output/'reference.json').exists())
 
     def test_axis_missed_motion_keeps_capture_without_analysis(self):
         code, output, report, _ = self.execute([True, False], axis_only=True)
@@ -809,6 +828,187 @@ class EndToEndFakeRun(unittest.TestCase):
         self.assertIn("constructed KDE cue failure", note["failure"])
         self.assertTrue(note["cleanup"]["restored"])
         self.assertTrue(any("constructed finalization failure" in error for error in note["finalization_errors"]))
+
+
+def six_direction_fixture():
+    result = {}
+    for index, direction in enumerate(guided.AXIS_DIRECTIONS):
+        samples = observations(1_000_000_000)
+        channel = (1, 1, 0, 0, 2, 2)[index]
+        sign = 1 if index % 2 == 0 else -1
+        for row in samples:
+            elapsed = (row['timestamp_ns']-1_000_000_000)/1e9
+            row['gyro_raw'] = [0, 0, 0]
+            if 40 <= elapsed < 55:
+                row['gyro_raw'][channel] = sign*200
+            if 60 <= elapsed < 75:
+                row['gyro_raw'] = [-32000, 32000, -32000]  # Deliberately large return, excluded.
+        result[direction] = guided.analyze_axis_observation(
+            samples, cue_fixture(1_000_000_000), 1, confirmed=True, direction=direction)
+    return result
+
+
+class SixDirectionAnalysis(unittest.TestCase):
+    def test_plan_is_device_free_and_keeps_bounded_transactions(self):
+        with patch.object(guided, 'snapshot_iio', side_effect=AssertionError('no metadata')), \
+                patch.object(guided.subprocess, 'Popen', side_effect=AssertionError('no process')), \
+                contextlib.redirect_stdout(io.StringIO()) as out:
+            self.assertEqual(guided.main(['plan-axes']), 0)
+        plan = json.loads(out.getvalue())
+        self.assertEqual([d['direction'] for d in plan['directions']], list(guided.AXIS_DIRECTIONS))
+        self.assertEqual(plan['minimum_total_seconds'], 918)
+        self.assertFalse(plan['hardware_authorized'])
+        for direction in guided.AXIS_DIRECTIONS:
+            phases = guided.direction_phases(direction)
+            self.assertEqual([p[:3] for p in phases], [p[:3] for p in guided.PHASES])
+            self.assertNotIn('90°', ' '.join(p[3] for p in phases))
+
+    def test_pairs_identify_review_candidates_but_not_calibration(self):
+        analyses = six_direction_fixture()
+        result = guided.summarize_axes(analyses)
+        self.assertEqual(result['mapping_candidates'], {
+            'yaw': {'raw_channel':'G1', 'positive_direction':'yaw-left'},
+            'pitch': {'raw_channel':'G0', 'positive_direction':'pitch-forward'},
+            'roll': {'raw_channel':'G2', 'positive_direction':'roll-left'}})
+        for flag in ['physical_axis_mapping_verified', 'accelerometer_axis_mapping_verified',
+                     'calibration_verified', 'scale_selected', 'sdl_runtime_enable']:
+            self.assertFalse(result[flag])
+        for direction, a in analyses.items():
+            # Huge opposite return samples never affect the selected motion window.
+            self.assertLessEqual(max(c['motion_mean_abs_delta_raw'] for c in a['gyro_channels']), 200)
+            self.assertEqual(len(a['accel_rest_channels']), 3)
+
+    def test_ambiguous_noisy_drifting_nonopposite_or_duplicate_channels_not_assigned(self):
+        for failure in ['no_motion','mixed','noise','drift','same_sign','same_channel']:
+            with self.subTest(failure=failure):
+                a=six_direction_fixture()
+                c=a['yaw-left']['gyro_channels']
+                if failure=='no_motion':
+                    c[1]['motion_mean_delta_raw']=0
+                elif failure=='mixed':
+                    c[0]['motion_mean_delta_raw']=c[1]['motion_mean_delta_raw']
+                elif failure=='noise':
+                    c[1]['rest_before_std_raw']=500
+                elif failure=='drift':
+                    c[1]['rest_after_mean_raw']=500
+                elif failure=='same_sign':
+                    a['yaw-right']['gyro_channels'][1]['motion_mean_delta_raw']*= -1
+                elif failure=='same_channel':
+                    for direction in ['pitch-forward','pitch-backward']:
+                        c=a[direction]['gyro_channels']
+                        c[1]['motion_mean_delta_raw']=c[0]['motion_mean_delta_raw']
+                        c[0]['motion_mean_delta_raw']=0
+                r=guided.summarize_axes(a)
+                self.assertEqual(r['mapping_candidates'],{})
+                self.assertTrue(r['review_reasons'])
+
+    def test_incomplete_other_instance_direction_or_nonfinite_rejected(self):
+        for failure in ['missing','instance','label','nan']:
+            with self.subTest(failure=failure):
+                a=six_direction_fixture()
+                if failure=='missing':a.pop('roll-right')
+                elif failure=='instance':a['roll-right']['stream']['instance_id']='replacement'
+                elif failure=='label':a['roll-right']['direction']='yaw-left'
+                else:a['roll-right']['gyro_channels'][0]['motion_mean_delta_raw']=float('nan')
+                with self.assertRaises(ValueError):guided.summarize_axes(a)
+
+
+class SixDirectionSeries(unittest.TestCase):
+    def run_fake(self, failure=None):
+        temporary=tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        home=Path(temporary.name)
+        expected={'directory':'fake-iio-metadata','device_node':'fake-not-a-device','generation':1}
+        current=copy.deepcopy(expected)
+        sources={'constructed':'hash'}
+        manifests=[]; calls=[]; analyses=six_direction_fixture()
+        output=home/'series'
+
+        def segment(manifest, repetition, description, dest, *, axis_only, direction):
+            calls.append(direction)
+            manifests.append(json.loads(manifest.read_text()))
+            self.assertTrue(axis_only)
+            self.assertEqual(repetition,1)
+            self.assertIsNone(description)
+            if len(calls)==3 and failure=='cancel':return 1
+            dest.mkdir(mode=0o700)
+            report={'passed':True,'direction':direction,'motion_confirmed':True,
+                    'analysis_created':True,'cleanup':{'restored':True,'cleanup_errors':[]}}
+            if len(calls)==3:
+                if failure=='unconfirmed':report['motion_confirmed']=False
+                elif failure=='rollback':report['cleanup']['restored']=False
+                elif failure=='cleanup_error':report['cleanup']['cleanup_errors']=['fake restoration error']
+                elif failure=='instance':current['generation']=2
+                elif failure=='source':sources['constructed']='changed'
+                elif failure=='exception':raise RuntimeError('constructed segment failure')
+                elif failure=='interrupt':raise KeyboardInterrupt()
+            guided.write_json(dest/'report.json',report)
+            guided.write_json(dest/'analysis.json',analyses[direction])
+            return 0
+
+        with contextlib.ExitStack() as stack:
+            stack.enter_context(patch.object(guided.os,'geteuid',return_value=1000))
+            stack.enter_context(patch.object(guided,'home_directory',return_value=home))
+            stack.enter_context(patch.object(guided,'source_hashes',side_effect=lambda:copy.deepcopy(sources)))
+            stack.enter_context(patch.object(guided,'snapshot_iio',side_effect=lambda *args:copy.deepcopy(current)))
+            stack.enter_context(patch.object(guided,'run_measurement',side_effect=segment))
+            stack.enter_context(patch.object(guided.subprocess,'Popen',side_effect=AssertionError('no real process')))
+            stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
+            base=home/'base.json'
+            guided.prepare_manifest(expected['directory'],expected['device_node'],base)
+            if failure=='initial_instance':current['generation']=2
+            code=guided.run_axes(base,output)
+        return code,output,json.loads((output/'series-report.json').read_text()),calls,manifests
+
+    def test_six_ordered_segments_fresh_manifests_and_private_checksums(self):
+        code,output,report,calls,manifests=self.run_fake()
+        self.assertEqual(code,0)
+        self.assertTrue(report['passed'])
+        self.assertEqual(calls,list(guided.AXIS_DIRECTIONS))
+        self.assertEqual(report['completed_directions'],calls)
+        self.assertEqual(len(manifests),6)
+        self.assertTrue(all(m==manifests[0] for m in manifests))
+        self.assertFalse(report['automatic_retry'])
+        self.assertTrue(report['local_go_each_direction'])
+        self.assertEqual(stat.S_IMODE(output.stat().st_mode),0o700)
+        for line in (output/'SERIES-SHA256SUMS').read_text().splitlines():
+            digest,name=line.split('  ',1)
+            self.assertEqual(hashlib.sha256((output/name).read_bytes()).hexdigest(),digest)
+            self.assertEqual(stat.S_IMODE((output/name).stat().st_mode),0o600)
+
+    def test_any_failed_or_unconfirmed_segment_stops_without_retry_or_next(self):
+        for failure in ['cancel','unconfirmed','rollback','cleanup_error','instance','source','exception','interrupt']:
+            with self.subTest(failure=failure):
+                code,output,report,calls,_=self.run_fake(failure)
+                self.assertNotEqual(code,0)
+                self.assertFalse(report['passed'])
+                self.assertEqual(len(calls),3)
+                self.assertNotIn('review',report)
+                self.assertTrue((output/'01-yaw-left'/'report.json').exists())
+                self.assertFalse((output/'04-pitch-backward').exists())
+
+    def test_changed_initial_instance_opens_no_segment(self):
+        code,_,report,calls,_=self.run_fake('initial_instance')
+        self.assertNotEqual(code,0)
+        self.assertEqual(calls,[])
+        self.assertIn('changed',report['failure'])
+
+    def test_finalization_failure_retains_original_failure_and_stops(self):
+        original=guided.write_json
+        def write(path,value):
+            if path.name=='series-report.json':
+                # Save first to let the fixture inspect the original failure;
+                # then simulate fsync/finalization failing.
+                original(path,value)
+                raise OSError('constructed finalization fault')
+            original(path,value)
+        with patch.object(guided,'write_json',side_effect=write):
+            code,output,_,calls,_=self.run_fake('exception')
+        note=json.loads((output/'series-finalization-error.json').read_text())
+        self.assertNotEqual(code,0)
+        self.assertEqual(len(calls),3)
+        self.assertIn('constructed segment failure',note['failure'])
+        self.assertIn('constructed finalization fault',note['finalization_error'])
 
 
 if __name__ == "__main__":

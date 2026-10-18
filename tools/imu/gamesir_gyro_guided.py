@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
-"""One separately approved, KDE-guided left-turn observation.
+"""Separately approved, KDE-guided IMU observations with one Go per movement.
 
 Preparing a manifest reads metadata only. Running is deliberately unprivileged:
 KDE questions and cues stay in the desktop session, while a fixed, separately
@@ -11,6 +11,7 @@ import datetime as dt
 import hashlib
 import html
 import json
+import math
 import os
 from pathlib import Path
 import pwd
@@ -52,6 +53,45 @@ AXIS_PHASES = tuple((offset, phase, seconds, {
     "hold_end": "In der erreichten Lage weiter stillhalten. Noch nicht ablegen oder zurückdrehen.",
 }.get(phase, instruction)) for offset, phase, seconds, instruction in PHASES)
 
+# Order and labels are physical instructions, never a raw/SDL axis mapping.
+AXIS_DIRECTIONS = {
+    "yaw-left": ("waagerecht nach LINKS drehen", "horizontal left turn"),
+    "yaw-right": ("waagerecht nach RECHTS drehen", "horizontal right turn"),
+    "pitch-forward": ("die USB-/VORDERKANTE nach UNTEN neigen", "front edge down"),
+    "pitch-backward": ("die USB-/VORDERKANTE nach OBEN neigen", "front edge up"),
+    "roll-left": ("die LINKE GRIFFSEITE absenken", "left grip down"),
+    "roll-right": ("die RECHTE GRIFFSEITE absenken", "right grip down"),
+}
+
+
+def direction_phases(direction):
+    if direction not in AXIS_DIRECTIONS:
+        raise ValueError("fixed qualitative direction required")
+    movement = AXIS_DIRECTIONS[direction][0]
+    changes = {
+        "motion": f"JETZT EINMAL langsam {movement}. Nur so weit wie bequem; kein bestimmter Winkel. Du hast 15 Sekunden. Danach halten, noch nicht zurückbewegen.",
+        "hold_end": "In der erreichten Lage noch 5 Sekunden halten. Noch nicht zurückbewegen.",
+        "put_down_buffer": "MESSBEWEGUNG VORBEI: Jetzt bequem zurückbewegen und FLACH ablegen. Du hast 15 Sekunden. Diese Rückbewegung wird nicht zur Achsenzuordnung ausgewertet.",
+        "rest_after": "SCHLUSSRUHE: 30 Sekunden flach auf dem Tisch liegen lassen. Nicht mehr bewegen.",
+    }
+    return tuple((o, p, s, changes.get(p, text)) for o, p, s, text in AXIS_PHASES)
+
+
+def axes_plan():
+    return {"kind": "qualitative_six_direction_plan", "hardware_authorized": False,
+            "directions": [{"direction": d, "instruction": labels[0],
+                            "phases": [dict(offset_seconds=o, phase=p, seconds=s, instruction=i)
+                                       for o, p, s, i in direction_phases(d)]}
+                           for d, labels in AXIS_DIRECTIONS.items()],
+            "local_go_before_each_direction": True, "prepare_seconds_each": 30,
+            "capture_seconds_each": 108, "reset_minimum_seconds_each": 15,
+            "minimum_total_seconds": 6 * (30 + 108 + 15),
+            "fresh_manifest_each_direction": True, "same_instance_required": True,
+            "stop_on_error_or_unconfirmed_motion": True, "automatic_retry": False,
+            "return_motion_excluded": True, "known_angle_required": False,
+            "calibration_verified": False, "runtime_mapping_changed": False,
+            "accelerometer_axis_mapping_verified": False}
+
 
 def axis_plan():
     """Information only: no metadata reads, GUI, timers or device access."""
@@ -66,10 +106,11 @@ def axis_plan():
             "host_buffer_changes_require_separate_approval": True}
 
 
-def analyze_axis_observation(samples, cue_rows, repetition, *, confirmed):
+def analyze_axis_observation(samples, cue_rows, repetition, *, confirmed, direction="yaw-left"):
     """Raw-channel evidence only; never manufacture a known angle or axis map."""
-    if confirmed is not True or type(repetition) is not int or repetition not in (1, 2, 3):
-        raise ValueError("one human-confirmed left turn required")
+    if (confirmed is not True or type(repetition) is not int or repetition not in (1, 2, 3)
+            or direction not in AXIS_DIRECTIONS):
+        raise ValueError("one human-confirmed fixed direction required")
     stream = validate_samples(samples, MAX_GAP_NS)
     names = [p[1] for p in AXIS_PHASES]
     rows = [row for row in cue_rows if row.get("event") in names]
@@ -104,9 +145,19 @@ def analyze_axis_observation(samples, cue_rows, repetition, *, confirmed):
                          "motion_mean_delta_raw": statistics.mean(delta),
                          "motion_mean_abs_delta_raw": statistics.mean(abs(v) for v in delta),
                          "motion_min_delta_raw": min(delta), "motion_max_delta_raw": max(delta)})
-    return {"schema_version": 1, "kind": "qualitative_yaw_left_observation",
-            "repetition": repetition, "human_confirmed_motion": "horizontal left turn",
+    acceleration = []
+    for axis in range(3):
+        entry = {"raw_channel": f"A{axis}"}
+        for name in ("rest_before", "rest_after"):
+            values = [s["accel_raw"][axis] for s in selected[name]]
+            entry[name + "_mean_raw"] = statistics.mean(values)
+            entry[name + "_std_raw"] = statistics.pstdev(values)
+        acceleration.append(entry)
+    return {"schema_version": 1, "kind": "qualitative_yaw_left_observation" if direction == "yaw-left" else "qualitative_axis_observation",
+            "direction": direction, "repetition": repetition,
+            "human_confirmed_motion": AXIS_DIRECTIONS[direction][1],
             "stream": stream, "windows": windows, "gyro_channels": channels,
+            "accel_rest_channels": acceleration, "accelerometer_axis_mapping_verified": False,
             "baseline_is_experimental": True, "physical_axis_mapping_verified": False,
             "calibration_verified": False, "scale_selected": False, "sdl_runtime_enable": False,
             "limits": "Raw response/sign evidence only; compare repetitions and human motion report. No angle, rate scale or full axis map inferred."}
@@ -521,11 +572,13 @@ def verify_capture(path, start_ns):
     return {"sha256_verified": True, "files": entries, "worker_report": report}
 
 
-def run_measurement(manifest_path, repetition, description, output, *, axis_only=False):
+def run_measurement(manifest_path, repetition, description, output, *, axis_only=False, direction=None):
     if os.geteuid() == 0:
         raise ValueError("KDE frontend must run as the desktop user, without sudo")
     if type(repetition) is not int or repetition not in (1, 2, 3):
         raise ValueError("exactly one repetition 1, 2 or 3 required")
+    if direction is not None and (not axis_only or direction not in AXIS_DIRECTIONS):
+        raise ValueError("fixed qualitative direction required")
     if not axis_only and (not isinstance(description, str) or not description.strip() or len(description) > 1_000 or "\0" in description):
         raise ValueError("describe the external 0°/90° reference in 1..1000 characters")
     manifest_path, manifest = load_manifest(manifest_path)
@@ -545,6 +598,9 @@ def run_measurement(manifest_path, repetition, description, output, *, axis_only
               "started_utc": dt.datetime.now(dt.timezone.utc).isoformat()}
     if axis_only:
         report.update(kind="guided_axis_left", motion_confirmed=False, scale_selected=False)
+        if direction is not None:
+            report.update(kind="guided_axis_direction", direction=direction,
+                          return_motion_policy="only after put_down_buffer cue; excluded from motion window")
     extra_files = ["worker.stderr.log"]
     failure = None
     stderr_handle = bundle.open("worker.stderr.log")
@@ -566,6 +622,12 @@ def run_measurement(manifest_path, repetition, description, output, *, axis_only
                         "Tastenfläche oben, USB-Kante anfangs von dir weg. Nur so weit wie bequem; KEIN bestimmter Winkel.\n"
                         "Erst bei JETZT drehen, dann dort halten. Zurückdrehen erst nach bestätigtem Ende.\n\n"
                         "Nach Go bleiben 30 Sekunden Vorbereitung. Keine automatische Wiederholung. Jetzt bereit?")
+        if direction is not None:
+            prompt = (f"Achsentest: EINMAL langsam {AXIS_DIRECTIONS[direction][0]}.\n"
+                      "Start: Tastenfläche oben, USB-Kante von dir weg. Kein bestimmter Winkel.\n"
+                      "Erst bei JETZT bewegen. Danach halten bis MESSBEWEGUNG VORBEI.\n"
+                      "Erst dann zurückbewegen und bequem FLACH ablegen.\n\n"
+                      "Nach deinem Go hast du 30 Sekunden Vorbereitung. Ohne Go keine Aufnahme. Jetzt bereit?")
         if not question(prompt,
                         worker=worker, cues=cues):
             raise ValueError("local Go declined; buffer not opened or enabled")
@@ -575,7 +637,8 @@ def run_measurement(manifest_path, repetition, description, output, *, axis_only
         worker.send("GO")
         started = worker.await_event("capture_started", timeout=10, cues=cues)
         report["capture_start_monotonic_ns"] = started["monotonic_ns"]
-        run_phases(worker, cues, started["monotonic_ns"], AXIS_PHASES if axis_only else PHASES)
+        phases = direction_phases(direction) if direction is not None else AXIS_PHASES if axis_only else PHASES
+        run_phases(worker, cues, started["monotonic_ns"], phases)
         finished = worker.await_event("finished", timeout=12, cues=cues)
         report["worker_result"] = finished
         if finished["passed"] is not True or finished["restored"] is not True:
@@ -594,13 +657,19 @@ def run_measurement(manifest_path, repetition, description, output, *, axis_only
                              "Waren die Ansagen sichtbar, und erfolgte keine Rückdrehung vor Aufnahmeende?\n"
                              "Der Winkel ist egal. Bei verpasster Ansage, unbequemer oder anderer Bewegung bitte nicht bestätigen.\n"
                              "Rohdaten bleiben auch dann erhalten; es startet kein neuer Versuch.")
+        if direction is not None:
+            confirmation = (f"Hast du nach JETZT genau einmal ausgeführt: {AXIS_DIRECTIONS[direction][0]}?\n"
+                            "Danach bis MESSBEWEGUNG VORBEI gehalten und erst dann zurückbewegt/flach abgelegt?\n"
+                            "Waren die Ansagen sichtbar? Kein bestimmter Winkel nötig.\n\n"
+                            "Bei anderer Bewegung oder verpasster Ansage NICHT bestätigen. Die Serie hält dann an.")
         confirmed = question(confirmation,
                              yes="Bestätigen", no="Nicht bestätigen", cues=cues)
         report["motion_confirmed" if axis_only else "reference_confirmed"] = confirmed
         if confirmed:
             samples = load_samples(output / "capture/observations.jsonl")
             if axis_only:
-                analysis = analyze_axis_observation(samples, cue_rows, repetition, confirmed=True)
+                analysis = analyze_axis_observation(samples, cue_rows, repetition, confirmed=True,
+                                                    direction=direction or "yaw-left")
             else:
                 metadata = reference_metadata(samples, cue_rows, repetition, description, confirmed=True)
                 analysis = analyze_reference(samples, metadata, MAX_GAP_NS)
@@ -672,10 +741,139 @@ def run_measurement(manifest_path, repetition, description, output, *, axis_only
     return 0 if report["passed"] else 1
 
 
+def summarize_axes(analyses):
+    """Conservative, review-only channel/sign candidates from six observations."""
+    if list(analyses) != list(AXIS_DIRECTIONS):
+        raise ValueError("six ordered confirmed directions required")
+    instances, directions = set(), {}
+    for direction, analysis in analyses.items():
+        if (analysis.get("direction") != direction or
+                analysis.get("human_confirmed_motion") != AXIS_DIRECTIONS[direction][1]):
+            raise ValueError("direction evidence mismatch")
+        instances.add(analysis["stream"]["instance_id"])
+        channels = analysis["gyro_channels"]
+        if [c["raw_channel"] for c in channels] != ["G0", "G1", "G2"]:
+            raise ValueError("three ordered raw gyro channels required")
+        for c in channels:
+            values = [c[k] for k in ("motion_mean_delta_raw", "rest_before_std_raw",
+                                     "rest_before_mean_raw", "rest_after_mean_raw")]
+            if any(type(v) not in (int, float) or not math.isfinite(v) for v in values):
+                raise ValueError("finite raw statistics required")
+        ranked = sorted(channels, key=lambda c: abs(c["motion_mean_delta_raw"]), reverse=True)
+        best, next_best = ranked[:2]
+        amplitude = abs(best["motion_mean_delta_raw"])
+        noise = max(c["rest_before_std_raw"] for c in channels)
+        drift = max(abs(c["rest_after_mean_raw"] - c["rest_before_mean_raw"]) for c in channels)
+        clear = amplitude > max(1, 5 * noise, 3 * abs(next_best["motion_mean_delta_raw"]), 2 * drift)
+        directions[direction] = {"candidate_channel": best["raw_channel"] if clear else None,
+                                 "candidate_sign": (1 if best["motion_mean_delta_raw"] > 0 else -1) if clear else None,
+                                 "motion_mean_delta_raw": best["motion_mean_delta_raw"],
+                                 "ambiguous": not clear}
+    if len(instances) != 1:
+        raise ValueError("one unchanged device instance required for series")
+    candidates, reasons = {}, []
+    for first, second in (("yaw-left", "yaw-right"), ("pitch-forward", "pitch-backward"),
+                          ("roll-left", "roll-right")):
+        a, b = directions[first], directions[second]
+        if (a["ambiguous"] or b["ambiguous"] or
+                a["candidate_channel"] != b["candidate_channel"] or
+                a["candidate_sign"] != -b["candidate_sign"]):
+            reasons.append(f"{first}/{second}: ambiguous, different channels or nonopposing signs")
+        else:
+            candidates[first.split('-')[0]] = {"raw_channel": a["candidate_channel"],
+                                               "positive_direction": first if a["candidate_sign"] == 1 else second}
+    if len({c["raw_channel"] for c in candidates.values()}) != len(candidates):
+        reasons.append("different physical movements selected the same raw channel")
+    return {"kind": "qualitative_axes_review", "direction_results": directions,
+            "mapping_candidates": candidates if len(candidates) == 3 and not reasons else {},
+            "review_reasons": reasons,
+            "heuristic": "absolute signed mean delta > max(1 raw count, 5x largest pre-rest SD, 3x next channel mean, 2x largest pre/post baseline drift); paired channels equal, signs opposite, three channels unique",
+            "physical_axis_mapping_verified": False, "accelerometer_axis_mapping_verified": False,
+            "calibration_verified": False, "scale_selected": False, "sdl_runtime_enable": False,
+            "limits": "One qualitative pair per movement only; heuristics are review aids, not calibration or automatic runtime mapping. Acceleration needs separate stationary gravity orientations."}
+
+
+def run_axes(manifest_path, output):
+    """Six bounded old-worker transactions; every segment has its own local Go."""
+    if os.geteuid() == 0:
+        raise ValueError("KDE frontend must run as the desktop user, without sudo")
+    manifest_path, manifest = load_manifest(manifest_path)
+    expected = manifest["snapshot"]
+    output = private_target(output)
+    output.mkdir(mode=0o700)
+    report = {"kind": "guided_six_directions", "passed": False, "completed_directions": [],
+              "automatic_retry": False, "local_go_each_direction": True,
+              "calibration_verified": False, "sdl_runtime_enable": False}
+    analyses = {}
+    code = 1
+    try:
+        for index, direction in enumerate(AXIS_DIRECTIONS, 1):
+            # Only re-observe this approved instance, never adopt a replacement.
+            current = snapshot_iio(expected["directory"], expected["device_node"])
+            if current != expected:
+                raise ValueError("device/settings changed between directions; series stopped")
+            step_manifest = output / f"{index:02d}-{direction}-manifest.json"
+            fresh = prepare_manifest(expected["directory"], expected["device_node"], step_manifest)
+            if fresh != manifest:
+                raise ValueError("instance or helper changed during new manifest; series stopped")
+            destination = output / f"{index:02d}-{direction}"
+            result = run_measurement(step_manifest, 1, None, destination,
+                                     axis_only=True, direction=direction)
+            if result != 0:
+                raise ValueError(f"{direction}: segment failed or Go cancelled; no following direction")
+            segment = json.loads(read_regular(destination / "report.json", MAX_JSON_BYTES))
+            if (segment.get("passed") is not True or segment.get("motion_confirmed") is not True or
+                    segment.get("direction") != direction or segment.get("analysis_created") is not True or
+                    segment.get("cleanup", {}).get("restored") is not True or
+                    segment.get("cleanup", {}).get("cleanup_errors")):
+                raise ValueError(f"{direction}: motion/rollback unconfirmed; no following direction")
+            if snapshot_iio(expected["directory"], expected["device_node"]) != expected:
+                raise ValueError(f"{direction}: independent post-state mismatch; series stopped")
+            analyses[direction] = json.loads(read_regular(destination / "analysis.json", MAX_JSON_BYTES))
+            report["completed_directions"].append(direction)
+        report["review"] = summarize_axes(analyses)
+        report["passed"] = True
+        code = 0
+    except BaseException as error:
+        report["failure"] = f"{type(error).__name__}: {error}"
+        code = 130 if isinstance(error, (KeyboardInterrupt, SystemExit)) else 1
+    finally:
+        # A failed finalization must not conceal a completed segment's originals.
+        try:
+            write_json(output / "series-report.json", report)
+            files = sorted(p for p in output.rglob('*') if p.is_file() and not p.is_symlink())
+            digest_path = output / "SERIES-SHA256SUMS"
+            fd = os.open(digest_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                for path in files:
+                    with path.open('rb') as source:
+                        digest = hashlib.file_digest(source, 'sha256').hexdigest()
+                    f.write(f"{digest}  {path.relative_to(output).as_posix()}\n")
+                f.flush()
+                os.fsync(f.fileno())
+        except BaseException as error:
+            report['passed'] = False
+            code = code or 1
+            note = f"series evidence finalization: {type(error).__name__}: {error}"
+            report.setdefault('failure', note)
+            report['finalization_error'] = note
+            try:
+                write_json(output / 'series-finalization-error.json', report)
+            except BaseException as secondary:
+                report['secondary_finalization_error'] = str(secondary)
+    print(json.dumps({"passed": report["passed"], "completed_directions": report["completed_directions"],
+                      "failure": report.get("failure"), "output": str(output)}, ensure_ascii=False), flush=True)
+    return code
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("plan-axis-left", help="print qualitative left-turn plan; no GUI or hardware access")
+    commands.add_parser("plan-axes", help="six-direction plan only; no GUI or hardware access")
+    series = commands.add_parser("run-axes", help="separately approved series; one local Go per direction")
+    series.add_argument("--manifest", required=True, type=Path)
+    series.add_argument("--output", required=True, type=Path)
     prepare = commands.add_parser("prepare", help="metadata-only manifest; no device open or buffer writes")
     prepare.add_argument("--iio-dir", required=True, type=Path)
     prepare.add_argument("--device-node", required=True, type=Path)
@@ -691,6 +889,11 @@ def main(argv=None):
     axis.add_argument("--output", required=True, type=Path)
     args = parser.parse_args(argv)
     try:
+        if args.command == "plan-axes":
+            print(json.dumps(axes_plan(), ensure_ascii=False, indent=2))
+            return 0
+        if args.command == "run-axes":
+            return run_axes(args.manifest, args.output)
         if args.command == "plan-axis-left":
             print(json.dumps(axis_plan(), ensure_ascii=False, indent=2))
             return 0

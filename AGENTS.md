@@ -56,6 +56,15 @@ because the user rotated back. The explicitly requested replacement run has
 predominantly positive is a candidate, not a complete axis map or scale.
 Further runs require a new request and local Go; do not reuse an old manifest
 or module hash.
+The six-direction extension in docs/GYRO_AXIS_TEST.md is offline-prepared,
+not hardware-validated. Its run-axes sequence reuses the unchanged 108-second
+worker once per direction, with fresh manifests, the same approved instance,
+local Go and restoration checks each time. Cancel, unconfirmed motion or any
+failure stops the series; never skip/retry or adopt a replacement. In this
+new mode only, return motion is permitted after MESSBEWEGUNG VORBEI and
+excluded from the analysis window. Preserve the legacy run-axis-left cues.
+Channel/sign heuristics are review candidates only. Separate gravity poses
+are still needed for accelerometer axis mapping; no scale or SDL activation.
 No universal trigger-game support or general stability guarantee.
 
 The optional `tools/offline` HID companion is file-only research, not runtime

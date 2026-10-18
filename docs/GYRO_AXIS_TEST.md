@@ -15,6 +15,9 @@ ausgewählt noch zur Winkelberechnung verwendet.
 
 ## Umfang und Vorbereitung
 
+Dieser Abschnitt beschreibt den bestehenden einzelnen Linksdrehungstest.
+Der zusätzlich vorbereitete Sechs-Richtungs-Ablauf steht am Ende dieser Datei.
+
 Geplant sind höchstens drei getrennte Wiederholungen. Jeder Aufruf führt nur
 eine aus, wartet auf ein eigenes lokales Go und endet anschließend. Es gibt
 keinen automatischen Folgelauf. Für den ersten Versuch zunächst ausschließlich
@@ -251,3 +254,119 @@ Dieser offene Codeverdacht ist inzwischen durch eine statische Gegenprüfung
 des vorhandenen IIO-Cores und einen reproduzierenden Regressionstest geklärt.
 Die [Offline-Korrektur und Updatevorbereitung](IIO_SCAN_SELECTION_FIX.md)
 ersetzen keine reale Pufferabnahme und erteilen keine Installationsfreigabe.
+
+## Sechs Richtungen in einem geführten Durchgang: offline vorbereitet
+
+Erweiterung vom 18. Oktober 2026, nach dem bestätigten Linksdrehungseinzeltest:
+Ein Start des Frontends kann jetzt durch alle drei Drehachsen in beiden
+Richtungen führen. **Noch nicht an Hardware ausgeführt.** Kernel, Manager,
+installiertes Paket und der privilegierte 108-Sekunden-Aufnahmeworker sind
+unverändert. Keine neue Treiberinstallation nötig. Die geänderten Helferhashes
+erfordern ein neues Manifest; alte Aufträge werden nicht wiederverwendet.
+
+Startlage für jeden Abschnitt: Tastenfläche oben, USB-/Vorderkante vom Nutzer
+weg, linke/rechte Griffseite aus seiner Sicht. Kein genauer Winkel erforderlich.
+Nur langsam und bequem bewegen; keine Achsen gleichzeitig absichtlich mischen.
+
+| Abschnitt | Genau eine Messbewegung |
+| --- | --- |
+| 1 | Waagerecht nach links drehen |
+| 2 | Waagerecht nach rechts drehen |
+| 3 | USB-/Vorderkante nach unten neigen |
+| 4 | USB-/Vorderkante nach oben neigen |
+| 5 | Linke Griffseite absenken |
+| 6 | Rechte Griffseite absenken |
+
+**Jeder Abschnitt wartet auf ein eigenes lokales Go.** Danach unverändert
+30 Sekunden Vorbereitung, 20 Sekunden Vorruhe, 15 Sekunden Aufnehmen,
+5 Sekunden Haltepuffer, 15 Sekunden Zeitfenster für die angekündigte Bewegung
+und 5 Sekunden Halten. Die Bewegung darf kürzer sein als ihr Zeitfenster.
+
+**Unterschied zum bisherigen Einzel-Linkstest:** Bei Sekunde 60 folgt
+„MESSBEWEGUNG VORBEI: Jetzt bequem zurückbewegen und FLACH ablegen“.
+Diese 15 Sekunden werden ausdrücklich nicht zur Achsenzuordnung verwendet.
+Der Controller muss nicht gekippt abgelegt oder bis zum Dateiende in einer
+unbequemen Lage gehalten werden. Alle Rohdaten einschließlich Rückbewegung
+bleiben zur Nachprüfung gespeichert; das Auswertungsfenster endet am realen
+Zeitstempel dieser Ansage. Es folgt 30 Sekunden Schlussruhe und die bestehende
+Rückstellungsprüfung. Beim alten `run-axis-left` bleibt dagegen die Rückdrehung
+erst nach bestätigtem Aufnahmeende erlaubt; dessen Hinweise wurden nicht geändert.
+
+Nach mindestens 15 Sekunden Abschluss-/Ruhepause wird die tatsächlich
+ausgeführte Bewegung bestätigt. Erst nach erfolgreicher Aufnahme, geprüften
+Original-Prüfsummen, bestätigter Bewegung und unabhängiger Wiederherstellung
+derselben Instanz/Einstellungen darf das nächste Go-Fenster erscheinen.
+Schließen/Abbrechen, falsche oder verpasste Bewegung, Quellenänderung,
+Gerätewechsel, Zeit-/Zählerfehler oder fehlgeschlagene Rückstellung stoppen
+die gesamte Serie. Kein Überspringen, Neuversuch oder Übernehmen eines neuen
+Dongles. Der ursprüngliche Fehler bleibt auch bei einem Folgefehler beim
+Speichern erhalten. Eine spätere Fortsetzung benötigt einen neuen Auftrag.
+
+Geplante Mindestdauer: **15 Minuten 18 Sekunden**, zuzüglich Passwort-/Go-
+Dialogen, Bestätigung und frei wählbaren Pausen zwischen den Abschnitten.
+Pro Abschnitt öffnet der unveränderte Worker den exakten IIO-Knoten einmal
+lesend und aktiviert ausschließlich den begrenzten Hostpuffer mit anschließendem
+Rückweg. Er erhält nur die vorhandenen GO/PING/STOP-Kommandos. Keine neuen
+USB-Befehle, Sensorregisterzugriffe, Motorimpulse oder Treiberwechsel.
+Eine Passwortabfrage kann je nach sudo-Zwischenspeicherung erneut erscheinen;
+die Berechtigungen werden dafür nicht dauerhaft erweitert.
+
+Vorbereitete Befehle aus dem Projektwurzelordner:
+
+```sh
+# Dieser reine Planaufruf ist gerätefrei:
+python3 -B tools/imu/gamesir_gyro_guided.py plan-axes
+
+# Erst nach frischer lesender Vorprüfung: tatsächliche Instanz und einen
+# neuen privaten Elternordner verwenden, keine alten Manifeste übernehmen.
+python3 -B tools/imu/gamesir_gyro_guided.py prepare \
+  --iio-dir /sys/bus/iio/devices/iio:deviceN --device-node /dev/iio:deviceN \
+  --output NEW_PRIVATE_DIR/manifest.json
+
+# Erst nach Freigabe dieser gesamten begrenzten Serie inklusive Passwortfenster:
+python3 -B tools/imu/gamesir_gyro_guided.py run-axes \
+  --manifest NEW_PRIVATE_DIR/manifest.json --output NEW_PRIVATE_DIR/six-directions
+```
+
+Der einzige privilegierte Aufruf pro Abschnitt bleibt intern:
+
+```sh
+SUDO_ASKPASS=/usr/bin/ksshaskpass sudo -A -p 'Password: ' \
+  /usr/bin/python -B tools/imu/gamesir_gyro_worker.py \
+  --manifest SEGMENT_MANIFEST --output SEGMENT_CAPTURE
+```
+
+### Auswertung und Offline-Prüfung
+
+Die Segmentordner enthalten getrennte Scans, Zeitmarken, Transaktionen,
+Bestätigungen, Auswertungen und SHA256-Dateien. Der Serienbericht enthält
+Abschlussstand, Fehler oder einen gemeinsamen Kandidatenvergleich; ein
+zusätzlicher SHA256-Satz umfasst die gespeicherten Serienbelege. Keine
+Rohdaten ins öffentliche Repository aufnehmen.
+
+Für G0/G1/G2 werden Bewegung minus Vorruhe, Streuung und Nachruhe verglichen.
+Eine bewusst konservative, ausdrücklich **heuristische** Kandidatenprüfung
+verlangt eine mittlere Reaktion über einem Rohwert, fünffachem größtem
+Ruherauschen, dreifacher nächstgrößter Kanalreaktion und doppelter größter
+Vor-/Nachruheänderung. Beide Gegenrichtungen müssen denselben Kanal mit
+entgegengesetztem Vorzeichen bevorzugen; die drei Achsen dürfen nicht auf
+denselben Kanal fallen. Andernfalls bleibt die gemeinsame Zuordnung leer
+und die Mehrdeutigkeit wird dokumentiert. Auch passende Kandidaten setzen
+niemals `physical_axis_mapping_verified` oder eine SDL-/Kalibrierungsfreigabe.
+
+Alle sechs Rohkanäle bleiben erhalten. Für A0/A1/A2 werden zusätzlich die
+Ruhewerte berichtet; eine vollständige Beschleunigungs-Achsenzuordnung
+benötigt **separate stationäre Schwerkraftlagen**. Drehungen bestimmen nicht
+automatisch den Gyrofaktor. Bekannte-Winkel-Kalibrierung bleibt pausiert.
+
+Gerätefreie Regressionen prüfen alle sechs Frontendrichtungen mit dem echten
+Frontend und simuliertem Worker, deutliche Rückbewegung außerhalb des Fensters,
+Vorzeichenpaare, fehlende/mehrdeutige Reaktion, Rauschen/Biasänderung,
+doppelte Kanalzuordnung, Instanz-/Quellenwechsel, Abbruch, unbestätigte Bewegung,
+Rückstellungsfehler, Fehlererhalt und private Prüfsummen. Die bisherigen
+Linksdrehungs-/90°- und Worker-Tests bleiben enthalten. Diese simulierten
+Prüfungen ersetzen keine bestätigte Ausführung der neuen Hinweise am Controller.
+
+Die gezielte Offline-Abnahme umfasst 247 bestandene Tests: IMU-Strom 58,
+Referenzauswertung 43, Pufferaufbau 33, unveränderter Worker 41, geführter
+Helfer 62, öffentliche Dokumentation 7 und Lizenzierung 3. Kein neuer Live-Lauf.

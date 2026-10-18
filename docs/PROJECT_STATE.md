@@ -5,6 +5,17 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Sechs Richtungen offline vorbereitet:** Der bestehende KDE-Helfer bietet
+jetzt `plan-axes` und `run-axes` für links/rechts drehen, Vorderkante ab/auf
+neigen und linken/rechten Griff absenken. Ein Durchgang umfasst sechs getrennte
+108-Sekunden-Aufnahmen, jeweils mit lokalem Go, 30 Sekunden Vorbereitung und
+Rückstellungsprüfung. Rückbewegung erst nach der eigenen Ansage, außerhalb
+des Auswertungsfensters. Fehler oder unbestätigte Bewegung stoppen die Serie.
+Keine Hardwareausführung dieses neuen Modus und keine Änderung am installierten
+Treiber. [Ablauf und Freigabegrenzen](GYRO_AXIS_TEST.md#sechs-richtungen-in-einem-geführten-durchgang-offline-vorbereitet).
+Die Zuordnungsheuristik liefert nur zu prüfende Gyro-Kandidaten; Beschleunigung
+benötigt eigene Schwerkraft-Ruhelagen. Winkelkalibrierung bleibt pausiert.
+
 **IIO-Kanalauswahl korrigiert und begrenzt hardwarebestätigt:** Der erste echte Pufferaufbau scheiterte
 an der vollständigen Maske im pro Kanal aufgerufenen `validate_scan_mask`.
 Ein neuer Regressionstest reproduziert den Fehler und den Rückweg. Die
