@@ -89,10 +89,16 @@ driver. Its five static lanes use private copied inputs and a verified
 network/device-isolated sandbox; never replace them with an unrestricted
 REA/MCP invocation or execute/emulate a target. Keep raw results private.
 Read the local-tool section of docs/GAMESIR_NEXUS_RESEARCH.md before use.
-REA 6.5.0 has no Jieli raw-code backend. The new external Pi32v2 candidate
-requires independent opcode/load-map validation; do not force ARM or infer
-CTRL2_G from numerical matches. Earlier mask correlations do not establish
-instruction semantics. Calibration remains paused and the driver unchanged.
+REA 6.5.0 has no built-in Jieli raw-code backend. A private local Ghidra
+Pi32v2 processor description from pinned Quarkslab commit
+`e1bd0707874b77b759401555d24839ad43af1267` is available for static analysis.
+Its tested literal and 22-bit transfer forms matched known anchors in three
+private app images; the tested transfers use `inst_next`, four bytes beyond
+the former empirical target. `E041` is decoded as zero-extending `movz`, so
+do not reuse the old signed-mask interpretation. The language remains
+incomplete: never infer code/data boundaries, sensor writes, or `CTRL2_G`
+from numeric matches alone. No target execution/emulation, hardware access,
+or driver edit. Calibration remains paused and the driver unchanged.
 
 ## Public snapshot
 

@@ -852,28 +852,87 @@ passenden **Prüfkandidaten**, [Quarkslabs ghidra-jieli](https://github.com/quar
 Das offizielle [BR23-SDK-Makefile von Jieli](https://github.com/Jieli-Tech/fw-AC63_BT_SDK/blob/master/apps/hid/board/br23/Makefile)
 verwendet `pi32v2`, `-mcpu=r3` und entsprechende Toolchainnamen. Das verbindet
 BR23 mit einer echten Compilerarchitektur; es identifiziert noch nicht den
-MCU oder ausgeführten Code unseres G7 Pro. Die Erweiterung wurde weder
-installiert noch auf Herstellerdateien ausgeführt.
+MCU oder ausgeführten Code unseres G7 Pro. Die Erweiterung wurde für die
+private lokale Ghidra-Installation aus dem festgehaltenen Quellcommit
+`e1bd0707874b77b759401555d24839ad43af1267` gebaut. Sie ist nicht Teil des
+öffentlichen Projekts. Herstellerdateien wurden nicht ausgeführt oder
+emuliert.
 
-Die SLEIGH-Referenz ist unvollständig und muss gegen bekannte Bytes geprüft
-werden. Ihr [Immediate-Decoder](https://github.com/quarkslab/ghidra-jieli/blob/master/data/languages/pi32v2_ins_loadimm.sinc)
-passt zur langen Literalform und liefert eine überprüfbare positive
-8-Bit-Konstantenform. Gleichzeitig beschreibt er die `E040`-Klasse als
-Nullerweiterung, während unser früherer Maskenleser eine numerisch passende
-Vorzeichenerweiterung verwendet. Die frühere Formulierung, diese Zahlenfolge
-bestätige bereits die Instruktionssemantik, war deshalb zu stark: Bestätigt
-bleiben die Byte-/Zahlenkorrelationen, nicht die allgemeine MOV-Wirkung.
-Auch die PC-Basis der [relativen Transfers](https://github.com/quarkslab/ghidra-jieli/blob/master/data/languages/pi32v2_ins_progflow.sinc)
-ist vor einer Übernahme unabhängig abzugleichen. Weder externe SLEIGH-
-Semantik noch eigene empirische Felder werden allein zur Wahrheit erklärt.
-Das neue kurze signed6-Feld bleibt ein getrenntes Teilmuster.
+Zum Zeitpunkt der ersten Sichtung war die SLEIGH-Referenz unvollständig und
+noch nicht an den Firmwareankern geprüft. Ihre [Immediate-Regeln im fixierten
+Quellcommit](https://github.com/quarkslab/ghidra-jieli/blob/e1bd0707874b77b759401555d24839ad43af1267/data/languages/pi32v2_ins_loadimm.sinc)
+beschreiben unter anderem die lange Literalform und `E040` als Nullerweiterung.
+Die [relativen Transferregeln desselben Commits](https://github.com/quarkslab/ghidra-jieli/blob/e1bd0707874b77b759401555d24839ad43af1267/data/languages/pi32v2_ins_progflow.sinc)
+verwenden `inst_next`; die nachfolgende Offline-Validierung prüft genau diese
+Teilformen. Sie bestätigt weder eine vollständige ISA noch die getrennte
+kurze signed6-Hypothese.
 
-Nächster Firmware-Schritt: Decoderkandidat und bekannte Literal-/Transfer-
-Kontrollen gegeneinander prüfen, Codebereiche und Load-/Run-Abbildung
-explizit erhalten, dann Sensor-ID-Lesezugriff und letzte wirksame
-`CTRL2_G`-Initialisierung verfolgen. **Weiterhin kein aktiver Registerwert,
-kein bestätigter Sensor-Messbereich und kein Gyrofaktor.** Keine Firmware-
-ausführung, Emulation, Hardwareaktion oder Upload aus dieser Einrichtung.
+### Offline-Validierung des Pi32v2-Decoders, 18. Oktober
+
+Der Apache-2.0-lizenzierte Quarkslab-SLEIGH-Beschreiber wurde aus dem
+festgehaltenen [Quellcommit](https://github.com/quarkslab/ghidra-jieli/tree/e1bd0707874b77b759401555d24839ad43af1267)
+mit Ghidra 12.1.4 kompiliert und
+statisch auf drei lokal vorhandene Controller-App-Versionen angewandt. Die
+Kompilierung war erfolgreich, meldete aber zwei Delay-Slot-Warnungen,
+50 als NOP markierte Konstruktoren und eine vereinfachte Erweiterungs-/
+Trunkierungsoperation. Der Beschreiber ist damit brauchbar für die geprüften
+Konstrukte, jedoch kein vollständiger oder unabhängig bestätigter Decoder.
+
+Die bekannten Literal-/Stringanker bestanden die gezielten Kontrollen:
+je 50 verschiedene Stellen pro App wurden als 6-Byte-`mov` mit 32-Bit-
+Immediate dekodiert; jedes Immediate stimmt mit der separat gefundenen
+Stringadresse überein. Das validiert diese konkrete Literalform, nicht die
+Vollständigkeit aller Adressierungsarten.
+
+Die 50 relativen Transferstellen pro App wurden als 4-Byte-`call` oder
+`goto` dekodiert. Für diese Formen ergibt die im SLEIGH definierte Basis
+`inst_next + 2 * displacement` in allen drei Apps dieselbe gemeinsame
+Logging-Funktion. Das frühere empirische Modell ohne `inst_next` zielte
+jeweils vier Bytes vor deren Prolog auf deren vorhergehendes Rückkehrende.
+Die PC-Basis ist für diese konkreten 22-Bit-Transfers damit durch die
+gemeinsamen Literal-/Kontrollflussanker gestützt; sie ist keine allgemeine
+Bestätigung aller Pi32v2-Sprungformen.
+
+Ein früherer `E041`-Maskenanker dekodiert als `movz` mit Immediate
+`0xffdf`, also als Nullerweiterungs-Konstruktor. Die zuvor angenommene
+Vorzeichenerweiterung, die aus einer passenden Komplementzahl abgeleitet
+wurde, ist dadurch nicht belegt und darf nicht mehr als Instruktionswirkung
+verwendet werden. Die Zahlenkorrelation allein identifiziert auch keine
+Maskenoperation.
+
+Der kurze kompakte Block dekodiert an den geprüften Stellen als wechselnde
+kurze `add`-/`mov`- und `rts`-Instruktionen. Ein Scan fand in den drei
+Versionen keine von den geprüften relativen Transfers direkt angesprungenen
+Ziele in diesem Block und keine Treffer für die angenommene Laufzeitadresse;
+einige Treffer auf nackte Dateioffsets bleiben mehrdeutig. Daher ist weder
+eine Funktionsgrenze noch eine ausführbare Rückgabewerttabelle bewiesen.
+Indirekte Referenzen und Code-/Datengrenzen bleiben offen.
+
+### Sensorpfad nach Decoderabgleich
+
+Die Zeichenkette `Enter Sensor Cal Mode!` besitzt einen bekannten direkten
+Literalverweis. Der Decoder zeigt dort das Immediate-Laden gefolgt von einem
+relativen Transfer zur gemeinsamen Logging-Funktion. Das belegt den
+Formatstring-/Logpfad, aber weder einen Sensorregisterzugriff noch eine
+Initialisierung. Die geprüften Adressmodelle fanden keine gleichartigen
+direkten Literalverweise für die übrigen sieben priorisierten Sensor- und
+Kalibrierungszeichenketten. Das schließt indirekte Tabellen, weitere
+Adressierungsformen oder nicht erkannte Referenzen nicht aus.
+
+Die Sensoranker bleiben außerhalb des bestätigten Load-/Run-Suffixbereichs;
+die dortige Adressumrechnung wird nicht auf sie übertragen. Trotz der
+validierten Teilregeln ist keine belastbare WHO_AM_I-Lesekette, kein
+Sensorwahlpfad und kein Schreibdatenfluss zu Register `0x11` nachgewiesen.
+Ein numerischer Treffer für `0x11` wäre weiterhin kein `CTRL2_G`-Schreibbeleg.
+**Aktiver `CTRL2_G`-Wert, tatsächlicher Messbereich und Gyrofaktor bleiben
+unbekannt.** Keine Firmwareausführung oder Emulation, Hardwareaktion oder
+Änderung am laufenden Treiber erfolgte.
+
+Der private lokale REA-/Ghidra-Aufbau enthält den Pi32v2-Beschreiber nun
+wiederverwendbar für weitere statische Analysen. Die Herstellersoftware und
+ihre Firmware bleiben lokale Eingaben; Rohdaten, Projektdumps und komplette
+Disassembly-Ausgaben werden nicht ins öffentliche Repository übernommen.
+Die Gyrokalibrierung bleibt pausiert.
 
 ### Exakte Sensorvariante erneut offen: gezielter WHO_AM_I-Abgleich
 

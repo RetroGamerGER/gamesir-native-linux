@@ -226,12 +226,14 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    ist REA zusätzlich lokal und wiederverwendbar eingerichtet, mit
    kopierten Eingaben, privater Ausgabe und Netzwerk-/Geräteisolation.
    Keine Ausführung oder Emulation des untersuchten Herstellercodes.
-   REA 6.5.0 unterstützt Jieli-Rohcode nicht direkt. Den neu gefundenen
-   Quarkslab-Pi32v2-Decoder zuerst an bekannten Literal-/Transferstellen
-   prüfen; noch keine Installation dieser Erweiterung oder Bestätigung
-   ihrer Semantik. Insbesondere E040-Null-/Vorzeichenerweiterung und
-   PC-Basis der Transfers gegen eigene Belege abgleichen. Die bisherige
-   Maskenkorrelation bestätigt noch keine Instruktionswirkung.
+   REA 6.5.0 unterstützt Jieli-Rohcode nicht direkt; der lokale Quarkslab-
+   Pi32v2-Beschreiber ist an drei App-Versionen
+   teilvalidiert: 150 Literal- und 150 Transferstellen stimmen mit bekannten
+   Ankern überein; die geprüften Transfers verwenden `inst_next`. `E041`
+   dekodiert als `movz`, nicht als die frühere Vorzeichenerweiterung.
+   Nächster Schritt bleibt die Code-/Datensegmentierung und das Auffinden
+   belastbarer Sensor-Lese-/Schreibhelfer. Der kurze `add`/`rts`-Block hat
+   keine verifizierte Erreichbarkeit; keine Funktion daraus ableiten.
    [Werkzeugstand und neue Primärreferenzen](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
    Der MCU-Folgepass vom 18. Oktober belegt zusätzlich begrenzte kompakte
    Zielfelder/Maskenoperanden und eine getrennte Suffix-Adressabbildung.

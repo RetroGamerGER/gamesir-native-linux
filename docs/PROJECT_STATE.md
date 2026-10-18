@@ -14,9 +14,16 @@ Dateien bestanden; keine Testdatei ausgeführt. .NET-Metadatenprüfung ist
 keine vollständige C#-Dekompilierung. Keine MCP-Konfiguration, Systempakete,
 Treiber-/Hardwareänderung oder Hersteller-Upload. Die Gyrokalibrierung
 bleibt pausiert. [Werkzeuge, Abnahme und Grenzen](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
-Der neue externe Jieli/Pi32v2-Decoder ist ein ungeprüfter Kandidat, noch
-nicht installiert. E040-Semantik und Transfer-PC-Basis sind gegen frühere
-empirische Modelle abzugleichen. Kein CTRL2_G-Wert oder Gyrofaktor gewonnen.
+Der lokale Pi32v2-Beschreiber aus Quarkslab-Commit
+`e1bd0707874b77b759401555d24839ad43af1267` wurde an drei App-Versionen
+statisch gegengeprüft: 150 Literalstellen und 150 relative Transferstellen
+passen zu den bekannten Text-/Kontrollflussankern. Die Transferbasis mit
+`inst_next` erklärt den gemeinsamen Logging-Prolog; das frühere Modell lag
+vier Bytes davor. `E041` dekodiert als `movz`, daher trägt die frühere
+Vorzeichenerweiterungs-/Maskenhypothese nicht. Der Beschreiber bleibt
+unvollständig; Code-/Datengrenzen und Sensorzugriffe sind nicht belegt. Kein
+WHO_AM_I-Pfad, CTRL2_G-Wert oder Gyrofaktor gewonnen; keine Firmwareausführung,
+Hardware- oder Treiberänderung. Gyrokalibrierung pausiert.
 
 **Normaler nativer Dauerbetrieb nach den HID-Aufnahmen wieder bestätigt:**
 Der Maintainer führte Resume selbst aus. Die anschließende rein lesende
