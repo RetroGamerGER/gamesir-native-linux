@@ -38,10 +38,15 @@ Verbindungswahl und Funkzustellung bleiben unbeobachtet. 61 Forschungstests
 bestanden. Die [Routingfortsetzung](JIELI_LINK_ROUTING.md) klärt nun die
 Listen-/Slot-Auswahl anhand der Verbindungskennung und verfolgt den
 aufbereiteten DG-Empfangsdeskriptor über Transporttabelle und `btstack`-
-Nachricht bis zum A2-Parser; 70 Forschungstests bestanden. Bedingte Callback-
-Kontextübernahme und der untere Helfer `0xfe42` bleiben konkrete offene Grenzen.
-Die bisherigen vier privaten Decoderkorrekturen/127 SDK-Kontrollen
-bleiben getrennt von den weiterhin unbestätigten Halfword-/Vorzeichenformen.
+Nachricht bis zum A2-Parser; damals 70 Forschungstests bestanden. Der
+[Empfangs-/Kontextfolgepass](JIELI_RX_CONTEXT.md) behebt die verlorene
+Kontextübernahme unseres Exporters und klärt die einfache Callback-Auswahl.
+Eine fünfte private Decoderkorrektur ergänzt fehlende Stack-Offsetbits;
+81 Forschungstests, 140 SDK-Einzelbefehls-Kontrollen und fünf einfache
+Bedingungsblöcke bestehen. Bedingte Parallelblöcke sowie bestimmte negative
+Konstanten bleiben begrenzt. `0xfe42` verarbeitet Paketpuffer über einen
+Hardwareblock; CCM-artige Verarbeitung bleibt eine Hypothese.
+Halfword-/Vorzeichenformen bleiben weiterhin unbestätigt.
 Aktive Konfiguration und physische Achsen bleiben begrenzt. Kein bestätigter
 USB-Gyrofaktor.
 Die folgenden älteren Suchpässe dokumentieren ihre damalige Erkenntnisgrenze.
@@ -82,9 +87,10 @@ ersten Namens-/UI-Prüfung werden dadurch präzisiert, keine globale
 Abwesenheit anderer Sensorpfade behauptet.
 
 **Nächste Priorität:** Die verbleibenden Lücken zwischen Sensorpfad und
-USB-Ausgabe schließen: bedingte Callback-Auswahl im unteren DG-Pfad,
-Helfer `0xfe42`, Ursprung der Empfangsdeskriptoren und Kennungs-/Kanalschreiber
-untersuchen. Statische Registrierung und der obere Empfangseinstieg zum
+USB-Ausgabe schließen: Registerblock und Parameter des Pakethelfers
+`0xfe42` unabhängig zuordnen, Ursprung der Empfangsdeskriptoren sowie
+Zustands-, Freigabe- und Kennungs-/Kanalschreiber untersuchen. Statische
+Registrierung und der obere Empfangseinstieg zum
 `A2`-Pfad sind zugeordnet, reale Funkzustellung nicht. Der Writer des
 Formatcaches `D+0xa24` ist gefunden, bleibt aber
 vom passend zugeordneten Queue-Pfad getrennt. Indizierte Halfword-/

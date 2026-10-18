@@ -145,12 +145,24 @@ or active radio delivery. Read docs/JIELI_LINK_ROUTING.md for the follow-up:
 the low-12-bit handle selects a dynamic list first, then two fixed slots.
 The DG descriptor-to-table-to-btstack-message-to-A2-parser chain is now
 identified; actual membership, lower radio delivery and descriptor origin
-remain open. The private static exporter omits conditional wrappers around
-the two callback literals at DG 0x1c7aa/0x1c7b0: do not infer sequential
-overwrite or a selected callback from that P-code. A lower branch calls
-0xfe42 and copies its output back before the callback; its purpose is
-unresolved. Never claim the whole lower path is byte-preserving from the
-verified upper queue copies alone. No new decoder patch in this pass.
+remain open. Read docs/JIELI_RX_CONTEXT.md for the follow-up. The private
+exporter's former ProcessorContextImpl silently lost future context commits;
+use the tested address-aware DisassemblerContextImpl helper for new ranges.
+Old context labels do not validate conditional blocks. DG state byte r14+9
+!=1 selects 0x1d81c, ==1 selects 0x1c8fe, under the reviewed simple-block
+model; actual state remains unknown. A fifth private decoder correction
+preserves E9D4 stack-offset bits: 13 SDK controls, two discriminators, plus
+the prior 127 controls pass. Five simple conditional blocks pass, but the
+SDK's conditional parallel block still loses its guard at 0x110130; the
+negative-immediate forms at 0x1103ec/0x11042a remain unsupported. These are
+not fixed by restoring the separately omitted repeat family. The unchanged
+conditional grammar and the own exporter have distinct limitations.
+DG 0xfe42 uses a hardware register block, variable packet buffers and a
+separate result area; another caller appends four result bytes. CCM-like
+packet crypto is a hypothesis, not a confirmed algorithm/register identity
+or validated authentication path. Do not infer sensor scaling, byte-preserving
+radio transit or a security bug from it. Trace descriptor origin, state writers
+and the engine's independent definition next.
 The D+0xa24 format-cache writer is identified but is a separate path.
 Likewise DG queue D+0x2a8 leads to IN 0x84; do not equate these queues/endpoints.
 DG's tag 0x0a rewrite does not apply to the reviewed tag 0xe0 telemetry.

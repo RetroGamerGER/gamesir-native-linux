@@ -24,21 +24,35 @@ den registrierten Daten-Callback zu. Die
 zwölf Bit Verbindungskennung, zuerst dynamische Liste, danach zwei feste
 Slots. Die DG-Kette vom aufbereiteten Empfangsdeskriptor über Transporttabelle
 und `btstack`-Nachricht bis zum A2-Parser ist zugeordnet. Reale
-Verbindungsmitgliedschaft und Funkzustellung bleiben unbeobachtet;
-bedingte Callback-Auswahl und der untere Helfer `0xfe42` sind neue konkrete
-Nachweisgrenzen. Der Formatcache `D+0xa24` und der alternative
+Verbindungsmitgliedschaft und Funkzustellung bleiben unbeobachtet.
+Der [Empfangs-/Kontextfolgepass](JIELI_RX_CONTEXT.md) korrigiert nun unseren
+privaten Exporthelfer und klärt die einfache Callback-Auswahl. `0xfe42`
+verarbeitet variable Paketpuffer über einen Hardware-Registerblock; der
+zweite Caller hängt vier Ergebnisbytes an. CCM-artige Transportbearbeitung
+ist eine Hypothese, keine bestätigte Register-/Algorithmuszuordnung.
+Der Formatcache `D+0xa24` und der alternative
 IN-`0x84`-Pfad sind getrennt. Halfword- und Vorzeichenoperationen haben
 weiterhin eine Decodergrenze. Kein
 bestätigter USB-Gyrofaktor oder physischer Achsennachweis; keine Änderung
 am Parser oder Treiber.
 [Datenfluss, Codeanker und Grenzen](JIELI_SENSOR_REPORT_DATAFLOW.md).
 
-Im Routingfolgepass bestanden **70 Forschungstests** (neun neu) und
+Im aktuellen Empfangs-/Kontextfolgepass bestanden **81 Forschungstests**
+(elf neu), **140 SDK-Einzelbefehls-Kontrollen** und fünf einfache
+Bedingungsblöcke. Private Korrekturen: adressbezogene Kontextübernahme im
+Exporter und E9D4-Stack-Abstände. Ein bedingter Parallelblock und zwei
+Negativ-Konstantenformen bleiben ausdrücklich ausgeschlossen. Die acht
+abschließenden DG-Fenster umfassen 294 Datensätze ohne Decodeabbruch;
+kein vollständiger ISA-, Funk- oder Gyrofaktornachweis. Keine Installation,
+Firmwareausführung, Netzwerk-/Hardwarezugriffe oder Treiberänderungen.
+
+Im vorherigen Routingfolgepass bestanden **70 Forschungstests** (neun neu) und
 30 abschließende Fenster mit 461 Decode-Datensätzen ohne Abbruch. Keine
 weitere Sensorrechnung im untersuchten oberen DG-Transport-/Queuepfad.
 Die bedingten Callback-Zuweisungen dürfen wegen fehlender Kontext-Wrapper
-im statischen P-Code nicht als linearer Ablauf gelesen werden. Kein neuer
-Decoderpatch; Firmware und laufender Treiber unverändert.
+im damaligen statischen P-Code nicht als linearer Ablauf gelesen werden.
+Die oben genannte Kontextkorrektur ersetzt diese historische Decodergrenze
+für die gezielt geprüften einfachen Blöcke. Firmware und Treiber unverändert.
 
 Im vorherigen Callback-Folgepass bestanden **61 Forschungstests** (zwölf neu) und
 29 abschließende Fenster mit 389 Decode-Datensätzen ohne Abbruch. Kein

@@ -268,9 +268,16 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    [Routingfolgepass](JIELI_LINK_ROUTING.md) klärt nun Listen-/Slot-Auswahl
    anhand der zwölf Bit Verbindungskennung und ordnet den DG-Empfang vom
    aufbereiteten Deskriptor bis zur A2-Queue zu; 70 Forschungstests und
-   30 abschließende Fenster bestanden. Als Nächstes bedingte Callback-
-   Kontextübernahme im statischen Exporter, unteren Helfer `0xfe42`,
-   Deskriptorursprung und Kennungs-/Kanalschreiber untersuchen.
+   30 abschließende Fenster bestanden. Der
+   [Empfangs-/Kontextfolgepass](JIELI_RX_CONTEXT.md) korrigiert nun den
+   privaten Exporter und Stack-Abstände; 81 Forschungstests, 140 SDK-
+   Einzelbefehls-Kontrollen und fünf einfache Bedingungsblöcke bestehen.
+   Die Callback-Auswahl ist statisch zugeordnet. `0xfe42` verarbeitet
+   Paketpuffer über einen Hardwareblock; CCM bleibt eine Hypothese.
+   Als Nächstes Registerblock/Parameter unabhängig zuordnen sowie
+   Deskriptorursprung, Zustands-/Freigabe- und Kennungs-/Kanalschreiber
+   untersuchen. Bedingte Parallelblöcke und bestimmte negative Konstanten
+   bleiben zusätzliche Decodergrenzen.
    Statische Registrierung beweist keine Laufzeitaktivierung oder Funkzustellung.
    Die weiterhin offenen Halfword-/Vorzeichenformen unabhängig absichern,
    einschließlich des verwandten skalierten Halfword-Stores; außerdem

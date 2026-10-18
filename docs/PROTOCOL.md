@@ -157,9 +157,13 @@ geprüften Transportkopien keine weitere Sensorrechnung. Der
 Registrierung in drei Apps zu. Der [Routingfolgepass](JIELI_LINK_ROUTING.md)
 klärt die Listen-/Slot-Auswahl nach Verbindungskennung und die DG-Übergabe
 vom aufbereiteten Deskriptor über Nachricht `0x400002` zum A2-Parser.
-Tatsächlich ausgeführter Start-/Verbindungspfad, bedingte untere Callback-
-Auswahl, Helfer `0xfe42`, Funkzustellung, Halfword-/Vorzeichenformen und letzte wirksame
-Konfiguration bleiben offen. Unter der ST-Annahme ist
+Der [Empfangs-/Kontextfolgepass](JIELI_RX_CONTEXT.md) klärt die einfache
+Callback-Auswahl nach Korrektur des privaten Exporters. `0xfe42` ist als
+hardwaregestützte Paketverarbeitung eingegrenzt; eine CCM-Zuordnung bleibt
+Hypothese. Tatsächlich ausgeführter Verbindungspfad, Registerblockidentität,
+Deskriptorursprung, Funkzustellung, Halfword-/Vorzeichenformen, bedingte
+Parallelblöcke und letzte wirksame Konfiguration bleiben offen. Unter der
+ST-Annahme ist
 `0,07 Grad/s je Sensorzählwert` weiterhin ein Kandidat, kein bestätigter
 USB-Faktor. Die unten genannten Unbekannten
 beziehen sich auf den realen Controller; der Parser und seine Rohachsen

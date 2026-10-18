@@ -6,6 +6,11 @@ Offline-Analyse unveränderter lokaler Firmwarekopien. Keine Zielausführung
 oder Emulation, Netzwerk-/Hardwarezugriffe, Installation oder Treiberänderung.
 Gyrokalibrierung bleibt pausiert.
 
+**Fortsetzung:** Der [Empfangs-/Kontextfolgepass](JIELI_RX_CONTEXT.md)
+korrigiert inzwischen den Exporter, ordnet die einfache Callback-Auswahl zu
+und grenzt `0xfe42` als hardwaregestützte Paketverarbeitung ein. Die unten
+beschriebenen offenen Stellen geben den Stand dieses früheren Passes wieder.
+
 ## Ergebnis
 
 **Die Auswahlregel der beiden Controller-Sendepfade ist eingegrenzt:**
