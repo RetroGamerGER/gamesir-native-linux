@@ -132,12 +132,20 @@ docs/JIELI_SENSOR_REPORT_DATAFLOW.md. Under the documented addressing/copy
 assumptions, the 10/3c/e0 report carries Gy,Gz,Gx,Ay,Az,Ax after optional bias
 subtraction at offsets 17..27, without extra ST gyro gain in that section.
 Other output/sensor branches negate, divide or use 976/1000; keep them separate.
-The external copy helper, indexed-halfword semantics, final transport/endpoint
-and last effective sensor configuration remain unresolved. This is not a
-confirmed USB scale or physical axis calibration. Never treat the 0x10ad4
-table as code, trust the known-broken extended-byte/indexed/sextra P-code, or
-count parallel members twice. Nexus's separate 60-byte parser paths still
-leave their sensor fields unset. The decoder is incomplete; never infer
+The transport follow-up independently matches the external copy CALLs to
+the cached SDK's __stub_memcpy/memmove via code base 0xffe000c0. This is
+an ABI/address model, not a measured silicon ROM revision or global alias mask.
+Read docs/JIELI_USB_TRANSPORT.md: the DV queue reaches local USB-IN 0x84;
+DG144 separately sends a 64-byte buffer to USB-IN 0x82. The incoming wireless
+writer/content association is still open. Never equate the endpoints or
+infer sensor content from length alone. DG D+0xa28's text-consumer reference
+is not a proven writer. Three private decoder repairs (extended-byte,
+indexed-word, single-bit branch) pass 83 cached SDK instruction controls;
+scaled indexed-halfword and signed-extract semantics remain unverified.
+Last effective sensor configuration and physical calibration are still open.
+Never treat the 0x10ad4/0xc60c tables as code, trust the original broken
+P-code forms, or count parallel members twice. Nexus's separate 60-byte
+parser paths still leave their sensor fields unset. The decoder is incomplete; never infer
 code/data boundaries, sensor writes, or `CTRL2_G` from numeric matches alone.
 No target execution/emulation,
 hardware access, or driver edit. Calibration remains paused and the driver

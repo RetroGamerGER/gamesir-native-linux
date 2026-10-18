@@ -25,9 +25,14 @@ Die [Zwölf-Byte-Fortsetzung](JIELI_SENSOR_REPORT_DATAFLOW.md) stützt nun
 eine Kette aus ST-Empfang, Achsenumordnung, bedingtem Offset-Abzug und
 `10/3c/e0`-Berichtskonstruktor. Seine Kopiergeometrie trifft die bekannten
 Sensorpositionen 17–27. Keine zusätzliche Gyro-Verstärkung im untersuchten
-ST-Ausgabeabschnitt; andere Zweige skalieren oder negieren. Externer
-Kopierhelfer, Teile der Decodersemantik und vollständiger USB-Transport
-bleiben offen, ebenso aktive Konfiguration und physische Achsen.
+ST-Ausgabeabschnitt; andere Zweige skalieren oder negieren.
+Der [Transportfolgepass](JIELI_USB_TRANSPORT.md) ordnet die externe Kopie
+dem SDK-ROM-Stub `memcpy`/`memmove` zu und erreicht Controller-USB-IN `0x84`.
+Ein separater DG144-Pfad sendet 64 Byte an Dongle-IN `0x82`; dessen
+eingehende Funk-/Sensorzuordnung bleibt offen. Drei private Decoderformen
+wurden korrigiert, 83 SDK-Instruktionen und 37 Forschungstests geprüft.
+Halfword-/Vorzeichenformen, aktive Konfiguration und physische Achsen
+bleiben begrenzt. Kein bestätigter USB-Gyrofaktor.
 Die folgenden älteren Suchpässe dokumentieren ihre damalige Erkenntnisgrenze.
 
 **Innerer Strukturfolgepass vom 16. Oktober:** `app.bin` und `cfg_tool.bin`
@@ -66,9 +71,10 @@ ersten Namens-/UI-Prüfung werden dadurch präzisiert, keine globale
 Abwesenheit anderer Sensorpfade behauptet.
 
 **Nächste Priorität:** Die verbleibenden Lücken zwischen Sensorpfad und
-USB-Ausgabe schließen: externe Kopie, indizierte Speicher-/Vorzeichenformen,
-Transport-/Endpointauswahl und weitere Schreiber der Offsets sowie
-Sensorregister. Sensorwahl und letzte wirksame Initialisierung bleiben
+USB-Ausgabe schließen: den Writer des DG144-Puffers `D+0xa24` und seinen
+Funk-/Pakettypbezug verfolgen, Controller-/Dongle-Pfade abgleichen,
+indizierte Halfword-/Vorzeichenformen sowie weitere Schreiber der Offsets
+und Sensorregister prüfen. Sensorwahl und letzte wirksame Initialisierung bleiben
 unbestätigt. Ein aktiver Messbereich allein ist noch kein Faktor für
 unsere USB-Rohwerte. Bestehende Werkzeuge werden
 weiterverwendet. Nach gesonderter Freigabe ist REA jetzt als getrenntes,

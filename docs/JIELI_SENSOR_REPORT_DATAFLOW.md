@@ -27,11 +27,11 @@ Der Datenfluss ist jetzt wesentlich weiter eingegrenzt:
   Beschleunigungswerte. Diese Transformation darf nicht auf unseren
   `10/3c/e0`-Bericht übertragen werden.
 
-**Beweisgrenze:** Der externe Kopierhelfer ist anhand seiner Argumente als
-byteweiser Kopierer stark gestützt, seine Implementierung aber noch nicht
-unabhängig zugeordnet. Warteschlangen-Writer und -Reader kopieren Bytes;
-der nachfolgende Transportpfad ist nicht bis zum konkreten USB-Endpunkt
-vollständig aufgelöst. Dies ist eine statisch gestützte Produzentenkette,
+**Fortschreibung:** Der [nachfolgende Transportpass](JIELI_USB_TRANSPORT.md)
+ordnet den externen Aufruf unabhängig dem SDK-ROM-Stub `memcpy`/`memmove`
+zu und verfolgt die Controller-Queue bis IN `0x84`. Ein separater
+Dongle-Puffer erreicht IN `0x82`; seine Verknüpfung mit genau diesen
+Sensorbytes über Funk bleibt offen. Dies ist eine statisch gestützte Produzentenkette,
 kein ausgeführter End-to-End-Nachweis und keine Freigabe eines Gyrofaktors.
 Einige benötigte indizierte Speicherzugriffe sind im verwendeten Decoder
 fehlerhaft modelliert; die betroffenen Aussagen sind unten eingegrenzt.
@@ -157,10 +157,12 @@ Byte 0 auf `0x10`, Byte 3 auf `0x3c` und Byte 4 auf `0xe0`. Bei
 - Länge 24 Byte.
 
 Der beobachtete direkte CALL-Zielausdruck im Decode mit Dateibasis null
-ist `0x3126e8`. Das ist **kein erreichbarer Dateioffset dieser App**;
-die tatsächliche Adressabbildung und Helferimplementierung sind noch
-nicht unabhängig aufgelöst. Aufrufmuster an weiteren Stellen stützen
-`memcpy`-ähnliche Semantik, ersetzen diesen Nachweis aber nicht.
+ist `0x3126e8`. Das ist **kein erreichbarer Dateioffset dieser App**.
+Der [Transportfolgepass](JIELI_USB_TRANSPORT.md#1-quellen-und-adressmodell)
+ordnet ihn mit Codebasis `0xffe000c0` dem SDK-ROM-Eintrag `0x1127a8`
+(`__stub_memcpy` → `memmove`) zu, gestützt durch weitere API-Aufrufe.
+Das SDK beschreibt eine byteerhaltende Kopie; die tatsächliche ROM-Version
+im Controller bleibt unbeobachtet.
 
 Unter genau dieser Kopiersemantik liegt das erste Sensorbyte bei:
 
@@ -183,9 +185,10 @@ Aufruf bei `0x1afd2` übergeben den 64-Byte-Puffer an `0x2e8`. Dessen
 Schleife kopiert einzelne Bytes in einen Ringpuffer, ohne Sensorarithmetik.
 Ein Verbraucher bei `0x1b000` nutzt den korrespondierenden Reader `0x114b6`
 und reicht den entnommenen Puffer über `0x1afd8` an `0x3bc8` weiter.
-Letzterer greift auf einen Transport-/MMIO-Pfad zu; seine Endpoint- und
-Moduszuordnung ist noch offen. Nicht aus dem Argumentwert 4 den USB-Endpunkt
-`0x82` ableiten. Bedingte Ausführung, Queue-Verfügbarkeit und erfolgreiche
+Der [Transportfolgepass](JIELI_USB_TRANSPORT.md#2-controller-reportkopie-bis-usb-in-0x84)
+weist diesem MMIO-Pfad Endpunkt 4 / IN `0x84` zu; die aktive Modusauswahl
+bleibt offen. Dieser Controllerpfad ist vom Dongle-IN `0x82` zu trennen.
+Bedingte Ausführung, Queue-Verfügbarkeit und erfolgreiche
 USB-Abschlüsse sind mit diesen statischen Ausschnitten nicht bewiesen.
 
 ## 5. Gegenprüfung und Grenzen des Decoders
@@ -225,6 +228,11 @@ geprüft. Neue Decodergrenzen:
   doppeltes Zählen falsche Daten behaupten. Hier wird jedes Mitglied nur
   einmal betrachtet; das ist keine allgemeine Decoderreparatur.
 
+Die folgende Prüfung beschreibt diesen ursprünglichen Datenflusspass;
+die spätere private Reparatur von Byte-, Wortindex- und Einzelbitformen,
+83 SDK-Gegenproben und weiterhin offene Halfword-/Vorzeichenformen stehen
+im [Transportbericht](JIELI_USB_TRANSPORT.md#4-decoderoperationen-korrigiert-und-weiterhin-offen).
+
 Explorative Fenster stoppten an vier unbekannten Decodepositionen,
 einschließlich einer überlaufenen Sprungtabelle und einer ungeeigneten
 Startgrenze. Diese Teile wurden nicht als Codebeleg verwendet. Der danach
@@ -254,7 +262,8 @@ Registerkonfiguration, korrekte Auflösung der noch offenen Helfer und die
 tatsächlich verwendete Firmware. Offsets und Achsen müssen berücksichtigt
 werden. Der laufende Treiber erhält daraus **keinen neuen Faktor**.
 
-Als Nächstes die externe Kopie und Transport-/Endpointauswahl unabhängig
+Nach der [Zuordnung von Kopie und USB-Sendepfaden](JIELI_USB_TRANSPORT.md)
+als Nächstes den Writer von DG144 `D+0xa24` und dessen Funk-/Sensorbezug
 auflösen, indizierte Halfword-/signed-extract-Semantik gegen einen zweiten
 lokalen Referenzbeleg prüfen und weitere Schreiber der Sensor-/Offsetfelder
 sowie spätere Bereichswechsel untersuchen. Erst danach ist die statische

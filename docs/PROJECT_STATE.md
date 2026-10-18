@@ -11,14 +11,25 @@ Die Folge `Gy,Gz,Gx,Ay,Az,Ax` passt über die vorbereitete Kopiergeometrie
 exakt zu den bekannten Reportpositionen 17–27. In diesem ST-Ausgabeabschnitt
 keine zusätzliche Gyro-Verstärkung; andere Sensor-/Ausgabezweige verwenden
 `976/1000`, Negationen oder Halbierung. Diese Zweige bleiben getrennt.
-Der externe Kopierhelfer und der letzte Transport bis zum USB-Endpunkt
-sind noch nicht unabhängig aufgelöst. Auch indizierte Speicherzugriffe
-haben eine dokumentierte Decodergrenze. Kein bestätigter USB-Gyrofaktor
-oder physischer Achsennachweis; keine Änderung am Parser oder Treiber.
+Der [Transportfolgepass](JIELI_USB_TRANSPORT.md) ordnet den externen
+Kopieraufruf unabhängig dem SDK-ROM-Stub `memcpy`/`memmove` zu und verfolgt
+die Controller-Queue bis USB-IN `0x84`. Die separate Dongle-App DG144
+sendet 64 Byte über IN `0x82`; die Verbindung ihres Quellpuffers zum
+Funkempfang genau dieser Sensorbytes bleibt offen. Indizierte Halfword-
+und Vorzeichenoperationen haben weiterhin eine Decodergrenze. Kein
+bestätigter USB-Gyrofaktor oder physischer Achsennachweis; keine Änderung
+am Parser oder Treiber.
 [Datenfluss, Codeanker und Grenzen](JIELI_SENSOR_REPORT_DATAFLOW.md).
 
-25 lokale Forschungstests (zehn neu) und 15 vorhandene Protokollparsertests
-bestanden. Zehn Codeblöcke sind in drei Apps eindeutig bytegleich; vier
+Im Transportfolgepass bestanden **37 lokale Forschungstests** (zwölf neu).
+Drei private Decoderkorrekturen und unsigned-extract wurden anhand von
+83 SDK-Instruktionen geprüft. Abschließende Controller-Fenster: 324
+Decode-Datensätze in drei Apps; getrennte DG-Fenster: 65 plus 15,
+jeweils ohne Decodeabbrüche. Firmware und SDK bleiben privat; öffentlicher
+Commit nur Dokumentation. Funk-/Sensorverknüpfung bleibt die nächste Lücke.
+
+Im vorherigen Datenflusspass bestanden 25 Forschungstests und 15 vorhandene
+Protokollparsertests. Zehn Codeblöcke sind in drei Apps eindeutig bytegleich; vier
 Halfword-Loads, sechs Stores, 23 Byte-Loads und elf Adressadditionen wurden
 gegen das gespeicherte Jieli-Listing geprüft. Der abschließende begrenzte
 Sandboxlauf liefert 501 Decode-Datensätze ohne Fehler. Explorative

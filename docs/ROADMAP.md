@@ -254,15 +254,19 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    keine zusätzliche Gyro-Verstärkung in diesem ST-Abschnitt. Die
    Kopiergeometrie trifft die bekannten Positionen 17–27. Andere Sensor-/
    Ausgabezweige skalieren oder negieren; nicht vermischen.
-   25 Forschungstests und 15 Protokollparsertests bestanden, außerdem
-   Versions- und unabhängige Jieli-Listingkontrollen.
-   Als Nächstes externen Kopierhelfer und Transport-/Endpointauswahl
-   unabhängig auflösen, indizierte Halfword-/Vorzeichenoperationen weiter
-   absichern sowie weitere Offsetschreiber, Busabschluss und letzte
-   wirksame Registerkonfiguration prüfen.
+   Im Transportfolgepass ist die Kopie dem SDK-ROM-Stub `memcpy`/`memmove`
+   zugeordnet; der Controllerpfad erreicht IN `0x84`, ein getrennter
+   DG144-64-Byte-Pfad IN `0x82`. 37 Forschungstests und 83 unabhängige
+   SDK-Instruktionskontrollen bestanden; drei private Decoderformen korrigiert.
+   Als Nächstes den Writer von DG144 `D+0xa24` samt Funk-/Pakettypbezug
+   verfolgen; passende Endpunkte allein belegen keine durchgehende
+   Sensorkette. Indizierte Halfword-/Vorzeichenoperationen weiter absichern
+   sowie weitere Offsetschreiber, Busabschluss und letzte wirksame
+   Registerkonfiguration prüfen.
    Aktive Hardwarevariante und Firmwareversion sind dadurch nicht bestimmt.
    [Sensorinitialisierung und konkrete Grenzen](JIELI_SENSOR_INITIALIZATION.md).
    [Datenfluss bis zum Berichtskonstruktor](JIELI_SENSOR_REPORT_DATAFLOW.md).
+   [Kopierhelfer und getrennte USB-Sendepfade](JIELI_USB_TRANSPORT.md).
    Der bekannte 64-Byte-Capture bleibt von den untersuchten 60-Byte-Nexus-
    Parsern getrennt; deren Sensorfelder werden weiterhin nicht gesetzt.
    Code-/Datengrenzen, Kontext-/Parallelsemantik und Speicheradressierung

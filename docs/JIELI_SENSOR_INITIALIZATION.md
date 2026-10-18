@@ -109,9 +109,11 @@ vier Ziele wurden im [anschließenden Datenflusspass](JIELI_SENSOR_REPORT_DATAFL
 rekonstruiert; die unmittelbar folgenden Tabellenbytes sind kein Code.
 Dieser Folgepass belegt bedingten Offset-Abzug und stützt die ST-Reihenfolge
 `Gy,Gz,Gx,Ay,Az,Ax` bis zur vorbereiteten Reportkopie, ohne zusätzlichen
-Gyro-Gain in diesem ST-Ausgabeabschnitt. Externer Kopierhelfer,
-indizierte Halfword-Semantik und letzter USB-Transport bleiben begrenzende
-offene Stellen. Andere Ausgabezweige verändern Maßstab und Vorzeichen.
+Gyro-Gain in diesem ST-Ausgabeabschnitt. Der
+[Transportfolgepass](JIELI_USB_TRANSPORT.md) ordnet die Kopie dem
+SDK-ROM-Stub `memcpy`/`memmove` zu und trennt Controller-IN `0x84` von
+Dongle-IN `0x82`. Funk-/Sensorverknüpfung und indizierte Halfword-Semantik
+bleiben begrenzende offene Stellen. Andere Ausgabezweige verändern Maßstab und Vorzeichen.
 Die frühere Annahme, Nexus selbst müsse den Skalierungsfaktor enthalten,
 ist für diesen Firmwarepfad nicht erforderlich.
 
@@ -155,10 +157,10 @@ vollständige Disassemblies werden nicht veröffentlicht.
 
 ## Nächster begrenzter Offline-Schritt
 
-Nach dem [Datenflusspass](JIELI_SENSOR_REPORT_DATAFLOW.md) den externen
-Kopierhelfer und die Transport-/Endpointauswahl unabhängig auflösen,
-indizierte Speicher- und Vorzeichenoperationen gegen weitere lokale
-Referenzen prüfen sowie weitere Offsetschreiber und spätere Registeränderungen
+Nach dem [Transportfolgepass](JIELI_USB_TRANSPORT.md) den Writer von
+DG144 `D+0xa24` und den Funk-/Pakettypbezug auflösen. Indizierte Halfword-
+und Vorzeichenoperationen gegen weitere lokale Referenzen prüfen sowie
+weitere Offsetschreiber und spätere Registeränderungen
 untersuchen. Erst diese Kette kann den Kandidaten
 `0,07 Grad/s je Sensorzählwert` mit unseren USB-Rohwerten verbinden.
 Ein tatsächlicher Hardware-/Winkeltest und jede Änderung der produktiven
