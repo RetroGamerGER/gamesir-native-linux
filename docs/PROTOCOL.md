@@ -149,10 +149,12 @@ bedingten Offset-Abzug und die Zuordnung zu den Positionen 17–27 eines
 `10/3c/e0`-Berichtskonstruktors. Im untersuchten ST-Ausgabeabschnitt keine
 zusätzliche Gyro-Verstärkung. Der [Transportfolgepass](JIELI_USB_TRANSPORT.md)
 ordnet den Kopieraufruf dem SDK-ROM-Stub `memcpy`/`memmove` zu. Die
-Controller-Queue führt zu USB-IN `0x84`; ein separater DG144-Puffer führt
-zu Dongle-IN `0x82`. Die Funkverbindung genau dieser Sensorfelder zwischen
-beiden Pfaden, Halfword-/Vorzeichenformen und tatsächlich aktive
-Konfiguration bleiben offen. Unter der ST-Annahme ist
+Controller-Queue hat mehrere Verbraucher. Der neue
+[Funkrahmen-Folgepass](JIELI_WIRELESS_DATAFLOW.md) verbindet einen beidseitig
+passenden `A2`-/Queue-Pfad mit dem Dongle-Sendepuffer für IN `0x82`; in den
+geprüften Transportkopien keine weitere Sensorrechnung. Aktive Callback-
+Anbindung/untere Funkstrecke, Halfword-/Vorzeichenformen und tatsächlich
+aktive Konfiguration bleiben offen. Unter der ST-Annahme ist
 `0,07 Grad/s je Sensorzählwert` weiterhin ein Kandidat, kein bestätigter
 USB-Faktor. Die unten genannten Unbekannten
 beziehen sich auf den realen Controller; der Parser und seine Rohachsen

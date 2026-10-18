@@ -10,9 +10,16 @@ Die Gyrokalibrierung bleibt pausiert.
 
 Der externe Kopieraufruf lässt sich jetzt konsistent dem offiziellen
 Jieli-ROM-Eintrag `__stub_memcpy` zuordnen. Dessen dokumentierter Körper
-kopiert die Bytes ohne Sensorarithmetik. Der anschließende Sendepfad des
+kopiert die Bytes ohne Sensorarithmetik. Der hier untersuchte direkte Sendepfad des
 **Controllers verwendet USB-IN-Endpunkt `0x84`**, nicht den in unseren
-Funk-Dongle-Mitschnitten beobachteten Endpunkt `0x82`.
+Funk-Dongle-Mitschnitten beobachteten Endpunkt `0x82`. Das ist einer von
+mehreren Verbrauchern der Queue, keine Aussage über sämtliche Betriebsmodi.
+
+Der nachfolgende [Funkrahmen-Folgepass](JIELI_WIRELESS_DATAFLOW.md) findet
+inzwischen den Formatcache-Writer und einen **anderen**, beidseitig passenden
+`A2`-/Queue-Pfad nach IN `0x82`. Aktiver Transport-Callback und untere
+Funkstrecke bleiben offen. Die Abschnitte unten dokumentieren den vorherigen
+Prüfumfang und werden dadurch präzisiert.
 
 In der separat untersuchten **Dongle-Firmware** wurde ebenfalls ein
 64-Byte-Sendepfad gefunden, dort über Endpunkt 2 / IN `0x82`. Seine Quelle
@@ -136,10 +143,11 @@ Die vollständige Zuordnung der Deskriptorvarianten zu den Betriebsmodi
 ist weiterhin offen. Es wurde nur DG144 entlang dieser Kette analysiert;
 keine entsprechende Aussage für sämtliche Dongle-Firmwareversionen.
 
-**Die noch fehlende Verbindung:** Wer befüllt `D+0xa24`, und enthält
-dieser Puffer in unserem Funkmodus genau den `10/3c/e0`-Bericht samt
-Sensorfeldern? Der Dispatcher verarbeitet auch andere 64-Byte-Formate.
-Die Zwölf-Byte-Zuordnung darf nicht allein aus der Paketlänge folgen.
+**Grenze dieses Prüflaufs:** Der Writer von `D+0xa24` war hier noch offen.
+Der [Folgepass](JIELI_WIRELESS_DATAFLOW.md#4-abgegrenzte-nebenpfade) ordnet ihn
+inzwischen der modusspezifischen Formatkonstruktion bei `0x8334`/`0x8618` zu.
+Die passendere Sensorroute läuft über `A2` und Queue `D+0x2e0` direkt in den
+Sendepuffer. Die Zwölf-Byte-Zuordnung folgt nicht allein aus der Paketlänge.
 
 Eine untersuchte Referenz auf `D+0xa28` bei `0xc5ea` ist kein
 nachgewiesener Writer: Sie übergibt den Zeiger bei `0xc5fa` an `0x174e`.
@@ -215,10 +223,10 @@ Feldleser, Tests, Decoderkopie und Rohresultate verbleiben unter
 `anchors/transport-review-final.json`. Keine Firmware, SDK-Codekopien oder
 Disassemblies in Git. Der öffentliche Commit enthält nur Dokumentation.
 
-Der nächste begrenzte Offline-Schritt ist der **Writer von DG `D+0xa24`
-und sein Funk-/Pakettypbezug**, anschließend der Abgleich mit dem
-Controller-Sendepfad und den bekannten Sensoroffsets. Parallel offene
-Halfword-/Vorzeichenformen und spätere Sensor-/Offsetschreiber absichern.
+Der damals vorgesehene Writer-/Funkabgleich ist im
+[Folgepass](JIELI_WIRELESS_DATAFLOW.md) dokumentiert. Nächste offene Grenze
+ist die aktive Transport-Callback-Anbindung; außerdem Halfword-/
+Vorzeichenformen und spätere Sensor-/Offsetschreiber weiter absichern.
 `0,07 Grad/s je ST-Sensorzählwert` bleibt ein bedingter Kandidat; ein
 bestätigter Faktor der tatsächlich empfangenen USB-Daten folgt daraus
 noch nicht. Kalibrierung und produktiver Treiber bleiben unverändert.

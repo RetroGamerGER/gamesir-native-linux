@@ -13,20 +13,34 @@ keine zusätzliche Gyro-Verstärkung; andere Sensor-/Ausgabezweige verwenden
 `976/1000`, Negationen oder Halbierung. Diese Zweige bleiben getrennt.
 Der [Transportfolgepass](JIELI_USB_TRANSPORT.md) ordnet den externen
 Kopieraufruf unabhängig dem SDK-ROM-Stub `memcpy`/`memmove` zu und verfolgt
-die Controller-Queue bis USB-IN `0x84`. Die separate Dongle-App DG144
-sendet 64 Byte über IN `0x82`; die Verbindung ihres Quellpuffers zum
-Funkempfang genau dieser Sensorbytes bleibt offen. Indizierte Halfword-
-und Vorzeichenoperationen haben weiterhin eine Decodergrenze. Kein
+einen Controller-Zweig bis USB-IN `0x84`. Der neue
+[Funkrahmen-Folgepass](JIELI_WIRELESS_DATAFLOW.md) verbindet beidseitig einen
+`A2`-Kandidaten: Bericht → Queue `B+0x3dc` → Abschnitt mit zwei Kopfbytes →
+DG-Queue `D+0x2e0` → Sendepuffer `D+0x8a4` → IN `0x82`. In diesen Kopien
+keine zusätzliche Sensorrechnung. Aktive Callback-Anbindung und untere
+Funkstrecke bleiben offen; der Formatcache `D+0xa24` und der alternative
+IN-`0x84`-Pfad sind getrennt. Indizierte Halfword- und Vorzeichenoperationen
+haben weiterhin eine Decodergrenze. Kein
 bestätigter USB-Gyrofaktor oder physischer Achsennachweis; keine Änderung
 am Parser oder Treiber.
 [Datenfluss, Codeanker und Grenzen](JIELI_SENSOR_REPORT_DATAFLOW.md).
 
-Im Transportfolgepass bestanden **37 lokale Forschungstests** (zwölf neu).
+Im neuen Funkrahmen-Folgepass bestanden **49 Forschungstests** (zwölf neu),
+127 SDK-Instruktionskontrollen und 19 abschließende Fenster mit 286
+Decode-Datensätzen ohne Abbruch. Eine zusätzliche private Byte-Store-
+Korrektur behebt die Verwechslung hoher Quellenregister. Die zwei offenen
+Operationen wurden mit konkreten Gegenbeispielen eingegrenzt, nicht als
+validiert freigegeben. Alle vier Original-App-Hashes stimmen weiterhin;
+öffentlicher Commit ausschließlich Dokumentation, kein Push.
+
+Im vorherigen Transportfolgepass bestanden **37 lokale Forschungstests** (zwölf neu).
 Drei private Decoderkorrekturen und unsigned-extract wurden anhand von
 83 SDK-Instruktionen geprüft. Abschließende Controller-Fenster: 324
 Decode-Datensätze in drei Apps; getrennte DG-Fenster: 65 plus 15,
-jeweils ohne Decodeabbrüche. Firmware und SDK bleiben privat; öffentlicher
-Commit nur Dokumentation. Funk-/Sensorverknüpfung bleibt die nächste Lücke.
+jeweils ohne Decodeabbrüche. Firmware und SDK bleiben privat; der damalige
+öffentliche
+Commit enthält nur Dokumentation. Die damalige Funk-/Sensorlücke wird durch
+den oben beschriebenen Folgepass eingegrenzt.
 
 Im vorherigen Datenflusspass bestanden 25 Forschungstests und 15 vorhandene
 Protokollparsertests. Zehn Codeblöcke sind in drei Apps eindeutig bytegleich; vier

@@ -258,11 +258,14 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    zugeordnet; der Controllerpfad erreicht IN `0x84`, ein getrennter
    DG144-64-Byte-Pfad IN `0x82`. 37 Forschungstests und 83 unabhängige
    SDK-Instruktionskontrollen bestanden; drei private Decoderformen korrigiert.
-   Als Nächstes den Writer von DG144 `D+0xa24` samt Funk-/Pakettypbezug
-   verfolgen; passende Endpunkte allein belegen keine durchgehende
-   Sensorkette. Indizierte Halfword-/Vorzeichenoperationen weiter absichern
-   sowie weitere Offsetschreiber, Busabschluss und letzte wirksame
-   Registerkonfiguration prüfen.
+   Der [Funkrahmen-Folgepass](JIELI_WIRELESS_DATAFLOW.md) hat inzwischen
+   den Formatcache-Writer und einen getrennten passenden `A2`-/Queue-Pfad
+   nach IN `0x82` eingegrenzt. In den Transportkopien keine Sensorarithmetik;
+   49 Forschungstests, 127 SDK-Kontrollen, vier private Decoderkorrekturen.
+   Als Nächstes aktive Transport-Callback-Anbindung und Empfangseinstieg
+   schließen. Die zwei weiterhin offenen Halfword-/Vorzeichenoperationen
+   unabhängig absichern, außerdem weitere Offsetschreiber, Busabschluss und
+   letzte wirksame Registerkonfiguration prüfen.
    Aktive Hardwarevariante und Firmwareversion sind dadurch nicht bestimmt.
    [Sensorinitialisierung und konkrete Grenzen](JIELI_SENSOR_INITIALIZATION.md).
    [Datenfluss bis zum Berichtskonstruktor](JIELI_SENSOR_REPORT_DATAFLOW.md).

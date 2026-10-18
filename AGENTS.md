@@ -135,13 +135,19 @@ Other output/sensor branches negate, divide or use 976/1000; keep them separate.
 The transport follow-up independently matches the external copy CALLs to
 the cached SDK's __stub_memcpy/memmove via code base 0xffe000c0. This is
 an ABI/address model, not a measured silicon ROM revision or global alias mask.
-Read docs/JIELI_USB_TRANSPORT.md: the DV queue reaches local USB-IN 0x84;
-DG144 separately sends a 64-byte buffer to USB-IN 0x82. The incoming wireless
-writer/content association is still open. Never equate the endpoints or
-infer sensor content from length alone. DG D+0xa28's text-consumer reference
-is not a proven writer. Three private decoder repairs (extended-byte,
-indexed-word, single-bit branch) pass 83 cached SDK instruction controls;
-scaled indexed-halfword and signed-extract semantics remain unverified.
+Read docs/JIELI_USB_TRANSPORT.md and docs/JIELI_WIRELESS_DATAFLOW.md.
+The two-ended A2 transport candidate now connects the report queue through
+B+0x3dc, an A2/sequence section, DG queue D+0x2e0 and buffer D+0x8a4 to IN 0x82.
+The active transport callback/registration, lower radio path and full receive
+entry guards remain open; never claim measured end-to-end radio delivery.
+The D+0xa24 format-cache writer is identified but is a separate path.
+Likewise DG queue D+0x2a8 leads to IN 0x84; do not equate these queues/endpoints.
+DG's tag 0x0a rewrite does not apply to the reviewed tag 0xe0 telemetry.
+A fourth private decoder repair preserves all four source-register bits in
+EE52 byte stores: 44 official SDK examples (25 high-register discriminators)
+and the previous 83 controls pass. Without it the A2 header is misread.
+Scaled indexed-halfword and signed-extract still lack exact independent SDK
+examples; exhaustive integer counterexamples are not ISA/hardware proof.
 Last effective sensor configuration and physical calibration are still open.
 Never treat the 0x10ad4/0xc60c tables as code, trust the original broken
 P-code forms, or count parallel members twice. Nexus's separate 60-byte

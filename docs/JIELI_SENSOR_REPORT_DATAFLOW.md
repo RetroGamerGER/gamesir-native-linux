@@ -263,9 +263,11 @@ tatsächlich verwendete Firmware. Offsets und Achsen müssen berücksichtigt
 werden. Der laufende Treiber erhält daraus **keinen neuen Faktor**.
 
 Nach der [Zuordnung von Kopie und USB-Sendepfaden](JIELI_USB_TRANSPORT.md)
-als Nächstes den Writer von DG144 `D+0xa24` und dessen Funk-/Sensorbezug
-auflösen, indizierte Halfword-/signed-extract-Semantik gegen einen zweiten
-lokalen Referenzbeleg prüfen und weitere Schreiber der Sensor-/Offsetfelder
-sowie spätere Bereichswechsel untersuchen. Erst danach ist die statische
+hat der [Funkrahmen-Folgepass](JIELI_WIRELESS_DATAFLOW.md) den Formatcache-
+Writer und einen getrennten `A2`-/Queue-Pfad bis Dongle-IN `0x82` eingegrenzt.
+Als Nächstes dessen aktive Transport-Callback-Anbindung schließen,
+indizierte Halfword-/signed-extract-Semantik unabhängig absichern und weitere
+Schreiber der Sensor-/Offsetfelder sowie spätere Bereichswechsel untersuchen.
+Erst danach ist die statische
 Kette ausreichend geschlossen, um einen künftigen, gesondert freigegebenen
 physikalischen Kalibrierungstest gezielt auszuwerten. Dieser bleibt pausiert.
