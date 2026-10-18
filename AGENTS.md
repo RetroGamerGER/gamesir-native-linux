@@ -39,6 +39,11 @@ Do not select it automatically, change the driver or enable calibrated SDL
 output. Known-angle, timestamped reference measurements require a new request
 and separate hardware approval; calibration stays paused. Preserve existing
 research and its unresolved questions without automatically continuing it.
+The separately prepared qualitative left-turn test in docs/GYRO_AXIS_TEST.md
+requires no known angle. Use its explicit run-axis-left mode only after fresh
+instance checks and separate live approval, with one local Go per repetition.
+No automatic repeat, reference-angle claim, scale selection or runtime mapping;
+raw channel/sign evidence does not validate a full axis map or calibrated SDL.
 No universal trigger-game support or general stability guarantee.
 
 The optional `tools/offline` HID companion is file-only research, not runtime

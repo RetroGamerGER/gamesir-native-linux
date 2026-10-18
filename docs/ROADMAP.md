@@ -122,6 +122,12 @@ erhalten. Erst nach neuem Auftrag, externer Winkelreferenz und frischer
 Geräte-/Befehlsfreigabe weiterarbeiten. Keine automatische Wiederaufnahme;
 der produktive Treiber und die bisherige SDL-Grenze bleiben bestehen.
 
+Davon getrennt ist jetzt der [qualitative Achsentest](GYRO_AXIS_TEST.md)
+offline vorbereitet: zunächst nur bequeme Linksdrehungen ohne Winkelvorgabe,
+jede Wiederholung nach eigenem Go. Rohkanal und Vorzeichen untersuchen,
+keinen Faktor kalibrieren. Live-Ausführung und Host-Pufferänderung bleiben
+separat freizugeben; der vorhandene 90°-Referenzablauf bleibt pausiert.
+
 **Funkanalyse zurückgestellt (18. Oktober):** Die bereits nachgewiesene
 IMU-Ausgabe genügt als Ausgangspunkt für eine spätere Referenzkalibrierung;
 eine vollständige Rekonstruktion der unteren Funkverarbeitung ist dafür

@@ -372,6 +372,60 @@ class PhaseClock(unittest.TestCase):
         self.assertLessEqual(max(b - a for a, b in zip(calls, calls[1:])), 50_000_000)
 
 
+class QualitativeAxes(unittest.TestCase):
+    def test_plan_is_device_free_and_requires_separate_go_without_angle(self):
+        with patch.object(guided, "snapshot_iio", side_effect=AssertionError("no metadata access")), \
+                patch.object(guided.subprocess, "Popen", side_effect=AssertionError("no GUI or worker")), \
+                contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(guided.main(["plan-axis-left"]), 0)
+        plan = json.loads(output.getvalue())
+        self.assertFalse(plan["hardware_authorized"])
+        self.assertFalse(plan["known_angle_required"])
+        self.assertFalse(plan["automatic_next_repetition"])
+        self.assertTrue(plan["local_go_required_each_time"])
+        self.assertEqual(plan["prepare_seconds"], 30)
+        self.assertNotIn("90°", json.dumps(plan, ensure_ascii=False))
+
+    def test_axis_cues_keep_worker_deadline_and_single_motion(self):
+        self.assertEqual([p[:3] for p in guided.AXIS_PHASES], [p[:3] for p in guided.PHASES])
+        self.assertEqual(sum(p[1] == "motion" for p in guided.AXIS_PHASES), 1)
+        self.assertNotIn("90°", " ".join(p[3] for p in guided.AXIS_PHASES))
+
+    def test_raw_sign_response_excludes_large_pickup_and_putdown(self):
+        samples = observations(1_000_000_000)
+        # A different raw channel and negative response; no presumed G2/Z map.
+        for sample in samples:
+            if sample["gyro_raw"] == [0, 0, 100]:
+                sample["gyro_raw"] = [-321, 0, 0]
+        result = guided.analyze_axis_observation(samples, cue_fixture(1_000_000_000), 1, confirmed=True)
+        channels = result["gyro_channels"]
+        self.assertEqual(channels[0]["motion_min_delta_raw"], -321)
+        self.assertLess(channels[0]["motion_mean_delta_raw"], 0)
+        self.assertEqual(channels[1]["motion_mean_abs_delta_raw"], 0)
+        self.assertEqual(channels[2]["motion_mean_abs_delta_raw"], 0)
+        self.assertFalse(result["physical_axis_mapping_verified"])
+        self.assertFalse(result["scale_selected"])
+        self.assertNotIn("known_angle_deg", json.dumps(result))
+
+    def test_no_motion_does_not_invent_a_channel_or_mapping(self):
+        samples = observations(1_000_000_000)
+        for sample in samples:
+            sample["gyro_raw"] = [7, -4, 20]
+        result = guided.analyze_axis_observation(samples, cue_fixture(1_000_000_000), 1, confirmed=True)
+        self.assertTrue(all(c["motion_mean_abs_delta_raw"] == 0 for c in result["gyro_channels"]))
+        self.assertFalse(result["physical_axis_mapping_verified"])
+
+    def test_confirmation_gaps_and_bad_cues_rejected(self):
+        samples, cues = observations(1_000_000_000), cue_fixture(1_000_000_000)
+        with self.assertRaisesRegex(ValueError, "human-confirmed"):
+            guided.analyze_axis_observation(samples, cues, 1, confirmed=False)
+        for malformed in (cues[:-1], cues + [cues[0]], list(reversed(cues))):
+            with self.subTest(cues=malformed), self.assertRaisesRegex(ValueError, "ordered axis cues"):
+                guided.analyze_axis_observation(samples, malformed, 1, confirmed=True)
+        with self.assertRaisesRegex(ValueError, "counter gap"):
+            guided.analyze_axis_observation(samples[:2] + samples[3:], cues, 1, confirmed=True)
+
+
 class WorkerProtocol(unittest.TestCase):
     def setUp(self):
         self.command_reader, command_writer = os.pipe()
@@ -484,7 +538,7 @@ class EndToEndFakeRun(unittest.TestCase):
     def tearDown(self):
         self.temporary.cleanup()
 
-    def execute(self, answers, *, cue_failure=None, restored=True, corrupt_capture=False):
+    def execute(self, answers, *, cue_failure=None, restored=True, corrupt_capture=False, axis_only=False):
         output = self.home / "repetition-2"
         clock, links = self.clock, self.links
         fake_process = SimpleNamespace(wait=lambda **kwargs: 0)
@@ -539,8 +593,51 @@ class EndToEndFakeRun(unittest.TestCase):
             stack.enter_context(patch.object(guided.time, "monotonic_ns", self.clock.monotonic_ns))
             stack.enter_context(patch.object(guided.time, "sleep", self.clock.sleep))
             stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
-            result = guided.run_measurement(self.home / "manifest.json", 2, "external paper square", output)
+            if axis_only:
+                stack.enter_context(patch.object(guided, "reference_metadata", side_effect=AssertionError("no angle metadata")))
+                stack.enter_context(patch.object(guided, "analyze_reference", side_effect=AssertionError("no angle analysis")))
+            result = guided.run_measurement(self.home / "manifest.json", 2,
+                                           None if axis_only else "external paper square", output, axis_only=axis_only)
         return result, output, json.loads((output / "report.json").read_text()), popen_calls
+
+    def test_axis_run_is_one_go_no_angle_profile_or_reference_file(self):
+        code, output, report, calls = self.execute([True, True], axis_only=True)
+        self.assertEqual(code, 0)
+        self.assertEqual(report["kind"], "guided_axis_left")
+        self.assertTrue(report["motion_confirmed"])
+        self.assertFalse(report["reference_confirmed"])
+        self.assertFalse(report["calibration_verified"])
+        self.assertFalse(report["scale_selected"])
+        self.assertEqual(self.links[0].sent, ["GO", "STOP"])
+        self.assertEqual(len(calls), 1)
+        self.assertFalse((output / "reference.json").exists())
+        analysis = json.loads((output / "analysis.json").read_text())
+        self.assertEqual(analysis["kind"], "qualitative_yaw_left_observation")
+        self.assertFalse(analysis["physical_axis_mapping_verified"])
+        self.assertNotIn("90°", (output / "cues.jsonl").read_text())
+        self.assertEqual(self.clock.now, 1_153_000_000_000)
+
+    def test_axis_missed_motion_keeps_capture_without_analysis(self):
+        code, output, report, _ = self.execute([True, False], axis_only=True)
+        self.assertEqual(code, 0)
+        self.assertFalse(report["motion_confirmed"])
+        self.assertFalse(report["analysis_created"])
+        self.assertTrue((output / "capture/scans.bin").exists())
+        self.assertFalse((output / "analysis.json").exists())
+
+    def test_axis_cancel_before_go_does_not_send_go(self):
+        code, output, report, _ = self.execute([False], axis_only=True)
+        self.assertEqual(code, 1)
+        self.assertNotIn("GO", self.links[0].sent)
+        self.assertTrue(report["cleanup"]["restored"])
+        self.assertFalse((output / "analysis.json").exists())
+
+    def test_axis_failed_restore_blocks_analysis(self):
+        code, output, report, _ = self.execute([True], restored=False, axis_only=True)
+        self.assertEqual(code, 1)
+        self.assertFalse(report["motion_confirmed"])
+        self.assertFalse(report["cleanup"]["restored"])
+        self.assertFalse((output / "analysis.json").exists())
 
     def test_one_go_one_left_rotation_and_private_analysis_bundle(self):
         code, output, report, calls = self.execute([True, True])

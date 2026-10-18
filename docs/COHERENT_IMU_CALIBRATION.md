@@ -8,6 +8,11 @@ wird als offline geprüfter Zwischenstand lokal gesichert; weiterarbeiten erst
 nach neuem Auftrag. Dieses Dokument erteilt keine Freigabe für Fenster,
 Passwortabfrage, Geräteöffnung, Pufferkonfiguration oder Messung.
 
+Ergänzung vom 18. Oktober: Ein getrennter [qualitativer Achsentest](GYRO_AXIS_TEST.md)
+ist ohne bekannten Winkel offline vorbereitet. Er verwendet denselben begrenzten
+Puffer-Worker, aber eigene Ansagen und eine reine Rohkanalauswertung. Die unten
+beschriebene 90°-Kalibrierung bleibt davon unberührt und weiterhin pausiert.
+
 Revision `0.1.0.alpha3-5` mit kohärentem Kernelpuffer ist inzwischen separat
 installiert und der native Betrieb lesend bestätigt. Der letzte dokumentierte
 Pufferzustand ist deaktiviert. Noch kein kohärenter Live-Pufferlauf und keine

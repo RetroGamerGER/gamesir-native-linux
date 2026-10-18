@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
-"""One separately approved, KDE-guided yaw90left observation.
+"""One separately approved, KDE-guided left-turn observation.
 
 Preparing a manifest reads metadata only. Running is deliberately unprivileged:
 KDE questions and cues stay in the desktop session, while a fixed, separately
@@ -16,12 +16,13 @@ from pathlib import Path
 import pwd
 import select
 import stat
+import statistics
 import subprocess
 import sys
 import time
 
 from gamesir_imu_diagnostic import Bundle, GuidedCues
-from gyro_reference import analyze_reference
+from gyro_reference import analyze_reference, validate_samples
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -43,6 +44,71 @@ PHASES = (
     (75, "rest_after", 30, "SCHLUSSRUHE: 30 Sekunden ruhig liegen lassen. Noch nicht zurückdrehen."),
     (105, "finish", 4, "Messphasen beendet. Noch ruhig liegen lassen, bis Puffer und Datei nachweislich geschlossen sind."),
 )
+AXIS_PHASES = tuple((offset, phase, seconds, {
+    "pickup_buffer": "JETZT vorsichtig aufnehmen. Tastenfläche oben, USB-Kante von dir weg. Du hast 15 Sekunden. Noch nicht drehen.",
+    "hold_start": "Bequem halten. Noch nicht drehen; in 5 Sekunden kommt JETZT.",
+    "motion": "JETZT EINMAL langsam waagerecht nach LINKS drehen, so weit es bequem ist. Kein bestimmter Winkel. Du hast 15 Sekunden. Danach dort halten, nicht zurückdrehen.",
+    "hold_end": "In der erreichten Lage weiter stillhalten. Noch nicht ablegen oder zurückdrehen.",
+}.get(phase, instruction)) for offset, phase, seconds, instruction in PHASES)
+
+
+def axis_plan():
+    """Information only: no metadata reads, GUI, timers or device access."""
+    return {"kind": "qualitative_yaw_left_plan", "hardware_authorized": False,
+            "repetitions": 3, "one_repetition_per_invocation": True,
+            "local_go_required_each_time": True, "prepare_seconds": 30,
+            "capture_seconds": 108, "reset_minimum_seconds": 15,
+            "phases": [dict(offset_seconds=o, phase=p, seconds=s, instruction=i)
+                       for o, p, s, i in AXIS_PHASES],
+            "known_angle_required": False, "scale_selected": False,
+            "automatic_next_repetition": False, "calibration_verified": False,
+            "host_buffer_changes_require_separate_approval": True}
+
+
+def analyze_axis_observation(samples, cue_rows, repetition, *, confirmed):
+    """Raw-channel evidence only; never manufacture a known angle or axis map."""
+    if confirmed is not True or type(repetition) is not int or repetition not in (1, 2, 3):
+        raise ValueError("one human-confirmed left turn required")
+    stream = validate_samples(samples, MAX_GAP_NS)
+    names = [p[1] for p in AXIS_PHASES]
+    rows = [row for row in cue_rows if row.get("event") in names]
+    if [row["event"] for row in rows] != names:
+        raise ValueError("complete ordered axis cues required")
+    stamps = [row["monotonic_ns"] for row in rows]
+    if any(type(t) is not int for t in stamps) or any(b <= a for a, b in zip(stamps, stamps[1:])):
+        raise ValueError("ordered actual cue timestamps required")
+    cues = dict(zip(names, stamps))
+    windows, selected = {}, {}
+    for name, first, last in (("rest_before", "rest_before", "pickup_buffer"),
+                              ("motion", "hold_start", "put_down_buffer"),
+                              ("rest_after", "rest_after", "finish")):
+        start, end = cues[first], cues[last]
+        selected[name] = [s for s in samples if start <= s["timestamp_ns"] < end]
+        if len(selected[name]) < 2:
+            raise ValueError("insufficient samples inside axis cue window")
+        windows[name] = {"cue_bounds_ns": [start, end],
+                         "sample_bounds_ns": [selected[name][0]["timestamp_ns"],
+                                              selected[name][-1]["timestamp_ns"]],
+                         "sample_count": len(selected[name])}
+    channels = []
+    for axis in range(3):
+        before, motion, after = ([s["gyro_raw"][axis] for s in selected[name]]
+                                 for name in ("rest_before", "motion", "rest_after"))
+        baseline = statistics.mean(before)
+        delta = [v - baseline for v in motion]
+        channels.append({"raw_channel": f"G{axis}", "rest_before_mean_raw": baseline,
+                         "rest_before_std_raw": statistics.pstdev(before),
+                         "rest_after_mean_raw": statistics.mean(after),
+                         "rest_after_std_raw": statistics.pstdev(after),
+                         "motion_mean_delta_raw": statistics.mean(delta),
+                         "motion_mean_abs_delta_raw": statistics.mean(abs(v) for v in delta),
+                         "motion_min_delta_raw": min(delta), "motion_max_delta_raw": max(delta)})
+    return {"schema_version": 1, "kind": "qualitative_yaw_left_observation",
+            "repetition": repetition, "human_confirmed_motion": "horizontal left turn",
+            "stream": stream, "windows": windows, "gyro_channels": channels,
+            "baseline_is_experimental": True, "physical_axis_mapping_verified": False,
+            "calibration_verified": False, "scale_selected": False, "sdl_runtime_enable": False,
+            "limits": "Raw response/sign evidence only; compare repetitions and human motion report. No angle, rate scale or full axis map inferred."}
 
 
 def home_directory():
@@ -260,7 +326,7 @@ class WorkerLink:
 
 def question(message, *, yes="Go", no="Abbrechen", worker=None, cues=None):
     """Desktop-owned, default-cancel question; never run from the root worker."""
-    command = ["/usr/bin/kdialog", "--title", "GameSir – 90° links", "--yes-label", yes,
+    command = ["/usr/bin/kdialog", "--title", "GameSir – Gyrotest", "--yes-label", yes,
                "--no-label", no, "--defaultno", "--yesno", message]
     child = subprocess.Popen(command, shell=False, stdin=subprocess.DEVNULL,
                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -300,20 +366,20 @@ def wait_seconds(seconds, cues, worker=None):
         time.sleep(.05)
 
 
-def run_phases(worker, cues, start_ns):
+def run_phases(worker, cues, start_ns, phases=PHASES):
     """Never catch up missed cues or launch another repetition."""
     index = 0
-    while index < len(PHASES):
+    while index < len(phases):
         worker.pulse()
         cues.check()
         if worker.pending:
             raise ValueError("capture finished before all reference phases were completed")
         now = time.monotonic_ns()
-        offset, phase, seconds, instruction = PHASES[index]
+        offset, phase, seconds, instruction = phases[index]
         scheduled = start_ns + offset * 1_000_000_000
         if now >= scheduled:
             if now - scheduled > 2_000_000_000 or (
-                    index + 1 < len(PHASES) and now >= start_ns + PHASES[index + 1][0] * 1_000_000_000):
+                    index + 1 < len(phases) and now >= start_ns + phases[index + 1][0] * 1_000_000_000):
                 raise ValueError("reference cue missed or delayed over two seconds; stop without catch-up")
             cues.show(phase, instruction, seconds, scheduled_ns=scheduled)
             index += 1
@@ -431,12 +497,12 @@ def verify_capture(path, start_ns):
     return {"sha256_verified": True, "files": entries, "worker_report": report}
 
 
-def run_measurement(manifest_path, repetition, description, output):
+def run_measurement(manifest_path, repetition, description, output, *, axis_only=False):
     if os.geteuid() == 0:
         raise ValueError("KDE frontend must run as the desktop user, without sudo")
     if type(repetition) is not int or repetition not in (1, 2, 3):
         raise ValueError("exactly one repetition 1, 2 or 3 required")
-    if not isinstance(description, str) or not description.strip() or len(description) > 1_000 or "\0" in description:
+    if not axis_only and (not isinstance(description, str) or not description.strip() or len(description) > 1_000 or "\0" in description):
         raise ValueError("describe the external 0°/90° reference in 1..1000 characters")
     manifest_path, manifest = load_manifest(manifest_path)
     output = private_target(output)
@@ -453,6 +519,8 @@ def run_measurement(manifest_path, repetition, description, output):
               "sdl_runtime_enable": False, "automatic_next_repetition": False,
               "manifest": manifest, "max_gap_ns": MAX_GAP_NS,
               "started_utc": dt.datetime.now(dt.timezone.utc).isoformat()}
+    if axis_only:
+        report.update(kind="guided_axis_left", motion_confirmed=False, scale_selected=False)
     extra_files = ["worker.stderr.log"]
     failure = None
     stderr_handle = bundle.open("worker.stderr.log")
@@ -465,11 +533,16 @@ def run_measurement(manifest_path, repetition, description, output):
         worker = WorkerLink(process)
         bundle.append({"event": "worker_authentication_requested", "monotonic_ns": time.monotonic_ns()})
         worker.await_event("ready", timeout=300, cues=cues)
-        if not question(f"Wiederholung {repetition} von 3: genau eine horizontale 90°-Drehung nach LINKS.\n"
+        prompt = (f"Wiederholung {repetition} von 3: genau eine horizontale 90°-Drehung nach LINKS.\n"
                         "Tastenfläche bleibt oben. Start: USB-Kante zeigt von dir weg; Ende: nach links.\n"
                         f"Externe Winkelreferenz: {html.escape(description.strip())}\n\n"
                         "Nach Go bleiben 30 Sekunden zum ruhigen Ablegen. Danach jede lokale Ansage abwarten.\n"
-                        "Keine automatische nächste Wiederholung. Jetzt bereit?",
+                        "Keine automatische nächste Wiederholung. Jetzt bereit?") if not axis_only else (
+                        f"Achsentest, Wiederholung {repetition} von 3: EINMAL waagerecht nach LINKS drehen.\n"
+                        "Tastenfläche oben, USB-Kante anfangs von dir weg. Nur so weit wie bequem; KEIN bestimmter Winkel.\n"
+                        "Erst bei JETZT drehen, dann dort halten. Zurückdrehen erst nach bestätigtem Ende.\n\n"
+                        "Nach Go bleiben 30 Sekunden Vorbereitung. Keine automatische Wiederholung. Jetzt bereit?")
+        if not question(prompt,
                         worker=worker, cues=cues):
             raise ValueError("local Go declined; buffer not opened or enabled")
         report["local_go_monotonic_ns"] = time.monotonic_ns()
@@ -478,7 +551,7 @@ def run_measurement(manifest_path, repetition, description, output):
         worker.send("GO")
         started = worker.await_event("capture_started", timeout=10, cues=cues)
         report["capture_start_monotonic_ns"] = started["monotonic_ns"]
-        run_phases(worker, cues, started["monotonic_ns"])
+        run_phases(worker, cues, started["monotonic_ns"], AXIS_PHASES if axis_only else PHASES)
         finished = worker.await_event("finished", timeout=12, cues=cues)
         report["worker_result"] = finished
         if finished["passed"] is not True or finished["restored"] is not True:
@@ -487,20 +560,28 @@ def run_measurement(manifest_path, repetition, description, output):
         if process.wait(timeout=2) != 0:
             raise ValueError("worker exit status contradicts successful result")
         report["capture_verification"] = verify_capture(output / "capture", started["monotonic_ns"])
-        cues.show("reset_outside_analysis", "PUFFER ZURÜCKGESTELLT, AUFNAHME GESCHLOSSEN. Jetzt außerhalb der Messung zur Startmarke zurücksetzen. Mindestens 15 Sekunden Pause; kein weiterer Lauf startet automatisch.", 15)
+        cues.show("reset_outside_analysis", "PUFFER ZURÜCKGESTELLT, AUFNAHME GESCHLOSSEN. Jetzt außerhalb der Messung zur Ausgangslage zurücksetzen. Mindestens 15 Sekunden Pause; kein weiterer Lauf startet automatisch.", 15)
         wait_seconds(15, cues)
-        confirmed = question("War die externe 90°-Linksdrehung vollständig, horizontal und genau einmal ausgeführt?\n"
+        confirmation = ("War die externe 90°-Linksdrehung vollständig, horizontal und genau einmal ausgeführt?\n"
                              "Waren die lokalen Ansagen sichtbar und Anfang/Ende der Drehung in den Stillhaltefenstern?\n"
                              "Keine Rückdrehung vor Ende der Aufnahme?\n\n"
-                             "Nur bei sicherem Ja bestätigen. Andernfalls bleiben die Rohdaten erhalten, ohne Winkel-Auswertung.",
+                             "Nur bei sicherem Ja bestätigen. Andernfalls bleiben die Rohdaten erhalten, ohne Winkel-Auswertung.") if not axis_only else (
+                             "Hast du nach JETZT genau einmal waagerecht nach LINKS gedreht und danach stillgehalten?\n"
+                             "Waren die Ansagen sichtbar, und erfolgte keine Rückdrehung vor Aufnahmeende?\n"
+                             "Der Winkel ist egal. Bei verpasster Ansage, unbequemer oder anderer Bewegung bitte nicht bestätigen.\n"
+                             "Rohdaten bleiben auch dann erhalten; es startet kein neuer Versuch.")
+        confirmed = question(confirmation,
                              yes="Bestätigen", no="Nicht bestätigen", cues=cues)
-        report["reference_confirmed"] = confirmed
+        report["motion_confirmed" if axis_only else "reference_confirmed"] = confirmed
         if confirmed:
             samples = load_samples(output / "capture/observations.jsonl")
-            metadata = reference_metadata(samples, cue_rows, repetition, description, confirmed=True)
-            analysis = analyze_reference(samples, metadata, MAX_GAP_NS)
-            write_json(output / "reference.json", metadata)
-            extra_files.append("reference.json")
+            if axis_only:
+                analysis = analyze_axis_observation(samples, cue_rows, repetition, confirmed=True)
+            else:
+                metadata = reference_metadata(samples, cue_rows, repetition, description, confirmed=True)
+                analysis = analyze_reference(samples, metadata, MAX_GAP_NS)
+                write_json(output / "reference.json", metadata)
+                extra_files.append("reference.json")
             write_json(output / "analysis.json", analysis)
             extra_files.append("analysis.json")
             report["analysis_created"] = True
@@ -560,6 +641,7 @@ def run_measurement(manifest_path, repetition, description, output):
             except BaseException as secondary:
                 report["finalization_errors"].append(f"failure note could not be saved: {secondary}")
     print(json.dumps({"passed": report["passed"], "reference_confirmed": report["reference_confirmed"],
+                      "motion_confirmed": report.get("motion_confirmed"),
                       "output": str(output), "failure": report.get("failure")}, ensure_ascii=False), flush=True)
     if isinstance(failure, (KeyboardInterrupt, SystemExit)):
         return 130
@@ -569,6 +651,7 @@ def run_measurement(manifest_path, repetition, description, output):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("plan-axis-left", help="print qualitative left-turn plan; no GUI or hardware access")
     prepare = commands.add_parser("prepare", help="metadata-only manifest; no device open or buffer writes")
     prepare.add_argument("--iio-dir", required=True, type=Path)
     prepare.add_argument("--device-node", required=True, type=Path)
@@ -578,12 +661,21 @@ def main(argv=None):
     run.add_argument("--repetition", required=True, type=int, choices=(1, 2, 3))
     run.add_argument("--reference-description", required=True)
     run.add_argument("--output", required=True, type=Path)
+    axis = commands.add_parser("run-axis-left", help="one separately approved qualitative left turn; no angle reference")
+    axis.add_argument("--manifest", required=True, type=Path)
+    axis.add_argument("--repetition", required=True, type=int, choices=(1, 2, 3))
+    axis.add_argument("--output", required=True, type=Path)
     args = parser.parse_args(argv)
     try:
+        if args.command == "plan-axis-left":
+            print(json.dumps(axis_plan(), ensure_ascii=False, indent=2))
+            return 0
         if args.command == "prepare":
             prepare_manifest(args.iio_dir, args.device_node, args.output)
             print(json.dumps({"manifest": str(args.output), "device_opened": False, "buffer_changed": False}))
             return 0
+        if args.command == "run-axis-left":
+            return run_measurement(args.manifest, args.repetition, None, args.output, axis_only=True)
         return run_measurement(args.manifest, args.repetition, args.reference_description, args.output)
     except (OSError, ValueError, json.JSONDecodeError) as error:
         print(f"STOPPED {type(error).__name__}: {error}", file=sys.stderr)

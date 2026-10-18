@@ -5,6 +5,14 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Qualitativer Achsentest offline vorbereitet:** Zunächst nur eine bequeme
+waagerechte Linksdrehung pro eigenem Go, ohne Winkelvorgabe; höchstens drei
+getrennte Wiederholungen. Der vorhandene KDE-/IIO-Helfer bietet dafür einen
+separaten Modus mit Rohkanalvergleich ohne Winkelintegration oder Profilwahl.
+[Ablauf, Befehle und Grenzen](GYRO_AXIS_TEST.md). Kein Live-Lauf, keine aktuelle
+Geräteprüfung und keine Treiberänderung. Die bekannte Winkelkalibrierung
+bleibt pausiert; die Vorbereitung erteilt keine Hardwarefreigabe.
+
 **Entscheidung vom 18. Oktober: Funkanalyse zurückgestellt.** Der Empfang
 veränderlicher IMU-Rohdaten ist durch die bisherigen Hardwaretests belegt.
 Die vollständige Rekonstruktion der unteren Funk-/Kryptoverarbeitung ist
