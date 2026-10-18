@@ -161,13 +161,31 @@ Der [Empfangs-/Kontextfolgepass](JIELI_RX_CONTEXT.md) klärt die einfache
 Callback-Auswahl nach Korrektur des privaten Exporters. `0xfe42` ist als
 hardwaregestützte Paketverarbeitung eingegrenzt; eine CCM-Zuordnung bleibt
 Hypothese. Tatsächlich ausgeführter Verbindungspfad, Registerblockidentität,
-Deskriptorursprung, Funkzustellung, Halfword-/Vorzeichenformen, bedingte
+Deskriptorursprung, Zuordnung der realen Pakete zu diesen Firmwarezweigen,
+Halfword-/Vorzeichenformen, bedingte
 Parallelblöcke und letzte wirksame Konfiguration bleiben offen. Unter der
 ST-Annahme ist
 `0,07 Grad/s je Sensorzählwert` weiterhin ein Kandidat, kein bestätigter
 USB-Faktor. Die unten genannten Unbekannten
 beziehen sich auf den realen Controller; der Parser und seine Rohachsen
 werden durch diese statischen Erkenntnisse nicht umgestellt.
+
+### Unbestätigter Gyro-Testkandidat
+
+Entscheidung vom 18. Oktober 2026: **0,07 °/s pro USB-Rohwert** als
+unbestätigten, austauschbaren Testkandidaten festhalten. Grundlage ist der
+statische ST-Initialisierungskandidat für LSM6DS3TR-C bei ±2000 °/s.
+Die Übertragung des Sensorfaktors auf USB setzt unveränderte Verstärkung
+voraus; weder diese Annahme noch der aktive Sensor/Messbereich sind durch
+die bisherigen Funde abschließend belegt. Kein produktiver Standardwert,
+keine automatische Profilwahl und keine bestätigte physikalische Kalibrierung.
+
+Der reale IMU-Paketempfang ist bereits belegt. Weitere untere Funk-/
+Kryptoanalyse ist zurückgestellt und keine Voraussetzung für eine spätere
+Referenzmessung des effektiven USB-Faktors. Dafür sind bekannte Drehwinkel,
+kohärente Zeitstempel, Paketverlustprüfung sowie Bias, Achsen und Vorzeichen
+maßgeblich. **Gyrokalibrierung bleibt pausiert**; kein neuer Test und keine
+Änderung am Treiber oder an der SDL-Freigabe durch diese Dokumentation.
 
 **Unbekannt:** aktiver Gyro-Messbereich und Gyro-LSB/(°/s) am USB-Report,
 vollständige Achsen-/Vorzeichenabbildung, bestätigte Offsets, Geräteuhr und

@@ -148,10 +148,18 @@ weder ein nachgewiesener Sicherheitsfehler noch ein bestätigter Algorithmus.
   Eigene Prüfhelfer, Firmware, SDK-Ausschnitte und fremder Decoder bleiben
   privat. Der öffentliche Commit enthält ausschließlich Dokumentation.
 
-Als Nächstes Registerblock und Transportparameter unabhängig zuordnen,
-Deskriptorursprung sowie Schreiber von Empfangsfreigabe/Zustandsbyte verfolgen.
-Die belegten oberen Kopien bis zum `A2`-/USB-Pfad bleiben von dieser unteren
-Bearbeitung getrennt. Tatsächliche Funkzustellung, letzte wirksame
-Sensorkonfiguration und physische Kalibrierung sind offen. **0,07 Grad/s
-je ST-Sensorzählwert bleibt ein bedingter Kandidat, kein freigegebener
-Faktor für USB-Rohwerte.**
+**Entscheidung nach diesem Analysepass (18. Oktober): Funkanalyse
+zurückgestellt.** Registerblock, Transportparameter, Deskriptorursprung und
+Schreiber von Empfangsfreigabe/Zustandsbyte bleiben dokumentierte offene
+Fragen. Die belegten oberen Kopien bis zum `A2`-/USB-Pfad bleiben von dieser
+unteren Bearbeitung getrennt. Reale IMU-Pakete wurden bereits empfangen;
+welche internen Firmwarezweige dabei aktiv waren, ist nicht nachgewiesen.
+Die vollständige Funkrekonstruktion ist keine Voraussetzung für eine spätere
+Referenzkalibrierung der USB-Werte.
+
+**0,07 °/s pro USB-Rohwert ist ein unbestätigter Testkandidat**, abgeleitet
+aus der ST-Arbeitshypothese und der Annahme unveränderter Verstärkung bis USB.
+[Herkunft und Prüfgrenzen](PROTOCOL.md#unbestätigter-gyro-testkandidat).
+Keine automatische Übernahme in den Treiber. Letzte wirksame
+Sensorkonfiguration und physische Kalibrierung bleiben offen;
+**Gyrokalibrierung bleibt pausiert.**

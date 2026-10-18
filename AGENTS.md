@@ -30,6 +30,15 @@ VID3537; standard PIDs100a/109c; ZZZ105e remains experimental. Keep existing
 XInput/GIP/IMU formats and hardware-confirmed four-motor packet support.
 8192 LSB/g is an interchangeable experimental accelerometer value. Gyro scale
 is unknown; calibration is paused and calibrated SDL output is not approved.
+Decision of 2026-10-18: defer further lower-radio/crypto analysis. Received
+IMU packets are already hardware-confirmed; reconstructing every RF stage is
+not a prerequisite for measuring the effective USB gyro scale. Document
+0.07 degrees/s per USB raw count only as an unconfirmed test candidate,
+based on the ST +/-2000 dps hypothesis and assumed unchanged gain to USB.
+Do not select it automatically, change the driver or enable calibrated SDL
+output. Known-angle, timestamped reference measurements require a new request
+and separate hardware approval; calibration stays paused. Preserve existing
+research and its unresolved questions without automatically continuing it.
 No universal trigger-game support or general stability guarantee.
 
 The optional `tools/offline` HID companion is file-only research, not runtime
@@ -161,8 +170,9 @@ DG 0xfe42 uses a hardware register block, variable packet buffers and a
 separate result area; another caller appends four result bytes. CCM-like
 packet crypto is a hypothesis, not a confirmed algorithm/register identity
 or validated authentication path. Do not infer sensor scaling, byte-preserving
-radio transit or a security bug from it. Trace descriptor origin, state writers
-and the engine's independent definition next.
+radio transit or a security bug from it. Descriptor origin, state writers
+and the engine's independent definition remain deferred research questions,
+not the next task or prerequisites for a reference calibration.
 The D+0xa24 format-cache writer is identified but is a separate path.
 Likewise DG queue D+0x2a8 leads to IN 0x84; do not equate these queues/endpoints.
 DG's tag 0x0a rewrite does not apply to the reviewed tag 0xe0 telemetry.

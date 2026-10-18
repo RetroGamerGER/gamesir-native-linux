@@ -5,6 +5,21 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Entscheidung vom 18. Oktober: Funkanalyse zurückgestellt.** Der Empfang
+veränderlicher IMU-Rohdaten ist durch die bisherigen Hardwaretests belegt.
+Die vollständige Rekonstruktion der unteren Funk-/Kryptoverarbeitung ist
+keine Voraussetzung für die Bestimmung der effektiven USB-Gyroskalierung.
+Vorhandene Befunde, private Prüfartefakte und offene Fragen bleiben erhalten.
+
+**0,07 °/s pro USB-Rohwert ist ausschließlich ein unbestätigter Testkandidat.**
+Er stammt aus der ST-/±2000-°/s-Arbeitshypothese und setzt eine unveränderte
+Verstärkung bis zu den USB-Werten voraus. Aktiver Sensor/Messbereich und
+dieser Gesamtfaktor sind damit nicht bewiesen. Herkunft und Grenzen stehen
+im [Protokollbericht](PROTOCOL.md#unbestätigter-gyro-testkandidat).
+Keine Profilwahl, Treiberänderung oder Freigabe kalibrierter SDL-Ausgabe.
+Die Gyrokalibrierung bleibt pausiert; eine spätere bekannte Winkelreferenz
+mit kohärenten Zeitstempeln, Bias- und Achsenprüfung benötigt neue Freigabe.
+
 **Zwölf Sensorbytes bis zum Berichtskonstruktor verfolgt:** Der ST-Pfad
 ordnet die Registerachsen um und zieht bedingt sechs gespeicherte Offsets ab.
 Die Folge `Gy,Gz,Gx,Ay,Az,Ax` passt über die vorbereitete Kopiergeometrie
@@ -23,8 +38,9 @@ den registrierten Daten-Callback zu. Die
 [Routingfortsetzung](JIELI_LINK_ROUTING.md) klärt die Auswahlregel:
 zwölf Bit Verbindungskennung, zuerst dynamische Liste, danach zwei feste
 Slots. Die DG-Kette vom aufbereiteten Empfangsdeskriptor über Transporttabelle
-und `btstack`-Nachricht bis zum A2-Parser ist zugeordnet. Reale
-Verbindungsmitgliedschaft und Funkzustellung bleiben unbeobachtet.
+und `btstack`-Nachricht bis zum A2-Parser ist zugeordnet. Welche dieser
+Firmwarezweige bei den bereits empfangenen realen Paketen aktiv waren,
+ist durch die statische Analyse nicht nachgewiesen.
 Der [Empfangs-/Kontextfolgepass](JIELI_RX_CONTEXT.md) korrigiert nun unseren
 privaten Exporthelfer und klärt die einfache Callback-Auswahl. `0xfe42`
 verarbeitet variable Paketpuffer über einen Hardware-Registerblock; der

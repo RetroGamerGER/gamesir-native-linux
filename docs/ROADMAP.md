@@ -122,6 +122,14 @@ erhalten. Erst nach neuem Auftrag, externer Winkelreferenz und frischer
 Geräte-/Befehlsfreigabe weiterarbeiten. Keine automatische Wiederaufnahme;
 der produktive Treiber und die bisherige SDL-Grenze bleiben bestehen.
 
+**Funkanalyse zurückgestellt (18. Oktober):** Die bereits nachgewiesene
+IMU-Ausgabe genügt als Ausgangspunkt für eine spätere Referenzkalibrierung;
+eine vollständige Rekonstruktion der unteren Funkverarbeitung ist dafür
+nicht erforderlich. **0,07 °/s pro USB-Rohwert bleibt ein unbestätigter
+Testkandidat**, ohne Profilaktivierung oder Treiberänderung.
+[Herkunft und Prüfgrenzen](PROTOCOL.md#unbestätigter-gyro-testkandidat).
+Kalibrierung und Funkanalyse werden nicht automatisch wieder aufgenommen.
+
 Der separate [experimentelle Gyrodiagnosepfad](EXPERIMENTAL_GYRO_TEST.md)
 bereitet fünf LSM6DS3TR-C-Hypothesen vor; kein Messbereich wird automatisch
 ausgewählt. Gespeicherte IMU-Pakete sind unter allen fünf Faktoren vergleichbar,
@@ -193,7 +201,8 @@ GIP-Update-DLL, getrennte Edition-/Controller-/Dongle-Paketkandidaten,
 Windows-Versionsschnittstelle und Motion-/Kalibrierungsdialog.
 Noch keine bestätigte Gyro-Skalierung oder sichere Firmwareimplementierung.
 
-Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
+Forschungsbacklog; weitere Arbeit nur nach neuem Auftrag und Erläuterung
+des Ansatzes. Die untere Funkanalyse ist ausdrücklich zurückgestellt:
 
 1. Native Modell-/DFU-Verbraucher, Live-Versionsquellen, Updatevergleich und
    Controller-/Dongle-Paketpaarung vollständig zuordnen. Konstruktoren und
@@ -274,10 +283,11 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    Einzelbefehls-Kontrollen und fünf einfache Bedingungsblöcke bestehen.
    Die Callback-Auswahl ist statisch zugeordnet. `0xfe42` verarbeitet
    Paketpuffer über einen Hardwareblock; CCM bleibt eine Hypothese.
-   Als Nächstes Registerblock/Parameter unabhängig zuordnen sowie
-   Deskriptorursprung, Zustands-/Freigabe- und Kennungs-/Kanalschreiber
-   untersuchen. Bedingte Parallelblöcke und bestimmte negative Konstanten
-   bleiben zusätzliche Decodergrenzen.
+   Zurückgestellte Fragen: unabhängige Zuordnung von Registerblock/Parametern,
+   Deskriptorursprung, Zustands-/Freigabe- und Kennungs-/Kanalschreiber.
+   Diese Lücken blockieren keine spätere Messung des effektiven USB-Faktors.
+   Bedingte Parallelblöcke und bestimmte negative Konstanten bleiben
+   zusätzliche Decodergrenzen.
    Statische Registrierung beweist keine Laufzeitaktivierung oder Funkzustellung.
    Die weiterhin offenen Halfword-/Vorzeichenformen unabhängig absichern,
    einschließlich des verwandten skalierten Halfword-Stores; außerdem

@@ -86,15 +86,20 @@ Kalibrierungsframing bleiben offen. Die folgenden Grenzen der
 ersten Namens-/UI-Prüfung werden dadurch präzisiert, keine globale
 Abwesenheit anderer Sensorpfade behauptet.
 
-**Nächste Priorität:** Die verbleibenden Lücken zwischen Sensorpfad und
-USB-Ausgabe schließen: Registerblock und Parameter des Pakethelfers
-`0xfe42` unabhängig zuordnen, Ursprung der Empfangsdeskriptoren sowie
-Zustands-, Freigabe- und Kennungs-/Kanalschreiber untersuchen. Statische
-Registrierung und der obere Empfangseinstieg zum
-`A2`-Pfad sind zugeordnet, reale Funkzustellung nicht. Der Writer des
-Formatcaches `D+0xa24` ist gefunden, bleibt aber
+**Entscheidung vom 18. Oktober: weitere Funkanalyse zurückgestellt.**
+Registerblock und Parameter des Pakethelfers `0xfe42`, Ursprung der
+Empfangsdeskriptoren und Zustands-/Freigabe-/Kennungsschreiber bleiben offene
+Forschungsfragen. Der reale IMU-Paketempfang ist bereits belegt; die Zuordnung
+zu jedem einzelnen Firmwarezweig ist keine Voraussetzung für eine spätere
+Referenzmessung. **0,07 °/s pro USB-Rohwert ist nur ein unbestätigter
+Testkandidat**; [Herkunft und Grenzen](PROTOCOL.md#unbestätigter-gyro-testkandidat).
+Gyrokalibrierung bleibt pausiert, keine Änderung an Treiber oder SDL-Ausgabe.
+Statische Registrierung und der obere Empfangseinstieg zum `A2`-Pfad sind
+zugeordnet; tatsächlich aktive interne Zweige bleiben unbestätigt. Der Writer
+des Formatcaches `D+0xa24` ist gefunden, bleibt aber
 vom passend zugeordneten Queue-Pfad getrennt. Indizierte Halfword-/
-Vorzeichenformen sowie weitere Schreiber der Offsets und Sensorregister prüfen.
+Vorzeichenformen sowie weitere Schreiber der Offsets und Sensorregister
+bleiben ebenfalls offene Forschungsfragen.
 Sensorwahl und letzte wirksame Initialisierung bleiben
 unbestätigt. Ein aktiver Messbereich allein ist noch kein Faktor für
 unsere USB-Rohwerte. Bestehende Werkzeuge werden
