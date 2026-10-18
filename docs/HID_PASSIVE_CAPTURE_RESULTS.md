@@ -129,3 +129,30 @@ capture requires fresh authorization, target/process checks, and a verified
 ordinary input consumer kept open throughout. No automatic repeats, release,
 resume, recovery or replacement of the native architecture follow from this
 result. Gyro calibration remains paused.
+
+## Subsequent return to normal native operation
+
+Later on the same day the maintainer manually executed `gamesir-native resume`.
+The assistant did not repeat it or execute release, a module operation,
+binding write or direct device access. Fresh read-only cached-state, protected
+manager-status and journal checks confirmed the controlled source instance
+and successful transition to `109c`, with IF0 bound to `gs_native`.
+
+Manager status: unpaused, present, `phase=active`, no current device/scan/port
+error or status conflict. Bootstrap returned zero without timeout, state 7,
+error 0, failed stage 0, accepted pad/IMU and confirmed handover. The service
+remained active and boot-enabled, with the same process and zero restarts;
+loaded `persistent_mode`, `bootstrap_mode` and `enable_output` were all `Y`.
+`returned=false` is expected during native operation, not a failed return.
+
+The known xpad teardown `usb_submit_urb ... -2` message appeared again before
+the later successful native bootstrap. Its presence was preserved in the
+private journal evidence; it was not treated as a new bootstrap failure or
+used to start an automatic retry/recovery loop.
+
+The input device is named `GameSir G7 Pro`; the maintainer confirmed normal
+buttons, both sticks and triggers. This was a return-function confirmation,
+not a new all-paddle, motor, reconnect or calibration test. Gyro calibration
+remains paused. The earlier paused `100a/xpad` state above describes capture
+completion; the final observed state is active native `109c/gs_native`.
+See [sanitized return evidence](evidence/NATIVE_RETURN_AFTER_HID_20261018.json).

@@ -5,6 +5,17 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Normaler nativer Dauerbetrieb nach den HID-Aufnahmen wieder bestätigt:**
+Der Maintainer führte Resume selbst aus. Die anschließende rein lesende
+Kontrolle bestätigt den zugehörigen erfolgreichen Bootstrap nach `109c`,
+IF0 `gs_native`, Manager `active` ohne aktuelle Fehler und `persistent_mode=Y`.
+Dienst aktiv, Autostart aktiviert, kein Dienstneustart. `GameSir G7 Pro` und
+normale Tasten-/Stick-/Triggereingaben vom Maintainer bestätigt. Die bekannte
+xpad-Abbaumeldung `-2` trat vor dem danach erfolgreichen Bootstrap erneut auf.
+Kein weiterer Resume, Release, direktes Geräteöffnen oder Reparaturbefehl durch die
+Assistenz; keine neuen Motor-, Paddle-, Reconnect- oder Kalibrierungstests.
+[Lesender Nachweis und Grenzen](HID_PASSIVE_CAPTURE_RESULTS.md#subsequent-return-to-normal-native-operation).
+
 **Zwei freigegebene 90-Sekunden-Aufnahmen abgeschlossen:** Recorder,
 Isolation und Prüfsummen bestanden. Der erste Lauf ohne bestätigten offenen
 Eingabeclient hatte keine XInput-Berichte. Nach ausdrücklicher Wiederholungs-
@@ -17,8 +28,9 @@ volle Stick-/Triggerbereiche beobachtet, keine D-Pad-Aktivität belegt.
 
 Originale bleiben privat, unverändert und dauerhaft gespeichert; keine
 Rohmitschnitte oder HID-Tasteninhalte in Git. usbmon einmal geladen, danach
-kein Resume, Treiberwechsel oder weiterer Modulladevorgang. Manager weiterhin
-pausiert, dieselbe `100a`-/`xpad`-/`usbhid`-Instanz bestätigt. Kein Beleg für
+kein Resume, Treiberwechsel oder weiterer Modulladevorgang während der Aufnahmen.
+Zum Aufnahmeende war der Manager pausiert und dieselbe
+`100a`-/`xpad`-/`usbhid`-Instanz bestätigt. Kein Beleg für
 Paddle-Zuordnung oder passive IMU-Nutzbarkeit unter XInput; Gyrokalibrierung
 pausiert. Beide einmaligen Freigaben verbraucht, keine weitere Hardwareaktion.
 [Ergebnisse, Grenzen und Prüfsummen](HID_PASSIVE_CAPTURE_RESULTS.md).

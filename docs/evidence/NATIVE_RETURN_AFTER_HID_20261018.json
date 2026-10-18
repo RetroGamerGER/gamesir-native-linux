@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "action_origin": "Maintainer manually executed resume; assistant verification was read-only",
+  "kernel": "7.2.11-1-garuda",
+  "package": "gamesir-native-dkms 0.1.0.alpha3-6",
+  "module": "0.1.0.alpha3",
+  "controlled_source_instance_matches_fresh_precheck": true,
+  "device": {
+    "vid": "3537",
+    "pid": "109c",
+    "if0": "gs_native",
+    "if1": null,
+    "input_name": "GameSir G7 Pro"
+  },
+  "manager": {
+    "paused": false,
+    "phase": "active",
+    "present": true,
+    "busy": false,
+    "error": "",
+    "scan_error": "",
+    "port_errors": {},
+    "status_conflict": "",
+    "returned": false
+  },
+  "bootstrap": {
+    "returncode": 0,
+    "timed_out": false,
+    "state": 7,
+    "error": 0,
+    "failed_stage": 0,
+    "pad": 1,
+    "imu": 1,
+    "handover": 1
+  },
+  "service": {
+    "active": true,
+    "boot_enabled": true,
+    "same_service_process_as_before": true,
+    "restarts": 0
+  },
+  "mode": {
+    "bootstrap": true,
+    "output_enabled": true,
+    "persistent": true
+  },
+  "known_xpad_teardown_minus2_observed": true,
+  "later_kernel_bootstrap_finished_successfully": true,
+  "user_feedback": {
+    "source": "Explicit maintainer reply after read-only native status verification",
+    "device_name_correct": true,
+    "normal_buttons_sticks_triggers_work": true,
+    "new_motor_paddle_reconnect_or_calibration_test": false
+  },
+  "assistant_actions": {
+    "resume": 0,
+    "release": 0,
+    "module_or_binding_operations": 0,
+    "direct_device_opens": 0
+  },
+  "limits": [
+    "Cached registration is not a fresh all-paddle, motor, IMU calibration or reconnect test.",
+    "Bootstrap IMU acceptance does not establish calibrated physical gyro units.",
+    "Known xpad teardown -2 message preceded successful native startup; no automatic retry or repair followed.",
+    "Raw protected journals and identifiers remain private."
+  ]
+}
