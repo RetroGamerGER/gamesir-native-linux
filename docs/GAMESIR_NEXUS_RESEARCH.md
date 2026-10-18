@@ -31,10 +31,14 @@ dem SDK-ROM-Stub `memcpy`/`memmove` zu und erreicht Controller-USB-IN `0x84`.
 Der [Funkrahmen-Folgepass](JIELI_WIRELESS_DATAFLOW.md) ergänzt einen
 beidseitig passenden `A2`-/Queue-Kandidaten bis zum DG144-Sendepuffer für
 IN `0x82`, ohne zusätzliche Sensorarithmetik in den geprüften Kopien.
-Aktiver Transport-Callback und untere Funkstrecke bleiben offen. Vier private
-Decoderformen korrigiert; 127 SDK-Instruktionskontrollen und 49 Forschungstests
-bestanden. Halfword-/Vorzeichenformen, aktive Konfiguration und physische
-Achsen bleiben begrenzt. Kein bestätigter USB-Gyrofaktor.
+Der [Callback-Folgepass](JIELI_RADIO_CALLBACK.md) ordnet inzwischen
+Transporttabelle, Setter und registrierten Callback in drei Apps statisch zu;
+zwei bedingte untere Sendepfade sind eingegrenzt. Tatsächliches Scheduling,
+Verbindungswahl und Funkzustellung bleiben unbeobachtet. 61 Forschungstests
+bestanden. Die bisherigen vier privaten Decoderkorrekturen/127 SDK-Kontrollen
+bleiben getrennt von den weiterhin unbestätigten Halfword-/Vorzeichenformen.
+Aktive Konfiguration und physische Achsen bleiben begrenzt. Kein bestätigter
+USB-Gyrofaktor.
 Die folgenden älteren Suchpässe dokumentieren ihre damalige Erkenntnisgrenze.
 
 **Innerer Strukturfolgepass vom 16. Oktober:** `app.bin` und `cfg_tool.bin`

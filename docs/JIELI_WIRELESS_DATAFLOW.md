@@ -7,6 +7,11 @@ Analyse mit bereits gespeicherten Referenzen. Keine Firmwareausführung oder
 Emulation, Netzwerk-/Hardwarezugriffe, Installation oder Treiberänderung.
 Gyrokalibrierung bleibt pausiert; kein neuer Laufzeitfaktor.
 
+**Spätere Fortsetzung:** [Callback-Registrierung](JIELI_RADIO_CALLBACK.md)
+ordnet die unten noch offene Tabellen-/Setter-Verknüpfung statisch zu und
+grenzt zwei untere Sendepfade ein. Tatsächliche Aktivierung und Funkzustellung
+bleiben unbeobachtet. Dieser Bericht hält den vorherigen Analysestand fest.
+
 ## Ergebnis und Beweisgrenze
 
 Ein **beidseitig passender `A2`-Transportpfad** verbindet jetzt den

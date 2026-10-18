@@ -138,8 +138,11 @@ an ABI/address model, not a measured silicon ROM revision or global alias mask.
 Read docs/JIELI_USB_TRANSPORT.md and docs/JIELI_WIRELESS_DATAFLOW.md.
 The two-ended A2 transport candidate now connects the report queue through
 B+0x3dc, an A2/sequence section, DG queue D+0x2e0 and buffer D+0x8a4 to IN 0x82.
-The active transport callback/registration, lower radio path and full receive
-entry guards remain open; never claim measured end-to-end radio delivery.
+The callback-registration follow-up in docs/JIELI_RADIO_CALLBACK.md resolves
+the selected H4_Controller table, setter and data callback in three apps.
+This proves a static initialization relationship, not observed task execution
+or active radio delivery. Two conditional lower connection paths, their
+runtime selection and the full DG receive entry remain open.
 The D+0xa24 format-cache writer is identified but is a separate path.
 Likewise DG queue D+0x2a8 leads to IN 0x84; do not equate these queues/endpoints.
 DG's tag 0x0a rewrite does not apply to the reviewed tag 0xe0 telemetry.
@@ -148,6 +151,11 @@ EE52 byte stores: 44 official SDK examples (25 high-register discriminators)
 and the previous 83 controls pass. Without it the A2 header is misread.
 Scaled indexed-halfword and signed-extract still lack exact independent SDK
 examples; exhaustive integer counterexamples are not ISA/hardware proof.
+The related EDD8 mode-9 store also has a suspect base/index shift order.
+The monotone table and shifted signed-field checks in the callback report
+are internal consistency evidence only. Do not treat the table's 16384 as
+a sensor scale or confuse the table's data callback with its opposite-direction
+send handler. Preserve the distinct text-pointer, ROM and RAM-suffix models.
 Last effective sensor configuration and physical calibration are still open.
 Never treat the 0x10ad4/0xc60c tables as code, trust the original broken
 P-code forms, or count parallel members twice. Nexus's separate 60-byte

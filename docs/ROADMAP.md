@@ -262,9 +262,14 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    den Formatcache-Writer und einen getrennten passenden `A2`-/Queue-Pfad
    nach IN `0x82` eingegrenzt. In den Transportkopien keine Sensorarithmetik;
    49 Forschungstests, 127 SDK-Kontrollen, vier private Decoderkorrekturen.
-   Als Nächstes aktive Transport-Callback-Anbindung und Empfangseinstieg
-   schließen. Die zwei weiterhin offenen Halfword-/Vorzeichenoperationen
-   unabhängig absichern, außerdem weitere Offsetschreiber, Busabschluss und
+   Der [Callback-Folgepass](JIELI_RADIO_CALLBACK.md) ordnet inzwischen die
+   tabellenbasierte Registrierung in drei Apps zu; 61 Forschungstests und
+   29 abschließende statische Fenster ohne Decodeabbrüche. Als Nächstes
+   die zwei unteren Verbindungspfade bis zur tatsächlichen DG-Empfangsanbindung
+   verfolgen. Statische Registrierung beweist keine Laufzeitaktivierung.
+   Die weiterhin offenen Halfword-/Vorzeichenformen unabhängig absichern,
+   einschließlich des verwandten skalierten Halfword-Stores; außerdem
+   weitere Offsetschreiber, Busabschluss und
    letzte wirksame Registerkonfiguration prüfen.
    Aktive Hardwarevariante und Firmwareversion sind dadurch nicht bestimmt.
    [Sensorinitialisierung und konkrete Grenzen](JIELI_SENSOR_INITIALIZATION.md).

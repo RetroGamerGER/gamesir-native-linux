@@ -152,9 +152,11 @@ ordnet den Kopieraufruf dem SDK-ROM-Stub `memcpy`/`memmove` zu. Die
 Controller-Queue hat mehrere Verbraucher. Der neue
 [Funkrahmen-Folgepass](JIELI_WIRELESS_DATAFLOW.md) verbindet einen beidseitig
 passenden `A2`-/Queue-Pfad mit dem Dongle-Sendepuffer für IN `0x82`; in den
-geprüften Transportkopien keine weitere Sensorrechnung. Aktive Callback-
-Anbindung/untere Funkstrecke, Halfword-/Vorzeichenformen und tatsächlich
-aktive Konfiguration bleiben offen. Unter der ST-Annahme ist
+geprüften Transportkopien keine weitere Sensorrechnung. Der
+[Callback-Folgepass](JIELI_RADIO_CALLBACK.md) ordnet die tabellenbasierte
+Registrierung in drei Apps zu. Tatsächlich ausgeführter Start-/Verbindungspfad,
+untere Funkzustellung, Halfword-/Vorzeichenformen und letzte wirksame
+Konfiguration bleiben offen. Unter der ST-Annahme ist
 `0,07 Grad/s je Sensorzählwert` weiterhin ein Kandidat, kein bestätigter
 USB-Faktor. Die unten genannten Unbekannten
 beziehen sich auf den realen Controller; der Parser und seine Rohachsen
