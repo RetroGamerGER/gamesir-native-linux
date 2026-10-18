@@ -49,6 +49,16 @@ Belege: [Gamescope](STEAM_GAMESCOPE.md),
 
 ## 2. Spielintegration und kalibrierte Sensoren
 
+**Qualitative Achsen ins Offline-Testprofil übernommen:** Das explizite
+`g7pro-observed-20261018` bewahrt Rohdaten und getrennte Skalierungswahl;
+Replay aller sechs gespeicherten Richtungen bestanden. Nächster sinnvoller
+Schritt ist ein lokales visuelles Diagnosefenster mit kohärentem IIO-Strom,
+Fadenkreuz/Drehungsanzeige und getrenntem Darstellungsfaktor. Zuerst mit
+gespeicherten Daten entwickeln, dann einen begrenzten E2E-Anzeigelauf separat
+freigeben. Kein neuer Treiber nötig für diesen Diagnosepfad. Eine spätere
+SDL-/Eden-Abnahme benötigt weiterhin die zusätzliche Sensorschnittstelle
+und passende Kalibrierungsbelege. [Plan und Grenzen](EXPERIMENTAL_GYRO_TEST.md#visueller-e2e-empfindlichkeitstest-geplanter-nächster-schritt).
+
 **Architekturvereinfachung offline bewerten:** Den
 [xpad-/HID-Vergleich mit PandaPro8K](XPAD_HID_FEASIBILITY.md) weiterverfolgen.
 Gespeicherte normale `100a`-Deskriptoren und einzelne IF1-Telemetriepakete

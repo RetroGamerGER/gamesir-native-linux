@@ -26,6 +26,31 @@ PROFILES = {125: Fraction(7, 1600), 250: Fraction(7, 800),
 IIO_NAME = "gamesir_g7pro_raw_experimental"
 CHANNELS = [f"in_{sensor}_{axis}_raw" for sensor in ("anglvel", "accel") for axis in "xyz"]
 MAX_SWEEP_NS = 100_000_000
+OBSERVED_AXIS_PROFILE = "g7pro-observed-20261018"
+
+
+def axis_profile_info(name):
+    if name != OBSERVED_AXIS_PROFILE:
+        raise ValueError("unknown explicitly selected experimental axis profile")
+    return {"id": name, "version": 1, "scope": "standard G7 Pro, 3537:109c, 2.4 GHz dongle",
+            "evidence": "docs/GYRO_AXIS_TEST.md; recorded at afa840a, two separately approved instances",
+            "status": "observed qualitative directions; experimental mapping, not full calibration",
+            "positive_motion_from_wire": {"pitch_up": "G0", "yaw_left": "G1", "roll_left": "G2"},
+            "body_frame": {"X": "right", "Y": "toward USB/front edge, away from player",
+                           "Z": "out of button face; right-handed"},
+            "body_xyz_from_wire": [{"raw_axis": 0, "sign": 1},
+                                   {"raw_axis": 2, "sign": -1},
+                                   {"raw_axis": 1, "sign": 1}],
+            "accelerometer_mapping_applied": False, "scale_verified": False,
+            "physical_axis_mapping_verified": False, "calibration_verified": False,
+            "sdl_runtime_enable": False}
+
+
+def body_vector(wire, axis_profile):
+    mapping = axis_profile_info(axis_profile)["body_xyz_from_wire"]
+    return [wire[item["raw_axis"]] * item["sign"] for item in mapping]
+
+
 GUIDED_PHASES = (
     (0, "rest", "AUFZEICHNUNG LÄUFT. 15 Sekunden ruhig liegen lassen."),
     (15, "pickup_buffer", "15 Sekunden Vorbereitung: vorsichtig aufnehmen, noch nicht drehen."),
@@ -122,15 +147,23 @@ def vector(value, *, raw=False):
     return list(value)
 
 
-def convert(gyro_raw, accel_raw, profile, bias=(0., 0., 0.)):
+def convert(gyro_raw, accel_raw, profile, bias=(0., 0., 0.), *, axis_profile=None):
     if type(profile) is not int or profile not in PROFILES:
         raise ValueError("explicit experimental range required; no default")
     g, a, b = vector(gyro_raw, raw=True), vector(accel_raw, raw=True), vector(bias)
     dps = [(x - offset) * float(PROFILES[profile]) for x, offset in zip(g, b)]
-    return {"gyro_raw": g, "accel_raw": a, "experiment": True,
+    result = {"gyro_raw": g, "accel_raw": a, "experiment": True,
             "test_values": {"gyro_dps": dps, "gyro_rad_s": [math.radians(x) for x in dps],
                             "accel_g": [x / 8192 for x in a],
                             "accel_m_s2": [x / 8192 * 9.80665 for x in a]}}
+    if axis_profile is not None:
+        body_dps = body_vector(dps, axis_profile)
+        result["experimental_axes"] = {
+            "profile_id": axis_profile, "body_gyro_dps_xyz": body_dps,
+            "body_gyro_rad_s_xyz": [math.radians(x) for x in body_dps],
+            "positive_motion_dps": dict(zip(("pitch_up", "yaw_left", "roll_left"), dps)),
+            "scale_verified": False, "calibration_verified": False, "sdl_runtime_enable": False}
+    return result
 
 
 def profile_info(profile, bias=(0., 0., 0.)):
@@ -145,7 +178,7 @@ def profile_info(profile, bias=(0., 0., 0.)):
             "calibration_verified": False, "sdl_runtime_enable": False}
 
 
-def replay(path):
+def replay(path, *, axis_profile=None):
     # Reuse our strict stored-record reader and existing byte decoder.
     sys.path.insert(0, str(ROOT / "tools/offline"))
     from gamesir_offline.records import read_records
@@ -167,6 +200,10 @@ def replay(path):
                 decoded.disposition != "decoded" or decoded.kind != "gamesir_telemetry"):
             counters["not_full_imu_telemetry"] += 1
             continue
+        if axis_profile is not None:
+            axis_profile_info(axis_profile)
+            if record.pid != 0x109c:
+                raise ValueError("observed axis profile is scoped to standard 3537:109c, not ZZZ")
         if key is not None and key != record.stream_key:
             raise ValueError("multiple IMU device/session/timebase streams; filter offline first")
         key = record.stream_key
@@ -182,15 +219,71 @@ def replay(path):
                      "source_sha256": digest(Path(path)), "device_clock_verified": False}
 
 
+def replay_buffer(path, *, axis_profile=None):
+    """Saved bounded worker bundle only; verify originals, never inspect live IIO."""
+    from gamesir_gyro_guided import read_regular, verify_capture
+    from gamesir_imu_stream import ScanDecoder, CHANNELS as SCAN_CHANNELS
+    path = Path(path)
+    report = json.loads(read_regular(path / "report.json", 1_048_576))
+    if not isinstance(report, dict):
+        raise ValueError("saved worker report must be an object")
+    start = report.get("capture_started_monotonic_ns")
+    if type(start) is not int or start <= 0:
+        raise ValueError("successful saved capture start required")
+    verified = verify_capture(path, start)
+    report = verified["worker_report"]
+
+    def original(name, maximum=64 * 1_048_576):
+        data = read_regular(path / name, maximum)
+        if hashlib.sha256(data).hexdigest() != verified["files"][name]:
+            raise ValueError("saved capture changed after checksum verification")
+        return data
+
+    layout = json.loads(original("layout.json", 1_048_576))
+    transaction = json.loads(original("buffer-transaction.json", 1_048_576))
+    before = transaction.get("before")
+    if not isinstance(layout, dict) or not isinstance(before, dict):
+        raise ValueError("saved layout and transaction metadata must be objects")
+    usb, metadata = before.get("usb"), layout.get("metadata")
+    identity = before.get("iio_identity")
+    if (not isinstance(usb, dict) or not isinstance(metadata, dict) or
+            not isinstance(before.get("directory"), str) or not before["directory"] or
+            not isinstance(identity, list) or len(identity) != 2 or
+            any(type(x) is not int or x < 0 for x in identity)):
+        raise ValueError("saved instance metadata invalid")
+    if axis_profile is not None:
+        axis_profile_info(axis_profile)
+        if (usb.get("vid"), usb.get("pid"), usb.get("interface_number"), usb.get("driver")) != ("3537", "109c", 0, "gs_native"):
+            raise ValueError("observed axis profile requires saved standard native 3537:109c metadata")
+    expected_instance = before["directory"] + ":" + ":".join(map(str, identity))
+    if (layout.get("channels") != list(SCAN_CHANNELS) or layout.get("scan_bytes") != 32 or
+            layout.get("counter_offset") != 16 or layout.get("host_timestamp_offset") != 24 or
+            metadata.get("clock") != "monotonic" or metadata.get("instance_id") != expected_instance):
+        raise ValueError("saved coherent layout/instance mismatch")
+    raw = original("scans.bin")
+    decoder = ScanDecoder(expected_instance, 250_000_000, "iio_buffer")
+    samples = []
+    for offset in range(0, len(raw), 65536):
+        samples.extend(decoder.feed(raw[offset:offset + 65536]))
+    decoder.finish()
+    recorded = [json.loads(line) for line in original("observations.jsonl").splitlines()]
+    if (samples != recorded or len(samples) != report.get("observations") or
+            len(raw) != report.get("original_bytes")):
+        raise ValueError("saved binary/JSON/count disagreement")
+    return samples, {"capture_sha256_verified": True, "original_sha256": verified["files"],
+                     "instance_id": expected_instance, "device_clock_verified": False,
+                     "source_kind": "saved_coherent_worker_bundle", "max_gap_ns": 250_000_000}
+
+
 def distribution(values):
     return {"mean": statistics.mean(values), "std_population": statistics.pstdev(values),
             "min": min(values), "max": max(values)}
 
 
-def analyze(samples, profile, bias=(0., 0., 0.)):
+def analyze(samples, profile, bias=(0., 0., 0.), *, axis_profile=None):
     if not samples:
         raise ValueError("no samples")
-    converted = [convert(s["gyro_raw"], s["accel_raw"], profile, bias) for s in samples]
+    converted = [convert(s["gyro_raw"], s["accel_raw"], profile, bias, axis_profile=axis_profile) for s in samples]
     stamps = [s["timestamp_ns"] for s in samples]
     if any(type(t) is not int or t < 0 for t in stamps):
         raise ValueError("nonnegative integer nanosecond timestamps required")
@@ -209,7 +302,7 @@ def analyze(samples, profile, bias=(0., 0., 0.)):
     if coherent and intervals:
         integral = [sum((dps[i][axis] + dps[i + 1][axis]) / 2 * delta / 1e9
                         for i, delta in enumerate(intervals) if i not in gaps) for axis in range(3)]
-    return {"sample_count": len(samples), "profile": profile_info(profile, bias),
+    result = {"sample_count": len(samples), "profile": profile_info(profile, bias),
             "calibration_verified": False, "packet_loss_known": False,
             "coherent_six_axes": coherent,
             "timing": {"timebase": next(iter(timebases)), "device_clock_verified": False,
@@ -234,6 +327,14 @@ def analyze(samples, profile, bias=(0., 0., 0.)):
             "angle_integration_status": (f"illustrative {next(iter(timebases))} integral; partial when gaps excluded; not reference calibration") if integral is not None else
                                         "unavailable: noncoherent IIO sweep or fewer than two samples",
             "known_angle_reference": None, "selected_as_actual_hardware_profile": False}
+    if axis_profile is not None:
+        result["experimental_axes"] = {
+            "profile": axis_profile_info(axis_profile),
+            "body_gyro_dps_stats_xyz": [distribution([s["experimental_axes"]["body_gyro_dps_xyz"][i]
+                                                      for s in converted]) for i in range(3)],
+            "body_gyro_rad_s_stats_xyz": [distribution([s["experimental_axes"]["body_gyro_rad_s_xyz"][i]
+                                                        for s in converted]) for i in range(3)]}
+    return result
 
 
 def read_attribute(path):
@@ -360,16 +461,22 @@ def cli_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("profiles", help="print assumptions; no device access")
+    sub.add_parser("axis-profiles", help="print observed experimental axes; no device access")
     sub.add_parser("plan", help="print guided future measurement plan; no device access")
-    for command in ("replay", "observe-iio"):
+    for command in ("replay", "replay-buffer", "observe-iio"):
         cmd = sub.add_parser(command)
         cmd.add_argument("--experimental", action="store_true", required=True)
-        choices = [str(x) for x in PROFILES] + (["all"] if command == "replay" else [])
+        choices = [str(x) for x in PROFILES] + (["all"] if command != "observe-iio" else [])
         cmd.add_argument("--profile", choices=choices, required=True)
         cmd.add_argument("--bias-raw", default="0,0,0", help="explicit assumed G0,G1,G2 bias; never auto-estimated")
         cmd.add_argument("--output", type=Path, required=True, help="new persistent private directory; parent must exist")
+        if command != "observe-iio":
+            cmd.add_argument("--axis-profile", choices=[OBSERVED_AXIS_PROFILE], default=None,
+                             help="explicit experimental axes for saved data only; no default")
         if command == "replay":
             cmd.add_argument("--records", type=Path, required=True)
+        elif command == "replay-buffer":
+            cmd.add_argument("--capture-dir", type=Path, required=True, help="saved bounded-worker capture bundle")
         else:
             cmd.add_argument("--iio-dir", type=Path, required=True)
             cmd.add_argument("--duration", type=float, default=30)
@@ -381,11 +488,15 @@ def cli_parser():
 
 def main(argv=None):
     args = cli_parser().parse_args(argv)
+    if args.command == "axis-profiles":
+        print(json.dumps(axis_profile_info(OBSERVED_AXIS_PROFILE), indent=2))
+        return 0
     if args.command in ("profiles", "plan"):
         value = [profile_info(p) for p in PROFILES] if args.command == "profiles" else measurement_plan()
         print(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False))
         return 0
     bundle, samples, failure, cues = None, [], None, None
+    axis_profile = getattr(args, "axis_profile", None)
     try:
         bias = vector([float(x) for x in args.bias_raw.split(",")])
         profiles = list(PROFILES) if args.profile == "all" else [int(args.profile)]
@@ -399,8 +510,10 @@ def main(argv=None):
             if args.guided_kde and (not Path('/usr/bin/kdialog').is_file() or
                                    not (os.environ.get('DISPLAY') or os.environ.get('WAYLAND_DISPLAY'))):
                 raise ValueError("guided KDE mode needs installed kdialog and a graphical session")
+        elif args.command == "replay-buffer":
+            samples, metadata = replay_buffer(args.capture_dir, axis_profile=axis_profile)
         else:
-            samples, metadata = replay(args.records)
+            samples, metadata = replay(args.records, axis_profile=axis_profile)
         bundle = Bundle(args.output)
         if args.command == "observe-iio":
             metadata = {"iio_directory": str(args.iio_dir), "atomic": False, "packet_loss_known": False,
@@ -445,7 +558,7 @@ def main(argv=None):
                 if samples and sample["timestamp_ns"] <= samples[-1]["timestamp_ns"]:
                     raise ValueError("nonmonotonic read timestamp")
                 samples.append(sample)
-                row = dict(sample, conversions={str(p): convert(sample["gyro_raw"], sample["accel_raw"], p, bias) for p in profiles})
+                row = dict(sample, conversions={str(p): convert(sample["gyro_raw"], sample["accel_raw"], p, bias, axis_profile=axis_profile) for p in profiles})
                 bundle.append(row)
                 print(json.dumps(row, allow_nan=False), flush=True)
                 time.sleep(min(args.period_ms / 1000, max(0, end - time.monotonic())) if cues is not None else args.period_ms / 1000)
@@ -463,8 +576,8 @@ def main(argv=None):
                     time.sleep(min(.1, remaining))
         else:
             for sample in samples:
-                bundle.append(dict(sample, conversions={str(p): convert(sample["gyro_raw"], sample["accel_raw"], p, bias) for p in profiles}))
-    except (ValueError, OSError, KeyboardInterrupt) as error:
+                bundle.append(dict(sample, conversions={str(p): convert(sample["gyro_raw"], sample["accel_raw"], p, bias, axis_profile=axis_profile) for p in profiles}))
+    except (ValueError, OSError, KeyError, TypeError, KeyboardInterrupt) as error:
         failure = "user_interrupted" if isinstance(error, KeyboardInterrupt) else f"{type(error).__name__}: {error}"
     if cues is not None:
         try:
@@ -477,7 +590,7 @@ def main(argv=None):
         report = {"schema_version": 1, "created_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
                   "mode": args.command, "completed": failure is None, "failure": failure,
                   "metadata": metadata if "metadata" in locals() else {},
-                  "profiles": {str(p): analyze(samples, p, bias) for p in profiles} if samples else {},
+                  "profiles": {str(p): analyze(samples, p, bias, axis_profile=axis_profile) for p in profiles} if samples else {},
                   "runtime_calibration_changed": False, "automatic_profile_selection": False}
         bundle.finish(report)
     if failure:

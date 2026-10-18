@@ -19,6 +19,146 @@ offline ergänzt. Die nachstehende Einzelattributdiagnose bleibt eine
 separate Anzeige; ihre historischen Daten werden dadurch nicht nachträglich
 kohärent. Noch kein neuer Sensorlauf oder installiertes Modul.
 
+## Beobachtetes Achsenprofil v1 (offline)
+
+Nachtrag vom 18. Oktober 2026: Der Nutzer hat die Übernahme der
+[sechs beobachteten Richtungen](GYRO_AXIS_TEST.md#hardwarebeobachtung-in-zwei-freigegebenen-blöcken)
+in ein **separat gewähltes experimentelles Diagnoseprofil** freigegeben.
+Kennung: `g7pro-observed-20261018`, Version 1. Gültigkeitsbereich dieser
+Beobachtung: Standard-G7-Pro, Funk-Dongle, `3537:109c`. Kein automatisches
+Übertragen auf ZZZ, andere Modi oder Firmwarestände.
+
+Die bestehenden Rohdaten und Umrechnungen in Drahtreihenfolge bleiben
+unverändert. Nur bei explizitem `--axis-profile g7pro-observed-20261018`
+kommen unter `experimental_axes` benannte Bewegungen und Gehäuseachsen hinzu:
+
+| Positiv benannte Bewegung | Rohkanal | Rechtshändige Gehäuseachse |
+| --- | --- | --- |
+| USB-/Vorderkante nach oben neigen | G0 positiv | +X |
+| Waagerecht nach links drehen | G1 positiv | +Z |
+| Linken Griff absenken | G2 positiv | −Y |
+
+Das Gehäusesystem entspricht dem vorhandenen `gyro_reference.BODY_FRAME`:
+X nach rechts, Y zur USB-/Vorderkante vom Spieler weg, Z aus der Tastenfläche
+heraus. Daher **`body_xyz = (G0, −G2, G1)`**. Die `positive_motion_dps`-Werte
+heißen dagegen `pitch_up`, `yaw_left`, `roll_left` und bleiben in G0/G1/G2-
+Reihenfolge. Beide Darstellungen nicht verwechseln. Ein expliziter Bias ist
+weiterhin in Rohkanalreihenfolge anzugeben und wird vor der Umrechnung
+abgezogen; keine automatische Biasmessung oder Speicherung.
+
+Auch SDLs Koordinaten sind davon zu unterscheiden: Der lokal gelesene
+`SDL_sensor.h` beschreibt X rechts, Y oben, Z zum Spieler, mit rechtshändigen
+Drehraten. Rechnerisch wäre dafür aus dem obigen Gehäusesystem
+`(body_X, body_Z, −body_Y)` zu verwenden. Das ist eine spätere
+Koordinatentransformation, **keine aktivierte SDL-Ausgabe oder SDL-Abnahme**.
+[Referenz und Integrationsgrenzen](DUALSENSE_SENSOR_COMPARISON.md).
+
+Der Faktor wird weiterhin **separat** mit `--profile` gewählt; kein Default,
+keine Ableitung aus den 8192 LSB/g. `--profile 2000` bedeutet hier nur die
+Hypothese **0,07 °/s pro USB-Rohwert**, nicht den Nachweis des aktiven
+Sensorbereichs. °/s und rad/s sind entsprechend beschriftete Testwerte.
+`scale_verified`, `physical_axis_mapping_verified`, `calibration_verified`
+und `sdl_runtime_enable` bleiben false. Beschleunigungsachsen werden nicht
+umgeordnet: Die Gyro-Bewegungsbeobachtungen ersetzen keine Schwerkraftlagen.
+Der produktive Vertrag `sdl-sensor-calibration.json` bleibt unverändert.
+
+### Gespeicherte kohärente Aufnahme wiedergeben
+
+Ohne Sensorzugriff, Passwort oder Pufferänderung aus der Projektwurzel:
+
+```sh
+python3 -B tools/imu/gamesir_imu_diagnostic.py axis-profiles
+python3 -B tools/imu/gamesir_imu_diagnostic.py replay-buffer \
+  --experimental --profile 2000 \
+  --axis-profile g7pro-observed-20261018 \
+  --capture-dir "/PFAD/ZUM/GESPEICHERTEN/ABSCHNITT/capture" \
+  --output ".local/gyro-replay-NEUER-LAUF"
+```
+
+Der neue `replay-buffer`-Pfad akzeptiert ausschließlich ein bereits
+abgeschlossenes privates Worker-Dateibündel. Er prüft dessen SHA256-Dateien,
+erfolgreiche Aufnahme und Rückstellung, Layout/Instanz und Berichtszähler.
+Die bestehenden 32-Byte-Scans werden erneut dekodiert und exakt mit den
+aufgezeichneten JSONL-Samples verglichen. Veränderte Dateien, unvollständige
+Frames, Zähler-/Zeitlücken über die bestehende Grenze, abgebrochene Aufnahmen
+oder ein für dieses Profil ungeeignetes Gerät werden abgewiesen. Kein
+live IIO- oder USB-Zugriff. Der bisherige Parserdatensatz-Replay kann das
+Achsenprofil ebenfalls explizit auswählen; `observe-iio` erhält diese neue
+Option bewusst noch nicht. Pro Aufnahme eigener Ausgabepfad, kein Mischen
+der getrennten Geräteinstanzen und kein Überschreiben der Originaldaten.
+
+Offline-Nachweis: 330 Python-Tests und der C-Sensorvertrag bestanden,
+darunter 18 neue Tests für sechs Richtungen, Umrechnung in rad/s,
+Vorzeichenextreme, Bias-Reihenfolge, Rechtshändigkeit, unveränderten Standard,
+Profilgrenzen, beschädigte/inkonsistente gespeicherte Aufnahmen und einen
+vollständigen synthetischen CLI-Replay. Zusätzlich wurden **alle 40.486
+real gespeicherten Scans** der sechs bestätigten Richtungen getrennt mit
+diesem Profil und explizit 0,07 wiedergegeben. Rohwerte, Zeitstempel und
+Zähler sind unverändert; die jeweils dominante Gehäuseachse und ihr Vorzeichen
+entsprechen der obigen Tabelle. Dies bestätigt die Softwareumsetzung der
+Beobachtungen, nicht die physikalische Richtigkeit von 0,07 oder neue Hardware.
+
+Die Diagnosequelle ist Teil der Quellprüfsummen des geführten Aufnahmewerkzeugs.
+Alte Aufnahmemanifeste deshalb nicht für einen neuen Live-Lauf wiederverwenden;
+frische Metadaten und Freigabe bleiben nötig. Historische Aufnahmebündel sind
+weiter offline prüfbar. Installation und laufender Treiber bleiben unverändert.
+
+## Visueller E2E-Empfindlichkeitstest (geplanter nächster Schritt)
+
+Empfohlen ist zunächst ein **lokales Diagnosefenster** mit diesem Datenweg:
+
+`G7 Pro → bestehender gs_native → kohärenter IIO-Puffer → experimentelles Profil → Anzeige`
+
+Das ist ein E2E-Test bis zu dieser eigenen Anwendung. Eine erfolgreiche
+Anzeige wäre kein Nachweis, dass Steam, SDL oder Eden bereits Gyro erkennen.
+Das Fenster und sein Live-Transport sind **noch nicht implementiert**; dieser
+Abschnitt beschreibt den konkreten nächsten Entwicklungs-/Freigabeschritt.
+Die bestehenden begrenzten Worker-/Rückstellungsregeln bleiben die Grundlage,
+kein zweiter paralleler IIO-Leser, keine neue USB-Initialisierung.
+
+Vorgesehene Bedienung:
+
+1. Zunächst ein gerätefreier Replay-Modus mit unseren vorhandenen Aufnahmen.
+   Drei benannte Drehraten, Rohwerte und eine Controller-/Drehungsanzeige
+   zeigen Richtung und Geschwindigkeit. Keine mathematisch falsche Deutung
+   von drei unabhängigen Winkelintegralen als allgemeine 3D-Orientierung;
+   für freie Bewegung eine getestete Orientierungsintegration verwenden.
+2. Nach eigener Freigabe ein begrenzter Live-Lauf mit frischer Prüfung,
+   lokalem Go und 30 Sekunden Vorbereitung. Das Diagramm/Fadenkreuz reagiert
+   auf bequeme Links-/Rechts- und Auf-/Abbewegungen; seitliches Kippen wird
+   getrennt angezeigt. Kein genauer Winkel und keine schnelle Reaktion nötig.
+3. Ein **Darstellungsfaktor**, beispielsweise 0,25×, 0,5×, 1×, 2×, 4×,
+   verändert nur den Ausschlag der Anzeige. Rohdaten und der separat sichtbare
+   Faktor 0,07 bleiben unverändert. Ein Zentrierknopf setzt nur die dargestellte
+   Ausrichtung zurück. Ein eventuell angebotener Ruhe-Bias muss ausdrücklich
+   als lokale Schätzung gekennzeichnet bleiben und darf nicht installiert werden.
+4. Vergleich bei langsamer/schneller Bewegung und anschließender Ruhe:
+   richtige Richtung, angenehme Verstärkung, Rauschen, sichtbare Drift und
+   durchgehende Daten. Host-Zeitstempel und Datenlücken anzeigen; keine
+   angeblich gemessene Sensor- oder Gesamt-Eingabelatenz daraus ableiten.
+5. Abbruch/Disconnect beendet den Datenstrom und friert die Anzeige mit
+   deutlicher Meldung ein, statt alte Drehraten fortzuschreiben. Puffer
+   zurückstellen und normale Gamepad-Funktion nachprüfen. Keine automatischen
+   Wiederverbindungen; außerhalb der Aufnahmen normales A-Drücken gegen
+   Inaktivität vorsehen, keinen unbekannten Keepalive senden.
+
+Die GUI läuft als normaler Desktopnutzer; nur der bereits begrenzte
+Puffer-Worker erhält bei Bedarf freigegebene Rechte und liefert validierte
+Samples über einen noch zu implementierenden lokalen Transport. Weder
+Root-GUI noch systemweite Maus-/Tastaturinjektion sind dafür erforderlich.
+
+**Was dieser Test entscheidet:** Die Steuerung kann plausibel reagieren und
+sich gut anfühlen. Damit lassen sich Achsenfehler, Drift und eine passende
+Anwendungs-Empfindlichkeit erkennen. Ein angenehm eingestellter Regler beweist
+keinen physikalischen Gyrofaktor; Referenzkalibrierung bleibt pausiert.
+
+Für den anschließenden vollständigen Spielepfad ist eine zusätzliche,
+separat freizugebende evdev-Sensorschnittstelle mit korrekter Zuordnung zum
+Gamepad und ein SDL3-Sensortest erforderlich. Erst dann folgt die konkrete
+Eden-/Spielintegration. Das bisherige IIO-Gerät allein stellt diesen SDL-
+Gamepadpfad nicht bereit. Ein experimenteller Spieleversuch wäre weiterhin
+als solcher zu kennzeichnen; kalibrierte Produktivfreigabe bleibt offen.
+
 ## Werkzeug und Quellenstatus
 
 `tools/imu/gamesir_imu_diagnostic.py` ist ein eigenständiges Diagnoseprogramm.

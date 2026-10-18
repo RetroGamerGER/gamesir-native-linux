@@ -92,6 +92,7 @@ test-sensor:
 
 test-imu-diagnostic:
 	$(PYTHON) -B tests/test_imu_diagnostic.py
+	$(PYTHON) -B tests/test_gyro_axis_profile.py
 
 test-imu-stream:
 	$(PYTHON) -B tests/test_imu_stream.py

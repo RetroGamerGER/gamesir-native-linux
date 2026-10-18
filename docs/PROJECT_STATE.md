@@ -5,6 +5,19 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Beobachtete Gyroachsen als optionales Offline-Profil:**
+`g7pro-observed-20261018` ergänzt die bestehende Diagnose, ohne Rohwerte oder
+produktive Kalibrierung zu ändern. Die benannten positiven Bewegungen sind
+Vorderkante hoch = G0, links drehen = G1, linker Griff ab = G2. Im bisherigen
+rechtshändigen Gehäusekoordinatensystem ergibt sich `(G0, −G2, G1)`.
+Explizite Auswahl erforderlich; `0,07 °/s` bleibt unbestätigter Testwert.
+Alle 40.486 gespeicherten Scans der sechs Richtungen wurden einzeln offline
+wiedergegeben: Kanal, Vorzeichen und unveränderte Rohdaten/Zeitstempel geprüft.
+330 Python-Tests und der C-Sensorvertrag bestanden. Kein neues Live-Ergebnis,
+keine Installation. Ein visueller Empfindlichkeitstest ist als nächster
+separater Schritt beschrieben, noch nicht implementiert.
+[Profil, Replay und E2E-Plan](EXPERIMENTAL_GYRO_TEST.md#beobachtetes-achsenprofil-v1-offline).
+
 **Sechs Richtungen qualitativ beobachtet:** Nach frischer Vorprüfung und
 separater Freigabe wurden links/rechts und Vorderkante ab aufgenommen. Der
 Controller ging während der Vorbereitung des vierten Abschnitts von selbst

@@ -76,6 +76,18 @@ new mode only, return motion is permitted after MESSBEWEGUNG VORBEI and
 excluded from the analysis window. Preserve the legacy run-axis-left cues.
 Channel/sign heuristics are review candidates only. Separate gravity poses
 are still needed for accelerometer axis mapping; no scale or SDL activation.
+The user subsequently authorized applying these observations to the opt-in
+offline profile g7pro-observed-20261018 in gamesir_imu_diagnostic.py. Keep the
+wire vectors unchanged; right-handed body X=right, Y=front, Z=face-up uses
+(G0,-G2,G1). Named positive motions are pitch-up G0, yaw-left G1, roll-left G2.
+This is not the SDL frame. Require explicit axis and gain selection, limit
+the observed profile to standard 109c evidence, and retain false calibration/
+runtime verification flags. 0.07 dps/raw is still only a test hypothesis.
+Never reuse the gyro mapping for acceleration without separate pose evidence.
+Offline replay-buffer verifies saved worker checksums, restoration and binary/
+JSON agreement; it must not open live devices or merge capture instances.
+Read docs/EXPERIMENTAL_GYRO_TEST.md for the planned visual sensitivity test;
+it is not yet implemented or authorized live. Display gain is not calibration.
 No universal trigger-game support or general stability guarantee.
 
 The optional `tools/offline` HID companion is file-only research, not runtime
