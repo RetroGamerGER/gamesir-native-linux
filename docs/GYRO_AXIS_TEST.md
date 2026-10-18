@@ -1,6 +1,7 @@
 # Qualitativer Gyro-Achsentest: zunächst nur links
 
-Stand: 18. Oktober 2026. **Offline vorbereitet, noch nicht live ausgeführt.**
+Stand: 18. Oktober 2026. **Offline vorbereitet; erster freigegebener Anlauf
+vor dem lokalen Go beendet, noch keine Sensoraufnahme.**
 Dieser Test untersucht Rohkanalreaktion und Vorzeichen beim waagerechten
 Linksdrehen. Kein bestimmter Winkel, Anschlagwinkel oder Bewegungsumfang ist
 erforderlich. Die physikalische Skalierung bleibt unbestätigt; die bekannte
@@ -142,3 +143,22 @@ Prüfung am 18. Oktober: `make test-imu-stream test-public-readme test-licensing
 bestanden, insgesamt 229 Tests. Davon 45 Frontend-/Achsenfälle, neun neu.
 Auch der gerätefreie Planaufruf, Dokumentationslinks und `git diff --check`
 wurden geprüft. Keine Installation oder Live-Abnahme durchgeführt.
+
+## Erster freigegebener Anlauf: vor der Aufnahme beendet
+
+Die frische lesende Vorprüfung bestätigte den erwarteten Modul-Build zum
+Kernel `7.2.11-1-garuda`, Paket `0.1.0.alpha3-6`, eine aktive native
+Standard-G7-Pro-Instanz unter `3537:109c`, inaktiven IIO-Puffer und keine
+konkurrierenden IIO-Leser. Historische Managerfehler waren früheren
+Systemstarts zugeordnet; für die aktuelle Instanz kein Fehler gefunden.
+
+Beim anschließend separat freigegebenen Einzellauf lieferte das lokale
+Go-Fenster keine Startbestätigung. Der Grund für diese Dialogantwort ist
+nicht festgestellt. Der Helfer beendete den Versuch vor Öffnen des IIO-Knotens:
+null Beobachtungen/Scanbytes, kein Aufnahmestart, keine Konfigurationsversuche
+oder Pufferwrites. Abschluss ohne Bereinigungsfehler; eine lesende Nachprüfung
+bestätigte unveränderte Instanz und Einstellungen einschließlich deaktiviertem
+Puffer und null Pufferfehlern. Private Abschlussdateien und SHA256-Prüfsummen
+wurden gesichert und kontrolliert. Kein Achsenergebnis, keine automatische
+Wiederholung und keine Änderung des laufenden Treibers. Ein neuer Anlauf
+benötigt eine neue konkrete Freigabe und frische Instanzprüfung.

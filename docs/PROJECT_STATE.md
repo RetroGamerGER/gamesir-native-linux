@@ -9,9 +9,15 @@ Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 waagerechte Linksdrehung pro eigenem Go, ohne Winkelvorgabe; höchstens drei
 getrennte Wiederholungen. Der vorhandene KDE-/IIO-Helfer bietet dafür einen
 separaten Modus mit Rohkanalvergleich ohne Winkelintegration oder Profilwahl.
-[Ablauf, Befehle und Grenzen](GYRO_AXIS_TEST.md). Kein Live-Lauf, keine aktuelle
-Geräteprüfung und keine Treiberänderung. Die bekannte Winkelkalibrierung
+[Ablauf, Befehle und Grenzen](GYRO_AXIS_TEST.md). Noch keine Sensoraufnahme
+und keine Treiberänderung. Die bekannte Winkelkalibrierung
 bleibt pausiert; die Vorbereitung erteilt keine Hardwarefreigabe.
+
+Nachtrag: Die separat freigegebene lesende Vorprüfung war erfolgreich.
+Der danach freigegebene erste Achsenlauf endete ohne lokale Go-Bestätigung
+vor der Geräteöffnung: null Sensorbeobachtungen, keine Pufferänderung.
+Unveränderter Zustand und private Prüfsummen bestätigt; keine Wiederholung.
+Noch kein Achsennachweis. [Einzelheiten](GYRO_AXIS_TEST.md#erster-freigegebener-anlauf-vor-der-aufnahme-beendet).
 
 **Entscheidung vom 18. Oktober: Funkanalyse zurückgestellt.** Der Empfang
 veränderlicher IMU-Rohdaten ist durch die bisherigen Hardwaretests belegt.
