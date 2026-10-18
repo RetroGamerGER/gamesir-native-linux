@@ -1,8 +1,8 @@
 # Qualitativer Gyro-Achsentest: zunächst nur links
 
-Stand: 18. Oktober 2026. **Erster freigegebener Anlauf durch einen Dialogfehler
-vor der Aufnahme beendet; Dialog korrigiert und gerätefrei sichtbar bestätigt.
-Noch keine Sensoraufnahme.**
+Stand: 18. Oktober 2026. **Dialog korrigiert; neuer separat freigegebener
+Einzellauf nach lokalem Go bei der Kanalauswahl mit EINVAL angehalten.
+Ursprünglicher Pufferzustand wiederhergestellt, keine Sensordaten aufgenommen.**
 Dieser Test untersucht Rohkanalreaktion und Vorzeichen beim waagerechten
 Linksdrehen. Kein bestimmter Winkel, Anschlagwinkel oder Bewegungsumfang ist
 erforderlich. Die physikalische Skalierung bleibt unbestätigt; die bekannte
@@ -197,3 +197,45 @@ und Fehlererhalt ohne GO. Insgesamt 237 Tests mit
 Alte Manifeste enthalten nun veraltete Helferprüfsummen und dürfen nicht
 wiederverwendet werden. Vor einem neuen Messlauf frisch prüfen, neues Manifest
 und Ergebnisverzeichnis vorbereiten und eine neue konkrete Freigabe einholen.
+
+## Neuer Einzellauf: Kanalauswahl vor Aufnahmebeginn abgelehnt
+
+Nach der Dialogkorrektur wurde genau ein neuer Linksdrehungsversuch separat
+freigegeben. Eine frische lesende Vorprüfung und ein neues Manifest bestätigten
+denselben geprüften Modul-Build, aktive native Bindung, inaktiven Puffer,
+keine konkurrierenden IIO-Leser und keinen aktuellen Managerfehler. Die
+historischen Fehler gehörten weiterhin zu früheren Systemstarts. Die
+Kernelprüfung war auf passende Einträge unter den letzten 500 Meldungen des
+aktuellen Starts begrenzt.
+
+Das korrigierte Fenster lieferte diesmal ausdrücklich ein lokales Go. Die
+30 Sekunden Vorbereitung liefen ab. Beim anschließenden Einrichten des
+Hostpuffers gelang die Änderung von `buffer/length` von 128 auf 512; das erste
+Schreiben von `1` nach `scan_elements/in_accel_x_en` scheiterte dagegen mit
+`EINVAL` (errno 22). `buffer/enable` wurde nicht geschrieben. Der IIO-Knoten
+war für diesen Versuch einmal lesend geöffnet, aber es gab keinen
+`capture_started`-Zeitpunkt, keine Bewegungsansage, keine Sensordaten und
+keine Achsenauswertung.
+
+Die Rückstellung setzte die Pufferlänge wieder auf 128 und schloss den Leser.
+Worker und unabhängige lesende Metadatenkontrolle bestätigten exakt den
+ursprünglichen Zustand: alle Scan-Kanäle aus, Puffer und Stream aus,
+Pufferfehlerzähler null, identische USB-/IIO-Instanz und native Bindung.
+Keine Bereinigungsfehler. Die unveränderten Originalberichte und ihre
+SHA256-Prüfsummen wurden geprüft und bleiben privat erhalten.
+
+**Konkreter Codeverdacht, noch keine korrigierte Hardwareabnahme:**
+`gsn_iio_scan_mask()` akzeptiert nur exakt `GENMASK(6, 0)` (0x7f), während
+der Helfer die sieben Datenkanäle nacheinander aktiviert. Bereits die erste
+Zwischenmaske 0x01 wird von dieser Funktion abgelehnt. Das passt zum
+beobachteten Fehlerort; der genaue Aufrufpfad des verwendeten IIO-Cores
+muss noch offline gegengeprüft werden. Die bisherigen simulierten
+Puffer-/Frontendtests haben diesen Vertrag zwischen Core, Treiber und
+schrittweiser Kanalauswahl nicht nachgewiesen. Kein Hardware- oder
+Sensorfehler ist daraus abgeleitet.
+
+Nächster Schritt: den IIO-Kanalauswahlvertrag offline reproduzieren und
+passend testen; dabei die vollständigen kohärenten Samples und eine sichere
+Rückstellung erhalten. Keine Kanalprüfungen am laufenden System umgehen.
+Kein automatischer Neuversuch, keine Treiberänderung oder Installation in
+diesem Lauf. Bekannte-Winkel-Kalibrierung bleibt pausiert.

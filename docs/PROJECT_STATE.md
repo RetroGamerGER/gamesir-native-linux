@@ -20,8 +20,17 @@ verwendete Option `--defaultno` nicht. Dies war keine bestätigte Nutzerabsage.
 Null Sensorbeobachtungen, keine Pufferänderung; unveränderter Zustand und
 private Prüfsummen bestätigt. Der korrigierte Dialog verwendet eine explizite
 Auswahl mit Abbrechen als Vorgabe und bewahrt Startfehler. Ein gerätefreier
-Fenstertest wurde als sichtbar bestätigt; noch kein neuer Sensorlauf.
-Noch kein Achsennachweis. [Einzelheiten](GYRO_AXIS_TEST.md#erster-freigegebener-anlauf-vor-der-aufnahme-beendet).
+Fenstertest wurde als sichtbar bestätigt.
+
+Der danach separat freigegebene neue Einzellauf erhielt ein ausdrückliches
+lokales Go und hielt nach 30 Sekunden Vorbereitung bei der ersten
+Scan-Kanalaktivierung mit `EINVAL` an. Keine Pufferaktivierung, kein
+Aufnahmestart und keine Sensordaten. Die vorübergehend geänderte Pufferlänge
+wurde zurückgestellt; ursprüngliche Instanz, Einstellungen und native Bindung
+sind lesend bestätigt. Konkreter Offline-Prüfpunkt: die nur vollständige
+Masken akzeptierende Treiberprüfung gegenüber der schrittweisen IIO-Auswahl.
+Keine automatische Wiederholung oder Treiberänderung. Noch kein
+Achsennachweis. [Befund und Grenzen](GYRO_AXIS_TEST.md#neuer-einzellauf-kanalauswahl-vor-aufnahmebeginn-abgelehnt).
 
 **Entscheidung vom 18. Oktober: Funkanalyse zurückgestellt.** Der Empfang
 veränderlicher IMU-Rohdaten ist durch die bisherigen Hardwaretests belegt.
