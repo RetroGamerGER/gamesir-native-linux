@@ -971,25 +971,41 @@ architekturspezifisch noch nicht vollständig eingeordnete Folgeinstruktion.
 ein Speicherzugriff im generischen Firmware-Code, aber kein erkannter
 I²C-/SPI-/USB-Sensorschreibzugriff und kein `CTRL2_G`-Nachweis.
 
-Direkt anschließend liegt ein zweiter Loganker, `adc scan not over` (`0x10730`
-in DV209, `0x10738` in DV515/DV608). Sein umgebender P-Code liest und löscht
-ein Byte bei der Ausdrucksadresse `0xf140 + 0x534`, berechnet danach eine
-indirekte Ladeadresse `((0xf140 + 0x298) << 2)` und führt bei einem nichtnull
-geladenen Ziel `CALLIND` aus. Die genaue Tabellenabbildung und der aufgerufene
-Zielcode sind nicht statisch bestimmt. Weil dieser Block an einen ADC-Scan-
-Logtext grenzt und kein belegter Kontrollfluss ihn mit dem Kalibrierungsanker
-oder einem IMU-Register verbindet, bleibt er ein unaufgelöster allgemeiner
-Dispatch-Kandidat, kein Sensorpfad.
+**Korrektur der ADC-/EEPROM-Zuordnung:** Der frühere Bericht identifizierte
+den Code bei `0x10730` (DV209) beziehungsweise `0x10738` (DV515/DV608)
+fälschlich als `adc scan not over`. Der dort dekodierte Literalzeiger zeigt
+tatsächlich auf `eeprom read over:`. Der gleichartige zweite Block bei
+`0x10760`/`0x10768` zeigt auf `eeprom write over`. In beiden EEPROM-Blöcken
+prüft der begrenzte P-Code ein Statusbyte mit Ausdruck `0xf140 + 0x534` und
+lädt anschließend einen möglichen indirekten Aufruf über
+`((0xf140 + 0x298) << 2)`; wenn der geladene Wert ungleich null ist, folgt
+`CALLIND`. Pro App tritt die geprüfte unmittelbare `0x298`-Form nur an diesen
+beiden Stellen auf. Tabelleninhalt, Speicherabbildung, ABI und Zielcode sind
+nicht aufgelöst. Die Call-Sites liegen bei `0x1075a`/`0x1078a` (DV209) und
+`0x10762`/`0x10792` (DV515/DV608). Diese EEPROM-Blöcke werden nicht als
+Sensor- oder ADC-Pfad gewertet.
+
+Der tatsächliche Text `adc scan not over!!` liegt separat in den Appdaten
+(DV209 `0x23108`, DV515 `0x231e0`, DV608 `0x231de`). Ein eigener direkter
+Literalzeiger steht in allen drei Varianten bei Codeoffset `0x7426`; der
+folgende relative Transfer führt zum gemeinsamen Textlogger (`0x44d38` in
+DV209, `0x44e18` in DV515/DV608). Im begrenzten Ausschnitt folgen P-Code-
+Stores an Ausdrücken mit Basis `r0` sowie eine Verzweigung und ein Aufruf
+`0x2dfe`. Da Rückgabewerte, Call-Clobbers, Registerprovenienz und ABI nicht
+modelliert sind, bleiben diese Ausdrücke semantisch unbestimmt. Im dekodierten
+Fenster folgt kein `CALLIND`; kein Sensorbuszugriff oder IMU-Bezug ist
+nachgewiesen. Der isolierte statische Decode lief über 40 Instruktionen je
+Appversion ohne Decodefehler; alle drei Eingabedateien blieben hashgleich.
 
 Eine byte-ausgerichtete Suche über alle drei vollständigen Appdateien fand
 keine Kandidaten für eingehende Sprünge in den geprüften relativen 22-Bit-
-und kompakten GOTO-Formen auf den Kalibrierungs- oder benachbarten ADC-Logblock.
-Auch die geprüften ausgerichteten absoluten Zeigerformen (Dateioffset und
-`0x1e000c0 + Dateioffset`) ergaben keinen Treffer. Das schließt andere
+und kompakten GOTO-Formen auf den Kalibrierungs- oder EEPROM-Lese-Logblock.
+Für den echten ADC-Text wurde stattdessen der direkte Literalzeiger bei
+`0x7426` gefunden und separat dekodiert. Die geprüften exakten Zeigerformen
+auf die genannten Codeanker ergaben keinen Treffer. Das schließt andere
 Instruktionsformen, indirekte Tabellen und unbekannte Code-/Datenabbildungen
-nicht aus. Die Ergebnisse sind im privaten `sensor-code-xref-candidates.json`
-für die drei gehashten Binärbilder festgehalten; der kleine Scanner und sein
-Regressionstest liegen ausschließlich unter `build/` und sind nicht Teil des
+nicht aus. Ergebnisse für die drei gehashten Binärbilder, Scanner und
+Regressionstest bleiben ausschließlich unter `build/` und sind kein Teil des
 öffentlichen Quellstands.
 
 ### Querverweiskarte: Sensorlogs, Maskenblock und IMU-Bericht
@@ -1000,7 +1016,8 @@ Nexus-Prozess bilden noch keine durchgehende Datenflusskette:
 | Ausgangspunkt | Nachgewiesene Kante | Offene Verbindung |
 |---|---|---|
 | `Enter Sensor Cal Mode!` | Literal laden → gemeinsamer Textlogger; danach Nullwort-Store an `((r0 + 0x115) << 1)` | `r0`/Objektsemantik und Sensorkontext unbekannt; kein Sensorbus-Schreibzugriff |
-| `adc scan not over` | Textlogger → Statusbyte prüfen/nullen → bedingtes `CALLIND` | Tabellenbasis/-inhalt und Zielcode ungeklärt; kein belegter IMU-Bezug |
+| `adc scan not over!!` | Literalzeiger bei `0x7426` → gemeinsamer Textlogger; danach begrenzte Speicher-/Schleifenausdrücke | ABI/Call-Clobbers ungeklärt; kein belegter IMU-Bezug oder `CALLIND` im dekodierten Fenster |
+| `eeprom read/write over` | Zwei EEPROM-Logblöcke → Statusbyte und bedingter `CALLIND` über Ausdruck `((0xf140 + 0x298) << 2)` | Callback-Tabelleninhalt/-ursprung und Zielcode ungelöst; kein belegter Sensorbezug |
 | Sieben weitere Sensor-/Kalibrierungstexte | Keine direkten Zeiger in den geprüften Literal-/Splitformen | Indirekte Tabellen und weitere Adressierungsformen |
 | 16 Maskeneinträge pro App | Je Eintrag kurzer Sprung zum lokalen AND-/Write-Block | Kein eingehender Treffer in der Datei für die geprüften kurzen und 22-Bit-Sprungformen; indirekte Erreichbarkeit ungeklärt |
 | Sprint-002 IMU-Capture | 64 Byte IN `0x82`; Gyro bei 17/19/21, Beschleunigung bei 23/25/27 | Kein Firmwarecodeort des Berichtsproduzenten identifiziert |
@@ -1015,17 +1032,19 @@ Transportnormalisierung.
 
 Ein zusätzliches byte-ausgerichtetes Suchfenster prüfte die eingehenden Ziele
 der validierten kompakten GOTO- und relativen 22-Bit-Transferformen sowohl für
-alle 48 Maskeneinträge als auch für den Kalibrierungs- und angrenzenden
-ADC-Logblock. Für die zusätzlich geprüften Einstiege fand es weder direkte
-Sprungkandidaten noch exakte ausgerichtete Zeiger in den zwei geprüften
-Adressformen. Das ist wegen unvollständiger ISA-/Code-Datensegmentierung kein
-Beweis für Unerreichbarkeit. Der benachbarte ADC-Block enthält einen
-`CALLIND` über eine dynamisch geladene Adresse; seine Verbindung zur IMU ist
-nicht belegt. Der nächste Schritt ist, die RAM-/Codeabbildung und den Ursprung
-dieser Callback-Tabelle separat zu identifizieren, ohne den Aufruf als
-Sensorfunktion zu etikettieren. Eine Sensorinitialisierung oder Skala wird
-erst behauptet, wenn eine solche Kante bis zu einem nachgewiesenen
-Sensorbuszugriff führt.
+alle 48 Maskeneinträge als auch für den Kalibrierungs- und EEPROM-Lese-
+Logblock. Es fand dort in den geprüften Formen keine direkten
+Sprungkandidaten. Der ADC-Textanker wurde danach korrekt auf `0x7426`
+zurückverfolgt; der dortige begrenzte Ausschnitt enthält einen Textlogger,
+Speicher-/Schleifenausdrücke und einen direkten Hilfsaufruf, aber keinen
+nachgewiesenen Sensorbezug. Der `CALLIND` gehört zu den separat liegenden
+EEPROM-Lese-/Schreibblöcken, nicht zum ADC-Textanker. Unvollständige
+ISA-/Code-Datensegmentierung bedeutet, dass fehlende Treffer keine
+Unerreichbarkeit beweisen. Nächster Schritt ist, die Abbildung und den
+Ursprung des EEPROM-Callback-Slots beziehungsweise die konkrete
+USB-Sensor-Kalibrierungsdispatcher-Kette getrennt zu identifizieren. Eine
+Sensorinitialisierung oder Skala wird erst behauptet, wenn eine Kante bis zu
+einem nachgewiesenen Sensorbuszugriff führt.
 
 Der private lokale REA-/Ghidra-Aufbau enthält den Pi32v2-Beschreiber nun
 wiederverwendbar für weitere statische Analysen. Die Herstellersoftware und

@@ -241,12 +241,17 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    eingehenden direkten Sprünge zu diesen Einträgen; indirekte Tabellen und
    die Erreichbarkeit bleiben offen. Der Kalibrierungslog erreicht den
    gemeinsamen Textlogger und wird gefolgt von einem Nullwort-Store an
-   `((r0 + 0x115) << 1)` mit ungeklärter Basis-/Objektsemantik. Der benachbarte
-   `adc scan not over`-Block enthält einen bedingten indirekten Aufruf, aber
-   keinen belegten IMU-Bezug. Geprüfte direkte Sprung- und exakte
-   Zeigerformen fanden keine eingehenden Kandidaten zu beiden Blöcken.
-   Nächster Schritt ist die Zuordnung der Adressraum-/Codeabbildung und des
-   Callback-Tabellenursprungs, ohne den ADC-Block als Sensorpfad zu etikettieren.
+   `((r0 + 0x115) << 1)` mit ungeklärter Basis-/Objektsemantik. **Korrektur
+   vom 18. Oktober:** Der Code bei `0x10730`/`0x10738` referenziert
+   `eeprom read over:`, nicht den ADC-Text; die EEPROM-Lese-/Schreibblöcke
+   enthalten bedingte indirekte Aufrufe über einen ungeklärten Slot. Der echte
+   `adc scan not over!!`-Text wird bei `0x7426` direkt geladen und zum
+   Textlogger geführt; die folgenden Speicher-/Schleifenausdrücke haben
+   ungeklärte ABI-/Registerwirkung und keinen belegten IMU-Bezug. Geprüfte
+   direkte Sprung- und Zeigerformen fanden keine eingehenden Kandidaten zu den
+   Kalibrierungs- und EEPROM-Lese-Logblöcken. Nächster Schritt ist die
+   Zuordnung der Adressraum-/Codeabbildung und des EEPROM-Callback-Slot-Ursprungs,
+   ohne diesen Aufruf als Sensorfunktion zu etikettieren.
    Die 64-Byte-Capture-IMU ist nicht mit einem Firmwareproduzenten oder den
    60-Byte-Nexus-Parsern verbunden; deren untersuchte Pfade lassen die
    Sensorfelder ungesetzt. WHO_AM_I, Sensorwahl, letzter CTRL2_G-Schreibwert

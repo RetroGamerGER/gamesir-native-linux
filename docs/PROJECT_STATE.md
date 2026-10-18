@@ -33,10 +33,16 @@ kurzen und 22-Bit-Sprüngen fand keinen Treffer zu diesen Einträgen;
 indirekte Tabellen bleiben offen. Der Kalibrierungs-Loganker führt in allen
 drei geprüften Images zum Textlogger; danach setzt der Ausschnitt ein
 16-Bit-Nullwort an `((r0 + 0x115) << 1)`, wobei Basisobjekt und Bedeutung
-unbekannt bleiben. Im benachbarten `adc scan not over`-Block gibt es einen
-bedingten `CALLIND`, aber keine belegte IMU-Verbindung. Eingehende direkte
-Sprung-/Zeigerkandidaten auf beide Blöcke wurden in den geprüften Formen nicht
-gefunden. Der bekannte 64-Byte-IMU-Capture
+unbekannt bleiben. **Korrektur vom 18. Oktober:** Der früher als ADC-Block
+bezeichnete Code bei `0x10730`/`0x10738` referenziert tatsächlich
+`eeprom read over:`; zusammen mit `eeprom write over` folgt dort ein bedingter
+`CALLIND` über einen ungeklärten globalen Slot. Der echte
+`adc scan not over!!`-Text besitzt einen direkten Literalverweis bei `0x7426`
+und erreicht den gemeinsamen Logger; folgende Stores bleiben wegen
+ungeklärter ABI/Register-Clobbers semantisch offen. Für keinen dieser Pfade
+ist eine IMU-Verbindung belegt. Eingehende direkte Sprung-/Zeigerkandidaten
+auf den Kalibrierungs- und EEPROM-Lese-Logblock wurden in den geprüften Formen
+nicht gefunden. Der bekannte 64-Byte-IMU-Capture
 ist nicht mit einem Firmware-Produzenten oder den 60-Byte-Nexus-Parsern
 verbunden; die untersuchten Parser lassen die sechs Sensorfelder ungesetzt.
 Der Beschreiber bleibt unvollständig; Code- und Datengrenzen sind nicht

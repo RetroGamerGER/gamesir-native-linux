@@ -109,10 +109,13 @@ these entries; indirect-table reachability remains open. The sole direct
 reference to `Enter Sensor Cal Mode!` still reaches the shared text logger.
 Its decoded follow-on stores a zero halfword at `((r0 + 0x115) << 1)`; the
 base object and meaning are unknown, and this is not a proven sensor-bus write.
-The adjacent `adc scan not over` block conditionally calls an indirect target,
-but no evidence links that dispatch to IMU setup. Tested direct-branch and
-exact-pointer scans found no incoming candidate to either block; other
-addressing forms and indirect-table reachability remain open.
+Correction: the code at `0x10730`/`0x10738` refers to `eeprom read over:`,
+not `adc scan not over`; its EEPROM read/write neighbors conditionally call
+an unresolved indirect target. The actual ADC log literal is at `0x7426` and
+reaches the shared text logger, with no proven IMU link. Neither path proves
+sensor initialization. Tested direct-branch and exact-pointer scans found no
+incoming candidate to the calibration/EEPROM log blocks; other addressing
+forms and indirect-table reachability remain open.
 The captured 64-byte IMU report has not been linked to a firmware producer or
 to Nexus's 60-byte parsers; those parser paths leave the six sensor fields
 unset. The decoder is incomplete; never infer code/data boundaries, sensor
