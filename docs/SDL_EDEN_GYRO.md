@@ -255,3 +255,46 @@ motion and button assignment. No particular game's aiming, prolonged stability,
 late hotplug or suspend was tested. No separate mapped SDL shared library was
 visible in the inspected Eden process; its bundled SDL version was not independently
 identified. The earlier source/time-domain limitations and gyro-only scope remain.
+
+## Persistent opt-in prepared after acceptance
+
+The maintainer requested persistence after reboot. Preparation is complete;
+**no persistent system configuration has been written at this checkpoint**.
+Fresh unprivileged checks found revision 8, the expected loaded/installed
+module source version, active/enabled service, paired accessible sensor/gamepad
+nodes, no service drop-in, no conflicting module options and no early-load
+entry in readable modules-load/dracut configuration or the kernel command line.
+
+The proposed sole configuration change is the new root-owned, mode-0644 file
+`/etc/modprobe.d/90-gamesir-native-gyro.conf`, with this option:
+
+```conf
+options gs_native experimental_gyro=1
+```
+
+The existing service already calls modprobe during startup, so it will combine
+this option with its bootstrap/output/persistent-runtime options. A device-free
+`modprobe -C <prepared-file> --show-depends gs_native bootstrap_mode=1
+enable_output=1 persistent_mode=1` confirmed that combination without loading
+anything. The current module already has the test option; writing the file
+does not require a release, reload, rebind, service restart or daemon-reload.
+
+Before an approved write, inspect root-protected manager status, the running
+gyro parameter and both current initramfs images read-only. If a conflicting
+configuration or an early-loading native module is found, stop and review the
+boot path instead of silently rebuilding images or changing other files.
+Require the destination to remain absent, then install only the reviewed file
+as root:root/0644. Verify exact content/ownership and the effective modprobe
+dependency listing, plus unchanged runtime state. No automatic reboot.
+
+Rollback removes only this added file after verifying its identity/content;
+the currently loaded option remains until a separately approved reload/reboot.
+This local opt-in survives ordinary package updates but must also be removed
+when opting out or uninstalling the driver. It is not a new package default.
+
+Actual boot acceptance remains a separate user-led restart: confirm module
+option, active/unpaused manager and paired readable event nodes, then start
+Eden after native initialization. Retain the documented late-start/time-domain
+limitation; persistent configuration alone does not resolve it or prove boot
+behavior. No calibration, application configuration or hardware test is part
+of this preparation.
