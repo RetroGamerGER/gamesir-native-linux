@@ -154,8 +154,11 @@ Controller-Queue hat mehrere Verbraucher. Der neue
 passenden `A2`-/Queue-Pfad mit dem Dongle-Sendepuffer für IN `0x82`; in den
 geprüften Transportkopien keine weitere Sensorrechnung. Der
 [Callback-Folgepass](JIELI_RADIO_CALLBACK.md) ordnet die tabellenbasierte
-Registrierung in drei Apps zu. Tatsächlich ausgeführter Start-/Verbindungspfad,
-untere Funkzustellung, Halfword-/Vorzeichenformen und letzte wirksame
+Registrierung in drei Apps zu. Der [Routingfolgepass](JIELI_LINK_ROUTING.md)
+klärt die Listen-/Slot-Auswahl nach Verbindungskennung und die DG-Übergabe
+vom aufbereiteten Deskriptor über Nachricht `0x400002` zum A2-Parser.
+Tatsächlich ausgeführter Start-/Verbindungspfad, bedingte untere Callback-
+Auswahl, Helfer `0xfe42`, Funkzustellung, Halfword-/Vorzeichenformen und letzte wirksame
 Konfiguration bleiben offen. Unter der ST-Annahme ist
 `0,07 Grad/s je Sensorzählwert` weiterhin ein Kandidat, kein bestätigter
 USB-Faktor. Die unten genannten Unbekannten

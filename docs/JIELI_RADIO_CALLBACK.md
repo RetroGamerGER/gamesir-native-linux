@@ -6,6 +6,12 @@ Analyse der bereits gehashten App-Kopien und gespeicherten Referenzen.
 Keine Zielausführung oder Emulation, Netzwerk-/Hardwarezugriffe,
 Installation oder Treiberänderung. Gyrokalibrierung bleibt pausiert.
 
+**Fortsetzung:** [Sendepfadauswahl und Dongle-Empfang](JIELI_LINK_ROUTING.md)
+ordnet inzwischen die beiden Suchverfahren für die Verbindungskennung und die DG-Kette vom
+aufbereiteten Deskriptor bis zum A2-Parser zu. Untere Funkzustellung und
+bedingte Callback-/Verarbeitungsschritte bleiben offen. Dieser Bericht
+dokumentiert den vorherigen Nachweisstand.
+
 ## Ergebnis
 
 Die zuvor fehlende **Registrierung des Controller-Transport-Callbacks ist

@@ -19,16 +19,28 @@ einen Controller-Zweig bis USB-IN `0x84`. Der neue
 DG-Queue `D+0x2e0` → Sendepuffer `D+0x8a4` → IN `0x82`. In diesen Kopien
 keine zusätzliche Sensorrechnung. Der [Callback-Folgepass](JIELI_RADIO_CALLBACK.md)
 ordnet nun in drei Apps die ausgewählte Transporttabelle, deren Setter und
-den registrierten Daten-Callback zu. Zwei verbindungsabhängige untere
-Sendepfade sind eingegrenzt; tatsächliche Aktivierung und Funkzustellung
-bleiben unbeobachtet. Der Formatcache `D+0xa24` und der alternative
+den registrierten Daten-Callback zu. Die
+[Routingfortsetzung](JIELI_LINK_ROUTING.md) klärt die Auswahlregel:
+zwölf Bit Verbindungskennung, zuerst dynamische Liste, danach zwei feste
+Slots. Die DG-Kette vom aufbereiteten Empfangsdeskriptor über Transporttabelle
+und `btstack`-Nachricht bis zum A2-Parser ist zugeordnet. Reale
+Verbindungsmitgliedschaft und Funkzustellung bleiben unbeobachtet;
+bedingte Callback-Auswahl und der untere Helfer `0xfe42` sind neue konkrete
+Nachweisgrenzen. Der Formatcache `D+0xa24` und der alternative
 IN-`0x84`-Pfad sind getrennt. Halfword- und Vorzeichenoperationen haben
 weiterhin eine Decodergrenze. Kein
 bestätigter USB-Gyrofaktor oder physischer Achsennachweis; keine Änderung
 am Parser oder Treiber.
 [Datenfluss, Codeanker und Grenzen](JIELI_SENSOR_REPORT_DATAFLOW.md).
 
-Im Callback-Folgepass bestanden **61 Forschungstests** (zwölf neu) und
+Im Routingfolgepass bestanden **70 Forschungstests** (neun neu) und
+30 abschließende Fenster mit 461 Decode-Datensätzen ohne Abbruch. Keine
+weitere Sensorrechnung im untersuchten oberen DG-Transport-/Queuepfad.
+Die bedingten Callback-Zuweisungen dürfen wegen fehlender Kontext-Wrapper
+im statischen P-Code nicht als linearer Ablauf gelesen werden. Kein neuer
+Decoderpatch; Firmware und laufender Treiber unverändert.
+
+Im vorherigen Callback-Folgepass bestanden **61 Forschungstests** (zwölf neu) und
 29 abschließende Fenster mit 389 Decode-Datensätzen ohne Abbruch. Kein
 neuer Decoderpatch: weitere interne Gegenproben stützen die vorgeschlagenen
 Halfword-/Signed-Modelle, liefern aber keine unabhängige ISA-Bestätigung.

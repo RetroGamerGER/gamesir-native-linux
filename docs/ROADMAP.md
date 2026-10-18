@@ -264,9 +264,14 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    49 Forschungstests, 127 SDK-Kontrollen, vier private Decoderkorrekturen.
    Der [Callback-Folgepass](JIELI_RADIO_CALLBACK.md) ordnet inzwischen die
    tabellenbasierte Registrierung in drei Apps zu; 61 Forschungstests und
-   29 abschließende statische Fenster ohne Decodeabbrüche. Als Nächstes
-   die zwei unteren Verbindungspfade bis zur tatsächlichen DG-Empfangsanbindung
-   verfolgen. Statische Registrierung beweist keine Laufzeitaktivierung.
+   29 abschließende statische Fenster ohne Decodeabbrüche. Der
+   [Routingfolgepass](JIELI_LINK_ROUTING.md) klärt nun Listen-/Slot-Auswahl
+   anhand der zwölf Bit Verbindungskennung und ordnet den DG-Empfang vom
+   aufbereiteten Deskriptor bis zur A2-Queue zu; 70 Forschungstests und
+   30 abschließende Fenster bestanden. Als Nächstes bedingte Callback-
+   Kontextübernahme im statischen Exporter, unteren Helfer `0xfe42`,
+   Deskriptorursprung und Kennungs-/Kanalschreiber untersuchen.
+   Statische Registrierung beweist keine Laufzeitaktivierung oder Funkzustellung.
    Die weiterhin offenen Halfword-/Vorzeichenformen unabhängig absichern,
    einschließlich des verwandten skalierten Halfword-Stores; außerdem
    weitere Offsetschreiber, Busabschluss und

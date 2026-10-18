@@ -35,7 +35,12 @@ Der [Callback-Folgepass](JIELI_RADIO_CALLBACK.md) ordnet inzwischen
 Transporttabelle, Setter und registrierten Callback in drei Apps statisch zu;
 zwei bedingte untere Sendepfade sind eingegrenzt. Tatsächliches Scheduling,
 Verbindungswahl und Funkzustellung bleiben unbeobachtet. 61 Forschungstests
-bestanden. Die bisherigen vier privaten Decoderkorrekturen/127 SDK-Kontrollen
+bestanden. Die [Routingfortsetzung](JIELI_LINK_ROUTING.md) klärt nun die
+Listen-/Slot-Auswahl anhand der Verbindungskennung und verfolgt den
+aufbereiteten DG-Empfangsdeskriptor über Transporttabelle und `btstack`-
+Nachricht bis zum A2-Parser; 70 Forschungstests bestanden. Bedingte Callback-
+Kontextübernahme und der untere Helfer `0xfe42` bleiben konkrete offene Grenzen.
+Die bisherigen vier privaten Decoderkorrekturen/127 SDK-Kontrollen
 bleiben getrennt von den weiterhin unbestätigten Halfword-/Vorzeichenformen.
 Aktive Konfiguration und physische Achsen bleiben begrenzt. Kein bestätigter
 USB-Gyrofaktor.
@@ -77,9 +82,11 @@ ersten Namens-/UI-Prüfung werden dadurch präzisiert, keine globale
 Abwesenheit anderer Sensorpfade behauptet.
 
 **Nächste Priorität:** Die verbleibenden Lücken zwischen Sensorpfad und
-USB-Ausgabe schließen: die aktive Registrierung/Implementierung des
-indirekten Transport-Callbacks und den Empfangseinstieg zum `A2`-Pfad
-zuordnen. Der Writer des Formatcaches `D+0xa24` ist gefunden, bleibt aber
+USB-Ausgabe schließen: bedingte Callback-Auswahl im unteren DG-Pfad,
+Helfer `0xfe42`, Ursprung der Empfangsdeskriptoren und Kennungs-/Kanalschreiber
+untersuchen. Statische Registrierung und der obere Empfangseinstieg zum
+`A2`-Pfad sind zugeordnet, reale Funkzustellung nicht. Der Writer des
+Formatcaches `D+0xa24` ist gefunden, bleibt aber
 vom passend zugeordneten Queue-Pfad getrennt. Indizierte Halfword-/
 Vorzeichenformen sowie weitere Schreiber der Offsets und Sensorregister prüfen.
 Sensorwahl und letzte wirksame Initialisierung bleiben
