@@ -16,7 +16,9 @@ import sys
 from gamesir_imu_stream import CHANNELS, IIO_NAME, SCAN_SIZE
 
 
-MODULE_SRCVERSION = "71D6C2E25BA80E69BB4818D"
+# Reviewed offline build with incremental IIO scan selection fixed. Older
+# modules fail metadata preflight; do not retry the known EINVAL on hardware.
+MODULE_SRCVERSION = "A15BC39B5A21D181E4E5C49"
 
 
 def _identity(info):

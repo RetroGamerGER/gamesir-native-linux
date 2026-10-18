@@ -5,6 +5,16 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**IIO-Kanalauswahl offline korrigiert:** Der erste echte Pufferaufbau scheiterte
+an der vollständigen Maske im pro Kanal aufgerufenen `validate_scan_mask`.
+Ein neuer Regressionstest reproduziert den Fehler und den Rückweg. Die
+Korrektur nutzt die vorhandene vollständige Produzentenmaske und prüft sie
+beim Aktivieren; schrittweise Kanalauswahl ist möglich. Vollständige Rohscans,
+Zeitstempel und übrige Controllerfunktionen bleiben erhalten. Neuer geprüfter
+Quellstand `A15BC39B5A21D181E4E5C49`; PRE-ALPHA-Paketkandidat
+`0.1.0.alpha3-7`, noch nicht installiert. [Abnahme und nächster Lauf](IIO_SCAN_SELECTION_FIX.md).
+Keine neue Hardwaremessung; bisher kein kohärenter Live-Pufferlauf gelungen.
+
 **Qualitativer Achsentest offline vorbereitet:** Zunächst nur eine bequeme
 waagerechte Linksdrehung pro eigenem Go, ohne Winkelvorgabe; höchstens drei
 getrennte Wiederholungen. Der vorhandene KDE-/IIO-Helfer bietet dafür einen
@@ -27,9 +37,10 @@ lokales Go und hielt nach 30 Sekunden Vorbereitung bei der ersten
 Scan-Kanalaktivierung mit `EINVAL` an. Keine Pufferaktivierung, kein
 Aufnahmestart und keine Sensordaten. Die vorübergehend geänderte Pufferlänge
 wurde zurückgestellt; ursprüngliche Instanz, Einstellungen und native Bindung
-sind lesend bestätigt. Konkreter Offline-Prüfpunkt: die nur vollständige
-Masken akzeptierende Treiberprüfung gegenüber der schrittweisen IIO-Auswahl.
-Keine automatische Wiederholung oder Treiberänderung. Noch kein
+sind lesend bestätigt. Der damalige Verdacht einer nur vollständige Masken
+akzeptierenden Treiberprüfung ist inzwischen offline bestätigt und korrigiert
+(siehe oben). Im Hardwarelauf keine automatische Wiederholung oder
+Treiberänderung. Noch kein
 Achsennachweis. [Befund und Grenzen](GYRO_AXIS_TEST.md#neuer-einzellauf-kanalauswahl-vor-aufnahmebeginn-abgelehnt).
 
 **Entscheidung vom 18. Oktober: Funkanalyse zurückgestellt.** Der Empfang

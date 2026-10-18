@@ -44,6 +44,12 @@ requires no known angle. Use its explicit run-axis-left mode only after fresh
 instance checks and separate live approval, with one local Go per repetition.
 No automatic repeat, reference-angle claim, scale selection or runtime mapping;
 raw channel/sign evidence does not validate a full axis map or calibrated SDL.
+The first actual buffer setup exposed an IIO scan-selection bug, corrected
+offline in docs/IIO_SCAN_SELECTION_FIX.md. Do not reinstate a full-request-mask
+validate_scan_mask callback: IIO calls it for intermediate channel enables.
+Keep the full producer mask and enable-time layout guard, plus reader/build
+and instance checks. The corrected module needs separate installation and
+live buffer acceptance; do not reuse an old manifest or module hash.
 No universal trigger-game support or general stability guarantee.
 
 The optional `tools/offline` HID companion is file-only research, not runtime

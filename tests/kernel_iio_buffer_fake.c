@@ -34,12 +34,21 @@ struct gsn_device;
 struct iio_buffer { unsigned refs; bool owner_released; };
 struct device { void *owner; };
 struct device_attribute { unsigned unused; };
+struct iio_dev;
+struct iio_buffer_setup_ops {
+	int (*preenable)(struct iio_dev *);
+	int (*postenable)(struct iio_dev *);
+	int (*predisable)(struct iio_dev *);
+	bool (*validate_scan_mask)(struct iio_dev *, const unsigned long *);
+};
 struct iio_dev {
 	struct device dev;
 	struct gsn_device *g;
 	struct iio_buffer *buffer;
 	unsigned refs;
 	int clock_id;
+	const unsigned long *available_scan_masks, *active_scan_mask;
+	const struct iio_buffer_setup_ops *setup_ops;
 	bool registered, timestamp_enabled, owner_released;
 };
 enum { IIO_ACCEL = 1, IIO_ANGL_VEL, IIO_COUNT, IIO_TIMESTAMP };
@@ -226,6 +235,9 @@ static struct gsn_device *new_device(void)
 	g->iio_buffer->refs = 2; /* Caller ownership plus attached-IIO reference. */
 	g->iio->timestamp_enabled = true;
 	g->iio->clock_id = CLOCK_MONOTONIC;
+	g->iio->available_scan_masks = gsn_scan_masks;
+	g->iio->active_scan_mask = gsn_scan_masks;
+	g->iio->setup_ops = &gsn_iio_buffer_ops;
 	g->rx_urb->active = g->service.queued = true;
 	g->accel_scale.counts_per_g_num = 8192;
 	g->accel_scale.counts_per_g_den = 1;
@@ -285,6 +297,101 @@ static void verify_stream_active(struct gsn_device *g, bool expected)
 	assert(!g->report_lock.held && !memcmp(&before, &g->rt, sizeof(before)));
 	tests++;
 }
+/* Narrow model of the locally inspected IIO core's sysfs selection contract:
+ * enable validates the temporary requested mask BEFORE committing it; clear
+ * does not call validate_scan_mask; timestamp is selected separately. This
+ * executes our extracted callbacks, not Linux sysfs/FIFO/demux or real I/O.
+ * See docs/IIO_SCAN_SELECTION_FIX.md for binary/header evidence and limits.
+ */
+static int select_channel(struct iio_dev *i, unsigned long *requested,
+                          unsigned channel, bool enable, bool active)
+{
+	unsigned long candidate, data;
+	if (active)
+		return -EBUSY;
+	if (channel > 7)
+		return -EINVAL;
+	candidate = enable ? *requested | BIT(channel) : *requested & ~BIT(channel);
+	if (!enable || channel == 7 || candidate == *requested) {
+		*requested = candidate;
+		return 0;
+	}
+	data = candidate & ~BIT(7);
+	if (i->setup_ops->validate_scan_mask &&
+	    !i->setup_ops->validate_scan_mask(i, &data))
+		return -EINVAL;
+	for (const unsigned long *mask = i->available_scan_masks; *mask; mask++) {
+		if (!(data & ~*mask)) {
+			*requested = candidate;
+			return 0;
+		}
+	}
+	return -EINVAL;
+}
+static int enable_selected(struct iio_dev *i, unsigned long requested)
+{
+	unsigned long data = requested & ~BIT(7);
+	if (!data)
+		return -EINVAL; /* The core rejects empty data selections. */
+	for (const unsigned long *mask = i->available_scan_masks; *mask; mask++) {
+		if (!(data & ~*mask)) {
+			i->active_scan_mask = mask;
+			i->timestamp_enabled = !!(requested & BIT(7));
+			int ret = i->setup_ops->preenable(i);
+			return ret ? ret : i->setup_ops->postenable(i);
+		}
+	}
+	return -EINVAL;
+}
+static void selection_cases(struct gsn_device *g)
+{
+	struct gs_runtime saved = g->rt;
+	unsigned before = pushes;
+	unsigned long requested = 0;
+	for (unsigned channel = 0; channel < 8; channel++) {
+		/* This first write reproduced EINVAL with the old real callback. */
+		assert(!select_channel(g->iio, &requested, channel, true, false));
+		assert(requested == GENMASK(channel, 0) && !g->iio_buffer_active);
+	}
+	assert(!enable_selected(g->iio, requested));
+	assert(g->iio_buffer_active && *g->iio->active_scan_mask == 0x7f);
+	assert(select_channel(g->iio, &requested, 0, false, true) == -EBUSY);
+	assert(requested == 0xff);
+	assert(!g->iio->setup_ops->predisable(g->iio));
+	for (int channel = 7; channel >= 0; channel--)
+		assert(!select_channel(g->iio, &requested, channel, false, false));
+	assert(!requested && !g->iio_buffer_active);
+	assert(enable_selected(g->iio, 0) == -EINVAL);
+	assert(enable_selected(g->iio, BIT(7)) == -EINVAL);
+	assert(enable_selected(g->iio, BIT(8)) == -EINVAL);
+	/* Every nonempty data subset selects the same full producer layout;
+	 * the IIO core owns userspace subset demux, which is not simulated here.
+	 */
+	for (unsigned long subset = 1; subset <= 127; subset++) {
+		for (unsigned timestamp = 0; timestamp < 2; timestamp++) {
+			requested = timestamp ? BIT(7) : 0;
+			for (int channel = 6; channel >= 0; channel--)
+				if (subset & BIT(channel))
+					assert(!select_channel(g->iio, &requested, channel, true, false));
+			assert(!enable_selected(g->iio, requested));
+			assert(*g->iio->active_scan_mask == 0x7f);
+			assert(g->iio->timestamp_enabled == !!timestamp);
+			assert(!g->iio->setup_ops->predisable(g->iio));
+		}
+	}
+	/* Defend the actual producer layout at enable time, after core matching. */
+	for (unsigned long active = 0; active < 256; active++) {
+		g->iio->active_scan_mask = &active;
+		assert(gsn_iio_preenable(g->iio) == (active == 0x7f ? 0 : -EINVAL));
+		assert(!g->iio_buffer_active);
+	}
+	g->iio->active_scan_mask = NULL;
+	assert(gsn_iio_preenable(g->iio) == -EINVAL);
+	assert(pushes == before && !memcmp(&saved, &g->rt, sizeof(saved)));
+	g->iio->active_scan_mask = gsn_scan_masks;
+	g->iio->timestamp_enabled = true;
+	tests++;
+}
 static void buffer_cases(void)
 {
 	struct gsn_device *g = new_device();
@@ -292,16 +399,13 @@ static void buffer_cases(void)
 		.gyro = {-1, 12345, -23456}, .extras = {0x3b, 3} };
 	int value, unused;
 	unsigned before = pushes, stop_before = stops;
-	unsigned long mask;
 	struct gs_runtime runtime = g->rt;
 	verify_stream_active(g, false);
 	assert(gsn_iio_preenable(g->iio) == -ENODATA); tests++;
 	receive(g, &f);
 	assert(pushes == before && g->sample.sample_number == 1); tests++;
 	assert(!memcmp(&runtime, &g->rt, sizeof(runtime)) && stops == stop_before); tests++;
-	for (mask = 0; mask < 256; mask++)
-		assert(gsn_iio_scan_mask(g->iio, &mask) == (mask == 127));
-	tests++;
+	selection_cases(g);
 	g->iio->clock_id = CLOCK_BOOTTIME;
 	assert(gsn_iio_preenable(g->iio) == -EINVAL); tests++;
 	g->iio->clock_id = CLOCK_MONOTONIC;
@@ -519,6 +623,15 @@ static void emit_synthetic_reference(unsigned axis, int angle)
 }
 int main(int argc, char **argv)
 {
+	if (argc == 6 && !strcmp(argv[1], "--select-scan")) {
+		struct iio_dev i = { .available_scan_masks = gsn_scan_masks,
+			.setup_ops = &gsn_iio_buffer_ops };
+		unsigned long requested = strtoul(argv[2], NULL, 0);
+		int ret = select_channel(&i, &requested, (unsigned)strtoul(argv[3], NULL, 0),
+					 !!atoi(argv[4]), !!atoi(argv[5]));
+		printf("{\"result\":%d,\"requested\":%lu}\n", ret, requested);
+		return 0;
+	}
 	if (argc == 4 && !strcmp(argv[1], "--emit-synthetic-angle")) {
 		emit_synthetic_reference((unsigned)strtoul(argv[2], NULL, 10), atoi(argv[3]));
 		return 0;
@@ -530,6 +643,6 @@ int main(int argc, char **argv)
 	partial_probe_cleanup_cases();
 	assert(iio_frees == 5 && buffer_frees == 4 && g_frees == 6);
 	assert(kills == 7 && neutralizations == 7 && stops == 7);
-	printf("PASS: %u actual-kernel IIO adapter groups; scan metadata, full masks, coherent 32-byte packing, signed extremes, zero padding, shared RX timestamp/count, unchanged raw/Paddles/runtime, nonfatal FIFO errors, re-enable, stale/fault rejection, PM stream break, retained IIO/control-reference teardown and partial-probe cleanup\n", tests);
+	printf("PASS: %u actual-kernel IIO adapter groups; scan metadata, incremental selection/clear, 254 subset/timestamp selections with full producer mask, invalid/empty/active mask rejection, coherent 32-byte packing, signed extremes, zero padding, shared RX timestamp/count, unchanged raw/Paddles/runtime, nonfatal FIFO errors, re-enable, stale/fault rejection, PM stream break, retained IIO/control-reference teardown and partial-probe cleanup\n", tests);
 	return 0;
 }

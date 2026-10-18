@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
 """Exercise extracted IIO adapter code with synthetic kernel objects only."""
+import copy
+import errno
 import hashlib
 import json
 import math
@@ -14,10 +16,12 @@ from project_paths import BUILD, PROJECT, RESULTS
 sys.path.insert(0, str(PROJECT / "tools/imu"))
 from gamesir_imu_stream import ScanDecoder
 import gyro_reference
+import gamesir_iio_buffer
+from test_iio_buffer_setup import FakeBackend
 
 
 NAMES = ["gsn_delete", "gsn_imu", "gsn_sample_snapshot", "gsn_iio_raw",
-         "buffer_push_errors_show", "buffer_stream_active_show", "gsn_iio_scan_mask", "gsn_iio_preenable",
+         "buffer_push_errors_show", "buffer_stream_active_show", "gsn_iio_preenable",
          "gsn_iio_postenable", "gsn_iio_predisable", "gsn_quiesce",
          "gsn_disconnect", "gsn_suspend", "gsn_resume"]
 
@@ -31,10 +35,12 @@ def extract(source):
         assert match, name
         blocks.append(source[match.start():source.index("\n}", match.end()) + 2])
     start = source.index("#define GSN_CHANNEL(")
-    end = source.index("\nstatic bool gsn_iio_scan_mask", start)
+    end = source.index("\nstatic int gsn_iio_preenable", start)
     channels = source[start:end]
     declarations = [block[:block.index("\n{")] + ";" for block in blocks]
-    return "\n\n".join([structure, channels, *declarations, *blocks]) + "\n"
+    ops_start = source.index("static const struct iio_buffer_setup_ops gsn_iio_buffer_ops = {")
+    ops = source[ops_start:source.index("\n};", ops_start) + 3]
+    return "\n\n".join([structure, channels, *declarations, *blocks, ops]) + "\n"
 
 
 def build(label, source):
@@ -55,6 +61,59 @@ def build(label, source):
     return executable
 
 
+def transaction_cases(executable, env, *, legacy=False):
+    """Real Python setup/rollback -> actual C driver callback registration.
+
+    Only the narrow IIO mask-selection boundary is modelled, as reviewed in
+    the installed core binary. No devices, sysfs writes or kernel execution.
+    """
+    class CoreBackend(FakeBackend):
+        def write_at(self, directory_fd, relative, value):
+            if relative.startswith("scan_elements/"):
+                names = [f"scan_elements/{name}_en" for name in gamesir_iio_buffer.CHANNELS]
+                mask = sum(1 << n for n, name in enumerate(names)
+                           if self.value["settings"][name] == "1")
+                active = self.value["buffer_enable"] == "1"
+                result = subprocess.run([str(executable), "--select-scan", str(mask),
+                    str(names.index(relative)), value, str(int(active))], env=env,
+                    capture_output=True, text=True, timeout=10, check=True)
+                selected = json.loads(result.stdout)
+                if selected["result"]:
+                    assert selected["requested"] == mask
+                    raise OSError(-selected["result"], "modelled IIO channel selection")
+                expected = (mask | (1 << names.index(relative))) if value == "1" else (
+                    mask & ~(1 << names.index(relative)))
+                assert selected["requested"] == expected
+            super().write_at(directory_fd, relative, value)
+
+    completed = 0
+    for fail_at in ([None] if legacy else [None, *range(1, 11)]):
+        backend = CoreBackend()
+        before = copy.deepcopy(backend.value)
+        if fail_at:
+            backend.fail_write = {fail_at}
+        transaction = gamesir_iio_buffer.BufferTransaction(before, backend=backend)
+        try:
+            _, fd = transaction.setup()
+        except OSError as error:
+            if legacy:
+                assert error.errno == errno.EINVAL
+                assert transaction.writes[:2] == [
+                    {"attribute": "buffer/length", "value": "512", "ok": True},
+                    {"attribute": "scan_elements/in_accel_x_en", "value": "1", "ok": False}]
+            else:
+                assert fail_at and "injected write failure" in str(error)
+        else:
+            assert not legacy and fail_at is None
+            assert fd == 102 and backend.value["buffer_stream_active"] == "1"
+            assert all(v == "1" for k, v in backend.value["settings"].items() if k.endswith("_en"))
+        restored = transaction.restore()
+        assert restored["restored"] and not restored["errors"]
+        assert backend.value == before and backend.closed == [102, 101]
+        completed += 1
+    return completed
+
+
 def main():
     source = (PROJECT / "kernel/gs_native_usb.c").read_text()
     RESULTS.mkdir(parents=True, exist_ok=True)
@@ -65,6 +124,7 @@ def main():
     (RESULTS / "kernel-iio-buffer-actual.log").write_text(result.stdout + result.stderr)
     if result.returncode:
         raise SystemExit(result.stdout + result.stderr)
+    transactions = transaction_cases(executable, env)
     # Cross-language contract: actual gsn_imu serializes all bytes. Decode them
     # using the real userspace consumer and pass those decoded rows unchanged
     # into the known-angle analyzer. No Python struct.pack duplicate is used.
@@ -124,10 +184,30 @@ def main():
         "quiesce-gate": ("g->iio_buffer_active = false;\n\tspin_unlock_irqrestore(&g->report_lock, flags);\n\tif (state != GS_DISCONNECTED)",
                          "/* negative control: leave active gate set */\n\tspin_unlock_irqrestore(&g->report_lock, flags);\n\tif (state != GS_DISCONNECTED)"),
     }
+    legacy_callback = """static bool gsn_iio_scan_mask(struct iio_dev *indio, const unsigned long *mask)
+{
+	return mask[0] == gsn_scan_masks[0];
+}
+
+"""
+    legacy_source = source.replace("static int gsn_iio_preenable", legacy_callback + "static int gsn_iio_preenable", 1)
+    legacy_source = legacy_source.replace(".predisable = gsn_iio_predisable,",
+        ".predisable = gsn_iio_predisable,\n\t.validate_scan_mask = gsn_iio_scan_mask,", 1)
+    broken_sources = {label: source.replace(old, new) for label, (old, new) in mutations.items()}
+    broken_sources["strict-request-mask"] = legacy_source
+    guard = """	if (!indio->active_scan_mask ||
+	    indio->active_scan_mask[0] != gsn_scan_masks[0])
+		return -EINVAL;
+"""
+    assert source.count(guard) == 1
+    broken_sources["missing-producer-mask-guard"] = source.replace(guard, "", 1)
     negative = {}
-    for label, (old, new) in mutations.items():
-        assert source.count(old) == 1, label
-        broken = build(label, source.replace(old, new))
+    for old, _ in mutations.values():
+        assert source.count(old) == 1
+    for label, broken_source in broken_sources.items():
+        broken = build(label, broken_source)
+        if label == "strict-request-mask":
+            assert transaction_cases(broken, env, legacy=True) == 1
         control = subprocess.run([str(broken)], env=env, capture_output=True, text=True, timeout=20)
         output = control.stdout + control.stderr
         (RESULTS / f"kernel-iio-buffer-{label}.log").write_text(output)
@@ -139,6 +219,8 @@ def main():
         "method": "Actual extracted driver structures, channel metadata and C functions; synthetic IIO/input/USB/lock boundaries",
         "sanitizers": ["address", "undefined", "leak"],
         "coverage": result.stdout.strip(), "negative_controls": negative,
+        "python_transaction_core_selection_cases": transactions,
+        "old_callback_exact_EINVAL_and_rollback_reproduced": True,
         "cross_language_scan_decoder_reference_cases": crossings,
         "source_sha256": {name: hashlib.sha256((PROJECT / name).read_bytes()).hexdigest()
                           for name in ("kernel/gs_native_usb.c", "tests/kernel_iio_buffer_fake.c",
@@ -151,6 +233,7 @@ def main():
     }
     (RESULTS / "kernel-iio-buffer.json").write_text(json.dumps(report, indent=2) + "\n")
     print(result.stdout.strip())
+    print(f"PASS: {transactions} real Python setup/rollback to C selection cases; legacy EINVAL reproduced")
     print(f"PASS: {len(negative)} isolated IIO-adapter negative controls rejected")
     print(f"PASS: {len(crossings)} actual-C-scan to Python decoder/known-angle analyzer paths, synthetic only")
 

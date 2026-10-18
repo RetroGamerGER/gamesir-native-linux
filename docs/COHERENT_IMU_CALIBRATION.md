@@ -12,6 +12,11 @@ Ergänzung vom 18. Oktober: Ein getrennter [qualitativer Achsentest](GYRO_AXIS_T
 ist ohne bekannten Winkel offline vorbereitet. Er verwendet denselben begrenzten
 Puffer-Worker, aber eigene Ansagen und eine reine Rohkanalauswertung. Die unten
 beschriebene 90°-Kalibrierung bleibt davon unberührt und weiterhin pausiert.
+Der erste Aufbau des kohärenten Puffers offenbarte einen Konflikt bei der
+schrittweisen Kanalauswahl. Die [Offline-Korrektur](IIO_SCAN_SELECTION_FIX.md)
+ist für einen separat freizugebenden Modulwechsel vorbereitet. Frühere
+Build-/Softwaretests dieses Dokuments sind kein Nachweis eines erfolgreichen
+Live-Pufferlaufs.
 
 Revision `0.1.0.alpha3-5` mit kohärentem Kernelpuffer ist inzwischen separat
 installiert und der native Betrieb lesend bestätigt. Der letzte dokumentierte

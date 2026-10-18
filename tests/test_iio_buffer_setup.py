@@ -425,6 +425,13 @@ class VirtualMetadata:
 
 
 class RealSnapshotVirtualTree(unittest.TestCase):
+    def test_known_old_scan_mask_build_rejected_before_device_open(self):
+        tree = VirtualMetadata()
+        tree.files[tree.driver + "/module/srcversion"] = "71D6C2E25BA80E69BB4818D"
+        with patch.object(setup.os, "open", side_effect=AssertionError("no device open")):
+            with self.assertRaisesRegex(ValueError, "unexpected native module srcversion"):
+                tree.run()
+
     def test_real_snapshot_validates_complete_virtual_metadata_without_open(self):
         tree = VirtualMetadata()
         with patch.object(setup.os, "open", side_effect=AssertionError("metadata inspection must not open device")):

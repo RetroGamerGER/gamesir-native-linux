@@ -30,6 +30,7 @@ DOCUMENT_FILES = (
     'docs/EXPERIMENTAL_GYRO_TEST.md', 'docs/experimental-gyro-validation.json',
     'docs/COHERENT_IMU_CALIBRATION.md', 'docs/coherent-imu-validation.json',
     'docs/COHERENT_IMU_UPDATE.md', 'docs/evidence/COHERENT_IMU_INSTALL_20261016.json',
+    'docs/GYRO_AXIS_TEST.md', 'docs/IIO_SCAN_SELECTION_FIX.md',
     'docs/experimental-gyro-live-001.json',
     'docs/experimental-gyro-live-002.json',
     'docs/GAMESIR_NEXUS_RESEARCH.md', 'docs/NEXUS_SENSOR_DATAFLOW.md',

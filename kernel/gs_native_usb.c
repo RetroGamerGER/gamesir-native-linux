@@ -657,20 +657,23 @@ static const struct iio_chan_spec gsn_channels[] = {
 	IIO_CHAN_SOFT_TIMESTAMP(7),
 };
 
-/* Only complete six-channel samples plus the count may be requested. The
- * standard software timestamp remains separately selectable by IIO userspace.
+/* The producer always supplies all six channels plus the report count. IIO
+ * may accept a userspace subset and demultiplex it from this complete scan.
+ * Do not require the full mask in validate_scan_mask: that callback also runs
+ * for each intermediate sysfs channel enable, before the buffer starts.
+ * The standard software timestamp remains separately selectable.
  */
 static const unsigned long gsn_scan_masks[] = { GENMASK(6, 0), 0 };
-
-static bool gsn_iio_scan_mask(struct iio_dev *indio, const unsigned long *mask)
-{
-	return mask[0] == gsn_scan_masks[0];
-}
 
 static int gsn_iio_preenable(struct iio_dev *indio)
 {
 	struct gsn_device *g = iio_device_get_drvdata(indio);
 	struct gsn_sample sample;
+
+	/* Check the core-selected producer layout, not the intermediate request. */
+	if (!indio->active_scan_mask ||
+	    indio->active_scan_mask[0] != gsn_scan_masks[0])
+		return -EINVAL;
 
 	/* The existing report snapshot and buffered timestamps share ktime_get_ns.
 	 * Reject a different selected clock instead of mislabelling host time.
@@ -713,7 +716,6 @@ static const struct iio_buffer_setup_ops gsn_iio_buffer_ops = {
 	.preenable = gsn_iio_preenable,
 	.postenable = gsn_iio_postenable,
 	.predisable = gsn_iio_predisable,
-	.validate_scan_mask = gsn_iio_scan_mask,
 };
 
 static int gsn_open(struct inode *inode, struct file *file)

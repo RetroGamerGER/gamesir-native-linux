@@ -3,6 +3,8 @@
 Stand: 18. Oktober 2026. **Dialog korrigiert; neuer separat freigegebener
 Einzellauf nach lokalem Go bei der Kanalauswahl mit EINVAL angehalten.
 Ursprünglicher Pufferzustand wiederhergestellt, keine Sensordaten aufgenommen.**
+Die [anschließende Offline-Korrektur](IIO_SCAN_SELECTION_FIX.md) ist gebaut;
+ein separat freigegebenes Modulupdate ist Voraussetzung für einen neuen Lauf.
 Dieser Test untersucht Rohkanalreaktion und Vorzeichen beim waagerechten
 Linksdrehen. Kein bestimmter Winkel, Anschlagwinkel oder Bewegungsumfang ist
 erforderlich. Die physikalische Skalierung bleibt unbestätigt; die bekannte
@@ -47,6 +49,9 @@ Im Bereitschaftsfenster ist **Abbrechen** vorausgewählt. Zum Start ausdrücklic
 **Go** auswählen und **Auswahl bestätigen** drücken. Fenster schließen oder
 Abbrechen bestätigt keinen Start. Die spätere Bewegungsbestätigung verwendet
 dieselbe Auswahl mit **Nicht bestätigen** als Vorgabe.
+Das Go-Fenster schließt nach der Auswahl. Die anschließenden Hinweise sind
+zeitlich begrenzt und werden bei Phasenwechsel ersetzt. Ihr Verschwinden ist
+kein Start- oder Erfolgssignal; maßgeblich sind die ausdrücklichen Ansagen.
 
 | Phase | Zeit | Handlung |
 | --- | --- | --- |
@@ -239,3 +244,8 @@ passend testen; dabei die vollständigen kohärenten Samples und eine sichere
 Rückstellung erhalten. Keine Kanalprüfungen am laufenden System umgehen.
 Kein automatischer Neuversuch, keine Treiberänderung oder Installation in
 diesem Lauf. Bekannte-Winkel-Kalibrierung bleibt pausiert.
+
+Dieser offene Codeverdacht ist inzwischen durch eine statische Gegenprüfung
+des vorhandenen IIO-Cores und einen reproduzierenden Regressionstest geklärt.
+Die [Offline-Korrektur und Updatevorbereitung](IIO_SCAN_SELECTION_FIX.md)
+ersetzen keine reale Pufferabnahme und erteilen keine Installationsfreigabe.
