@@ -85,6 +85,21 @@ Lizenzpfade im Quellarchiv und Offline-Staging. Fehlende Lizenztexte stoppen
 den Generator vor Ausgabe. Beide Prüfungen gehören zu `make test` und
 installieren nichts. Herkunft und Grenzen: [Lizenzbericht](LICENSING.md).
 
+## Lokales Gyrofenster ohne Hardware
+
+`make test-imu-diagnostic` prüft zusätzlich das reine Wiedergabemodell:
+Quaternionen, sechs Vorzeichen, Zeitintegration, Displaygain, Zentrieren,
+Wiedergabetempo und Ablehnung beschädigter oder gemischter Datenströme.
+`make test-gyro-viewer` benötigt das optionale PySide6 und führt Qt offscreen
+mit Softwaredarstellung aus. Es prüft die tatsächlichen Bedienelemente,
+Quellen-/Profilwechsel, Timerende, Schließen und überlappungsfreie Darstellung.
+Kein Displayserver, keine Geräte, kein sudo und keine Paketinstallation nötig.
+Die GUI-Abhängigkeit gehört nicht zum Kernel-/Manager-Paket oder zur
+Pflicht-Testsuite. Die 15 Modelltests und 8 GUI-Tests wurden zusätzlich an
+sechs vorhandenen privaten Aufnahmen mit zusammen 40.486 Scans ergänzt;
+Originalprüfsummen unverändert, fehlerhafte Aufnahme abgelehnt.
+[Details und Grenzen](GYRO_VIEWER.md).
+
 ## Kohärenter IIO-Strom und Winkelreferenz
 
 Die Gyroreferenzmessungen sind auf Nutzerwunsch pausiert. Die vorbereiteten

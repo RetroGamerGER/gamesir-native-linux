@@ -111,8 +111,10 @@ Empfohlen ist zunächst ein **lokales Diagnosefenster** mit diesem Datenweg:
 
 Das ist ein E2E-Test bis zu dieser eigenen Anwendung. Eine erfolgreiche
 Anzeige wäre kein Nachweis, dass Steam, SDL oder Eden bereits Gyro erkennen.
-Das Fenster und sein Live-Transport sind **noch nicht implementiert**; dieser
-Abschnitt beschreibt den konkreten nächsten Entwicklungs-/Freigabeschritt.
+Das **Offline-Fenster ist inzwischen implementiert und mit den gespeicherten
+Aufnahmen geprüft**: [Bedienung und Abnahme](GYRO_VIEWER.md). Es liest nur
+Dateien. Sein Live-Transport ist weiterhin **nicht implementiert**; die
+nachstehenden Live-Schritte sind ein Entwicklungs-/Freigabeplan.
 Die bestehenden begrenzten Worker-/Rückstellungsregeln bleiben die Grundlage,
 kein zweiter paralleler IIO-Leser, keine neue USB-Initialisierung.
 

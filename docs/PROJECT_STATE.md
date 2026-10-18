@@ -5,6 +5,18 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Lokales Gyrofenster offline umgesetzt:** Das optionale PySide6-Werkzeug
+zeigt Fadenkreuz, relative räumliche Drehung, benannte Drehraten und Rohwerte.
+Pausierter Start, Zeitleiste, Wiedergabetempo, Zentrieren und ein separater
+Fadenkreuz-Regler (0,25–4×) sind vorhanden. Auswahl des experimentellen
+Sensorfaktors bleibt ausdrücklich erforderlich; `0,07 °/s` ist unbestätigt.
+Alle sechs vorhandenen Aufnahmen mit 40.486 Scans wurden jeweils geprüft und
+wiedergegeben, ohne ihre Dateien zu verändern. Die abgebrochene Aufnahme
+wird abgelehnt. Quaternionen berücksichtigen kombinierte Drehungen; keine
+Bias-Korrektur, keine Sensorfusion und keine neue Kalibrierung. Qt-Fenster
+gerätefrei gerendert und geprüft; kein Live-Transport, Treiberupdate oder
+neuer Hardwaretest. [Bedienung, Tests und Grenzen](GYRO_VIEWER.md).
+
 **Beobachtete Gyroachsen als optionales Offline-Profil:**
 `g7pro-observed-20261018` ergänzt die bestehende Diagnose, ohne Rohwerte oder
 produktive Kalibrierung zu ändern. Die benannten positiven Bewegungen sind
@@ -14,8 +26,8 @@ Explizite Auswahl erforderlich; `0,07 °/s` bleibt unbestätigter Testwert.
 Alle 40.486 gespeicherten Scans der sechs Richtungen wurden einzeln offline
 wiedergegeben: Kanal, Vorzeichen und unveränderte Rohdaten/Zeitstempel geprüft.
 330 Python-Tests und der C-Sensorvertrag bestanden. Kein neues Live-Ergebnis,
-keine Installation. Ein visueller Empfindlichkeitstest ist als nächster
-separater Schritt beschrieben, noch nicht implementiert.
+keine Installation. Das darauf aufbauende Offline-Fenster ist inzwischen
+implementiert (oben); ein Live-Empfindlichkeitstest bleibt separat vorzubereiten.
 [Profil, Replay und E2E-Plan](EXPERIMENTAL_GYRO_TEST.md#beobachtetes-achsenprofil-v1-offline).
 
 **Sechs Richtungen qualitativ beobachtet:** Nach frischer Vorprüfung und

@@ -51,11 +51,12 @@ Belege: [Gamescope](STEAM_GAMESCOPE.md),
 
 **Qualitative Achsen ins Offline-Testprofil übernommen:** Das explizite
 `g7pro-observed-20261018` bewahrt Rohdaten und getrennte Skalierungswahl;
-Replay aller sechs gespeicherten Richtungen bestanden. Nächster sinnvoller
-Schritt ist ein lokales visuelles Diagnosefenster mit kohärentem IIO-Strom,
-Fadenkreuz/Drehungsanzeige und getrenntem Darstellungsfaktor. Zuerst mit
-gespeicherten Daten entwickeln, dann einen begrenzten E2E-Anzeigelauf separat
-freigeben. Kein neuer Treiber nötig für diesen Diagnosepfad. Eine spätere
+Replay aller sechs gespeicherten Richtungen bestanden. Das lokale
+[Diagnosefenster](GYRO_VIEWER.md) mit Fadenkreuz, relativer Drehungsanzeige
+und getrenntem Darstellungsfaktor ist jetzt im reinen Offline-Replay geprüft.
+Nächster Schritt: den begrenzten lokalen Transport vom vorhandenen kohärenten
+IIO-Worker zur GUI offline vorbereiten und prüfen, dann einen E2E-Anzeigelauf
+separat freigeben. Kein neuer Treiber nötig für diesen Diagnosepfad. Eine spätere
 SDL-/Eden-Abnahme benötigt weiterhin die zusätzliche Sensorschnittstelle
 und passende Kalibrierungsbelege. [Plan und Grenzen](EXPERIMENTAL_GYRO_TEST.md#visueller-e2e-empfindlichkeitstest-geplanter-nächster-schritt).
 

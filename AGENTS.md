@@ -86,8 +86,13 @@ runtime verification flags. 0.07 dps/raw is still only a test hypothesis.
 Never reuse the gyro mapping for acceleration without separate pose evidence.
 Offline replay-buffer verifies saved worker checksums, restoration and binary/
 JSON agreement; it must not open live devices or merge capture instances.
-Read docs/EXPERIMENTAL_GYRO_TEST.md for the planned visual sensitivity test;
-it is not yet implemented or authorized live. Display gain is not calibration.
+The optional PySide6 window in tools/imu/gamesir_gyro_viewer.py now replays
+verified saved captures only. Read docs/GYRO_VIEWER.md: explicit factor choice,
+paused start, quaternion integration over recorded timestamps, display-only
+crosshair gain and centering; no automatic bias correction or acceleration
+mapping. Do not replace file replay with live discovery or IIO access. The
+bounded live transport is still unimplemented and requires separate approval.
+Display gain, a plausible animation and offline tests do not prove calibration.
 No universal trigger-game support or general stability guarantee.
 
 The optional `tools/offline` HID companion is file-only research, not runtime
