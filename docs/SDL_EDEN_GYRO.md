@@ -8,8 +8,10 @@ reboot, suspend or universal-emulator acceptance claim. No push or release appro
 
 The maintainer subsequently **closed the current gyro milestone** after the
 accepted live result and verified persistent local opt-in. Dedicated Steam
-gyro integration is deferred because there is no current requested use case;
-existing Steam paddle support stays intact. No further calibration, tests or
+gyro integration was initially deferred for lack of a requested use case;
+the later [offline Steam feasibility study](STEAM_GYRO_FEASIBILITY.md) is a
+separate request and does not reopen calibration or authorize live changes.
+Existing Steam paddle support stays intact. No further calibration, tests or
 runtime changes follow automatically. Pending reboot and other validation
 limits below remain explicit; milestone closure does not claim those passed.
 

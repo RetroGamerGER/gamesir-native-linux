@@ -7,11 +7,25 @@ Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
 **Aktueller Gyro-Meilenstein vom Nutzer abgeschlossen:** SDL-/Eden-Livetest
 angenommen und dauerhafte lokale Konfiguration eingerichtet. Eine eigene
-Steam-Gyro-Integration wird mangels aktuellen Bedarfs zurückgestellt;
+Steam-Gyro-Integration wurde zunächst mangels Bedarfs zurückgestellt;
 die vorhandene Steam-Paddle-Unterstützung bleibt erhalten. Dies ist keine
 Aussage, dass Windows-Spiele grundsätzlich kein Gyro unterstützen.
 Der noch offene Neustartnachweis und weitere unten benannte Prüfgrenzen
 bleiben offen; keine automatische Fortsetzung von Tests oder Kalibrierung.
+
+**Anschließend angeforderte Steam-Gyro-Offline-Prüfung:** Beide lokal
+mitgelieferten 64-Bit-SDL3-Bibliotheken von Steam bestehen je sieben
+Sensorfälle, einschließlich unseres Gyro-ohne-Accel-Pfads, Ereigniszeitstempel
+und 32 Kombinationen aus A und vier Paddles. System-SDL, Buttons, Bridge und
+Steam-/Gamescope-Regressionen bleiben bestanden. Steams UI hängt Gyro an ein
+Fähigkeitsbit; ob sein Backend dieses für den echten GameSir setzt und nutzt,
+ist noch nicht nachgewiesen. Für Proton ist Gyro-zu-Maus/Stick der erste
+sinnvolle Prüfpfad; kein universeller Rohgyro-Transport über XInput.
+Der Nutzer fordert ausdrücklich eine gemeinsame kompatible Lösung: ein
+USB-Eigentümer, derselbe evdev-Sensorpfad für SDL/Eden/Steam und gemeinsame
+Input-/Output-/Lifecycle-Abnahme. Kein Steam-Start, keine Konfigurations-,
+Treiber- oder Hardwareänderung; kein Netz und kein Push.
+[Befunde, Grenzen und gemeinsame Abnahme](STEAM_GYRO_FEASIBILITY.md).
 
 **SDL-/Eden-Erstabnahme erfolgreich:** Paket `0.1.0.alpha3-8` ist lokal
 installiert und der neue Build unter gesonderter Freigabe mit

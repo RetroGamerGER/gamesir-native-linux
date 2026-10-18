@@ -10,8 +10,9 @@ Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 ## Abgeschlossener Meilenstein: SDL / Eden
 
 Der Nutzer nimmt den aktuellen Gyro-Funktionsumfang als abgeschlossen an.
-Eine eigene Steam-Gyro-Integration ist vorerst kein Arbeitsziel; bestehende
-Steam-Paddles bleiben unverändert. Zusätzliche Messungen und die unten
+Eine eigene Steam-Gyro-Integration war zunächst zurückgestellt; die danach
+angeforderte Offline-Machbarkeitsprüfung ist unten getrennt aufgeführt.
+Bestehende Steam-Paddles bleiben unverändert. Zusätzliche Messungen und die unten
 verbliebenen Abnahmefälle werden nicht automatisch begonnen.
 
 Die bevorzugte Gyroeinstellung bleibt bei 0,07 °/s; keine neue Faktorsuche.
@@ -25,6 +26,24 @@ und die Abnahme in einem konkreten Spiel.
 Eden-Hotplug und Wechsel der Zeitbasis bleiben separat zu lösen;
 keine universelle Spielefreigabe oder erfundene Beschleunigungsachsen.
 [Test, korrigierter Prüfhelfer und Grenzen](SDL_EDEN_GYRO.md).
+
+## Neu angefragte Steam-Gyro-Machbarkeit: offline geprüft
+
+Beide vorhandenen Steam-SDL3-Varianten akzeptieren den bestehenden
+Gyro-only-evdev-Pfad samt Paddles im gerätefreien Test. Noch offen: Steams
+tatsächliche Backendauswahl, Gyro-Fähigkeitsbit, Verhalten ohne Accel und
+Anwendung im Proton-Spiel. Zuerst unter eigener Freigabe vorhandene
+Erkennung prüfen; keine zweite Sensorausgabe oder Treiberneuentwicklung.
+Gyro-zu-Maus/Stick ist der bevorzugte Kompatibilitätspfad; natives
+Steam-Input-Motion und proprietäre Spielepfade haben eigene Grenzen.
+
+Alle Komponenten müssen zusammengeführt und gemeinsam abgenommen werden:
+SDL/Eden, Steam/Paddles, normale Eingaben, Griff-FF, Trigger-Bridge und IIO
+erhalten; gemeinsame Geräteidentität, eindeutige Ausgabezuständigkeit und
+STOP-/Reconnect-/Suspend-Regeln. Die bestandenen Einzeltests ersetzen keine
+Abnahme ihres Zusammenspiels. Details und Abnahmematrix:
+[Steam-Gyro-Prüfung](STEAM_GYRO_FEASIBILITY.md). Noch keine Steam-Änderung,
+Installation, Hardware-/Spielprüfung oder neue Kalibrierung freigegeben.
 
 ## 1. Stabile Alpha und Release-Abnahme
 

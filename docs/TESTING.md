@@ -4,6 +4,28 @@ Alle Make-Ziele sind offline. Keine Installation, erhöhten
 Rechte, USB-Kommandos, Modulaktivierung oder Treiberwechsel sind Bestandteil.
 Voraussetzung: vorhandenes Python ≥ 3.11, Make und clang mit ASan/UBSan.
 
+## Steam-SDL-Gyro ohne Steam-Start
+
+Der vorhandene gerätefreie Sensorprüfer kann zusätzlich genau eine lokal
+vorhandene SDL3-Bibliothek prüfen:
+
+```sh
+python -B tests/run_sdl_sensor_test.py --sdl3-library /path/to/Steam/ubuntu12_64/libSDL3.so.0
+python -B tests/run_sdl_sensor_test.py --sdl3-library /path/to/Steam/steamrt64/libSDL3.so.0
+```
+
+Die Platzhalterpfade müssen zur vorhandenen Installation passen; kein Download.
+Nur die SDL-Bibliothek wird schreibgeschützt in die bestehende Sandbox
+eingebunden. Keine Steam-Anwendung, kein Runtime-Container und keine echte
+Geräteöffnung. Der Prüfer kontrolliert geladenen Bibliothekspfad und SHA256;
+ein Rückfall auf die Systembibliothek ist kein gültiger Erfolg. Die Fixture
+deckt auch ältere glibc-`__fxstat`-Aufrufe ab. Pro Bibliothek sieben Szenarien,
+darunter Gyro-only mit Zeitstempel und 32 A-/Paddle-Kombinationen. Protokolle
+liegen privat unter `build/results/sdl-validation/sdl3-<hash-prefix>/`.
+Ohne Zusatzoption bleibt der bestehende System-SDL2/3-Test unverändert.
+Die Bibliotheken werden nicht ins Repository übernommen. SDL-Erfolg beweist
+noch keine Freischaltung in Steam Input; [Befunde und Grenzen](STEAM_GYRO_FEASIBILITY.md).
+
 ## Manager-Reconnect und veraltete Getter
 
 `python -B tests/test_manager_reconnect.py` verwendet die vorhandenen

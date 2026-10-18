@@ -2,6 +2,7 @@
 /* Exercise the installed SDL API with a syscall fixture in an empty /dev.
  * This program must never be run directly on the host.
  */
+#define _GNU_SOURCE
 #include <dlfcn.h>
 #include <math.h>
 #include <stdio.h>
@@ -40,6 +41,14 @@ int main(void)
     if (!j) { fprintf(stderr, "count=%d %s\n", count, SDL_GetError()); return 2; }
     char guid[33]; SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(j), guid, sizeof(guid));
 #else
+    const char *expected_library = getenv("GS_EXPECT_SDL3_LIBRARY");
+    Dl_info loaded;
+    if (!dladdr((void *)SDL_GetVersion, &loaded) || !loaded.dli_fname ||
+        (expected_library && strcmp(expected_library, loaded.dli_fname))) {
+        fprintf(stderr, "SDL3 library identity mismatch; refusing fallback.\n");
+        return 2;
+    }
+    printf("SDL3 loaded-library=%s\n", loaded.dli_fname);
     printf("SDL3 %d, revision %s\n", SDL_GetVersion(), SDL_GetRevision());
     if (!SDL_Init(SDL_INIT_GAMEPAD)) { fprintf(stderr, "%s\n", SDL_GetError()); return 2; }
     int count = 0; SDL_JoystickID *ids = SDL_GetJoysticks(&count);
@@ -117,13 +126,23 @@ int main(void)
 #ifndef TEST_SDL2
     if (!strcmp(s, "observed-gyro")) {
         SDL_Event event;
+        int gyro_event_matches = 0;
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_EVENT_GAMEPAD_SENSOR_UPDATE)
+            if (event.type == SDL_EVENT_GAMEPAD_SENSOR_UPDATE) {
                 printf("sensor-event type=%d host=%llu sensor=%llu data=%.9g,%.9g,%.9g\n",
                     event.gsensor.sensor, (unsigned long long)event.gsensor.timestamp,
                     (unsigned long long)event.gsensor.sensor_timestamp,
                     event.gsensor.data[0], event.gsensor.data[1], event.gsensor.data[2]);
+                if (event.gsensor.sensor == SDL_SENSOR_GYRO &&
+                    event.gsensor.sensor_timestamp == 16000000 &&
+                    fabsf(event.gsensor.data[0] - g[0]) < .000001f &&
+                    fabsf(event.gsensor.data[1] - g[1]) < .000001f &&
+                    fabsf(event.gsensor.data[2] - g[2]) < .000001f)
+                    gyro_event_matches = 1;
+            }
         }
+        ok &= gyro_event_matches;
+        printf("gyro_event_value_and_timestamp=%s\n", gyro_event_matches ? "PASS" : "FAIL");
     }
 #endif
     for (int i = 0; i < 3; i++) if (!isfinite(g[i]) || !isfinite(a[i])) finite = 0;

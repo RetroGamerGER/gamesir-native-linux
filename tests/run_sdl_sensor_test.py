@@ -6,6 +6,7 @@ No uinput, real input/IIO/USB nodes, libusb, root, module or system changes.
 The LD_PRELOAD fixture is private to each test child. Never run probes directly.
 """
 from pathlib import Path
+import argparse
 import hashlib
 import json
 import os
@@ -15,6 +16,7 @@ import subprocess
 import sys
 import shutil
 import ctypes as c
+import stat
 
 from project_paths import PROJECT, BUILD as BUILD_ROOT, RESULTS
 
@@ -30,8 +32,21 @@ def run(args):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--sdl3-library", type=Path,
+                        help="Test one local SDL3 shared library, mounted read-only; no Steam/client launch")
+    options = parser.parse_args()
+    library = options.sdl3_library
+    library_hash = None
+    report = REPORT
+    if library is not None:
+        library = library.expanduser().resolve(strict=True)
+        if not stat.S_ISREG(library.stat().st_mode):
+            parser.error("The SDL library must be a stored regular file")
+        library_hash = hashlib.sha256(library.read_bytes()).hexdigest()
+        report = REPORT / ("sdl3-" + library_hash[:16])
     BUILD.mkdir(parents=True, exist_ok=True)
-    REPORT.mkdir(parents=True, exist_ok=True)
+    report.mkdir(parents=True, exist_ok=True)
     fixture = BUILD / "fixture"
     (fixture / "evdev").mkdir(parents=True, exist_ok=True)
     for f in ["evdev/event0", "evdev/event1", "iio-device", "sandbox-marker"]:
@@ -65,7 +80,7 @@ def main():
             str(PROJECT / "tests/sdl_sensor_probe.c"), "-lSDL2", "-ldl", "-lm", "-o", str(BUILD / "probe2")]),
     ]:
         compile_log.append(name + ": " + shlex.join(args) + "\n" + run(args))
-    (REPORT / "build.log").write_text("\n".join(compile_log))
+    (report / "build.log").write_text("\n".join(compile_log))
     shutil.copyfile(PROJECT / "tests/audit_sdl_sandbox.py", BUILD / "audit_sdl_sandbox.py")
     host_ns = {n: os.readlink("/proc/self/ns/" + n) for n in ["mnt", "user", "pid", "net", "ipc", "uts"]}
     class Axis(c.Structure):
@@ -89,7 +104,7 @@ def main():
         converted.extend(out)
     assert converted == [10000, 0, -10000, 9000, -9000, 0]
     results = []
-    for version in [3, 2]:
+    for version in ([3] if library is not None else [3, 2]):
         for scenario in ["iio-only", "matching-uniq", "wrong-uniq", "missing-rz", "zero-resolution", "synthetic-converted", "observed-gyro"]:
             sample_raw = converted if scenario == "synthetic-converted" else raw
             accel_resolution, gyro_resolution = (10000, 100) if scenario == "synthetic-converted" else (8192, 16)
@@ -107,16 +122,24 @@ def main():
                 "--proc", "/proc", "--dev", "/dev", "--ro-bind", str(fixture / "sys"), "/sys",
                 "--tmpfs", "/run", "--tmpfs", "/tmp", "--ro-bind", str(fixture), "/fixture",
                 "--ro-bind", str(fixture / "iio-device"), "/dev/iio:device0",
-                "--ro-bind", str(BUILD), "/tests", "--chdir", "/tmp",
-                "/usr/bin/python", "/tests/audit_sdl_sandbox.py", f"/tests/probe{version}"]
+                "--ro-bind", str(BUILD), "/tests", "--chdir", "/tmp"]
+            if library is not None:
+                args.extend(["--ro-bind", str(library), "/sdl-override/libSDL3.so.0",
+                    "--setenv", "LD_LIBRARY_PATH", "/sdl-override",
+                    "--setenv", "GS_EXPECT_SDL3_LIBRARY", "/sdl-override/libSDL3.so.0"])
+            args.extend(["/usr/bin/python", "/tests/audit_sdl_sandbox.py", f"/tests/probe{version}"])
             output = run(args)
             filename = f"sdl{version}-{scenario}.log"
-            (REPORT / filename).write_text(output)
+            (report / filename).write_text(output)
             results.append({"api": f"SDL{version}", "scenario": scenario,
                 "passed": "result=PASS" in output and "iio opens=0;" in output and '"all_six_separate": true' in output,
                 "sample_raw": sample_raw, "synthetic_accel_resolution": accel_resolution, "synthetic_gyro_resolution": gyro_resolution,
                 "log": filename, "command": args})
-    result = {"schema_version": 1, "method": "installed SDL + synthetic evdev syscall fixture inside device-free Bubblewrap",
+    if library is not None and hashlib.sha256(library.read_bytes()).hexdigest() != library_hash:
+        raise RuntimeError("SDL library changed during the offline test; results not accepted")
+    result = {"schema_version": 1, "method": "local SDL + synthetic evdev syscall fixture inside device-free Bubblewrap",
+        "sdl3_override": None if library is None else {"path": str(library), "sha256": library_hash,
+            "loaded_path_verified_by_probe": True},
         "hardware_test": False, "privileged_actions": False, "kernel_changes": False,
         "fixture_scales": {"synthetic_not_G7_calibration": True, "accel_units_per_g": 8192, "gyro_units_per_degree_per_second": 16},
         "capture": "target-only excerpt: fixtures/sprint002-target.json", "record_line": index, "record": record,
@@ -126,8 +149,8 @@ def main():
             "gyro_wire_counts_per_degree_per_second": 16.4},
         "installed_packages": run(["pacman", "-Q", "sdl3", "sdl2-compat"]).strip(),
         "results": results, "all_passed": all(r["passed"] for r in results)}
-    (REPORT / "results.json").write_text(json.dumps(result, indent=2) + "\n")
-    print(json.dumps({"all_passed": result["all_passed"], "cases": len(results), "reports": str(REPORT)}))
+    (report / "results.json").write_text(json.dumps(result, indent=2) + "\n")
+    print(json.dumps({"all_passed": result["all_passed"], "cases": len(results), "reports": str(report)}))
     return 0 if result["all_passed"] else 1
 
 

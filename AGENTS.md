@@ -56,6 +56,15 @@ for lack of a current use case, not because Windows games cannot support gyro.
 Preserve the working SDL/Eden path and existing Steam paddle support. Remaining
 boot/hotplug/PM evidence limits stay documented; do not start further tests,
 calibration or Steam changes without a new request.
+The subsequent request authorizes offline Steam-gyro feasibility only, with
+all features required to remain compatible in one project. Read
+docs/STEAM_GYRO_FEASIBILITY.md: both local Steam SDL3 libraries pass the
+device-free gyro-only/paddle tests, but actual Steam Input capability and
+Proton gameplay remain unverified. Keep one existing evdev sensor contract
+and one USB owner; do not replace libraries, fabricate acceleration, change
+Steam settings or globally preload a bridge. Shared input/output and lifecycle
+acceptance is required before claiming integration. Preserve Eden acceptance;
+no new hardware, installation, calibration or push is authorized.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

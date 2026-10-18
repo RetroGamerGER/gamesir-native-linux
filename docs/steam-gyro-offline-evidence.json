@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "scope": "Offline local files and device-free SDL probes; no Steam/Proton launch, network, privileged operation or real hardware access",
+  "local_steam_manifest_version": "1791918634",
+  "running_steam_version_verified": false,
+  "bundled_sdl3": [
+    {
+      "path": "ubuntu12_64/libSDL3.so.0",
+      "bytes": 3541088,
+      "sha256": "be244af0c3384036888ce1ee79866c326576e742b13f42bae293b596b06edf35",
+      "api_version": 3005000,
+      "revision": "SDL-release-3.4.0-1576-gab5541ec5",
+      "scenarios": [
+        {
+          "name": "iio-only",
+          "passed": true
+        },
+        {
+          "name": "matching-uniq",
+          "passed": true
+        },
+        {
+          "name": "wrong-uniq",
+          "passed": true
+        },
+        {
+          "name": "missing-rz",
+          "passed": true
+        },
+        {
+          "name": "zero-resolution",
+          "passed": true
+        },
+        {
+          "name": "synthetic-converted",
+          "passed": true
+        },
+        {
+          "name": "observed-gyro",
+          "passed": true
+        }
+      ],
+      "gyro_only": true,
+      "simultaneous_a_and_paddles_combinations": 32,
+      "gyro_event_and_timestamp_verified": true,
+      "fixture_sensor_timestamp_ns": 16000000
+    },
+    {
+      "path": "steamrt64/libSDL3.so.0",
+      "bytes": 4018728,
+      "sha256": "08eb7ba02ec862b062d9876f00ffd6deb58f5b1fc9f2325bcf90e6245586b2de",
+      "api_version": 3005000,
+      "revision": "SDL-release-3.4.0-1576-gab5541ec5",
+      "scenarios": [
+        {
+          "name": "iio-only",
+          "passed": true
+        },
+        {
+          "name": "matching-uniq",
+          "passed": true
+        },
+        {
+          "name": "wrong-uniq",
+          "passed": true
+        },
+        {
+          "name": "missing-rz",
+          "passed": true
+        },
+        {
+          "name": "zero-resolution",
+          "passed": true
+        },
+        {
+          "name": "synthetic-converted",
+          "passed": true
+        },
+        {
+          "name": "observed-gyro",
+          "passed": true
+        }
+      ],
+      "gyro_only": true,
+      "simultaneous_a_and_paddles_combinations": 32,
+      "gyro_event_and_timestamp_verified": true,
+      "fixture_sensor_timestamp_ns": 16000000
+    }
+  ],
+  "client_static": [
+    {
+      "path": "linux64/steamclient.so",
+      "bytes": 47705264,
+      "sha256": "6cd0294f99f9d202167c2cdf8add53fc81780997d4d4a80916d79146bb36aef1",
+      "inspection": "static only; not executed or loaded",
+      "sensor_symbol_strings": [
+        "SDL_GamepadHasSensor",
+        "SDL_SetGamepadSensorEnabled"
+      ],
+      "backend_capability_assignment_verified": false
+    },
+    {
+      "path": "steamrt64/steamclient.so",
+      "bytes": 52846936,
+      "sha256": "6217c164c698a85e29d92b117ba967f18388afb279fc3b3982b37235d2301327",
+      "inspection": "static only; not executed or loaded",
+      "sensor_symbol_strings": [
+        "SDL_GamepadHasSensor",
+        "SDL_SetGamepadSensorEnabled"
+      ],
+      "backend_capability_assignment_verified": false
+    }
+  ],
+  "ui_static": {
+    "path": "steamui/sp.js",
+    "bytes": 16297789,
+    "sha256": "5a28c25041d07e69cf591a414519e0cf970b6884c1a0106659dcd9f1fb9586f9",
+    "inspection": "static only; not evaluated",
+    "gyro_capability_bit": 11,
+    "capability_name_character_offset": 2076408,
+    "gyro_source_gate_character_offset": 10262916
+  },
+  "cached_sources": [
+    {
+      "path": "cached-runtime-wine/dlls/winebus.sys/bus_sdl.c",
+      "bytes": 48404,
+      "sha256": "d2e0a69c1ebdd9f49fb5d9c01ab878e0b26f4ab92121e02c741f344b25eb3be1"
+    },
+    {
+      "path": "cached-runtime-wine/include/xinput.h",
+      "bytes": 8672,
+      "sha256": "1ab59c30b862616084c15a350931f7585da967289f6bf630cc57a2160694a924"
+    },
+    {
+      "path": "cached-xodus-proton/lsteamclient/steamworks_sdk_165/isteaminput.h",
+      "bytes": 63750,
+      "sha256": "4cc1887e02d829633385c07582279a5712fbcd5e1b046eade01efba376237093"
+    },
+    {
+      "path": "cached-xodus-proton/lsteamclient/cppISteamInput_SteamInput006.cpp",
+      "bytes": 40579,
+      "sha256": "6693d984fb2de0cde61b3be3e724c3bda92b9e67697d2f82b1c7f8e5391a8c32"
+    }
+  ],
+  "source_limit": "Cached Wine/runtime and Xodus-derived Proton sources, not established exact sources of installed Steam/Proton binaries; no network refresh",
+  "existing_source_reference": "sdl-source-manifest.json",
+  "regression_results": {
+    "system_sdl_sensor_cases": 14,
+    "sdl_button_cases": 18,
+    "sensor_contract_and_kernel_stub_checks": 2,
+    "bridge_python_cases": 82,
+    "steam_gamescope_python_cases": 40,
+    "all_passed": true
+  },
+  "confirmed": "Bundled SDL3 accepts the existing gyro-only contract, preserves A/paddles and exposes expected values/timestamp",
+  "unconfirmed": [
+    "Steam client backend selection and actual gyro capability for GameSir",
+    "Steam gyro-only filtering/orientation behavior",
+    "Proton gameplay and simultaneous live gyro/input/output",
+    "Boot/reconnect/suspend, multi-app input hiding and other hosts/32-bit/Flatpak"
+  ],
+  "runtime_changes": false,
+  "vendor_files_in_repository": false
+}

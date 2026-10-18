@@ -91,6 +91,29 @@ int fstat64(int fd, struct stat64 *s)
         s->st_rdev = makedev(240, kinds[fd]);
     return r;
 }
+/* Older glibc-targeted SDL builds use these entry points instead of fstat.
+ * Preserve the real stat result and change only the fake device number, as
+ * above. Otherwise both regular fixture files have st_rdev=0 and SDL
+ * mistakes the sensor for the already enumerated gamepad.
+ */
+int __fxstat(int version, int fd, struct stat *s)
+{
+    static int (*real_fxstat)(int, int, struct stat *);
+    if (!real_fxstat) real_fxstat = dlsym(RTLD_NEXT, "__fxstat");
+    int r = real_fxstat(version, fd, s);
+    if (!r && fd >= 0 && fd < FD_LIMIT && kinds[fd])
+        s->st_rdev = makedev(240, kinds[fd]);
+    return r;
+}
+int __fxstat64(int version, int fd, struct stat64 *s)
+{
+    static int (*real_fxstat64)(int, int, struct stat64 *);
+    if (!real_fxstat64) real_fxstat64 = dlsym(RTLD_NEXT, "__fxstat64");
+    int r = real_fxstat64(version, fd, s);
+    if (!r && fd >= 0 && fd < FD_LIMIT && kinds[fd])
+        s->st_rdev = makedev(240, kinds[fd]);
+    return r;
+}
 static void bit(void *buf, size_t size, unsigned n)
 {
     if (n / 8 < size) ((unsigned char *)buf)[n / 8] |= 1u << (n % 8);

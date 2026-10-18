@@ -1,0 +1,145 @@
+# Steam Input / Proton: offline gyro feasibility
+
+18 October 2026. This is an offline investigation, not Steam hardware
+acceptance. Steam, Proton and games were not started; installed configuration,
+driver and device state were not changed. No network, root, USB, evdev or IIO
+hardware access was used. Only the existing device-free test harness ran with
+local SDL libraries. Vendor libraries/source remain outside Git and packages.
+
+## Decision
+
+**Steam's locally bundled SDL3 can consume our existing gyro-only evdev
+contract, with the paddles intact. Actual Steam Input gyro recognition remains
+unconfirmed.** The missing acceptance step is whether Steam's controller
+backend exposes the gyro capability and consumes these events for this real
+GameSir. Passing an SDL probe does not execute that backend.
+
+Preserve one shared implementation: `gs_native` owns USB; paired gamepad and
+motion evdev devices serve SDL/Eden and, if accepted, Steam Input. Raw IIO,
+normal input, independent paddles, FF_RUMBLE and the optional trigger bridge
+retain their existing interfaces. No second sensor decoder, alternate scale,
+fake Sony identity, forced capability bit or new USB reader is justified by
+these results. The accepted SDL/Eden milestone remains closed; known-angle
+calibration is not reopened.
+
+## Reproducible local evidence
+
+See [the portable evidence manifest](steam-gyro-offline-evidence.json) for
+hashes, versions, source locations and test counts. Paths in that manifest are
+relative to the relevant locally available distribution/source tree. No
+download is required or performed. References include the previously saved
+Wine runtime sources and Xodus-derived Proton/Steamworks sources. They are
+not asserted to be the exact source of the installed Steam/Proton binaries.
+
+The local Steam manifest says build `1791918634`. Both 64-bit SDL3 libraries
+(`ubuntu12_64` and `steamrt64`) report API version `3005000` and revision
+`SDL-release-3.4.0-1576-gab5541ec5`. Presence does not prove which library a
+future Steam launch selects. Each library was separately bound read-only into
+the existing Bubblewrap harness; `dladdr` checks the loaded path, and hashes
+are checked before/after. The Steam client binary was only inspected statically.
+
+All six namespaces are separate, five capability sets zero, NoNewPrivs=1.
+The sandbox exposes synthetic regular fixture files and basic pseudo devices,
+no host input/USB/IIO devices, session IPC, Steam home or network. HIDAPI is
+disabled **inside the probe only**, making this a targeted Linux-evdev test,
+not evidence about Steam's eventual backend selection or access permissions.
+
+| Case, run with each bundled SDL3 | Result |
+| --- | --- |
+| IIO fixture alone | No gamepad gyro; raw IIO is not sufficient |
+| Paired evdev nodes with matching nonempty identity | Gyro and synthetic acceleration found |
+| Mismatched sensor identity | Sensor is not assigned to the gamepad |
+| Missing gyro Z axis | Incomplete gyro rejected |
+| Zero axis resolution | Non-finite conversion detected; intentional negative case |
+| Artificial 1 g / 90 degree/s reference | Expected m/s² and rad/s |
+| Current observed gyro-only contract | Gyro present, acceleration absent, expected values and timestamp |
+
+The last case uses the reviewed 12-byte saved IMU excerpt through our existing
+conversion (`7 * raw`, resolution 100 counts/degree/s), not live input. Both
+libraries deliver the expected SDL gyro event and the fixture's 16,000 µs
+timestamp as 16,000,000 ns. All 32 combinations of A and the four paddles,
+including release, pass while gyro remains readable. This does not measure
+live timing, drift, packet loss or multi-application behavior.
+
+The initial bundled-library attempt failed because its old-glibc `__fxstat`
+entry point bypassed the fixture's existing `fstat` interception: both fake
+files had device number zero and were deduplicated. The fixture now models
+both ABI forms identically. The final tests include positive and negative
+pairing cases; this was a harness defect, not a driver or Steam sensor defect.
+System SDL3 and SDL2-compat retain all 14 sensor tests, and the existing
+18-case button suite also passes. No proprietary library is copied into the
+project or distributed with the tests.
+
+## What the Steam client evidence establishes
+
+Both inspected 64-bit `steamclient.so` files reference
+`SDL_GamepadHasSensor` and `SDL_SetGamepadSensorEnabled`, and contain gyro
+processing / gyro-to-mouse / gyro-to-joystick components. The local UI checks
+`ATTRIBCAP_GYRO` (bit 11) before exposing gyro sources/settings. The examined
+gyro-source eligibility branch tests that capability, without a separate
+generic-Xbox type exclusion in that branch.
+
+These are positive static indications, **not a complete reconstructed call
+chain**. We have not proved that the backend sets bit 11 for VID 3537/PID109c,
+chooses evdev, pairs the nodes at the right time, accepts gyro without
+acceleration, or implements every motion mode without gravity information.
+Neither the old generic-Xbox display classification nor successful paddle
+mapping alone answers that question. Do not edit Steam's capability mask or
+invent acceleration data to make its UI appear compatible.
+
+## Routes to Proton games
+
+| Route | Evidence / limit |
+| --- | --- |
+| Steam Input gyro → mouse | Existing Steam gyro-to-mouse components make this the preferred route to investigate. The game receives ordinary mouse input, not a gyro-specific XInput field. Requires actual Steam recognition and appropriate layout; mixed mouse/gamepad behavior varies by game. |
+| Steam Input gyro → stick | Existing gyro-to-joystick components are present. Can target ordinary controller input, subject to the game's deadzones/response. Not an unmodified sensor stream. |
+| Native Steam Input API | Cached SDK defines `GetMotionData`; cached Proton `lsteamclient` forwards it, including the wow64 path. Requires a game using that API and actual backend support. Not proof of this installed runtime or GameSir output. |
+| Ordinary Wine SDL → XInput | Reviewed `winebus` source handles buttons/axes/hats, not SDL controller sensor events. `XINPUT_GAMEPAD` has no gyro field. Our Linux evdev gyro is not automatically exposed to every Windows game. |
+| Games expecting Sony-specific raw HID | Our current real GameSir identity/evdev contract does not emulate a DualSense. No compatibility promise for that path. |
+
+The cached SDK's `InputMotionData_t` uses its own normalized velocity fields
+and quaternion/acceleration contract; do not pass those units straight through
+as SDL rad/s. Its gravity-based orientation description is an additional reason
+to keep gyro-only versus full six-axis support explicit. Absence of gyro
+handling in the reviewed Wine SDL backend is not a claim about every Wine,
+RawInput, GameInput or native Steam Input path.
+
+## Shared integration and compatibility acceptance
+
+The maintainer explicitly requires all features to fit together. The final
+deliverable must therefore be one coherent project/component set, with the
+following boundaries and combined acceptance, rather than separate solutions
+that replace one another:
+
+- **One physical owner:** `gs_native` remains the only controller USB owner.
+  SDL/Eden/Steam read the existing evdev contract. No raw-device hooks, global
+  preload or exclusive input grab are introduced by this investigation.
+- **One motion contract:** retain identity pairing, axis signs, rad/s,
+  timestamps, the explicit experimental opt-in and unchanged IIO. Existing
+  Eden acceptance does not validate Steam's defaults or motion filtering.
+- **Inputs together:** test gyro while holding/releasing each paddle and
+  combinations, plus ordinary buttons, sticks and triggers. Keep the real
+  VID/PID, name and existing Paddle mapping. Steam layouts may still be needed;
+  no automatic universal game action mapping is promised.
+- **Outputs together:** existing grip FF and trigger-broker ownership/STOP
+  rules remain authoritative. The Forza/Xodus bridge's 82 offline cases and
+  Steam/Gamescope integration's 40 cases pass unchanged. They do not establish
+  Steam trigger support or simultaneous live gyro/rumble acceptance.
+- **Application ownership:** future tests must cover direct Eden use and
+  Steam-mediated use separately, then their interaction. Steam's virtual pad,
+  input hiding/grabbing, focus and physical/virtual duplication must not
+  remove Eden motion or route input to two controllers accidentally.
+- **Lifecycle:** after separate permission, check reconnect, suspend,
+  application exit and reboot with stable pairing and stopped outputs. Repeat
+  the relevant Steam/Gamescope case on the other supported environment;
+  local 64-bit library tests are not a remote-device/32-bit/Flatpak acceptance.
+
+First future live step, only after explicit approval: keep the current driver
+unchanged, verify the paired accessible nodes, start Steam normally with the
+existing paddle integration and check whether it offers and reacts to a gyro
+source. If it does, test a reversible mouse/stick layout and all existing
+inputs/outputs. A game with native gyro support is not required for the
+translated-input test. If recognition fails, retain Steam logs/capabilities
+and investigate the backend-selection/gyro-only gate before proposing code.
+No Steam library replacement, fabricated sensor capability or driver rewrite
+is currently recommended.
