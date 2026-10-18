@@ -94,11 +94,19 @@ Pi32v2 processor description from pinned Quarkslab commit
 `e1bd0707874b77b759401555d24839ad43af1267` is available for static analysis.
 Its tested literal and 22-bit transfer forms matched known anchors in three
 private app images; the tested transfers use `inst_next`, four bytes beyond
-the former empirical target. `E041` is decoded as zero-extending `movz`, so
-do not reuse the old signed-mask interpretation. The language remains
-incomplete: never infer code/data boundaries, sensor writes, or `CTRL2_G`
-from numeric matches alone. No target execution/emulation, hardware access,
-or driver edit. Calibration remains paused and the driver unchanged.
+the former empirical target. The pinned SLEIGH source describes `E040` as
+zero-extending, but this conflicts with the official Jieli-Tech
+`fw-AC63_BT_SDK` Pi32v2 ROM listing at commit
+`fdc018de81629e21e594d677cf05f87d288be0f0`: all 44 checked `E040`
+immediates match sign extension and register selection, while 14 negative
+values do not match zero extension. An isolated, private sign-extending
+decoder variant finds 16 mask-entry patterns in each of three app images;
+each branches to a shared handler whose decoded operations load a value,
+AND it with the mask register, and store it back. This supports a generic
+masked-update helper, not a sensor-register path. The decoder is incomplete;
+never infer code/data boundaries, sensor writes, or `CTRL2_G` from numeric
+matches alone. No target execution/emulation, hardware access, or driver
+edit. Calibration remains paused and the driver unchanged.
 
 ## Public snapshot
 

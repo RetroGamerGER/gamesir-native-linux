@@ -862,6 +862,9 @@ Zum Zeitpunkt der ersten Sichtung war die SLEIGH-Referenz unvollständig und
 noch nicht an den Firmwareankern geprüft. Ihre [Immediate-Regeln im fixierten
 Quellcommit](https://github.com/quarkslab/ghidra-jieli/blob/e1bd0707874b77b759401555d24839ad43af1267/data/languages/pi32v2_ins_loadimm.sinc)
 beschreiben unter anderem die lange Literalform und `E040` als Nullerweiterung.
+Dieser `E040`-Teil wird durch den unten beschriebenen unabhängigen
+Jieli-SDK-Disassembly-Gegenbeleg widerlegt und darf nicht als bestätigte
+Instruktionssemantik verwendet werden.
 Die [relativen Transferregeln desselben Commits](https://github.com/quarkslab/ghidra-jieli/blob/e1bd0707874b77b759401555d24839ad43af1267/data/languages/pi32v2_ins_progflow.sinc)
 verwenden `inst_next`; die nachfolgende Offline-Validierung prüft genau diese
 Teilformen. Sie bestätigt weder eine vollständige ISA noch die getrennte
@@ -893,12 +896,41 @@ Die PC-Basis ist für diese konkreten 22-Bit-Transfers damit durch die
 gemeinsamen Literal-/Kontrollflussanker gestützt; sie ist keine allgemeine
 Bestätigung aller Pi32v2-Sprungformen.
 
-Ein früherer `E041`-Maskenanker dekodiert als `movz` mit Immediate
-`0xffdf`, also als Nullerweiterungs-Konstruktor. Die zuvor angenommene
-Vorzeichenerweiterung, die aus einer passenden Komplementzahl abgeleitet
-wurde, ist dadurch nicht belegt und darf nicht mehr als Instruktionswirkung
-verwendet werden. Die Zahlenkorrelation allein identifiziert auch keine
-Maskenoperation.
+#### Korrektur: `E040`-Vorzeichenerweiterung und gemeinsamer Maskenhelfer
+
+Die damalige Schlussfolgerung, `E040` sei ein Null-erweiterndes `movz`, war
+falsch. Die SLEIGH-Quellregel ist zwar so formuliert, wird aber von der
+unabhängigen offiziellen [Jieli-Tech-`fw-AC63_BT_SDK`-Referenz](https://github.com/Jieli-Tech/fw-AC63_BT_SDK/blob/fdc018de81629e21e594d677cf05f87d288be0f0/cpu/br23/tools/rom.lst)
+für `ELF32-pi32v2` nicht gestützt. Eine begrenzte Prüfung der fixierten
+`cpu/br23/tools/rom.lst`-Datei (SHA256
+`650bd301951a311207aad7000fa27bdfa8fce0ae8101576eaaf302072982f1d2`)
+erfasste 3.422 Listingzeilen: 44/44 `E040`-Immediatewerte und Register
+stimmen mit Vorzeichenerweiterung überein; nur 30/44 stimmen mit
+Nullerweiterung überein, weil 14 Werte negativ sind. Unabhängige
+Kontrollgruppen passten ebenfalls: 289/289 geprüfte 22-Bit-Transfers zur
+`PC+4`-Basis, 346/346 U8-Immediates und 11/11 negative 5-Bit-Immediates.
+Das belegt die gelisteten SDK-Encodings, nicht automatisch die genaue
+MCU-Variante oder jede Instruktion im Controller.
+
+Ein privater, isoliert gebauter SLEIGH-Folgevariant änderte ausschließlich
+`E040` auf Vorzeichenerweiterung und ließ eine nicht implementierte
+`rep nwords`-Familie bewusst unaufgelöst. Die drei App-Binärdateien blieben
+hashgleich und wurden nicht ausgeführt. In jeder App führen 16 geprüfte
+Maskeneinträge (zehn `E040`-Formen plus sechs 32-Bit-Literalformen) per
+relativem Kurzsprung in denselben versionsinternen Codeblock. Ein gezielter
+P-Code-Durchlauf dekodierte 48 Eintragsfenster und 72 Instruktionen des
+gemeinsamen Blocks ohne Fehler. Der Block lädt einen Wert an einer aus
+`0x2010 + r0` berechneten Adresse, AND-verknüpft ihn mit dem Maskenregister
+`r4` und speichert das Ergebnis zurück. Zusammen mit den abgestuften
+Komplementmasken stützt das einen allgemeinen maskierten Feld-Update-Helfer;
+eine globale Funktionsgrenze oder die Bedeutung des bearbeiteten Objekts ist
+damit nicht bewiesen. Insbesondere ist kein Bezug zu IMU, Sensorbus oder
+`CTRL2_G` hergestellt.
+
+Damit ist die frühere Interpretation der `E040`-Maske durch die
+Decoder- und Quelllistenprüfung ersetzt. Der Beschreiber bleibt partiell;
+fehlende Instruktionsfamilien und globale Code-/Datengrenzen dürfen nicht
+übergangen werden.
 
 Der kurze kompakte Block dekodiert an den geprüften Stellen als wechselnde
 kurze `add`-/`mov`- und `rts`-Instruktionen. Ein Scan fand in den drei

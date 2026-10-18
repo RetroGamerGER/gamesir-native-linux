@@ -229,11 +229,19 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    REA 6.5.0 unterstützt Jieli-Rohcode nicht direkt; der lokale Quarkslab-
    Pi32v2-Beschreiber ist an drei App-Versionen
    teilvalidiert: 150 Literal- und 150 Transferstellen stimmen mit bekannten
-   Ankern überein; die geprüften Transfers verwenden `inst_next`. `E041`
-   dekodiert als `movz`, nicht als die frühere Vorzeichenerweiterung.
-   Nächster Schritt bleibt die Code-/Datensegmentierung und das Auffinden
-   belastbarer Sensor-Lese-/Schreibhelfer. Der kurze `add`/`rts`-Block hat
-   keine verifizierte Erreichbarkeit; keine Funktion daraus ableiten.
+   Ankern überein; die geprüften Transfers verwenden `inst_next`. Die frühere
+   `E041`-Nullerweiterungsdeutung ist korrigiert: Die ursprüngliche
+   SLEIGH-Regel sagt Nullerweiterung,
+   während 44/44 `E040`-Immediates im offiziellen Jieli-Pi32v2-ROM-Listing
+   zur Vorzeichenerweiterung passen; 14 negative Werte widerlegen dort
+   Nullerweiterung. Ein isolierter privater Decoderlauf findet je 16
+   Maskeneinträge, die zu einem gemeinsamen maskierten Update-Helfer führen
+   (Laden, AND mit Maske, Zurückschreiben). Das ist kein Sensorpfad.
+   Nächster Schritt bleibt eine belastbare Zuordnung dieses generischen
+   Helfers und weiterer Speicher-/Argumentformen zu konkreten Aufrufern;
+   WHO_AM_I, Sensorwahl, letzter CTRL2_G-Schreibwert und IMU-Reportpfad
+   bleiben unbelegt. Der Beschreiber und Code-/Datensegmentierung sind
+   weiterhin unvollständig.
    [Werkzeugstand und neue Primärreferenzen](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
    Der MCU-Folgepass vom 18. Oktober belegt zusätzlich begrenzte kompakte
    Zielfelder/Maskenoperanden und eine getrennte Suffix-Adressabbildung.

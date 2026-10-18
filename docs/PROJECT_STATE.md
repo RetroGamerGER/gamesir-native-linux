@@ -19,11 +19,19 @@ Der lokale Pi32v2-Beschreiber aus Quarkslab-Commit
 statisch gegengeprüft: 150 Literalstellen und 150 relative Transferstellen
 passen zu den bekannten Text-/Kontrollflussankern. Die Transferbasis mit
 `inst_next` erklärt den gemeinsamen Logging-Prolog; das frühere Modell lag
-vier Bytes davor. `E041` dekodiert als `movz`, daher trägt die frühere
-Vorzeichenerweiterungs-/Maskenhypothese nicht. Der Beschreiber bleibt
-unvollständig; Code-/Datengrenzen und Sensorzugriffe sind nicht belegt. Kein
-WHO_AM_I-Pfad, CTRL2_G-Wert oder Gyrofaktor gewonnen; keine Firmwareausführung,
-Hardware- oder Treiberänderung. Gyrokalibrierung pausiert.
+vier Bytes davor. **Korrektur vom 18. Oktober:** Der ursprüngliche
+Quarkslab-Beschreiber behandelt `E040` als Nullerweiterung, aber die
+unabhängige offizielle Jieli-Pi32v2-ROM-Liste widerspricht dem: 44/44
+geprüfte Immediate-Werte passen zur Vorzeichenerweiterung; 14 negative Werte
+schließen Nullerweiterung aus. Eine isolierte private Decoder-Variante mit
+dieser Korrektur dekodiert in allen drei App-Versionen je 16 Masken-Einträge
+zum gleichen versionsinternen Helfer. Dessen P-Code liest einen Wert,
+verknüpft ihn mit dem Maskenregister per AND und schreibt ihn zurück. Das
+stützt einen allgemeinen maskierten Feld-Update-Helfer, aber keinen Bezug zu
+IMU oder Sensorregistern. Der Beschreiber bleibt unvollständig; Code- und
+Datengrenzen sind nicht global bewiesen. Kein WHO_AM_I-Pfad, CTRL2_G-Wert
+oder Gyrofaktor gewonnen; keine Firmwareausführung, Hardware- oder
+Treiberänderung. Gyrokalibrierung pausiert.
 
 **Normaler nativer Dauerbetrieb nach den HID-Aufnahmen wieder bestätigt:**
 Der Maintainer führte Resume selbst aus. Die anschließende rein lesende
