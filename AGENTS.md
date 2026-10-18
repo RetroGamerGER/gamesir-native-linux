@@ -48,8 +48,14 @@ The first actual buffer setup exposed an IIO scan-selection bug, corrected
 offline in docs/IIO_SCAN_SELECTION_FIX.md. Do not reinstate a full-request-mask
 validate_scan_mask callback: IIO calls it for intermediate channel enables.
 Keep the full producer mask and enable-time layout guard, plus reader/build
-and instance checks. The corrected module needs separate installation and
-live buffer acceptance; do not reuse an old manifest or module hash.
+and instance checks. The corrected module was subsequently installed under
+separate authorization as alpha3-7 on the Garuda test host. Two bounded
+buffered runs restored all settings; exclude the first from axis analysis
+because the user rotated back. The explicitly requested replacement run has
+6,749 coherent scans and one human-confirmed qualitative left turn: G1
+predominantly positive is a candidate, not a complete axis map or scale.
+Further runs require a new request and local Go; do not reuse an old manifest
+or module hash.
 No universal trigger-game support or general stability guarantee.
 
 The optional `tools/offline` HID companion is file-only research, not runtime

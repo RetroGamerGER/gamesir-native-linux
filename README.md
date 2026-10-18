@@ -100,8 +100,9 @@ computer.
 - **Gyroscope calibration is paused.** Raw data is available, but calibrated
   SDL gyro output and gyro-enabled game compatibility are not confirmed.
   `8192 LSB/g` remains an experimental accelerometer assumption, not a gyro
-  factor. The newer coherent IIO buffer defaults to disabled and has not yet
-  completed a real buffered reference measurement.
+  factor. The coherent IIO buffer defaults to disabled; bounded live captures
+  and restoration passed one qualitative left-turn test workflow. Known-angle
+  reference calibration and the full physical axis mapping remain unverified.
 - **Trigger vibration has no confirmed universal games path.** Standard
   Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,
   with game-specified effect duration. Four-channel hardware support and the

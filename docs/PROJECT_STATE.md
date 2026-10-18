@@ -5,23 +5,32 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**IIO-Kanalauswahl offline korrigiert:** Der erste echte Pufferaufbau scheiterte
+**IIO-Kanalauswahl korrigiert und begrenzt hardwarebestätigt:** Der erste echte Pufferaufbau scheiterte
 an der vollständigen Maske im pro Kanal aufgerufenen `validate_scan_mask`.
 Ein neuer Regressionstest reproduziert den Fehler und den Rückweg. Die
 Korrektur nutzt die vorhandene vollständige Produzentenmaske und prüft sie
 beim Aktivieren; schrittweise Kanalauswahl ist möglich. Vollständige Rohscans,
 Zeitstempel und übrige Controllerfunktionen bleiben erhalten. Neuer geprüfter
 Quellstand `A15BC39B5A21D181E4E5C49`; PRE-ALPHA-Paketkandidat
-`0.1.0.alpha3-7`, noch nicht installiert. [Abnahme und nächster Lauf](IIO_SCAN_SELECTION_FIX.md).
-Keine neue Hardwaremessung; bisher kein kohärenter Live-Pufferlauf gelungen.
+`0.1.0.alpha3-7`, inzwischen separat freigegeben auf dem Garuda-Testsystem
+installiert, per DKMS geprüft und aktiviert. Zwei vollständige 108-Sekunden-
+Pufferläufe samt unabhängiger Rückstellungsprüfung bestanden. Der erste
+bleibt wegen vorzeitiger Rückdrehung von der Achsenauswertung ausgeschlossen;
+der ausdrücklich neu angeforderte Versuch wurde lokal bestätigt.
+6.749 kohärente Scans mit Host-Zeitstempeln, ohne Sprung im akzeptierten
+Berichtszähler, etwa 62,49 Hz. Erste qualitative Beobachtung: links reagiert
+G1 vorwiegend positiv; keine vollständige Achsenzuordnung oder Skalierung.
+Native Bindung, gesunder Dienst und normale Eingaben nach dem Test bestätigt.
+[Installation, Messwerte und Grenzen](IIO_SCAN_SELECTION_FIX.md#installation-und-hardwareabnahme-am-18-oktober-2026).
 
-**Qualitativer Achsentest offline vorbereitet:** Zunächst nur eine bequeme
+**Qualitativer Achsentest:** Zunächst nur eine bequeme
 waagerechte Linksdrehung pro eigenem Go, ohne Winkelvorgabe; höchstens drei
 getrennte Wiederholungen. Der vorhandene KDE-/IIO-Helfer bietet dafür einen
 separaten Modus mit Rohkanalvergleich ohne Winkelintegration oder Profilwahl.
-[Ablauf, Befehle und Grenzen](GYRO_AXIS_TEST.md). Noch keine Sensoraufnahme
-und keine Treiberänderung. Die bekannte Winkelkalibrierung
-bleibt pausiert; die Vorbereitung erteilt keine Hardwarefreigabe.
+[Ablauf, Befehle und Grenzen](GYRO_AXIS_TEST.md). Eine separat freigegebene
+qualitative Bewegung ist inzwischen bestätigt; weitere Wiederholungen
+benötigen jeweils einen neuen Auftrag und lokales Go. Die bekannte
+Winkelkalibrierung bleibt pausiert.
 
 Nachtrag: Die separat freigegebene lesende Vorprüfung war erfolgreich.
 Der danach freigegebene erste Achsenlauf endete durch einen nachträglich

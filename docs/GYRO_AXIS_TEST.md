@@ -1,10 +1,12 @@
 # Qualitativer Gyro-Achsentest: zunächst nur links
 
-Stand: 18. Oktober 2026. **Dialog korrigiert; neuer separat freigegebener
-Einzellauf nach lokalem Go bei der Kanalauswahl mit EINVAL angehalten.
-Ursprünglicher Pufferzustand wiederhergestellt, keine Sensordaten aufgenommen.**
-Die [anschließende Offline-Korrektur](IIO_SCAN_SELECTION_FIX.md) ist gebaut;
-ein separat freigegebenes Modulupdate ist Voraussetzung für einen neuen Lauf.
+Stand: 18. Oktober 2026. **Nach separat freigegebenem Update auf alpha3-7
+funktionieren Kanalauswahl, kohärente Aufnahme und Rückstellung.** Der erste
+neue Lauf bleibt wegen vorzeitiger Rückdrehung von der Auswertung ausgeschlossen.
+Ein ausdrücklich neu angeforderter Versuch wurde im lokalen Dialog bestätigt:
+6.749 Scans, erste Beobachtung „links → G1 positiv“. Keine abschließende
+Achsenzuordnung. [Installation, Messwerte und Grenzen](IIO_SCAN_SELECTION_FIX.md#installation-und-hardwareabnahme-am-18-oktober-2026).
+Die älteren Abbruchberichte unten bleiben als historische Belege erhalten.
 Dieser Test untersucht Rohkanalreaktion und Vorzeichen beim waagerechten
 Linksdrehen. Kein bestimmter Winkel, Anschlagwinkel oder Bewegungsumfang ist
 erforderlich. Die physikalische Skalierung bleibt unbestätigt; die bekannte

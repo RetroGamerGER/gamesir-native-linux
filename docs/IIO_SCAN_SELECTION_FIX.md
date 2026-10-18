@@ -1,8 +1,10 @@
-# IIO-Kanalauswahl: Offline-Korrektur und nächster Einzellauf
+# IIO-Kanalauswahl: Korrektur und begrenzte Hardwareabnahme
 
-Stand: 18. Oktober 2026. **PRE-ALPHA, offline korrigiert und gebaut; nicht
-installiert oder an Hardware getestet.** Die bekannte Winkelkalibrierung
-bleibt pausiert. Der nächste Test dient nur der qualitativen Achsenzuordnung.
+Stand: 18. Oktober 2026. **PRE-ALPHA alpha3-7 separat freigegeben installiert;
+kohärenter Pufferaufbau und Rückstellung auf einem Standard-G7-Pro bestätigt.**
+Ein ausdrücklich neu angeforderter Linksdrehungsversuch wurde als ausgeführt
+bestätigt. Ein vorheriger Lauf mit vorzeitiger Rückdrehung bleibt von der
+Achsenauswertung ausgeschlossen. Die bekannte Winkelkalibrierung bleibt pausiert.
 
 ## Ursache und unabhängige Gegenprüfung
 
@@ -92,11 +94,15 @@ Paddles, Bootstrap und Motorsteuerung werden nicht geändert.
   Gesamtdatei-Checkpatch wird behauptet.
 
 Das Auswahlmodell ist anhand des vorhandenen Cores überprüft, führt aber
-Linux-Sysfs, FIFO, Demultiplexer und IRQ-Konkurrenz nicht aus. Reales
-Pufferlesen, Timing, Rückstellung und gleichzeitige Spielfunktion benötigen
-weiterhin eine separat freigegebene Hardwareabnahme.
+Linux-Sysfs, FIFO, Demultiplexer und IRQ-Konkurrenz nicht aus. Die spätere
+begrenzte Live-Abnahme unten ergänzt Pufferlesen, Timing und Rückstellung;
+sie ersetzt keine umfassenden Konkurrenz- oder Spieltests.
 
-## Vorbereiteter nächster Lauf – noch nicht freigegeben
+## Historischer Update- und Messplan vor der separaten Freigabe
+
+Die folgenden Freigabehinweise beschreiben den ursprünglichen Plan.
+Installation und zwei einzeln angeforderte Versuche sind inzwischen wie
+unten dokumentiert abgeschlossen. Keine Freigabe weiterer Läufe.
 
 Paketkandidat: `gamesir-native-dkms 0.1.0.alpha3-7` (weiterhin PRE-ALPHA).
 Modul-`srcversion`: `A15BC39B5A21D181E4E5C49`. Der Messhelfer ist ausschließlich
@@ -151,3 +157,103 @@ sind zeitlich begrenzt und werden bei der nächsten Phase ersetzt. Ihr
 Verschwinden ist allein kein Erfolgssignal: Nur „PUFFER ZURÜCKGESTELLT,
 AUFNAHME GESCHLOSSEN“ nach verifiziertem Abschluss erlaubt die Rückdrehung.
 Bei Abbruch nicht weiterdrehen oder einen neuen Versuch starten.
+
+## Installation und Hardwareabnahme am 18. Oktober 2026
+
+Die frische Vorprüfung fand den ausgeschalteten Funkcontroller mit neu
+angemeldetem Dongle an xpad, ohne IIO-Gerät. Der Nutzer bestätigte den
+ausgeschalteten Zustand. Keine aktuellen Managerfehler, Leases oder nativen
+Bindungen; Modulreferenzzähler null. Kein fremdes 109c-Gerät wurde übernommen.
+
+Die freigegebene Transaktion aktualisierte ausschließlich
+`gamesir-native-dkms` von `0.1.0.alpha3-6` auf `0.1.0.alpha3-7`, aus
+Quellencommit `18767d9`. Paket-SHA256:
+`dba7164a138dd54e752f1e542629c1db2d7497cb576a7d12c0dcbf0ab33ab6fc`.
+Der Upgrade-Hook bestätigte Release, Dienststop und Entladung des unbenutzten
+Moduls. DKMS baute für `7.2.11-1-garuda` erfolgreich. Passende Vermagic und
+`srcversion=A15BC39B5A21D181E4E5C49`; 130 Paketprüfeinträge unverändert,
+alle 100 Paket-Nutzdateien zusätzlich bytegleich mit dem Installer.
+Snapshot- und Initramfs-Hooks liefen erfolgreich. Die bekannten Hinweise
+zu DKMS `CLEAN` und Clang 23.1.3 gegenüber Kernel-Clang 23.1.1 blieben
+sichtbar; keine Codewarnung im erfolgreichen Modulbau. Steam-Mapping und
+optionale Trigger-Bridge blieben unverändert.
+
+Nach verifiziert pausiertem Dienststart schaltete der Nutzer den Controller
+ein. Der Dongle erschien als 100a/xpad; genau ein freigegebenes Resume
+erreichte 109c/gs_native mit erfolgreichem Bootstrap, `failed_stage=0` und
+passender aktiver Lease. Der neue Quellstand wurde auch im geladenen Modul
+geprüft. Kein Deadband-Start, Firmwarezugriff oder Motorimpuls.
+
+### Zwei Aufnahmen, eine angenommene Bewegung
+
+Jeder Lauf hatte ein frisches Manifest, eigene Passwort-/Go-Prüfung,
+30 Sekunden Vorbereitung und 108 Sekunden kohärente IIO-Aufnahme mit lokalen
+Zeitmarken. Im ersten Lauf meldete der Nutzer eine vorzeitige Rückdrehung.
+Er bestätigte die Bewegung im Abschlussdialog nicht; **keine Achsenauswertung**.
+Die Originale bleiben erhalten. Erst auf ausdrücklichen Wunsch nach einem
+neuen Versuch, erfolgreicher Rückstellung und frischer Prüfung folgte der
+zweite Lauf. Dafür bestätigte der Nutzer lokal eine waagerechte Linksdrehung
+ohne Rückdrehung vor Aufnahmeende. Keine automatische Wiederholung; insgesamt
+nur **eine** angenommene qualitative Wiederholung.
+
+| Prüfung | Erster Lauf, Bewegung ausgeschlossen | Neuer bestätigter Versuch |
+| --- | --- | --- |
+| Vollständige 32-Byte-Scans | 6.748 | 6.749 |
+| Scan-Dateigröße | 215.936 Byte | 215.968 Byte |
+| Abstand erster bis letzter Scan | 107,986059 s | 107,986044 s |
+| Effektive Rate in diesem Intervall | 62,4803 Hz | 62,4896 Hz |
+| Median der Host-Zeitabstände | 16,000276 ms | 16,000302 ms |
+| Größter Host-Zeitabstand | 32,000641 ms | 20,003183 ms |
+| Sprünge im akzeptierten Berichtszähler | 0 | 0 |
+| Pufferfehler / Rückstellungsfehler | 0 / 0 | 0 / 0 |
+
+Alle Scans gehören pro Lauf derselben Instanz an. Der Zähler erfasst vom
+Treiber akzeptierte IMU-Berichte. Lückenfreiheit dort beweist **keine**
+Verlustfreiheit auf Funk-/Sensorseite. Host-Monotonzeit ist keine bestätigte
+Sensoruhr; die IMU-Rate ist nicht die Gamepad-Pollingrate.
+
+### Begrenzter Achsenbefund
+
+Das Bewegungs-Auswertungsfenster enthält die fünf Sekunden Haltepuffer vor
+und nach dem 15-Sekunden-Drehfenster; Aufnehmen und Ablegen sind ausgeschlossen.
+Vergleich zur mittleren Vorruhe, ausschließlich in Rohwerten:
+
+| Rohkanal | Vorruhe-Mittel / Standardabweichung | Bewegungs-Mittel minus Vorruhe | Größte positive Abweichung |
+| --- | --- | --- | --- |
+| G0 | +0,291 / 1,171 | +0,366 | +361,709 |
+| G1 | −0,429 / 0,672 | +53,884 | +1.162,429 |
+| G2 | −0,138 / 1,660 | −4,704 | +212,138 |
+
+Die stärkste mittlere und positive Reaktion liegt in diesem Versuch auf
+**G1**. G0/G2 reagieren ebenfalls; begleitende Handbewegungen sind eine
+mögliche, nicht separat gemessene Ursache. Ergebnis: **Kandidat
+„waagerecht links → G1 positiv“**, keine endgültige Sensor-/SDL-Achsenzuordnung.
+Gegenrichtung, Neigen und weitere getrennte Wiederholungen bleiben offen.
+Kein Winkel vorausgesetzt, integriert oder geschätzt; kein Skalierungsprofil
+ausgewählt. `0,07 °/s` bleibt ein unbestätigter Kandidat.
+
+### Rückstellung und Belege
+
+Nach beiden Läufen bestätigte eine unabhängige lesende Kontrolle dieselbe
+USB-/IIO-Instanz und sämtliche ursprünglichen Einstellungen: Buffer/Stream
+aus, alle acht Scan-Elemente aus, Länge 128, Watermark 1, monotonic,
+Push-Fehler null. Keine parallelen IIO-Leser und keine neuen passenden
+Kernelmeldungen im verglichenen Journalfenster. Ein `final motor stop
+failed: -19` beim früheren Ausschalten des **alten** Modulstands war bereits
+vor der Installation vorhanden; kein neuer Testfehler oder STOP-Erfolgsbeleg.
+
+Dienst active/running/enabled, Manager gesund/unpausiert, Controller weiterhin
+an gs_native. Der Nutzer bestätigte normale Tasten, Sticks und Trigger sowie
+einen flüssigen Rechner. Keine erneute Einzelprüfung von Paddles, Motoren,
+Spielen oder Suspend/Hotplug. Originale, Dialogzeitmarken, Transaktionen und
+Auswertung bleiben privat; Capture-/Frontend-Prüfsummen unabhängig geprüft.
+
+| Beleg | SHA256 |
+| --- | --- |
+| Ausgeschlossener Lauf, `scans.bin` | `c35aea5c0f2f70aa327305170a66fad94db3ca6b526eddc9d9776b348bf52805` |
+| Bestätigter Versuch, `scans.bin` | `5d4c91cdc4f2bdc1967f4c0a8bff3e6ce4f7a2ca5332466bface8ff8ce2bc4a3` |
+| Bestätigter Versuch, `observations.jsonl` | `af900a19cd7c8a2b9c2a2fdb1cf3d036d37019362a04d05a650d1c56da913e77` |
+
+**Abnahme:** Kanalauswahl, zusammenhängender Host-Pufferstrom und Rückstellung
+in diesen begrenzten Läufen bestanden. Ein qualitativer Linksdrehungsbefund.
+Keine allgemeine Stabilitätsgarantie, Gyrokalibrierung oder SDL-Freigabe.
