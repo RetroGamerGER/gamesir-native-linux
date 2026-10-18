@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "kind": "gyro_viewer_live_acceptance",
+  "source_commit": "e51a491",
+  "authorization": "one separately approved continuous live preview; local Go; user stop",
+  "usb": {
+    "vid": "3537",
+    "pid": "109c",
+    "interface": 0,
+    "driver": "gs_native"
+  },
+  "worker": {
+    "completed": true,
+    "exit_code": 0,
+    "stopped_by_user": true,
+    "observations": 11466,
+    "received_bytes": 366912,
+    "original_bytes": 0,
+    "raw_recording": false,
+    "duration_limit_seconds": null,
+    "failure": null,
+    "cleanup_errors": [],
+    "restored": true
+  },
+  "frontend": {
+    "passed": true,
+    "restored_independently": true,
+    "observations": 11466,
+    "initial_profile": 2000,
+    "final_profile": 2000,
+    "profile_changes": 0
+  },
+  "additional_postcheck": {
+    "schema_version": 1,
+    "worker_completed": true,
+    "worker_exit": 0,
+    "observations": 11466,
+    "worker_failure": null,
+    "worker_cleanup_errors": [],
+    "frontend_restored_independently": true,
+    "additional_read_only_snapshot_equals_before": true,
+    "buffer_enable_after": "0",
+    "producer_gate_after": "0",
+    "service_after": "active/running",
+    "native_binding_after": "3537:109c IF0 gs_native; original instance",
+    "source_hashes_unchanged": true,
+    "worker_stderr_bytes": 0,
+    "user_postcheck_scope": "normal buttons, both sticks, triggers and responsive computer",
+    "new_hardware_test_started": false,
+    "driver_changed": false,
+    "calibration_verified": false
+  },
+  "preferred_setting": {
+    "gyro_dps_per_usb_raw_count": 0.07,
+    "crosshair_display_gain": 1.0,
+    "settings_confirmed_unchanged_by_user": true,
+    "status": "user-preferred experimental setting; qualitatively confirmed in this live session"
+  },
+  "user_observations": {
+    "motion": "natural, not too fast, perceived correspondence to real controller motion",
+    "comparison": "user subjectively prefers the motion response to a PS5 controller; not a controlled comparison",
+    "normal_inputs_after_stop": true,
+    "computer_responsive_after_stop": true
+  },
+  "limitations": {
+    "physical_reference_calibration_verified": false,
+    "sensor_identity_verified": false,
+    "gyro_range_verified": false,
+    "bias_or_drift_quantified": false,
+    "sdl_or_eden_gyro_tested": false,
+    "long_term_reconnect_suspend_tested": false,
+    "raw_samples_saved": false
+  },
+  "private_evidence_sha256": {
+    "live/manifest.json": "c884da7db3c324a8ba666110db695cf5b843615682b142a5089868e146032569",
+    "live/worker.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/frontend-result.json": "f2b1d366f65ab7a99757344f2b6e5705ef181a86a92c22ed6bc6ddc356f8765d",
+    "live/capture/report.json": "760384d98b6082eb87318ab5edf43df6903a571da8e8c1da5d77d42e8485aeac",
+    "live/capture/buffer-transaction.json": "f4753f9eb56e98986363f2b694d5cb85c010f1e2f2ecb0595f94281320a4be3c",
+    "live/capture/layout.json": "b415d5387960032e9fa5537aa21f7d01e0bb113fa7af8cdc5bd72192a68e238b",
+    "live/capture/SHA256SUMS": "36f6b9864ce46250f48a856c3d9318a621fa4a640d139dc29f100ed307562d5e",
+    "human-feedback-20261018T183750515394Z.json": "e0265a24f8ee9b038057ae9927c127e0370609de93732b23893366e4847d3f15",
+    "settings-confirmation-20261018T183817354886Z.json": "c7ff3c6e851a5b6170caa89f0b3820d5a9933565ff0a501dcb68434faf93d449",
+    "preferred-setting-20261018T183940857235Z.json": "47ccfbe0ceb032ff71319c688699e66ddac8dcc5a456b194fe58b265acfd5fd4",
+    "postcheck-and-acceptance.json": "99793ea164ed98e36bfe32395c5327978994ccae4c21590b6ec3aafaf986e5f3"
+  },
+  "public_artifact_contains_private_originals": false
+}

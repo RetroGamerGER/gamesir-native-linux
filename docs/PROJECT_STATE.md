@@ -5,7 +5,24 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Live-Anbindung des Gyrofensters offline umgesetzt:** Ein separater
+**Erster Live-Test des Gyrofensters bestanden (18. Oktober):** Nach eigener
+Freigabe, frischer Instanz-/Buildprüfung und lokalem Go wurden 11.466
+kohärente Sensorwerte im unbegrenzt angelegten Vorschaufenster verarbeitet.
+Der Nutzer beendete den Lauf; Worker und GUI melden Erfolg, keine Fehler
+und bestätigte Rückstellung. Ein zusätzlicher lesender Vergleich bestätigt
+die ursprüngliche Instanz und alle Pufferwerte; Dienst und native Bindung
+bleiben erhalten. Normale Tasten, Sticks, Trigger und flüssiger Rechner
+wurden nach Stopp ebenfalls bestätigt. Kein neuer Treiber installiert.
+**Bevorzugte Einstellung: 0,07 °/s pro Rohwert und 1,00× Fadenkreuz-Gain.**
+Der Nutzer ließ beide unverändert und beschreibt natürliche, zur realen
+Bewegung passende Reaktion, subjektiv sauberer als beim PS5-Controller.
+Damit ist diese Kombination qualitativ im eigenen Fenster bestätigt;
+kein exakter Winkel-/Driftnachweis und keine SDL-/Eden-Abnahme. Keine weitere
+Faktorsuche angefordert; Winkelkalibrierung bleibt pausiert. Originale privat,
+kein Rohmitschnitt. [Ergebnis und Prüfsummen](gyro-viewer-live-001.json),
+[Bericht und Grenzen](GYRO_VIEWER.md#erster-live-test--18-oktober-2026).
+
+**Vorherige Vorbereitung: Live-Anbindung offline umgesetzt:** Ein separater
 `--live`-Modus verbindet das vorhandene Fenster mit dem bestehenden
 IIO-Puffer-Worker. Vorbereitung und lokales Go bleiben ausdrücklich;
 Fensteröffnung allein öffnet kein Gerät. Auf Nutzerwunsch kein festes
@@ -15,7 +32,7 @@ Profilwechsel und Empfindlichkeit betreffen nur die Anzeige. STOP, EOF,
 fehlende Daten, Suspend/Instanzwechsel und blockierte Kommunikation führen
 zur Rückstellung; kein automatischer Reconnect. Ein Fehler bleibt als Fehler
 sichtbar, auch wenn die Rückstellung gelingt. Offline-Regressionen und
-40.486 gespeicherte Scans geprüft, keine neue Hardwareabnahme.
+40.486 gespeicherte Scans geprüft; bei diesem Vorbereitungsschritt keine Hardwareabnahme.
 [Ablauf und konkrete Befehle zur gesonderten Freigabe](GYRO_VIEWER.md#live-test-zur-freigabe-vorbereitet).
 Keine Installation, Treiberänderung oder Wiederaufnahme der Winkelkalibrierung.
 

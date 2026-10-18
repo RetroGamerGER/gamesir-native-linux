@@ -138,9 +138,14 @@ Live-Vorschau ist jetzt offline implementiert und geprüft: vorhandener
 IIO-Worker, lokales Go, fünf explizite Testprofile, Fadenkreuz-Gain und
 Zentrierung. Auf Nutzerwunsch kein festes Laufzeitlimit; STOP/Fenster schließen
 oder ein Sicherheitsfehler beendet die Sitzung mit Rückstellungsprüfung.
-Nächster Schritt ist ausschließlich die separat freigegebene Live-Abnahme
-von Richtung, Empfindlichkeit und Drift. Keine neue Installation erforderlich;
-kein Nachweis physikalischer Kalibrierung oder SDL-/Eden-Integration.
+Eine separat freigegebene Live-Abnahme am 18. Oktober verarbeitete 11.466
+Werte und endete auf Nutzerwunsch mit bestätigter Rückstellung und normaler
+Gamepad-Funktion. Der Nutzer behält 0,07 °/s pro Rohwert bei 1,00× als
+bevorzugte Einstellung: natürliches, zur realen Bewegung passendes Gefühl.
+Keine weitere Faktorsuche angefordert. Drift ist noch nicht quantifiziert;
+physikalische Referenzkalibrierung bleibt pausiert, SDL-/Eden-Integration
+eine separate offene Aufgabe. Neue Live-Aktionen benötigen eigene Freigabe.
+[Ergebnis und Grenzen](GYRO_VIEWER.md#erster-live-test--18-oktober-2026).
 [Bedienung und Freigabeplan](GYRO_VIEWER.md#live-test-zur-freigabe-vorbereitet).
 
 Davon getrennt ist jetzt der [qualitative Achsentest](GYRO_AXIS_TEST.md)

@@ -105,6 +105,15 @@ weiter offline prüfbar. Installation und laufender Treiber bleiben unverändert
 
 ## Visueller E2E-Empfindlichkeitstest (geplanter nächster Schritt)
 
+Nachtrag vom 18. Oktober: Das eigene Fenster hat inzwischen einen separat
+freigegebenen Live-Lauf mit 11.466 kohärenten Werten, Nutzer-Stopp und
+vollständig geprüfter Puffer-Rückstellung bestanden. Normale Eingaben danach
+bestätigt. Der Nutzer behält **0,07 °/s pro Rohwert und 1,00×** als bevorzugte
+experimentelle Einstellung; Bewegungen fühlten sich natürlich und passend an.
+[Live-Ergebnis und Grenzen](GYRO_VIEWER.md#erster-live-test--18-oktober-2026).
+Keine weitere Faktorsuche angefordert. Die folgende Architektur/Bedienung
+bleibt maßgeblich; diese Abnahme ist keine SDL-/Eden- oder Winkelkalibrierung.
+
 Empfohlen ist zunächst ein **lokales Diagnosefenster** mit diesem Datenweg:
 
 `G7 Pro → bestehender gs_native → kohärenter IIO-Puffer → experimentelles Profil → Anzeige`

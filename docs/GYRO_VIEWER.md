@@ -3,7 +3,8 @@
 Stand: 18. Oktober 2026. Experimentelles Diagnosewerkzeug, keine installierte
 Sensorausgabe. Der unveränderte Standardmodus öffnet ausschließlich
 gespeicherte Aufnahme-Dateien. Die zusätzliche `--live`-Vorschau ist offline
-implementiert, aber noch nicht an Hardware abgenommen. Fensteröffnung allein
+implementiert und hat inzwischen einen gesondert freigegebenen Live-Lauf
+bestanden (Bericht unten). Fensteröffnung allein
 öffnet kein Gerät. Live-Vorbereitung und temporärer Host-IIO-Puffer benötigen
 eine separate Freigabe; siehe Ablauf unten. Keine neue Installation, keine
 USB-Befehle und keine Dienst-/Treiberänderung. Winkelkalibrierung bleibt pausiert.
@@ -151,8 +152,9 @@ oder Kalibrierung. Für die Live-Erweiterung wurde kein anderer Chat abgerufen.
 
 ## Live-Test zur Freigabe vorbereitet
 
-**Noch nicht ausführen.** Der aktuelle Auftrag erlaubt nur Offline-Entwicklung.
-Die spätere Freigabe umfasst frische Metadaten-/Leserprüfung, eine
+**Ablauf für separat freizugebende Sitzungen.** Die erste Freigabe wurde
+inzwischen einmal genutzt und ist abgeschlossen; sie erlaubt keine Wiederholung.
+Eine neue Freigabe umfasst frische Metadaten-/Leserprüfung, eine
 Passwortabfrage und genau eine temporäre Host-Puffertransaktion bis Stopp.
 Keine Modul-/Dienstaktion, USB-Konfiguration, Bindungsänderung oder Installation.
 Ein bereits laufendes Offline-Fenster wird einmal durch die neue Live-Version
@@ -258,7 +260,43 @@ Damit ist diese Vorschau kein nachträglich auswertbarer Kalibrierungslauf.
 - Gesamte betroffene Regression: 382 Python-Tests plus C-Sensorvertrag
   bestanden (Diagnose, Stream, Puffer, Worker, Führung, GUI, Lizenz und README).
 
-Dies belegt Implementierung und Offline-Verhalten. Echte Live-Latenz,
-Langzeitstabilität, Hardware-Rückstellung dieses Modus und physikalische
-Skalierung bleiben bis zu ihren jeweiligen Prüfungen unbestätigt.
-SDL-/Eden-Unterstützung ist eine eigene, offene Integration.
+Dies belegt Implementierung und Offline-Verhalten. Der folgende Live-Bericht
+ergänzt eine begrenzte Hardwareabnahme. Gemessene Live-Latenz,
+Langzeitstabilität und physikalische Skalierung sind damit nicht bestätigt.
+SDL-/Eden-Unterstützung bleibt eine eigene, offene Integration.
+
+## Erster Live-Test — 18. Oktober 2026
+
+Geprüfter Quellstand `e51a491`, Standard-G7-Pro `3537:109c` über den bereits
+laufenden nativen Treiber. Frische Metadaten-/Build-/Leserprüfung, grafische
+Passwortabfrage und lokales Go; keine Installation oder Treiberänderung.
+**11.466 kohärente Werte / 366.912 Bytes verarbeitet**, kein festes
+Laufzeitlimit, Ende durch Nutzer-Stopp. Worker-Ausgang 0, GUI-Abschluss
+erfolgreich, keine Fehler oder Cleanup-Fehler. Keine Rohdatei aufgezeichnet.
+
+Der Worker stellte den Host-Puffer zurück; GUI-Nachprüfung und zusätzlicher
+lesender Vergleich bestätigen die vollständige ursprüngliche Instanz und
+Einstellung. `buffer/enable=0`, Produzentengate 0, Dienst aktiv und native
+Bindung erhalten. Normale Tasten, beide Sticks und Trigger sowie ein flüssiger
+Rechner wurden nach Stopp vom Nutzer bestätigt. Kein weiterer Lauf gestartet.
+
+**Nutzerentscheidung:** 0,07 °/s pro USB-Rohwert (experimentelles Profil 2000)
+und Fadenkreuz-Empfindlichkeit 1,00× beibehalten. Der Nutzer bestätigte beide
+Werte unverändert; die GUI verzeichnet ebenfalls null Profilwechsel. Er
+beschreibt natürliche, nicht zu schnelle und zur realen Bewegung passende
+Reaktion, subjektiv sogar sauberer als beim PS5-Controller. Dies ist ein
+persönlicher Vergleich, kein kontrollierter Vergleichstest. Diese Kombination
+ist die bevorzugte experimentelle Diagnoseeinstellung; keine weitere
+Faktorsuche für diesen Lauf angefordert. Der produktive Treiber und die
+ausdrückliche Profilauswahl bleiben unverändert.
+
+Der Versuch bestätigt den Live-Datenweg bis zu diesem Fenster und das vom
+Nutzer passende Bewegungsgefühl. Er enthält keine bekannte Winkelreferenz,
+Drift-/Bias-Messung, Sensoridentifikation oder SDL-/Eden-Abnahme. Es gibt
+keinen Rohverlauf für eine nachträgliche Winkelanalyse. Deshalb bleiben
+die maschinenlesbaren Flags zur physikalischen Kalibrierung `false`;
+Winkelkalibrierung bleibt pausiert. Weitere Sitzungen benötigen neue Freigabe.
+
+[Anonymisierter Ergebnisdatensatz und Prüfsummen](gyro-viewer-live-001.json).
+Originale, Metadaten und menschliche Rückmeldungen bleiben im privaten
+Laufverzeichnis. Kein Push im Rahmen dieser Abnahme.

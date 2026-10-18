@@ -87,8 +87,8 @@ Never reuse the gyro mapping for acceleration without separate pose evidence.
 Offline replay-buffer verifies saved worker checksums, restoration and binary/
 JSON agreement; it must not open live devices or merge capture instances.
 The optional PySide6 window in tools/imu/gamesir_gyro_viewer.py retains
-verified file-only replay and now offers a separate --live frontend, tested
-offline only. Read docs/GYRO_VIEWER.md before any live use. Window construction
+verified file-only replay and now offers a separate --live frontend. Read
+docs/GYRO_VIEWER.md before any live use. Window construction
 does not discover/open devices. Preparation, password/metadata checks, then
 local Go are explicit; live execution still requires separate approval.
 The user requested no fixed preview duration: keep only current samples in
@@ -101,6 +101,14 @@ The legacy 108-second capture remains bounded and retains its raw evidence.
 Factor changes reset only displayed orientation, never transport identity/
 counter checks. Quaternion integration uses host sample timestamps; crosshair
 gain/centering are display-only. No bias correction or acceleration mapping.
+One separately approved live preview on 2026-10-18 processed 11,466 samples
+and ended through user STOP with verified host-buffer restoration and normal
+gamepad function. The user confirmed unchanged 0.07 dps/raw and 1.00x display
+gain, natural movement and a subjective preference over a PS5 controller.
+Retain that pair as the user-preferred experimental diagnostic setting;
+do not start another factor search or silently install calibrated runtime
+output. No known-angle reference, quantified drift or SDL/Eden test was done.
+Read docs/gyro-viewer-live-001.json; subsequent live sessions need new approval.
 Display gain, a plausible animation and offline tests do not prove calibration.
 No universal trigger-game support or general stability guarantee.
 
