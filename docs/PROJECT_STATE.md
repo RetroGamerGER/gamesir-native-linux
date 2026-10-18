@@ -9,7 +9,10 @@ Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 installiert und der neue Build unter gesonderter Freigabe mit
 `experimental_gyro=1` geladen. Eden erkennt Bewegung über SDL; der Nutzer
 bestätigt passende Richtung/Empfindlichkeit, vier unabhängig zuordenbare
-Paddles und unveränderte normale Eingaben. Abschlussprüfung: aktive native
+Paddles und unveränderte normale Eingaben. Anschließend ausdrücklich
+bestätigt: Die Live-Bewegungsanzeige im Eden-Controllermenü folgt der realen
+Controllerbewegung wie erwartet; der Nutzer bewertet den Livetest positiv.
+Abschlussprüfung: aktive native
 109c-Sitzung, keine aktuellen Managerfehler, IIO-Puffer weiterhin aus.
 Ein erster Start wurde durch einen fehlerhaften privaten Prüfhelfer
 unterbrochen; Rückweg, Korrektur durch Wiederverwendung der vorhandenen

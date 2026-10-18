@@ -236,6 +236,11 @@ Eden was started after native initialization. The user confirmed:
 - GameSir is recognized and movement reacts through SDL; the private
   screenshot shows the motion binding `sdl` and enabled motion control.
 - Direction and sensitivity match the intended movement.
+- In a subsequent explicit confirmation, the user reported that Eden's live
+  motion indicator in the controller menu follows the physical controller
+  movement as expected. This confirms the live visual response, beyond
+  sensor discovery and the static screenshot, and was accepted by the user
+  as a positive live test.
 - L4, R4, L5 and R5 are each independently assignable; ordinary buttons,
   sticks and triggers continue to work.
 
