@@ -5,14 +5,29 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Sechs Richtungen offline vorbereitet:** Der bestehende KDE-Helfer bietet
+**Sechs Richtungen qualitativ beobachtet:** Nach frischer Vorprüfung und
+separater Freigabe wurden links/rechts und Vorderkante ab aufgenommen. Der
+Controller ging während der Vorbereitung des vierten Abschnitts von selbst
+aus; der Helfer stoppte vor Pufferänderung/Geräteöffnung. Nach erneuter
+Nutzerfreigabe, Einschalten und frischer Instanzprüfung wurden Vorderkante auf
+und beide seitlichen Kipprichtungen einzeln nachgeholt. Insgesamt 40.486
+kohärente Scans in sechs bestätigten 108-Sekunden-Aufnahmen, alle Puffer
+zurückgestellt. Beobachtung: links/rechts → G1 +/−, Vorderkante ab/auf →
+G0 −/+, linker/rechter Griff ab → G2 +/−. Zwei getrennte Geräteinstanzen;
+keine als durchgehend erfolgreich ausgegebene Serie, keine Änderung der
+Zuordnung im Treiber. Normale Eingaben und flüssiger Rechner bestätigt.
+[Messwerte, Abbruch und Grenzen](GYRO_AXIS_TEST.md#hardwarebeobachtung-in-zwei-freigegebenen-blöcken).
+Winkelkalibrierung, Skalierung und SDL-Freigabe bleiben offen.
+
+**Vorbereitung des Sechs-Richtungs-Helfers:** Der bestehende KDE-Helfer bietet
 jetzt `plan-axes` und `run-axes` für links/rechts drehen, Vorderkante ab/auf
 neigen und linken/rechten Griff absenken. Ein Durchgang umfasst sechs getrennte
 108-Sekunden-Aufnahmen, jeweils mit lokalem Go, 30 Sekunden Vorbereitung und
 Rückstellungsprüfung. Rückbewegung erst nach der eigenen Ansage, außerhalb
 des Auswertungsfensters. Fehler oder unbestätigte Bewegung stoppen die Serie.
-Keine Hardwareausführung dieses neuen Modus und keine Änderung am installierten
-Treiber. [Ablauf und Freigabegrenzen](GYRO_AXIS_TEST.md#sechs-richtungen-in-einem-geführten-durchgang-offline-vorbereitet).
+Bei diesem damaligen Vorbereitungsschritt keine Hardwareausführung und keine
+Änderung am installierten Treiber. Die spätere begrenzte Live-Prüfung steht
+oben. [Ablauf und Freigabegrenzen](GYRO_AXIS_TEST.md#sechs-richtungen-in-einem-geführten-durchgang-offline-vorbereitet).
 Die Zuordnungsheuristik liefert nur zu prüfende Gyro-Kandidaten; Beschleunigung
 benötigt eigene Schwerkraft-Ruhelagen. Winkelkalibrierung bleibt pausiert.
 

@@ -56,8 +56,19 @@ because the user rotated back. The explicitly requested replacement run has
 predominantly positive is a candidate, not a complete axis map or scale.
 Further runs require a new request and local Go; do not reuse an old manifest
 or module hash.
-The six-direction extension in docs/GYRO_AXIS_TEST.md is offline-prepared,
-not hardware-validated. Its run-axes sequence reuses the unchanged 108-second
+The six-direction extension in docs/GYRO_AXIS_TEST.md now has a limited live
+observation: three accepted directions, then an inactivity shutdown before
+the fourth capture. The user separately authorized continuation on a fresh
+instance; three existing single-direction transactions completed the set.
+Keep both blocks and the failed series report intact. Never merge their
+instance identities or bypass summarize_axes' single-instance guard. Reviewed
+raw candidates are left/right G1 +/-, front down/up G0 -/+ and left/right
+grip down G2 +/-. These are qualitative observations, not installed axes,
+scale calibration or full sensor/SDL validation. All six captures restored
+their buffers; the stopped fourth attempt made no buffer writes or reads.
+For future approved work, ordinary user button activity between captures,
+before Go, may avoid idle shutdown; do not invent automatic keepalive commands.
+Its run-axes sequence reuses the unchanged 108-second
 worker once per direction, with fresh manifests, the same approved instance,
 local Go and restoration checks each time. Cancel, unconfirmed motion or any
 failure stops the series; never skip/retry or adopt a replacement. In this

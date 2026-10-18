@@ -1,5 +1,11 @@
 # Qualitativer Gyro-Achsentest: zunächst nur links
 
+**Aktueller Nachtrag:** Inzwischen liegen sechs vom Nutzer bestätigte
+qualitative Richtungsaufnahmen vor, nach einem Inaktivitätsabbruch in zwei
+separat freigegebenen Blöcken. [Ergebnisse und Grenzen](#hardwarebeobachtung-in-zwei-freigegebenen-blöcken).
+Die Beschreibung des ursprünglichen Linkstests und seine älteren Befunde
+bleiben unten erhalten.
+
 Stand: 18. Oktober 2026. **Nach separat freigegebenem Update auf alpha3-7
 funktionieren Kanalauswahl, kohärente Aufnahme und Rückstellung.** Der erste
 neue Lauf bleibt wegen vorzeitiger Rückdrehung von der Auswertung ausgeschlossen.
@@ -369,4 +375,106 @@ Prüfungen ersetzen keine bestätigte Ausführung der neuen Hinweise am Controll
 
 Die gezielte Offline-Abnahme umfasst 247 bestandene Tests: IMU-Strom 58,
 Referenzauswertung 43, Pufferaufbau 33, unveränderter Worker 41, geführter
-Helfer 62, öffentliche Dokumentation 7 und Lizenzierung 3. Kein neuer Live-Lauf.
+Helfer 62, öffentliche Dokumentation 7 und Lizenzierung 3. Bei dieser
+Offline-Abnahme noch kein neuer Live-Lauf.
+
+## Hardwarebeobachtung in zwei freigegebenen Blöcken
+
+18. Oktober 2026, Helferstand `de15c11`, installiertes PRE-ALPHA-Paket
+`0.1.0.alpha3-7`, Kernel `7.2.11-1-garuda`, geprüfte Modul-srcversion
+`A15BC39B5A21D181E4E5C49`. Kein Modul-/Paketwechsel durch diesen Test.
+Frische lesende Prüfungen bestätigten jeweils die native Standard-G7-Pro-
+Instanz, Layout, ausgeschalteten Puffer und fehlende konkurrierende IIO-Leser.
+Jede tatsächlich erfasste Richtung erhielt ein eigenes lokales Go,
+30 Sekunden Vorbereitung, 108 Sekunden Aufnahme und die spätere ausdrückliche
+Bestätigung der ausgeführten Bewegung. Kein bekannter Winkel verlangt.
+
+**Unterbrechung korrekt erhalten:** Der erste Block erfasste links, rechts
+und Vorderkante nach unten. Während der Vorbereitung des vierten Abschnitts
+verschwand die IIO-Instanz. Der Nutzer bestätigte selbsttätiges Ausschalten.
+Dieser vierte Versuch endete vor Geräteöffnung, Pufferkonfiguration oder
+Sensordatenaufnahme: null Bytes/Scans und keine Konfigurationswrites.
+Die ersten drei Transaktionen waren vorher abgeschlossen und zurückgestellt.
+Die Serie stoppte; beide folgenden Richtungen wurden nicht gestartet.
+Der ursprüngliche Serienbericht bleibt mit `passed=false` erhalten.
+
+Der Kernel meldete beim Geräteverlust außerdem `final motor stop failed: -19`
+(`ENODEV`). Das ist kein erfolgreicher Stoppnachweis am bereits verschwundenen
+Gerät; in diesem Sensortest wurden keine Motorimpulse angefordert. Keine
+automatische Reparatur oder Wiederholung durch den Testhelfer.
+
+Der Nutzer schaltete den Controller wieder ein, bestätigte normale Eingaben
+und beauftragte ausdrücklich die Fortsetzung ab der fehlenden Richtung.
+Die vorhandene Verwaltung stellte den nativen Betrieb auf einer **neuen
+USB-/IIO-Instanz** her. Nach frischer Prüfung wurden nur Vorderkante nach oben
+und beide Griff-Kipprichtungen mit dem vorhandenen `run_measurement`-Pfad
+einzeln ausgeführt; jede mit frischem Manifest, Go und Rückstellungsprüfung.
+Es wurde weder die Instanzprüfung gelockert noch die alte Serie überschrieben.
+Zwischen diesen Messungen wurde der Nutzer auf normales A-Drücken vor dem Go
+hingewiesen, um Inaktivität zu vermeiden. Keine automatisierten Eingaben oder
+Keepalive-Befehle; keine Änderung des Firmware-Schlaftimers. Dass reine
+IMU-Bewegung den Timer nicht zuverlässig zurücksetzt, ist eine Beobachtung
+dieses Ablaufs, kein vermessenes Timer-/Firmwaremodell.
+
+### Beobachtete Rohkanäle
+
+Ausgangslage jeweils Tastenfläche oben, USB-/Vorderkante vom Spieler weg.
+Vorzeichen beziehen sich auf den vorruhebereinigten **USB-/IIO-Rohkanal**,
+nicht auf eine bereits definierte SDL-Achse oder ST-Sensorregisterachse.
+Die mittlere Reaktion umfasst das bestehende Start-/Bewegungs-/Endhaltefenster;
+Aufnehmen und die angesagte Rückbewegung sind ausgeschlossen.
+
+| Bewegung | Block | Scans | G0 Mittelwertdifferenz | G1 Mittelwertdifferenz | G2 Mittelwertdifferenz | Dominanter Kandidat |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| Waagerecht links | 1 | 6.748 | +6,05 | +94,94 | −2,08 | G1 positiv |
+| Waagerecht rechts | 1 | 6.749 | +3,10 | −77,24 | +2,48 | G1 negativ |
+| Vorderkante nach unten | 1 | 6.747 | −67,48 | +5,54 | −1,78 | G0 negativ |
+| Vorderkante nach oben | 2 | 6.746 | +49,12 | +0,45 | −0,60 | G0 positiv |
+| Linken Griff absenken | 2 | 6.749 | −2,59 | −2,71 | +58,56 | G2 positiv |
+| Rechten Griff absenken | 2 | 6.747 | −6,82 | +4,57 | −55,39 | G2 negativ |
+
+Alle sechs Richtungen überschreiten einzeln die zuvor festgelegte
+heuristische Dominanzschwelle. Die drei Gegenrichtungspaare passen in Kanal
+und Vorzeichen zusammen. Das ist ein **manueller Vergleich von zwei getrennt
+freigegebenen Aufnahmeblöcken**, keine durchgehend erfolgreiche Sechserserie.
+Die unveränderte `summarize_axes`-Prüfung lehnt ihre Zusammenfassung als eine
+einzige Geräteinstanz weiterhin ab; diese Ablehnung wurde mit den echten
+Analyseobjekten geprüft. Insbesondere das Neigepaar überspannt den Neustart
+des Funkcontrollers. Kein automatisches Übernehmen dieser Kandidaten in den
+Treiber, kein Ersetzen der Instanzkennungen für eine scheinbar erfolgreiche
+Auswertung.
+
+### Datenqualität, Abschluss und Grenzen
+
+- Insgesamt **40.486 kohärente Scans**, 1.295.552 unveränderte Binärbytes.
+- Je Aufnahme etwa 62,47–62,49 akzeptierte Berichte/s; Medianabstand rund
+  16,001 ms, größte beobachtete Lücke 34,012 ms. In jeder Aufnahme steigt
+  der Treiber-Berichtszähler lückenlos um eins. Das beweist keine unveränderte
+  Sensor-/Funkrate und keine Verlustfreiheit vor dem Treiber.
+- Alle sechs vollständigen Aufnahmen stellten die ursprünglichen
+  Puffereinstellungen nachweislich zurück. Die unabhängige letzte Prüfung
+  bestätigt gleiche Instanz und Ausgangseinstellungen, inaktiven Puffer,
+  keinen konkurrierenden Leser, gesunden Manager und native Bindung.
+- Während des Fortsetzungsblocks keine neuen relevanten Kernelmeldungen im
+  geprüften aktuellen Journal-Ausschnitt. Normale Tasten, Sticks und Trigger
+  sowie flüssige Systemreaktion wurden abschließend vom Nutzer bestätigt.
+- Rohdaten, Zeitmarken, Manifeste, Fehlversuch und Prüfsummen bleiben in zwei
+  privaten lokalen Beweisordnern. Kein Rohcapture oder private Gerätekennung
+  wird versioniert. Die 49 Dateien des ursprünglichen Serien-Prüfsummensatzes
+  sind nach dem Abbruch unverändert verifiziert; Fortsetzungsdaten und
+  Nachprüfungen erhalten einen eigenen äußeren SHA256-Satz.
+
+Abschließende äußere Prüfsummensätze: Block 1 einschließlich Vor-/Nachprüfung
+umfasst 60 verifizierte Dateien, Manifest-SHA256
+`eec0cfd1c06eb57e3ef3d91bc5e49a283765dbd29fa6dea5522ea841f8c16b2c`;
+Fortsetzung einschließlich Vergleich und Nachprüfung 46 Dateien, Manifest-SHA256
+`7530cb0bc6d2dd600bd9be0dc746ac9c8835c78edf8eeb14955cb97783ffe927`.
+Die abschließende Dokumentationsänderung wurde mit `git diff --check`, sieben
+öffentlichen Dokumentationstests und drei Lizenztests geprüft. Kein Push.
+
+Diese qualitativen Beobachtungen sind keine Gyro-Skalierung, kein Biasmodell
+über Temperatur und keine vollständige Beschleunigungskalibrierung. Es fehlen
+insbesondere getrennte Schwerkraft-Ruhelagen für A0/A1/A2 sowie physikalische
+Referenzmessungen für den effektiven Gyrofaktor. `0,07 °/s pro USB-Rohwert`
+bleibt unbestätigter Kandidat. Keine bekannte Winkelintegration, kein
+Produktivmapping und keine kalibrierte SDL-Freigabe. Gyrokalibrierung pausiert.
