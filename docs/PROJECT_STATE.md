@@ -5,14 +5,27 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**SDL-/Eden-Anbindung offline umgesetzt:** Nach Annahme der bevorzugten
+**SDL-/Eden-Erstabnahme erfolgreich:** Paket `0.1.0.alpha3-8` ist lokal
+installiert und der neue Build unter gesonderter Freigabe mit
+`experimental_gyro=1` geladen. Eden erkennt Bewegung über SDL; der Nutzer
+bestätigt passende Richtung/Empfindlichkeit, vier unabhängig zuordenbare
+Paddles und unveränderte normale Eingaben. Abschlussprüfung: aktive native
+109c-Sitzung, keine aktuellen Managerfehler, IIO-Puffer weiterhin aus.
+Ein erster Start wurde durch einen fehlerhaften privaten Prüfhelfer
+unterbrochen; Rückweg, Korrektur durch Wiederverwendung der vorhandenen
+Übergangsprüfung und der separat freigegebene Erfolgslauf sind dokumentiert.
+Noch keine dauerhafte Gyro-Moduloption, kein konkreter Spiel-/Hotplug-/Suspend-
+Langzeittest und kein Push. [Ergebnis und Grenzen](SDL_EDEN_GYRO.md#first-local-installation-and-eden-acceptance).
+
+**Vorherige Offline-Vorbereitung:** Nach Annahme der bevorzugten
 Gyroeinstellung wurde ein zusätzliches, ausdrücklich aktivierbares evdev-
 Gyrogerät für `109c` ergänzt. 0,07 °/s und beobachtete Achsen bleiben erhalten;
 SDL erhält rad/s, rohe IIO-Daten und Paddles bleiben unabhängig. Eden akzeptiert
 im geprüften Quellstand auch Gyro ohne Beschleunigung; dessen Zeitbasisgrenze
 bei spätem Hotplug ist dokumentiert. Alle vier Paddles sollen weiterhin eigenständig erkennbar und zuordenbar
-bleiben; ihre gemeinsame Nutzung mit Gyro ist offline geprüft. Noch kein neues
-Paket installiert, kein Hardware-/Eden-Test, keine Systemänderung oder Push.
+bleiben; ihre gemeinsame Nutzung mit Gyro wurde offline geprüft. Zu diesem
+Vorbereitungszeitpunkt noch kein neues Paket oder Hardware-/Eden-Test; die
+spätere begrenzte Abnahme steht oben.
 [Implementierung, Tests und nächster Freigabeschritt](SDL_EDEN_GYRO.md).
 
 **Erster Live-Test des Gyrofensters bestanden (18. Oktober):** Nach eigener

@@ -2,12 +2,16 @@
 
 ## Unreleased SDL/Eden addition — 18 October 2026
 
-The opt-in 109c gyro input path is prepared and tested offline after the
-maintainer accepted the diagnostic response. It is not installed, hardware-
-validated in SDL/Eden, tagged or pushed. Existing release checkpoints below
-retain their historical scope. [New integration and limitations](SDL_EDEN_GYRO.md),
-[bounded offline result](sdl-eden-gyro-validation.json). No accelerometer axis
-claim, universal games support or default runtime activation is added.
+The opt-in 109c gyro input path passed offline validation and a separately
+approved local installation/activation as `0.1.0.alpha3-8`. In Eden's controller
+settings the user confirmed SDL motion, matching direction/sensitivity and
+four independently assignable paddles with ordinary input preserved. The
+first observer-induced cancellation, manual recovery and separately approved
+successful run are retained in [the installation/test report](SDL_EDEN_GYRO.md).
+No new tag or push, persistent gyro option, accelerometer-axis claim, specific
+game acceptance or universal support is added. Existing release checkpoints
+below retain their historical scope; the [offline result](sdl-eden-gyro-validation.json)
+still describes the earlier device-free preparation.
 
 
 Current candidate `v0.1.0-pre-alpha.2`, 2026-10-17: the corrected optional

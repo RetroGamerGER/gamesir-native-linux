@@ -1,8 +1,10 @@
 # SDL / Eden: opt-in GameSir gyro integration
 
-Status: 18 October 2026 — implemented and tested offline; **not installed or
-hardware-validated**. The existing live driver, manager, Steam configuration
-and Eden application have not been changed. No push or release approval.
+Status: 18 October 2026 — **installed locally and accepted in Eden's controller
+settings** after separate installation and activation approvals. The user
+confirmed SDL motion, matching directions/sensitivity, four independently
+assignable paddles and preserved ordinary inputs. This is not an in-game,
+reboot, suspend or universal-emulator acceptance claim. No push or release approval.
 
 ## Decision and scope
 
@@ -116,12 +118,13 @@ access, no broad world-readable input permission and no input-group membership.
 Active KDE/Gamescope session ACLs still require live verification. The option
 is deliberately absent from the default module/service configuration.
 
-A future approved activation would add `experimental_gyro=1` to the module
-options after a reviewed package update and controlled release/reload. This
-is not a command to run now. The exact release/install/load/resume steps must
-be based on a fresh system/ownership check. Removing that one opt-in and
-performing an approved reload returns to the existing raw-IIO-only behavior.
-No current service or Steam configuration was changed during preparation.
+The separately approved first test loaded `experimental_gyro=1` explicitly
+after the reviewed package update. No persistent modprobe configuration was
+created: the running module has the option, but a later default load/boot does
+not automatically enable it. Persistent activation requires its own decision.
+The exact release/install/load/resume steps must use a fresh ownership check.
+An approved reload without this option returns to raw-IIO-only behavior.
+No Steam or Eden configuration file was edited by the installation procedure.
 
 ## Offline verification
 
@@ -144,7 +147,7 @@ No current service or Steam configuration was changed during preparation.
 - Full regression suite and current-kernel build are required before commit.
   Evidence is recorded in `build/results/`; raw private source stays ignored.
 
-## Next approved end-to-end test
+## End-to-end procedure
 
 1. Fresh package/kernel/device/ownership check; close games and Eden.
 2. Review and approve the exact update/option/reload sequence and rollback.
@@ -172,3 +175,78 @@ and 18 button/axis/FF scenarios. Kernel build for `7.2.11-1-garuda` has zero
 code warnings; its known compiler-environment advisory is Clang 23.1.1
 (kernel) versus 23.1.3 (module build). Kernel checkpatch and all five Clang
 analyzer translation units passed. [Sanitized result](sdl-eden-gyro-validation.json).
+
+## First local installation and Eden acceptance
+
+The separately approved update installed only `gamesir-native-dkms`
+**0.1.0.alpha3-8**, replacing revision 7 on Garuda KDE, kernel
+`7.2.11-1-garuda`. The package guard first verified return to `100a/xpad`,
+stopped the manager and removed only the unused native module. DKMS, Garuda
+snapshot/initramfs hooks and the new udev rule installation completed.
+All 103 payload files matched the archive; package verification reported
+135 entries and zero alterations. Installed module source version:
+`51B1928C25EC5BD2C65C70C`; matching vermagic, no automatic USB aliases.
+
+The immutable tested archive was built from implementation commit `7e49d68`
+with package revision increased to 8, before this result documentation:
+
+- Package SHA256: `0277cf2d31921b7ee6dbd112c39071ed51f31b16668eacdaf53e835134acbd9e`.
+- Source archive SHA256: `9a3f417827d2bf9b220e0cf51061631ba164cef474c82cee34328c5acf4c7867`.
+- Fresh package tests: 25 passed. The preceding full implementation validation
+  remains recorded above; it was not unnecessarily repeated after only a
+  package-revision/documentation change.
+
+### Interrupted first activation and recovery
+
+A preliminary guard stopped before issuing Resume because the wireless
+reconnection changed the device address. The refreshed first actual Resume
+was then interrupted by an **incorrect private observation helper**: it
+treated any scan/per-port metadata error as immediately fatal instead of
+using the existing bounded transition policy. The triggering full status
+was not retained, so its exact error text cannot be reconstructed.
+The helper issued its authorized one-time Release during the handover;
+the kernel recorded `-EINTR` at stage 3. The manager correctly refused to
+claim successful return of the unowned new `109c/xpad` instance. This trial
+did not validate or disprove the new gyro path.
+
+Under separate permission the user removed the dongle. Read-only checks
+confirmed physical absence and empty leases before reinsertion. The fresh
+device returned to `100a/xpad` and normal KDE input was confirmed. No forced
+rebind, state deletion, repeated Release or automatic retry was used.
+
+The replacement private helper reuses `tools/native/bootstrap_observation.py`
+(`StartupWindow` and `wait_for_native`); all **31 existing observation tests**
+passed. It retains full status samples, original errors even if cleanup fails,
+the fixed deadline, kernel-log checks and exact device/parent/lease/token
+attestation. Future test runners must reuse this policy rather than treating
+every transient metadata gap as a failed bootstrap.
+
+### Successful separately approved attempt
+
+One new approved Resume completed `100a → 109c`, native handover and kernel
+startup state 7 with error/stage zero and both input/IMU evidence. The sensor
+and gamepad had the same nonempty session identity. Both event nodes were
+accessible through the active user's seat ACL, without world access or raw
+USB permissions. The gyro node exposed only `ABS_RX/RY/RZ` plus timestamps;
+it did not consume the raw IIO buffer. The familiar xpad teardown `-ENOENT`
+message was present; no new BUG/Oops/lockup warning was observed.
+
+Eden was started after native initialization. The user confirmed:
+
+- GameSir is recognized and movement reacts through SDL; the private
+  screenshot shows the motion binding `sdl` and enabled motion control.
+- Direction and sensitivity match the intended movement.
+- L4, R4, L5 and R5 are each independently assignable; ordinary buttons,
+  sticks and triggers continue to work.
+
+Final read-only inspection confirmed active native `109c`, running/enabled
+service, no current manager errors, `experimental_gyro=Y`, and both IIO
+buffer gates still zero. The service remains active; Eden was left to the
+user. No persistent gyro option, extra motor test, firmware command, new
+physical calibration or public push was performed.
+
+This is an **Eden controller-configuration acceptance test**, with user-observed
+motion and button assignment. No particular game's aiming, prolonged stability,
+late hotplug or suspend was tested. No separate mapped SDL shared library was
+visible in the inspected Eden process; its bundled SDL version was not independently
+identified. The earlier source/time-domain limitations and gyro-only scope remain.

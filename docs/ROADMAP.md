@@ -10,11 +10,14 @@ Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 ## Aktuell: SDL / Eden
 
 Die bevorzugte Gyroeinstellung bleibt bei 0,07 °/s; keine neue Faktorsuche.
-Der optionale evdev-Gyropfad ist offline umgesetzt, inklusive SDL-Erkennung
-und gemeinsamer Paddle-Prüfung. Nächster Schritt: freigegebene Installation
-und echter Eden-Test, ohne Beschleunigungsachsen zu erfinden. Eden-Hotplug
-und Wechsel der Zeitbasis bleiben separat zu lösen; keine universelle
-Spielefreigabe. [Details](SDL_EDEN_GYRO.md).
+Der optionale evdev-Gyropfad ist lokal installiert und in Edens
+Controller-Einstellungen angenommen: Bewegung über SDL, passende Richtung/
+Empfindlichkeit und vier unabhängig belegbare Paddles bei normalen Eingaben.
+Nächste getrennte Entscheidungen: dauerhafte Aktivierung der bisher nur
+beim Modulladen gesetzten Gyrooption und Abnahme in einem konkreten Spiel.
+Eden-Hotplug und Wechsel der Zeitbasis bleiben separat zu lösen;
+keine universelle Spielefreigabe oder erfundene Beschleunigungsachsen.
+[Test, korrigierter Prüfhelfer und Grenzen](SDL_EDEN_GYRO.md).
 
 ## 1. Stabile Alpha und Release-Abnahme
 

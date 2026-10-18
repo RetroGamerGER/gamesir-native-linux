@@ -41,6 +41,20 @@ No Eden GPL-3.0-or-later sources/binaries are distributable with our GPL-2.0-onl
 sources. The user also requires independent assignable paddles;
 maintain them and test their combinations alongside gyro. No push authorized.
 
+Revision alpha3-8 was subsequently installed under explicit permission. A
+separately approved activation and Eden controller-settings test confirmed
+SDL motion, matching directions/sensitivity, all four independently assignable
+paddles and preserved normal inputs. No particular game, persistent gyro
+configuration or new reboot/hotplug/PM test is proven. The current module
+was explicitly loaded with experimental_gyro=1; default boot configuration
+remains off. Do not restart calibration research from this qualitative result.
+The first activation was interrupted by a private helper that mistakenly
+aborted on transient metadata errors. Reuse the existing bounded
+tools/native/bootstrap_observation.py policy for future startup observers;
+do not write an ad-hoc fatal-on-any-port_errors check. Retain complete
+observations and original failures across cleanup. Read the recovery and
+successful separately approved run in docs/SDL_EDEN_GYRO.md before new tests.
+
 ## Historical boundaries and evidence
 
 VID3537; standard PIDs100a/109c; ZZZ105e remains experimental. Keep existing

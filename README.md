@@ -83,8 +83,10 @@ separates hardware results, offline tests and outstanding validation.
   not universal game integration.
 - **Motion data:** all six raw gyro/accelerometer channels were observed.
   Six gyro directions and a preferred 0.07 °/s/raw response were qualitatively
-  tested in the local diagnostic window. The optional SDL gyro integration
-  is offline-tested; real Eden/game acceptance remains pending.
+  tested in the local diagnostic window. One approved local test of the
+  optional SDL gyro path in Eden's controller settings confirmed responsive
+  motion, matching direction/sensitivity and four independently assignable
+  paddles with ordinary input preserved. In-game acceptance remains separate.
 - **Forza Horizon 6 through Xodus Nexus:** one controlled run of the optional
   trigger bridge `0.1.0.alpha1-2` produced felt effects on both impulse
   triggers, pauses between effects and renewed vibration on later effects.
@@ -100,9 +102,10 @@ computer.
 ## Known Limitations
 
 - **Gyro integration remains experimental.** The selected 0.07 °/s/raw profile
-  has an opt-in SDL evdev path; it is not enabled by default or validated in
-  Eden on hardware. Precise angle/bias calibration remains paused. The
-  accelerometer stays raw IIO with experimental `8192 LSB/g`; its physical
+  has an opt-in SDL evdev path and one limited hardware acceptance in Eden's
+  controller settings. It is not enabled by default, and that test added no
+  persistent boot-time gyro option. Precise angle/bias calibration remains
+  paused. The accelerometer stays raw IIO with experimental `8192 LSB/g`; its physical
   axes have not been established. See [SDL/Eden scope and test plan](docs/SDL_EDEN_GYRO.md).
 - **Trigger vibration has no confirmed universal games path.** Standard
   Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,
