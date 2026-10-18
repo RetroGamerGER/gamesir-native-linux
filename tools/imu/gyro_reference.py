@@ -132,10 +132,10 @@ def _vector(value, name):
     return list(value)
 
 
-def validate_samples(samples, max_gap_ns):
+def validate_samples(samples, max_gap_ns, *, allow_single=False):
     """Reject a broken complete stream before producing any angle integral."""
     _integer(max_gap_ns, "max_gap_ns", 1)
-    if not isinstance(samples, list) or len(samples) < 2:
+    if not isinstance(samples, list) or len(samples) < (1 if allow_single else 2):
         raise ValueError("at least two coherent samples required")
     instance, source, previous = None, None, None
     for sample in samples:

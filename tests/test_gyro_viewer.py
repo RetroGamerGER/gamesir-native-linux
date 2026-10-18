@@ -15,6 +15,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
 import gamesir_gyro_viewer as ui
 import test_gyro_axis_profile as capture_fixture
+import test_gyro_live as lf
+import gamesir_gyro_live as live
+import time
 
 
 class Window(unittest.TestCase):
@@ -107,6 +110,99 @@ class Window(unittest.TestCase):
     def test_cli_rejects_implicit_gain_or_live_mode(self):
         for args in (['--capture-dir','unused'],['--live'],['--profile','999']):
             with redirect_stderr(io.StringIO()),self.assertRaises(SystemExit):ui.main(args)
+
+
+class LiveWindow(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.app=ui.QApplication.instance() or ui.QApplication([])
+
+    def setUp(self):
+        self.fixture=lf.Lifecycle();self.fixture.setUp()
+        self.window=ui.LiveViewer(self.fixture.session);self.window.timer.stop()
+        self.window.show();self.app.processEvents()
+
+    def tearDown(self):
+        self.fixture.session.state='done'
+        self.window.close();self.window.deleteLater();self.app.processEvents()
+        self.fixture.tearDown()
+
+    def begin(self):
+        w=self.window;f=self.fixture
+        QTest.mouseClick(w.open_button,Qt.MouseButton.LeftButton);w.tick()
+        f.process.commands();f.process.emit(lf.ready());w.tick()
+        self.assertEqual(f.session.state,'ready')
+        self.assertNotIn(b'GO',f.process.commands())
+        QTest.mouseClick(w.play_button,Qt.MouseButton.LeftButton)
+        self.assertIn(b'GO\n',f.process.commands())
+        stamp=time.monotonic_ns();f.process.emit(lf.started(stamp))
+        f.process.emit({'protocol_version':1,'event':'sample','row':lf.row(stamp,1)})
+        w.tick();self.assertEqual(f.session.state,'running')
+        f.report['observations']=1
+
+    def finish(self):
+        f=self.fixture
+        f.process.emit(lf.finished(f.session.events.count));f.process.code=0
+        self.window.tick();self.app.processEvents()
+
+    def test_open_inert_and_live_controls_without_timeline(self):
+        w=self.window
+        self.assertEqual(self.fixture.launch_count,0)
+        self.assertFalse((self.fixture.home/'run').exists())
+        self.assertFalse(w.timeline.isVisible());self.assertFalse(w.speed_box.isVisible())
+        self.assertFalse(w.play_button.isEnabled())
+        self.begin()
+        self.assertIsNone(self.fixture.session.deadline)
+        self.assertIn('OHNE FESTES ZEITLIMIT',w.mode.text())
+        self.assertIn('Roh G0/G1/G2',w.values.text())
+        self.assertTrue(w.restart_button.isEnabled())
+
+    def test_gain_center_profile_switch_and_stop(self):
+        self.begin();w=self.window;s=self.fixture.session
+        raw=s.events.last_row.copy()
+        w.gain_slider.setValue(250)
+        self.assertEqual(s.events.pose.gain,2.5)
+        QTest.mouseClick(w.center_button,Qt.MouseButton.LeftButton)
+        self.assertEqual(s.events.last_row,raw)
+        w.profile_box.setCurrentIndex(w.profile_box.findData(125))
+        self.assertIsNone(w.playback);self.assertIn('0.004375',w.warning.text())
+        self.assertEqual(s.events.last_row,raw)
+        stamp=time.monotonic_ns()
+        self.fixture.process.emit({'protocol_version':1,'event':'sample','row':lf.row(stamp,2)})
+        w.tick();self.assertEqual(s.events.count,2);self.fixture.report['observations']=2
+        self.assertEqual(s.events.pose.integrator.profile,125)
+        QTest.mouseClick(w.restart_button,Qt.MouseButton.LeftButton)
+        self.assertEqual(s.state,'stopping');self.assertIn(b'STOP\n',self.fixture.process.commands())
+        self.finish();self.assertEqual(s.state,'done');self.assertTrue(s.restored)
+
+    def test_close_waits_for_verified_restoration(self):
+        self.begin();w=self.window
+        w.close();self.app.processEvents()
+        self.assertTrue(w.isVisible());self.assertEqual(self.fixture.session.state,'stopping')
+        self.assertIsNone(self.fixture.process.code)
+        self.finish();self.assertFalse(w.isVisible())
+
+    def test_failed_close_stays_visible_and_exposes_unconfirmed_restore(self):
+        self.begin();w=self.window
+        self.fixture.session.snapshot=lambda *args:{'replacement':True}
+        w.close();self.finish()
+        self.assertTrue(w.isVisible());self.assertIn('NICHT bestätigt',w.source.text())
+
+    def test_signal_stop_uses_same_cleanup_and_only_once(self):
+        self.begin();w=self.window
+        w.stop_requested=True;w.tick()
+        self.assertEqual(self.fixture.process.commands().count(b'STOP\n'),1)
+        w.stop_requested=True;w.tick()
+        self.assertEqual(self.fixture.process.commands(),b'')
+        self.finish();self.assertEqual(self.fixture.session.state,'done')
+
+    def test_live_software_render(self):
+        self.begin()
+        for width,height in ((900,880),(1080,900)):
+            self.window.resize(width,height);self.app.processEvents()
+            self.assertFalse(self.window.grab().isNull())
+            self.assertGreater(self.window.view.height(),300)
+            self.assertLess(self.window.view.geometry().bottom(),self.window.values.geometry().top())
 
 
 if __name__=='__main__':

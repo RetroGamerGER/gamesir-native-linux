@@ -5,7 +5,21 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Lokales Gyrofenster offline umgesetzt:** Das optionale PySide6-Werkzeug
+**Live-Anbindung des Gyrofensters offline umgesetzt:** Ein separater
+`--live`-Modus verbindet das vorhandene Fenster mit dem bestehenden
+IIO-Puffer-Worker. Vorbereitung und lokales Go bleiben ausdrücklich;
+Fensteröffnung allein öffnet kein Gerät. Auf Nutzerwunsch kein festes
+Laufzeitlimit: Vorschau bis Stopp/Fenster schließen oder Sicherheitsfehler,
+mit konstantem Sample-Speicher und kleinem Abschlussbericht statt Rohmitschnitt.
+Profilwechsel und Empfindlichkeit betreffen nur die Anzeige. STOP, EOF,
+fehlende Daten, Suspend/Instanzwechsel und blockierte Kommunikation führen
+zur Rückstellung; kein automatischer Reconnect. Ein Fehler bleibt als Fehler
+sichtbar, auch wenn die Rückstellung gelingt. Offline-Regressionen und
+40.486 gespeicherte Scans geprüft, keine neue Hardwareabnahme.
+[Ablauf und konkrete Befehle zur gesonderten Freigabe](GYRO_VIEWER.md#live-test-zur-freigabe-vorbereitet).
+Keine Installation, Treiberänderung oder Wiederaufnahme der Winkelkalibrierung.
+
+**Vorheriger Stand: lokales Gyrofenster offline umgesetzt:** Das optionale PySide6-Werkzeug
 zeigt Fadenkreuz, relative räumliche Drehung, benannte Drehraten und Rohwerte.
 Pausierter Start, Zeitleiste, Wiedergabetempo, Zentrieren und ein separater
 Fadenkreuz-Regler (0,25–4×) sind vorhanden. Auswahl des experimentellen
@@ -14,8 +28,8 @@ Alle sechs vorhandenen Aufnahmen mit 40.486 Scans wurden jeweils geprüft und
 wiedergegeben, ohne ihre Dateien zu verändern. Die abgebrochene Aufnahme
 wird abgelehnt. Quaternionen berücksichtigen kombinierte Drehungen; keine
 Bias-Korrektur, keine Sensorfusion und keine neue Kalibrierung. Qt-Fenster
-gerätefrei gerendert und geprüft; kein Live-Transport, Treiberupdate oder
-neuer Hardwaretest. [Bedienung, Tests und Grenzen](GYRO_VIEWER.md).
+gerätefrei gerendert und geprüft; damals ohne Live-Transport, Treiberupdate
+oder neuen Hardwaretest. Live-Erweiterung siehe oben. [Bedienung und Grenzen](GYRO_VIEWER.md).
 
 **Beobachtete Gyroachsen als optionales Offline-Profil:**
 `g7pro-observed-20261018` ergänzt die bestehende Diagnose, ohne Rohwerte oder
@@ -27,7 +41,7 @@ Alle 40.486 gespeicherten Scans der sechs Richtungen wurden einzeln offline
 wiedergegeben: Kanal, Vorzeichen und unveränderte Rohdaten/Zeitstempel geprüft.
 330 Python-Tests und der C-Sensorvertrag bestanden. Kein neues Live-Ergebnis,
 keine Installation. Das darauf aufbauende Offline-Fenster ist inzwischen
-implementiert (oben); ein Live-Empfindlichkeitstest bleibt separat vorzubereiten.
+implementiert (oben); der Live-Empfindlichkeitstest ist vorbereitet, noch nicht ausgeführt.
 [Profil, Replay und E2E-Plan](EXPERIMENTAL_GYRO_TEST.md#beobachtetes-achsenprofil-v1-offline).
 
 **Sechs Richtungen qualitativ beobachtet:** Nach frischer Vorprüfung und

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
-"""One approved 108-second host-IIO transaction. Never launches a GUI.
+"""Approved host-IIO transaction; legacy capture or continuous live preview.
 
 The unprivileged frontend supplies GO/PING/STOP on a pipe. No device is opened
 before GO. EOF, lost heartbeat, signal or sensor error enters restoration;
@@ -21,6 +21,7 @@ import time
 
 from gamesir_iio_buffer import BufferTransaction, snapshot_iio
 from gamesir_imu_stream import CHANNELS, MAX_FILE_BYTES, SCAN_SIZE, ScanDecoder, live_chunks
+from gamesir_imu_diagnostic import PROFILES, OBSERVED_AXIS_PROFILE
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCES = tuple("tools/imu/" + name for name in (
@@ -28,6 +29,9 @@ SOURCES = tuple("tools/imu/" + name for name in (
     "gamesir_imu_stream.py", "gamesir_imu_diagnostic.py", "gyro_reference.py"))
 CAPTURE_SECONDS = 108
 MAX_GAP_NS = 250_000_000
+LIVE_KIND = 'gamesir_gyro_live_manifest'
+LIVE_SOURCES = SOURCES + tuple('tools/imu/'+name for name in (
+    'gamesir_gyro_live.py', 'gamesir_gyro_viewer.py', 'gyro_view_model.py'))
 
 
 def read_manifest(path):
@@ -44,10 +48,16 @@ def read_manifest(path):
     if len(data) > 1_048_576:
         raise ValueError("oversized manifest")
     value = json.loads(data)
-    if (value.get("schema_version") != 1 or value.get("kind") != "gamesir_yaw90left_manifest" or
-            set(value.get("source_sha256", {})) != set(SOURCES)):
-        raise ValueError("exact yaw90left manifest v1 and six fixed source hashes required")
-    for relative in SOURCES:
+    if not isinstance(value, dict):
+        raise ValueError('manifest object required')
+    sources = LIVE_SOURCES if value.get('kind') == LIVE_KIND else SOURCES
+    if (value.get("schema_version") != 1 or value.get("kind") not in ("gamesir_yaw90left_manifest", LIVE_KIND) or
+            set(value.get("source_sha256", {})) != set(sources)):
+        raise ValueError("exact approved manifest v1 and fixed source hashes required")
+    if value['kind'] == LIVE_KIND and (type(value.get('profile')) is not int or
+            value['profile'] not in PROFILES or value.get('axis_profile') != OBSERVED_AXIS_PROFILE):
+        raise ValueError('explicit experimental live profile required')
+    for relative in sources:
         with (ROOT / relative).open("rb") as source:
             actual = hashlib.file_digest(source, "sha256").hexdigest()
         if value["source_sha256"][relative] != actual:
@@ -83,6 +93,10 @@ def check_other_readers(snapshot, owned_fd=None):
         raise ValueError("another IIO reader exists; no configuration: " + ", ".join(conflicts))
 
 
+class FrontendStop(ValueError):
+    """Explicit normal stop for live preview; legacy capture remains cancelled."""
+
+
 class ParentChannel:
     """Small bounded line protocol; never waits on a partial input line."""
     def __init__(self, fd=0, output=None):
@@ -109,7 +123,7 @@ class ParentChannel:
                 elif line == b"GO" and awaiting_go and not self.go:
                     self.go = True
                 elif line == b"STOP":
-                    raise ValueError("frontend STOP; cancel and restore")
+                    raise FrontendStop("frontend STOP; cancel and restore")
                 else:
                     raise ValueError("unexpected frontend command; cancel and restore")
             if len(self.pending) > 128:
@@ -123,6 +137,33 @@ class ParentChannel:
             self.poll(awaiting_go=True, timeout=.25)
             if time.monotonic() >= deadline:
                 raise ValueError("local Go wait exceeded 15 minutes; no device access")
+
+
+class LiveParentChannel(ParentChannel):
+    """Versioned sample pipe with a write deadline; GUI stalls cannot block cleanup."""
+    def __init__(self, fd=0, output=None):
+        super().__init__(fd, output)
+        self.output_fd = self.output.fileno()
+        os.set_blocking(self.output_fd, False)
+
+    def emit(self, event, **data):
+        payload = (json.dumps({'protocol_version': 1, 'event': event, **data},
+                              allow_nan=False)+'\n').encode('utf-8')
+        if len(payload) > 4096:
+            raise ValueError('live event exceeds 4096 bytes')
+        deadline = time.monotonic()+.5
+        while payload:
+            try:
+                count = os.write(self.output_fd, payload)
+                if count <= 0:
+                    raise BrokenPipeError('live output closed')
+                payload = payload[count:]
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise ValueError('live frontend not draining sample pipe; restore')
+                if event != 'finished':
+                    self.poll()  # During capture, STOP/EOF/heartbeat take precedence.
+                select.select([], [self.output_fd], [], .01)
 
 
 class Evidence:
@@ -224,44 +265,64 @@ class Evidence:
 
 
 def execute(manifest, evidence, channel, *, transaction_factory=BufferTransaction, reader=live_chunks,
-            revalidate=lambda: None):
+            revalidate=lambda: None, stream=False):
     """Dependencies are Python objects for offline tests, never CLI switches."""
     failure, notes, cleanup_errors = None, [], []
+    user_stopped = False
+    duration = None if stream else CAPTURE_SECONDS
     transaction = chunks = None
     restored, count, byte_count, started_ns = True, 0, 0, None
     report = {"schema_version": 1, "session": "yaw90left", "capture_seconds": CAPTURE_SECONDS,
               "max_gap_ns": MAX_GAP_NS, "no_data_seconds": 2,
               "calibration_verified": False, "automatic_next_repetition": False,
               "radio_or_sensor_loss_known": False, "timebase": "host_monotonic_receive"}
+    if stream:
+        report.update(session='live_view', live_protocol_version=1,
+                      capture_seconds=None, raw_recording=False,
+                      initial_display_profile=manifest['profile'], axis_profile=manifest['axis_profile'])
     try:
-        channel.emit("ready", capture_seconds=CAPTURE_SECONDS, device_opened=False, buffer_modified=False)
+        channel.emit("ready", capture_seconds=duration, device_opened=False, buffer_modified=False)
         channel.wait_go()
-        revalidate()  # Source hashes and exact instance again AFTER the 30s preparation.
+        revalidate()  # Source hashes and exact instance again AFTER local Go.
         channel.poll()
         transaction = transaction_factory(manifest["snapshot"])
+        if stream:
+            started_ns = time.monotonic_ns()  # Before enabling: first scan can predate setup return.
         metadata, descriptor = transaction.setup()
         decoder = ScanDecoder(metadata["instance_id"], MAX_GAP_NS)
-        binary = evidence.open("scans.bin", binary=True)
-        observations = evidence.open("observations.jsonl")
+        if not stream:
+            binary = evidence.open("scans.bin", binary=True)
+            observations = evidence.open("observations.jsonl")
         evidence.json("layout.json", {"channels": CHANNELS, "scan_bytes": SCAN_SIZE,
                       "counter_offset": 16, "host_timestamp_offset": 24, "metadata": metadata,
                       "timestamp_is_device_time": False})
-        started_ns = time.monotonic_ns()
+        if not stream:
+            started_ns = time.monotonic_ns()
         channel.emit("capture_started", monotonic_ns=started_ns,
-                     utc=dt.datetime.now(dt.timezone.utc).isoformat())
-        chunks = reader(metadata, manifest["snapshot"]["device_node"], CAPTURE_SECONDS, 2,
+                     utc=dt.datetime.now(dt.timezone.utc).isoformat(),
+                     **({'instance_id': metadata['instance_id']} if stream else {}))
+        chunks = reader(metadata, manifest["snapshot"]["device_node"], duration, 2,
                         descriptor=descriptor, check_alive=channel.poll)
         for data, received in chunks:
             byte_count += len(data)
-            if byte_count > MAX_FILE_BYTES:
+            if not stream and byte_count > MAX_FILE_BYTES:
                 raise ValueError("capture exceeded bounded file size")
-            binary.write(data)
+            if not stream:
+                binary.write(data)
             for row in decoder.feed(data, received):
-                observations.write(json.dumps(row, allow_nan=False) + "\n")
-                count += 1
+                if not stream:
+                    observations.write(json.dumps(row, allow_nan=False) + "\n")
+                if stream:
+                    channel.emit('sample', row=row)
+                count += 1  # Only fully forwarded live samples belong to GUI count.
         decoder.finish()
+        if stream:
+            raise ValueError('continuous preview ended without explicit STOP')
     except (Exception, KeyboardInterrupt) as error:
-        failure = f"{type(error).__name__}: {error}"
+        if stream and isinstance(error, FrontendStop):
+            user_stopped = True
+        else:
+            failure = f"{type(error).__name__}: {error}"
         notes = list(getattr(error, "__notes__", ()))
     finally:
         if chunks is not None:
@@ -295,6 +356,8 @@ def execute(manifest, evidence, channel, *, transaction_factory=BufferTransactio
                        "observations": count, "original_bytes": byte_count,
                        "capture_started_monotonic_ns": started_ns,
                        "buffer_configuration_modified": bool(result["writes"])})
+        if stream:
+            report.update(stopped_by_user=user_stopped, received_bytes=byte_count, original_bytes=0)
         try:
             evidence.json("report.json", report)
         except Exception as error:
@@ -343,7 +406,9 @@ def main(argv=None):
         for sig in (signal.SIGINT, signal.SIGTERM):
             signal.signal(sig, interrupted)
         evidence = Evidence(args.output, uid, gid, account.pw_dir)
-        return execute(manifest, evidence, ParentChannel(), revalidate=revalidate,
+        streaming = manifest['kind'] == LIVE_KIND
+        return execute(manifest, evidence, LiveParentChannel() if streaming else ParentChannel(),
+                       revalidate=revalidate, stream=streaming,
                        transaction_factory=lambda snap: BufferTransaction(snap,
                            after_reserve=lambda fd: check_other_readers(snap, fd)))
     except (Exception, KeyboardInterrupt) as error:

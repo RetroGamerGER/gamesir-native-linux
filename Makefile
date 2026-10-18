@@ -94,6 +94,7 @@ test-imu-diagnostic:
 	$(PYTHON) -B tests/test_imu_diagnostic.py
 	$(PYTHON) -B tests/test_gyro_axis_profile.py
 	$(PYTHON) -B tests/test_gyro_view_model.py
+	$(PYTHON) -B tests/test_gyro_live.py
 
 # Optional local GUI dependency: PySide6. Software/offscreen, no devices.
 .PHONY: test-gyro-viewer

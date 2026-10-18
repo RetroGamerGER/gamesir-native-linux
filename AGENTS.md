@@ -86,12 +86,21 @@ runtime verification flags. 0.07 dps/raw is still only a test hypothesis.
 Never reuse the gyro mapping for acceleration without separate pose evidence.
 Offline replay-buffer verifies saved worker checksums, restoration and binary/
 JSON agreement; it must not open live devices or merge capture instances.
-The optional PySide6 window in tools/imu/gamesir_gyro_viewer.py now replays
-verified saved captures only. Read docs/GYRO_VIEWER.md: explicit factor choice,
-paused start, quaternion integration over recorded timestamps, display-only
-crosshair gain and centering; no automatic bias correction or acceleration
-mapping. Do not replace file replay with live discovery or IIO access. The
-bounded live transport is still unimplemented and requires separate approval.
+The optional PySide6 window in tools/imu/gamesir_gyro_viewer.py retains
+verified file-only replay and now offers a separate --live frontend, tested
+offline only. Read docs/GYRO_VIEWER.md before any live use. Window construction
+does not discover/open devices. Preparation, password/metadata checks, then
+local Go are explicit; live execution still requires separate approval.
+The user requested no fixed preview duration: keep only current samples in
+memory, save summary evidence only, and continue until STOP/window close or
+a safety fault. Preserve bounded heartbeat/stall/setup/cleanup deadlines;
+never silently adopt another instance or retry after disconnect/suspend.
+Reuse the existing single-FD host-IIO transaction and verify restoration
+independently before claiming success. Do not install/rebind/start a driver.
+The legacy 108-second capture remains bounded and retains its raw evidence.
+Factor changes reset only displayed orientation, never transport identity/
+counter checks. Quaternion integration uses host sample timestamps; crosshair
+gain/centering are display-only. No bias correction or acceleration mapping.
 Display gain, a plausible animation and offline tests do not prove calibration.
 No universal trigger-game support or general stability guarantee.
 

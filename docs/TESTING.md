@@ -95,10 +95,23 @@ mit Softwaredarstellung aus. Es prüft die tatsächlichen Bedienelemente,
 Quellen-/Profilwechsel, Timerende, Schließen und überlappungsfreie Darstellung.
 Kein Displayserver, keine Geräte, kein sudo und keine Paketinstallation nötig.
 Die GUI-Abhängigkeit gehört nicht zum Kernel-/Manager-Paket oder zur
-Pflicht-Testsuite. Die 15 Modelltests und 8 GUI-Tests wurden zusätzlich an
+Pflicht-Testsuite. Die ursprünglichen 15 Modelltests und 8 GUI-Tests wurden zusätzlich an
 sechs vorhandenen privaten Aufnahmen mit zusammen 40.486 Scans ergänzt;
 Originalprüfsummen unverändert, fehlerhafte Aufnahme abgelehnt.
 [Details und Grenzen](GYRO_VIEWER.md).
+
+Die Live-Erweiterung ergänzt `test_gyro_live.py` im Diagnose-Testziel und
+sechs weitere Qt-Tests: echte anonyme Pipes, GO/Samples/STOP, Fake-IIO,
+erstes Go, Profilwechsel ohne Verlust der Transportprüfung, kein festes
+Laufzeit-/Samplebudget, begrenzter Speicher, EOF/Heartbeat/Datenlücken,
+blockierte Ausgabe, normale/fehlgeschlagene Rückstellung und unabhängiger
+Nachcheck. Die Fensterprüfung umfasst Stopp, Schließen mit weiter sichtbarer
+Rückstellung, Signal-Abbruch und Darstellung. Alle Gerätezugriffe/Startpfade
+sind ersetzt; keine Live-Entdeckung oder Passwortabfrage im Test.
+Alle 40.486 gespeicherten Scans wurden getrennt durch das neue Sampleprotokoll
+geschickt; jede resultierende Orientierung entspricht exakt dem Offline-Modell.
+Eine gerätefreie Simulation prüft 900×880 und 1080×900 Pixel. Keine Aussage
+über echte Live-Latenz, Langzeitstabilität oder physikalische Kalibrierung.
 
 ## Kohärenter IIO-Strom und Winkelreferenz
 

@@ -133,6 +133,16 @@ erhalten. Erst nach neuem Auftrag, externer Winkelreferenz und frischer
 Geräte-/Befehlsfreigabe weiterarbeiten. Keine automatische Wiederaufnahme;
 der produktive Treiber und die bisherige SDL-Grenze bleiben bestehen.
 
+**Eigenes Gyrofenster:** Offline-Replay ist vorhanden. Die zusätzliche
+Live-Vorschau ist jetzt offline implementiert und geprüft: vorhandener
+IIO-Worker, lokales Go, fünf explizite Testprofile, Fadenkreuz-Gain und
+Zentrierung. Auf Nutzerwunsch kein festes Laufzeitlimit; STOP/Fenster schließen
+oder ein Sicherheitsfehler beendet die Sitzung mit Rückstellungsprüfung.
+Nächster Schritt ist ausschließlich die separat freigegebene Live-Abnahme
+von Richtung, Empfindlichkeit und Drift. Keine neue Installation erforderlich;
+kein Nachweis physikalischer Kalibrierung oder SDL-/Eden-Integration.
+[Bedienung und Freigabeplan](GYRO_VIEWER.md#live-test-zur-freigabe-vorbereitet).
+
 Davon getrennt ist jetzt der [qualitative Achsentest](GYRO_AXIS_TEST.md)
 offline vorbereitet: zunächst nur bequeme Linksdrehungen ohne Winkelvorgabe,
 jede Wiederholung nach eigenem Go. Rohkanal und Vorzeichen untersuchen,

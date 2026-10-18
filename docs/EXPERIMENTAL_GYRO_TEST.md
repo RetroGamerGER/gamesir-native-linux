@@ -112,10 +112,10 @@ Empfohlen ist zunächst ein **lokales Diagnosefenster** mit diesem Datenweg:
 Das ist ein E2E-Test bis zu dieser eigenen Anwendung. Eine erfolgreiche
 Anzeige wäre kein Nachweis, dass Steam, SDL oder Eden bereits Gyro erkennen.
 Das **Offline-Fenster ist inzwischen implementiert und mit den gespeicherten
-Aufnahmen geprüft**: [Bedienung und Abnahme](GYRO_VIEWER.md). Es liest nur
-Dateien. Sein Live-Transport ist weiterhin **nicht implementiert**; die
-nachstehenden Live-Schritte sind ein Entwicklungs-/Freigabeplan.
-Die bestehenden begrenzten Worker-/Rückstellungsregeln bleiben die Grundlage,
+Aufnahmen geprüft**: [Bedienung und Abnahme](GYRO_VIEWER.md). Sein getrennt
+aktivierbarer Live-Transport ist inzwischen ebenfalls **offline implementiert**.
+Die nachstehenden Live-Schritte benötigen weiterhin eine eigene Freigabe.
+Die bestehenden Worker-/Rückstellungsregeln bleiben die Grundlage,
 kein zweiter paralleler IIO-Leser, keine neue USB-Initialisierung.
 
 Vorgesehene Bedienung:
@@ -125,8 +125,10 @@ Vorgesehene Bedienung:
    zeigen Richtung und Geschwindigkeit. Keine mathematisch falsche Deutung
    von drei unabhängigen Winkelintegralen als allgemeine 3D-Orientierung;
    für freie Bewegung eine getestete Orientierungsintegration verwenden.
-2. Nach eigener Freigabe ein begrenzter Live-Lauf mit frischer Prüfung,
-   lokalem Go und 30 Sekunden Vorbereitung. Das Diagramm/Fadenkreuz reagiert
+2. Nach eigener Freigabe ein Live-Lauf mit frischer Prüfung und lokalem Go.
+   Die aktuelle Nutzerentscheidung ersetzt das frühere feste Zeitfenster:
+   beliebig lange Vorschau bis Stopp/Fenster schließen oder Sicherheitsfehler.
+   Kein Countdown und keine Bewegung auf Kommando. Das Diagramm/Fadenkreuz reagiert
    auf bequeme Links-/Rechts- und Auf-/Abbewegungen; seitliches Kippen wird
    getrennt angezeigt. Kein genauer Winkel und keine schnelle Reaktion nötig.
 3. Ein **Darstellungsfaktor**, beispielsweise 0,25×, 0,5×, 1×, 2×, 4×,
@@ -144,9 +146,13 @@ Vorgesehene Bedienung:
    Wiederverbindungen; außerhalb der Aufnahmen normales A-Drücken gegen
    Inaktivität vorsehen, keinen unbekannten Keepalive senden.
 
-Die GUI läuft als normaler Desktopnutzer; nur der bereits begrenzte
+Die GUI läuft als normaler Desktopnutzer; nur der bestehende
 Puffer-Worker erhält bei Bedarf freigegebene Rechte und liefert validierte
-Samples über einen noch zu implementierenden lokalen Transport. Weder
+Samples über eine versionierte lokale Pipe mit GO/PING/STOP. Im Live-Modus
+bleibt nur der aktuelle Sample-/Orientierungszustand im Speicher; kein
+unbegrenzt wachsender Rohmitschnitt. Der ältere 108-s-Aufnahmemodus bleibt
+unverändert begrenzt. Heartbeat, Datenfrische und Rückstellung werden auch
+ohne feste Live-Dauer überwacht. Weder
 Root-GUI noch systemweite Maus-/Tastaturinjektion sind dafür erforderlich.
 
 **Was dieser Test entscheidet:** Die Steuerung kann plausibel reagieren und

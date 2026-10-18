@@ -74,6 +74,63 @@ class Frame:
     orientation: tuple
 
 
+class Integrator:
+    """Same incremental conversion for file replay and validated live samples."""
+    def __init__(self, profile, axis_profile, *, max_samples=MAX_SAMPLES):
+        if type(profile) is not int or profile not in PROFILES:
+            raise ValueError('explicit experimental gain profile required')
+        axis_profile_info(axis_profile)
+        self.profile, self.axis_profile = profile, axis_profile
+        self.max_samples = max_samples
+        self.previous_row = self.frame = None
+        self.first_stamp = None
+        self.count = 0
+
+    def feed(self, row):
+        validate_samples(([self.previous_row] if self.previous_row else [])+[row],
+                         250_000_000, allow_single=True)
+        if self.max_samples is not None and self.count >= self.max_samples:
+            raise ValueError('sample budget exhausted')
+        values = convert(row['gyro_raw'], row['accel_raw'], self.profile,
+                         axis_profile=self.axis_profile)['experimental_axes']
+        dps = tuple(values['body_gyro_dps_xyz'])
+        radians = tuple(values['body_gyro_rad_s_xyz'])
+        q = IDENTITY
+        if self.frame is None:
+            self.first_stamp = row['timestamp_ns']
+        else:
+            delta = row['timestamp_ns']-self.frame.timestamp_ns
+            increment = rotation(tuple((a+b)*.5*delta/1e9
+                                       for a,b in zip(self.frame.body_rad_s, radians)))
+            q = multiply(self.frame.orientation, increment)
+            q = tuple(x/math.hypot(*q) for x in q)
+        self.frame = Frame((row['timestamp_ns']-self.first_stamp)/1e9, row['timestamp_ns'],
+                           row['sample_number'], tuple(row['gyro_raw']), tuple(row['accel_raw']),
+                           dps, radians, q)
+        self.previous_row = {**row, 'gyro_raw': list(row['gyro_raw']), 'accel_raw': list(row['accel_raw'])}
+        self.count += 1
+        return self.frame
+
+
+class LivePose:
+    def __init__(self, profile, axis_profile):
+        self.integrator = Integrator(profile, axis_profile, max_samples=None)
+        self.gain = 1.
+        self.reference = IDENTITY
+
+    @property
+    def frame(self):
+        return self.integrator.frame
+
+    @property
+    def orientation(self):
+        return relative(self.frame.orientation, self.reference) if self.frame else IDENTITY
+
+    def center(self):
+        if self.frame:
+            self.reference = self.frame.orientation
+
+
 @dataclass(frozen=True)
 class Clip:
     frames: tuple
@@ -96,29 +153,11 @@ class Clip:
         if len(samples) > MAX_SAMPLES:
             raise ValueError('replay limited to 100000 samples per capture')
         validate_samples(samples, 250_000_000)
-        frames, q, previous = [], IDENTITY, None
-        first_stamp = samples[0]['timestamp_ns']
-        intervals = []
+        integrator = Integrator(profile, axis_profile)
+        frames = []
+        intervals = [b['timestamp_ns']-a['timestamp_ns'] for a,b in zip(samples,samples[1:])]
         for s in samples:
-            values = convert(s['gyro_raw'], s['accel_raw'], profile,
-                             axis_profile=axis_profile)['experimental_axes']
-            dps = tuple(values['body_gyro_dps_xyz'])
-            radians = tuple(values['body_gyro_rad_s_xyz'])
-            if previous is not None:
-                delta = s['timestamp_ns'] - previous.timestamp_ns
-                intervals.append(delta)
-                # Midpoint angular velocity in the body frame; right multiply.
-                # Receive timestamps approximate sample time. No bias removal,
-                # acceleration fusion or claim of calibrated/absolute attitude.
-                increment = rotation(tuple((a+b)*.5*delta/1e9
-                                           for a,b in zip(previous.body_rad_s, radians)))
-                q = multiply(q, increment)
-                norm = math.hypot(*q)
-                q = tuple(x/norm for x in q)
-            previous = Frame((s['timestamp_ns']-first_stamp)/1e9, s['timestamp_ns'],
-                             s['sample_number'], tuple(s['gyro_raw']), tuple(s['accel_raw']),
-                             dps, radians, q)
-            frames.append(previous)
+            frames.append(integrator.feed(s))
         median = statistics.median(intervals)
         return cls(tuple(frames), tuple(f.elapsed for f in frames), profile, axis_profile,
                    median/1e6, max(intervals)/1e6, sum(x > 2*median for x in intervals))

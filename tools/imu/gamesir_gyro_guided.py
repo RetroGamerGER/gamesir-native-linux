@@ -288,22 +288,25 @@ class WorkerLink:
             while b"\n" in self.buffer:
                 raw, _, self.buffer = self.buffer.partition(b"\n")
                 event = json.loads(raw)
-                name = event.get("event") if isinstance(event, dict) else None
-                if name not in ("ready", "capture_started", "finished") or self.finished is not None:
-                    raise ValueError("unexpected worker protocol event")
-                expected = ["ready", "capture_started"]
-                if name != "finished" and (len(self.event_order) >= 2 or name != expected[len(self.event_order)]):
-                    raise ValueError("duplicate or out-of-order worker event")
-                if name == "capture_started":
-                    stamp = event.get("monotonic_ns")
-                    if type(stamp) is not int or stamp <= 0:
-                        raise ValueError("recorded capture clock required")
-                if name == "finished":
-                    if type(event.get("passed")) is not bool or type(event.get("restored")) is not bool:
-                        raise ValueError("explicit capture and rollback result required")
-                    self.finished = event
-                self.event_order.append(name)
-                self.pending.append(event)
+                self.accept_event(event)
+
+    def accept_event(self, event):
+        name = event.get("event") if isinstance(event, dict) else None
+        if name not in ("ready", "capture_started", "finished") or self.finished is not None:
+            raise ValueError("unexpected worker protocol event")
+        expected = ["ready", "capture_started"]
+        if name != "finished" and (len(self.event_order) >= 2 or name != expected[len(self.event_order)]):
+            raise ValueError("duplicate or out-of-order worker event")
+        if name == "capture_started":
+            stamp = event.get("monotonic_ns")
+            if type(stamp) is not int or stamp <= 0:
+                raise ValueError("recorded capture clock required")
+        if name == "finished":
+            if type(event.get("passed")) is not bool or type(event.get("restored")) is not bool:
+                raise ValueError("explicit capture and rollback result required")
+            self.finished = event
+        self.event_order.append(name)
+        self.pending.append(event)
 
     def pulse(self, *, heartbeat=True):
         self._read()

@@ -152,6 +152,8 @@ def live_chunks(metadata, node, duration, no_data_seconds, *, descriptor=None, c
     second IIO FD would fail EBUSY. The caller retains and closes its own FD.
     ``check_alive`` lets a bounded collector abort on frontend cancellation.
     """
+    if duration is None and (descriptor is None or check_alive is None):
+        raise ValueError('continuous preview requires owned transaction and parent watchdog')
     node = Path(node)
     info = node.lstat()
     if not stat.S_ISCHR(info.st_mode) or (os.major(info.st_rdev), os.minor(info.st_rdev)) != (metadata["major"], metadata["minor"]):
@@ -170,7 +172,7 @@ def live_chunks(metadata, node, duration, no_data_seconds, *, descriptor=None, c
             raise ValueError("IIO node changed")
         start = last_data = time.monotonic()
         offset = boottime_offset()
-        while time.monotonic() - start < duration:
+        while duration is None or time.monotonic() - start < duration:
             if check_alive is not None:
                 check_alive()
             if abs(boottime_offset() - offset) > 50_000_000:
@@ -178,7 +180,7 @@ def live_chunks(metadata, node, duration, no_data_seconds, *, descriptor=None, c
             current = inspect_iio(metadata["directory"])
             if current["instance_id"] != metadata["instance_id"] or current["buffer_push_errors"] != metadata["buffer_push_errors"]:
                 raise ValueError("IIO instance changed or producer buffer push failed")
-            remaining = duration - (time.monotonic() - start)
+            remaining = .25 if duration is None else duration - (time.monotonic() - start)
             if remaining <= 0:
                 break
             if not select.select([fd], [], [], min(.25, remaining))[0]:
@@ -187,7 +189,7 @@ def live_chunks(metadata, node, duration, no_data_seconds, *, descriptor=None, c
                 continue
             if check_alive is not None:
                 check_alive()
-            if time.monotonic() - start >= duration:
+            if duration is not None and time.monotonic() - start >= duration:
                 break
             try:
                 data = os.read(fd, 4096)

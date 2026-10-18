@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0-only
-"""Local experimental gyro window: verified saved captures only, never live IIO."""
+"""Experimental gyro window: offline replay, or separately approved live preview."""
 import argparse
+import datetime as dt
 import math
+import os
 from pathlib import Path
+import signal
 import sys
 import time
 
@@ -64,7 +67,7 @@ class MotionView(QWidget):
         playback = self.owner.playback
         if playback is None:
             p.drawText(left.adjusted(20, 90, -20, -20), Qt.AlignmentFlag.AlignBottom | Qt.TextFlag.TextWordWrap,
-                       'Aufnahme auswählen und Testprofil bestätigen.')
+                       self.owner.empty_hint)
             p.end()
             return
         q = playback.orientation
@@ -114,6 +117,7 @@ class MotionView(QWidget):
 class Viewer(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.empty_hint = 'Aufnahme auswählen und Testprofil bestätigen.'
         self.playback = None
         self.capture_path = None
         self.metadata = None
@@ -176,7 +180,8 @@ class Viewer(QMainWindow):
         for b in (self.play_button, self.restart_button, self.center_button):
             controls.addWidget(b)
         controls.addStretch()
-        controls.addWidget(QLabel('Wiedergabe'))
+        self.speed_label = QLabel('Wiedergabe')
+        controls.addWidget(self.speed_label)
         self.speed_box = QComboBox()
         for speed in (.5, 1., 2., 4.):
             self.speed_box.addItem(f'{speed:g}×', speed)
@@ -200,6 +205,7 @@ class Viewer(QMainWindow):
         footer.setWordWrap(True)
         footer.setStyleSheet(f'color: {MUTED}; font-size: 11px;')
         layout.addWidget(footer)
+        self.footer = footer
         self.setCentralWidget(main)
         self.setStyleSheet(f'QMainWindow, QWidget {{background: {BG}; color: {INK}; font-size: 13px;}}'
                           'QPushButton, QComboBox {background: #273b4e; padding: 8px; border: 1px solid #405770; border-radius: 5px;}'
@@ -320,21 +326,119 @@ class Viewer(QMainWindow):
             self.timeline.blockSignals(True)
             self.timeline.setValue(round(b.position/b.clip.duration*10000))
             self.timeline.blockSignals(False)
-            x, y, z = f.body_dps
-            rx, ry, rz = f.body_rad_s
-            self.values.setText(f'Vorne hoch: {x:+8.2f} °/s   Links drehen: {z:+8.2f} °/s   Links kippen: {-y:+8.2f} °/s\n'
-                                f'Gehäuse X/Y/Z: {rx:+.4f} / {ry:+.4f} / {rz:+.4f} rad/s (Testwerte)\n'
-                                f'Roh G0/G1/G2: {f.gyro_raw}   Roh A0/A1/A2: {f.accel_raw}')
+            self.show_values(f)
         else:
             self.values.setText('Keine Sensordaten geladen.')
             self.position_label.setText('Pausiert · keine Quelle')
             self.play_button.setText('Abspielen')
         self.view.update()
 
+    def show_values(self, f):
+        x, y, z = f.body_dps
+        rx, ry, rz = f.body_rad_s
+        self.values.setText(f'Vorne hoch: {x:+8.2f} °/s   Links drehen: {z:+8.2f} °/s   Links kippen: {-y:+8.2f} °/s\n'
+                            f'Gehäuse X/Y/Z: {rx:+.4f} / {ry:+.4f} / {rz:+.4f} rad/s (Testwerte)\n'
+                            f'Roh G0/G1/G2: {f.gyro_raw}   Roh A0/A1/A2: {f.accel_raw}')
+
     def closeEvent(self, event):
         self.timer.stop()
         self.pause()
         event.accept()
+
+
+class LiveViewer(Viewer):
+    """Desktop-user GUI. Device ownership and temporary buffer writes stay in worker."""
+    def __init__(self, session):
+        self.session = session
+        self.closing_after_stop = False
+        self.stop_requested = False
+        super().__init__()
+        self.empty_hint = 'Verbindung vorbereiten und danach „Live starten“ wählen.'
+        self.setWindowTitle('GameSir G7 Pro · Gyro-Labor · Live-Test')
+        for widget in (self.timeline,self.speed_box,self.speed_label):
+            widget.hide()
+        self.open_button.setText('Verbindung vorbereiten')
+        self.play_button.setText('Live starten')
+        self.restart_button.setText('Stopp')
+        self.profile_box.setCurrentIndex(self.profile_box.findData(session.profile))
+        self.profile_box.model().item(0).setEnabled(False)
+        self.footer.setText('Kein festes Zeitlimit · Ende mit Stopp oder Fenster schließen. Kein fortlaufender Rohmitschnitt.\n'
+                            'Sensorfaktor und Winkel bleiben experimentell. Zentrieren/Faktorwechsel ändern nur die Ansicht.')
+        self.source.setTextFormat(Qt.TextFormat.PlainText)
+        self.refresh()
+
+    def choose_capture(self):
+        try:self.session.start()
+        except (OSError,ValueError) as error:self.session.stop(error)
+        self.refresh()
+
+    def toggle_play(self):
+        try:self.session.go()
+        except (OSError,ValueError) as error:self.session.stop(error)
+        self.refresh()
+
+    def restart(self):
+        self.session.stop()
+        self.refresh()
+
+    def profile_changed(self):
+        profile=self.profile_box.currentData()
+        if profile is not None:
+            self.session.select_profile(profile)
+            self.warning.setText(f'EXPERIMENTELL · {float(PROFILES[profile]):g} °/s pro Rohwert — UNBESTÄTIGT · Keine Kalibrierung')
+            self.refresh()
+
+    def gain_changed(self,value):
+        self.gain_label.setText(f'Fadenkreuz-Empfindlichkeit  {value/100:.2f}×')
+        if self.session.events:
+            self.session.events.pose.gain=value/100
+        self.view.update()
+
+    def tick(self):
+        if self.stop_requested:
+            self.stop_requested=False
+            self.restart()
+        if self.session.state not in ('idle',*self.session.TERMINAL):
+            self.session.poll()
+            self.refresh()
+            if self.closing_after_stop and self.session.state=='done':
+                self.close()
+
+    def refresh(self):
+        s=self.session
+        self.playback=s.events.pose if s.events and s.events.pose.frame else None
+        labels={'idle':'BEREIT ZUR VORBEREITUNG','waiting':'WARTE AUF CONTROLLER',
+                'authorizing':'PASSWORT UND VORPRÜFUNG','ready':'BEREIT FÜR DEIN GO',
+                'starting':'STARTET','stopping':'STOPP UND RÜCKSTELLUNG',
+                'done':'BEENDET','error':'ANGEHALTEN – FEHLER PRÜFEN'}
+        self.mode.setText('LIVE-VORSCHAU · OHNE FESTES ZEITLIMIT' if s.state=='running'
+                          else 'LIVE-TEST · '+labels.get(s.state,s.state))
+        self.source.setText(s.message)
+        self.open_button.setEnabled(s.state=='idle')
+        self.play_button.setEnabled(s.state=='ready')
+        self.restart_button.setEnabled(s.state not in ('idle','stopping',*s.TERMINAL))
+        self.profile_box.setEnabled(s.state in ('idle','ready','running'))
+        self.center_button.setEnabled(self.playback is not None)
+        self.gain_slider.setEnabled(self.playback is not None)
+        if self.playback:
+            frame=self.playback.frame
+            self.playback.gain=self.gain_slider.value()/100
+            self.show_values(frame)
+            self.position_label.setText(f'{s.events.count:,} Werte empfangen · {frame.elapsed:.1f} s seit letztem Profilwechsel · Scan {frame.number}')
+        else:
+            self.values.setText('Warte auf frische Sensordaten.' if s.state=='running' else 'Kein aktiver Sensorstrom.')
+            self.position_label.setText('Kein Vorspulen. Nach „Live starten“ bewegen, zurückdrehen oder ruhig halten – ohne Winkelvorgabe.')
+        self.view.update()
+
+    def closeEvent(self,event):
+        if self.session.state not in ('idle',*self.session.TERMINAL):
+            self.closing_after_stop=True
+            self.session.stop()
+            self.refresh()
+            event.ignore()  # Stay responsive and show the verified rollback result.
+        else:
+            self.timer.stop()
+            event.accept()
 
 
 def parser():
@@ -343,16 +447,29 @@ def parser():
     p.add_argument('--experimental', action='store_true')
     p.add_argument('--profile', type=int, choices=tuple(PROFILES))
     p.add_argument('--axis-profile', choices=[OBSERVED_AXIS_PROFILE])
+    p.add_argument('--live',action='store_true',help='separately approved live preview; no access before GUI preparation')
+    p.add_argument('--output',type=Path,help='new private live summary directory; no continuous raw recording')
     return p
 
 
 def main(argv=None):
     p = parser()
     args = p.parse_args(argv)
-    if args.capture_dir and not (args.experimental and args.profile and args.axis_profile):
-        p.error('capture replay requires --experimental, --profile and --axis-profile')
+    if (args.capture_dir or args.live) and not (args.experimental and args.profile and args.axis_profile):
+        p.error('replay/live preview requires --experimental, --profile and --axis-profile')
+    if args.live and args.capture_dir or args.output and not args.live:
+        p.error('select live preview OR saved capture; --output belongs to live only')
     app = QApplication([sys.argv[0]])
-    window = Viewer()
+    if args.live:
+        from gamesir_gyro_live import LiveSession
+        output=args.output or Path.home()/('GameSir-Gyro-Live-'+dt.datetime.now(dt.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ'))
+        window=LiveViewer(LiveSession(output,args.profile))
+        # Python signal delivery runs on the GUI thread; defer work to its timer.
+        for number in (signal.SIGINT,signal.SIGTERM):
+            signal.signal(number,lambda *_:setattr(window,'stop_requested',True))
+        print(f'LIVE_VIEWER_PID={os.getpid()}',flush=True)
+    else:
+        window = Viewer()
     if args.capture_dir:
         try:
             window.load_capture(args.capture_dir, args.profile)
