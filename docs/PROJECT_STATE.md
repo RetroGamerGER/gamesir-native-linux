@@ -27,6 +27,17 @@ Input-/Output-/Lifecycle-Abnahme. Kein Steam-Start, keine Konfigurations-,
 Treiber- oder Hardwareänderung; kein Netz und kein Push.
 [Befunde, Grenzen und gemeinsame Abnahme](STEAM_GYRO_FEASIBILITY.md).
 
+**Erster manueller Steam-Gyro-Check danach:** Die Gyro-Seite ist vorhanden,
+zeigt laut Nutzer jedoch auch bei Bewegung null; der Kalibrierdialog bleibt
+nach dem Countdown stehen. Abbrechen und Desktop funktionieren. Eden hat
+nach dem Reconnect weiterhin Gyro, vom Nutzer erneut bestätigt. Lesend sind
+gepaarte native Gamepad-/Sensorknoten nachgewiesen; Steam hat zeitweise beide
+geöffnet. Seine tatsächlich geladene 32-Bit-SDL besteht ebenfalls alle sieben
+gerätefreien Sensorfälle. Eine fehlende Beschleunigungsquelle für Steams
+Kalibrierung/Filter ist eine Hypothese, keine bewiesene Ursache. Der konkrete
+Steam-Verarbeitungspfad bleibt offen; keine Treiber-/Steam-Änderung, kein
+Neustart und keine neue Hardwareaufzeichnung durch diese Diagnose.
+
 **SDL-/Eden-Erstabnahme erfolgreich:** Paket `0.1.0.alpha3-8` ist lokal
 installiert und der neue Build unter gesonderter Freigabe mit
 `experimental_gyro=1` geladen. Eden erkennt Bewegung über SDL; der Nutzer

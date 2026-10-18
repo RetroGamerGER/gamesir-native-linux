@@ -65,6 +65,16 @@ and one USB owner; do not replace libraries, fabricate acceleration, change
 Steam settings or globally preload a bridge. Shared input/output and lifecycle
 acceptance is required before claiming integration. Preserve Eden acceptance;
 no new hardware, installation, calibration or push is authorized.
+The user subsequently started Steam manually: its gyro UI exists but stays
+at zero during reported motion, and calibration waits after its countdown.
+Cancel and the desktop work; the user confirms Eden gyro still works after
+reconnect. Read-only snapshots found paired native nodes and Steam opening
+the motion node; its actually loaded 32-bit SDL also passes seven synthetic
+cases. Steam's accel/gyro calibration stages suggest an acceleration-related
+dependency, not a proved root cause. Do not equate UI presence, an open FD or
+SDL probe success with Steam motion acceptance. Do not fabricate acceleration
+or change the functioning driver/Eden path. See the follow-up in
+docs/STEAM_GYRO_FEASIBILITY.md; next live tracing/settings changes need approval.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

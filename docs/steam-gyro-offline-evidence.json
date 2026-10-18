@@ -86,6 +86,50 @@
       "simultaneous_a_and_paddles_combinations": 32,
       "gyro_event_and_timestamp_verified": true,
       "fixture_sensor_timestamp_ns": 16000000
+    },
+    {
+      "path": "ubuntu12_32/libSDL3.so.0",
+      "bytes": 3911164,
+      "sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+      "elf_class": 32,
+      "api_version": 3005000,
+      "revision": "SDL-release-3.4.0-1576-gab5541ec5",
+      "scenarios": [
+        {
+          "name": "iio-only",
+          "passed": true
+        },
+        {
+          "name": "matching-uniq",
+          "passed": true
+        },
+        {
+          "name": "wrong-uniq",
+          "passed": true
+        },
+        {
+          "name": "missing-rz",
+          "passed": true
+        },
+        {
+          "name": "zero-resolution",
+          "passed": true
+        },
+        {
+          "name": "synthetic-converted",
+          "passed": true
+        },
+        {
+          "name": "observed-gyro",
+          "passed": true
+        }
+      ],
+      "gyro_only": true,
+      "simultaneous_a_and_paddles_combinations": 32,
+      "gyro_event_and_timestamp_verified": true,
+      "fixture_sensor_timestamp_ns": 16000000,
+      "method": "Existing fixture/probe compiled with clang -m32; private auditor preload-path adjustment; same device-free sandbox, not new runner ABI support",
+      "observed_in_running_steam_maps": true
     }
   ],
   "client_static": [
@@ -119,7 +163,9 @@
     "inspection": "static only; not evaluated",
     "gyro_capability_bit": 11,
     "capability_name_character_offset": 2076408,
-    "gyro_source_gate_character_offset": 10262916
+    "gyro_source_gate_character_offset": 10262916,
+    "calibration_stages_character_offset": 9962728,
+    "positive_accel_and_gyro_tolerance_save_condition_character_offset": 9963677
   },
   "cached_sources": [
     {
@@ -155,11 +201,33 @@
   },
   "confirmed": "Bundled SDL3 accepts the existing gyro-only contract, preserves A/paddles and exposes expected values/timestamp",
   "unconfirmed": [
-    "Steam client backend selection and actual gyro capability for GameSir",
-    "Steam gyro-only filtering/orientation behavior",
+    "Steam event consumption and downstream gyro-only filtering/orientation behavior",
+    "Cause of the zero motion display and stalled calibration despite current Eden response",
     "Proton gameplay and simultaneous live gyro/input/output",
-    "Boot/reconnect/suspend, multi-app input hiding and other hosts/32-bit/Flatpak"
+    "Comprehensive boot/reconnect/suspend, multi-app input hiding and other hosts/Flatpak"
   ],
   "runtime_changes": false,
-  "vendor_files_in_repository": false
+  "vendor_files_in_repository": false,
+  "manual_steam_followup": {
+    "date": "2026-10-18",
+    "scope": "User-operated Steam; read-only process, log and cached device metadata inspection plus device-free 32-bit SDL probes",
+    "user_report": {
+      "gyro_settings_visible": true,
+      "gyro_reacts_to_motion": false,
+      "calibration_waits_at_zero": true,
+      "cancel_works": true,
+      "desktop_responsive": true,
+      "eden_gyro_works_after_reconnect": true
+    },
+    "paired_native_gamepad_and_motion_nodes_present": true,
+    "steam_opened_sensor_node_in_fd_snapshot": true,
+    "fd_snapshot_limit": "Other snapshots only showed the gamepad; no continuous observation or read of input events",
+    "live_motion_events_recorded_by_investigator": false,
+    "root_cause_confirmed": false,
+    "hypothesis": "Steam calibration or motion filter may need acceleration; UI stages/save condition alone do not prove that this causes absent gyro motion",
+    "privileged_actions": false,
+    "hardware_device_opens": false,
+    "steam_or_driver_configuration_changes": false,
+    "application_restarts": false
+  }
 }

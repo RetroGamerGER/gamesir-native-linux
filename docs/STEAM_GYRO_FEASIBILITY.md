@@ -1,18 +1,19 @@
 # Steam Input / Proton: offline gyro feasibility
 
-18 October 2026. This is an offline investigation, not Steam hardware
-acceptance. Steam, Proton and games were not started; installed configuration,
-driver and device state were not changed. No network, root, USB, evdev or IIO
+18 October 2026. Initial scope: offline investigation, not Steam hardware
+acceptance. Steam, Proton and games were not started by that investigation;
+installed configuration, driver and device state were not changed. No network,
+root, USB, evdev or IIO
 hardware access was used. Only the existing device-free test harness ran with
 local SDL libraries. Vendor libraries/source remain outside Git and packages.
+The later user-operated Steam check and read-only diagnosis are recorded below.
 
 ## Decision
 
 **Steam's locally bundled SDL3 can consume our existing gyro-only evdev
-contract, with the paddles intact. Actual Steam Input gyro recognition remains
-unconfirmed.** The missing acceptance step is whether Steam's controller
-backend exposes the gyro capability and consumes these events for this real
-GameSir. Passing an SDL probe does not execute that backend.
+contract, with the paddles intact. Actual Steam Input motion remains
+unconfirmed: its gyro UI is available, but the first manual check showed no
+movement.** Passing an SDL probe does not execute the Steam motion backend.
 
 Preserve one shared implementation: `gs_native` owns USB; paired gamepad and
 motion evdev devices serve SDL/Eden and, if accepted, Steam Input. Raw IIO,
@@ -70,7 +71,7 @@ System SDL3 and SDL2-compat retain all 14 sensor tests, and the existing
 18-case button suite also passes. No proprietary library is copied into the
 project or distributed with the tests.
 
-## What the Steam client evidence establishes
+## Initial static Steam client evidence
 
 Both inspected 64-bit `steamclient.so` files reference
 `SDL_GamepadHasSensor` and `SDL_SetGamepadSensorEnabled`, and contain gyro
@@ -86,6 +87,69 @@ acceleration, or implements every motion mode without gravity information.
 Neither the old generic-Xbox display classification nor successful paddle
 mapping alone answers that question. Do not edit Steam's capability mask or
 invent acceleration data to make its UI appear compatible.
+
+## First manual Steam check: UI present, motion not accepted
+
+Later on the same date, the user started Steam normally and reported that
+the gyro calibration countdown remained at zero. Cancel still worked and
+the desktop remained responsive. The gyro settings page then showed three
+zero angular velocities; the user reported no response to movement. This
+is a failed Steam-motion check, not evidence of a system freeze. The user
+subsequently confirmed that Eden still had working gyro after the reconnect.
+That current countercheck supports a working driver-to-SDL/Eden path; a
+reboot is not required simply to restore gyro after every reconnect.
+
+Read-only inspection, without opening input/USB/IIO devices, established:
+
+- The current native `109c` instance has both gamepad and gyro-only motion
+  nodes, with the same nonempty session identity and user read access.
+  Registration alone would not establish fresh samples; the Eden response
+  above is separate user evidence.
+- The running Steam process loads **`ubuntu12_32/libSDL3.so.0`**. The earlier
+  64-bit tests did not establish this runtime choice.
+- Process file-descriptor snapshots showed Steam opening both the gamepad
+  and motion node during the investigation. Other snapshots showed only the
+  gamepad. These are snapshots, not a continuous trace or proof of sensor
+  event consumption. A persistent permission denial is not established.
+- The same seven synthetic sensor scenarios also pass with the bundled
+  **32-bit** SDL3: gyro-only events, units/timestamp and all 32 A/paddle
+  combinations included. Existing fixture/probe sources were compiled with
+  `clang -m32`, with a private auditor-path adjustment, in the same audited
+  device-free sandbox. No package was installed. The checked library hash
+  and API revision are in the evidence manifest. This manually adapted run
+  does not add automatic 32-bit support to the committed test runner.
+
+Static inspection of the local `steamui/sp.js` explains the visible wait:
+after the countdown reaches zero, `StartGyroSoftwareCalibration` is sent
+and the timer stops. Progress then depends on a calibration-state update
+from the backend. The wizard includes accelerometer-tolerance and gyro-drift
+stages; its success handler saves the tolerances only when **both** are
+positive. Relevant character offsets in the hashed file are approximately
+9,962,728 (stages/countdown) and 9,963,677 (save condition). No UI JavaScript
+was evaluated or modified for this inspection.
+
+Our evdev node deliberately exposes **gyro only**; acceleration remains in
+raw IIO. A dependence of Steam's calibration or motion processing on
+acceleration is therefore a concrete **hypothesis**, not a proven root cause.
+The UI save condition does not prove that missing acceleration suppresses
+all angular-velocity events. Do not add fabricated acceleration, silently
+reuse gyro axis signs for acceleration, or replace the working Eden path.
+
+A bounded static trace of the hashed `linux64/steamclient.so` also identifies
+an SDL gyro-capability query and sensor-event handling (virtual addresses
+`0x17e837b` and `0x17e96b0`, respectively). Gyro events are recorded separately
+from acceleration in that handler. This is neither the full downstream
+motion filter nor proof about the active 32-bit client implementation.
+Disassembler labels inherited from the nearest exported symbol are not
+recovered function names. No proprietary code or disassembly is distributed.
+
+**Next investigation:** distinguish sensor reattachment/event processing
+inside Steam from its calibration/filter prerequisites. Preserve the current
+Eden result, gamepad, paddles and output interfaces. Live tracing, restarting
+Steam or changing its settings require a separately agreed next step. This
+diagnosis made no privileged calls, driver changes, new captures, Steam
+configuration edits or restarts. Raw logs, account identifiers, local paths
+and screenshots remain private. The exact Steam-side failure remains open.
 
 ## Routes to Proton games
 
@@ -132,10 +196,10 @@ that replace one another:
 - **Lifecycle:** after separate permission, check reconnect, suspend,
   application exit and reboot with stable pairing and stopped outputs. Repeat
   the relevant Steam/Gamescope case on the other supported environment;
-  local 64-bit library tests are not a remote-device/32-bit/Flatpak acceptance.
+  local 32-/64-bit library tests are not a remote-device/Flatpak acceptance.
 
-First future live step, only after explicit approval: keep the current driver
-unchanged, verify the paired accessible nodes, start Steam normally with the
+Initial live plan (the first manual check above now records its outcome):
+keep the current driver unchanged, verify the paired accessible nodes, start Steam normally with the
 existing paddle integration and check whether it offers and reacts to a gyro
 source. If it does, test a reversible mouse/stick layout and all existing
 inputs/outputs. A game with native gyro support is not required for the
