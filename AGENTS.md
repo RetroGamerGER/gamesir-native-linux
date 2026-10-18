@@ -50,6 +50,12 @@ options and unchanged active runtime were checked; no module reload or reboot
 occurred. The local boot option is now persistent; the package default remains
 off. Actual gyro reboot/hotplug/PM and particular-game acceptance remain open.
 Do not restart calibration research from this qualitative result.
+The maintainer closed the current gyro milestone after Eden acceptance and
+persistent local configuration. Dedicated Steam gyro integration is deferred
+for lack of a current use case, not because Windows games cannot support gyro.
+Preserve the working SDL/Eden path and existing Steam paddle support. Remaining
+boot/hotplug/PM evidence limits stay documented; do not start further tests,
+calibration or Steam changes without a new request.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

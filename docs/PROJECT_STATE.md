@@ -5,6 +5,14 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Aktueller Gyro-Meilenstein vom Nutzer abgeschlossen:** SDL-/Eden-Livetest
+angenommen und dauerhafte lokale Konfiguration eingerichtet. Eine eigene
+Steam-Gyro-Integration wird mangels aktuellen Bedarfs zurückgestellt;
+die vorhandene Steam-Paddle-Unterstützung bleibt erhalten. Dies ist keine
+Aussage, dass Windows-Spiele grundsätzlich kein Gyro unterstützen.
+Der noch offene Neustartnachweis und weitere unten benannte Prüfgrenzen
+bleiben offen; keine automatische Fortsetzung von Tests oder Kalibrierung.
+
 **SDL-/Eden-Erstabnahme erfolgreich:** Paket `0.1.0.alpha3-8` ist lokal
 installiert und der neue Build unter gesonderter Freigabe mit
 `experimental_gyro=1` geladen. Eden erkennt Bewegung über SDL; der Nutzer

@@ -7,7 +7,12 @@ Stand: 18. Oktober 2026. Prioritäten ergänzen den
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 
-## Aktuell: SDL / Eden
+## Abgeschlossener Meilenstein: SDL / Eden
+
+Der Nutzer nimmt den aktuellen Gyro-Funktionsumfang als abgeschlossen an.
+Eine eigene Steam-Gyro-Integration ist vorerst kein Arbeitsziel; bestehende
+Steam-Paddles bleiben unverändert. Zusätzliche Messungen und die unten
+verbliebenen Abnahmefälle werden nicht automatisch begonnen.
 
 Die bevorzugte Gyroeinstellung bleibt bei 0,07 °/s; keine neue Faktorsuche.
 Der optionale evdev-Gyropfad ist lokal installiert und in Edens

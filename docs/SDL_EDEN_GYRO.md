@@ -6,6 +6,13 @@ confirmed SDL motion, matching directions/sensitivity, four independently
 assignable paddles and preserved ordinary inputs. This is not an in-game,
 reboot, suspend or universal-emulator acceptance claim. No push or release approval.
 
+The maintainer subsequently **closed the current gyro milestone** after the
+accepted live result and verified persistent local opt-in. Dedicated Steam
+gyro integration is deferred because there is no current requested use case;
+existing Steam paddle support stays intact. No further calibration, tests or
+runtime changes follow automatically. Pending reboot and other validation
+limits below remain explicit; milestone closure does not claim those passed.
+
 ## Decision and scope
 
 The maintainer accepted the observed gyro directions and **0.07 degrees/s
