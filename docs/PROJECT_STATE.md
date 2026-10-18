@@ -37,6 +37,12 @@ gerätefreien Sensorfälle. Eine fehlende Beschleunigungsquelle für Steams
 Kalibrierung/Filter ist eine Hypothese, keine bewiesene Ursache. Der konkrete
 Steam-Verarbeitungspfad bleibt offen; keine Treiber-/Steam-Änderung, kein
 Neustart und keine neue Hardwareaufzeichnung durch diese Diagnose.
+Der abschließende DualSense-Vergleich trennt Sony-HID- und Linux-evdev-Pfad:
+DualSense bietet sechs Achsen und Gerätezeit, wir bisher Gyro mit Hostzeit.
+Steams vorhandene Behandlung unerwarteter SDL-Sensorzeitabstände ist eine
+zweite Prüfspur neben fehlender Beschleunigung; keine Ursache ist bewiesen.
+Keine Sony-Identität oder Kalibrierwerte übernehmen. Die Untersuchung ist
+für heute beendet; keine automatische Fortsetzung oder weiteren Tests.
 
 **SDL-/Eden-Erstabnahme erfolgreich:** Paket `0.1.0.alpha3-8` ist lokal
 installiert und der neue Build unter gesonderter Freigabe mit

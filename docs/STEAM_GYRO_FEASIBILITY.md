@@ -151,6 +151,70 @@ diagnosis made no privileged calls, driver changes, new captures, Steam
 configuration edits or restarts. Raw logs, account identifiers, local paths
 and screenshots remain private. The exact Steam-side failure remains open.
 
+## DualSense comparison: two input routes, not just a different name
+
+The maintainer requested one final offline comparison on 18 October 2026.
+No DualSense was opened or tested; no application, setting or driver changed.
+The [earlier Linux/SDL comparison](DUALSENSE_SENSOR_COMPARISON.md) describes
+its historical GameSir implementation. The following table uses the current
+opt-in GameSir path in [SDL_EDEN_GYRO.md](SDL_EDEN_GYRO.md).
+
+There are two distinct reference routes:
+
+1. **Sony-specific HID handling:** the saved SDL HIDAPI dispatcher registers
+   `SDL_HIDAPI_DriverPS5`, opens HID device paths and delegates sensor enabling
+   to that device driver's `SetJoystickSensorsEnabled`. The installed SDL
+   headers document `SDL_JOYSTICK_HIDAPI_PS5`; Steam's bundled 32-bit SDL
+   contains that option and DualSense identification strings. The local
+   Steam client also contains the controller-type string `PS5ControllerInput`.
+   These establish Sony-specific support machinery, **not which route Steam
+   selects for a particular DualSense**. The PS5-specific SDL implementation
+   file is absent from the saved source subset; its complete report/calibration
+   chain was not reconstructed here. Do not infer an exact proprietary Steam
+   handler merely from a type-name string.
+2. **Linux input handling:** the reviewed official `hid-playstation` source
+   decodes Sony reports and publishes a separate six-axis motion evdev node.
+   SDL's general Linux backend can pair that node with its gamepad and expose
+   standard gamepad sensor events. This architecture is also the basis of
+   our current GameSir sensor path. It is not necessary to impersonate a Sony
+   device to provide a valid SDL sensor.
+
+| Aspect | DualSense Linux reference | Current GameSir path |
+| --- | --- | --- |
+| Hardware report | Sony USB report `0x01` / 64 bytes or Bluetooth `0x31` / 78 bytes; gyro, acceleration and device timestamp | Existing decoded GameSir `109c` IMU packets; one USB owner, `gs_native` |
+| Sensor channels exposed to SDL | Three gyro **and** three acceleration axes | Three gyro axes; acceleration remains raw IIO and is not available to Steam through this SDL path |
+| Kernel normalization | Sony feature report `0x05` supplies calibration references; per-axis conversion, with documented fallback limits | User-accepted experimental 0.07 degrees/s/raw; no Sony calibration values, no certified angle/bias calibration |
+| evdev gyro representation | 1024 counts/(degree/s), normalized by the kernel | `7 * raw`, 100 counts/(degree/s); SDL converts either representation to rad/s using its declared resolution |
+| Acceleration representation | 8192 normalized counts/g; SDL converts to m/s² | No evdev acceleration axes; the experimental raw-IIO 8192 LSB/g value does not establish physical axis signs |
+| Pairing | Shared kernel `uniq` derived from the Sony device identity | Shared nonempty per-binding session `uniq`; not a claimed hardware serial |
+| Timing | Device ticks at nominal 1/3 microsecond, accumulated into `MSC_TIMESTAMP` | Host-derived active-stream microseconds; not a device clock |
+| Acceptance here | Source comparison only; no new DualSense/Steam hardware test | Current Eden motion confirmed; Steam UI visible but movement still absent |
+
+The differing integer resolutions are **not themselves an incompatibility**:
+SDL converts both to the same physical units. Copying Sony's 1024 constant
+would not resolve an unproven Steam processing problem. Likewise, renaming
+the controller or editing a button mapping does not supply missing sensor
+channels, calibration or event timing.
+
+**Additional timing lead:** the installed Steam client contains
+`gyro_auto_detect_polling_rate`. Its help text describes handling zero or
+unexpected SDL3 sensor intervals, a legacy high-polling-rate issue, and a
+packet-rate fallback. In the hashed 64-bit client, the registration sequence at
+`0x1170ee1` ties this help text to that setting and a default string of `1`.
+The matching help text is also present in the 32-bit client. This is static
+evidence of timing-dependent processing, **not a read of the active setting,
+proof that the GameSir hits that branch, or permission to change it**.
+No 1000-Hz IMU rate is inferred from the controller's configured input rate.
+
+**Recommendation for the next session:** compare Steam's sensor activation,
+reattachment and timestamp consumption before attributing the zero display
+solely to absent acceleration. If a six-axis requirement is then established,
+extend the same existing evdev node using real coherent acceleration samples
+and separately supported physical axis/sign metadata. Keep raw IIO, the
+accepted gyro profile, Eden, all paddles and output ownership intact. Do not
+add fake gravity, a Sony identity or a competing HID/USB reader. No further
+live work follows from this comparison; the user requested stopping for today.
+
 ## Routes to Proton games
 
 | Route | Evidence / limit |

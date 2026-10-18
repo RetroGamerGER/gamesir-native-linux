@@ -229,5 +229,57 @@
     "hardware_device_opens": false,
     "steam_or_driver_configuration_changes": false,
     "application_restarts": false
+  },
+  "dualsense_comparison": {
+    "date": "2026-10-18",
+    "scope": "Static local source/binary comparison; no hardware or application execution",
+    "additional_local_references": [
+      {
+        "path": "linux/drivers/hid/hid-playstation.c",
+        "bytes": 94073,
+        "sha256": "48a08dddf8d276a611195311a29cd4f113a949a1f5431ecc84b0396b106ec896"
+      },
+      {
+        "path": "cached-sdl3/src/joystick/hidapi/SDL_hidapijoystick.c",
+        "bytes": 56811,
+        "sha256": "68469fe0ad81424c2dece0fb38ba0d589d4d8280d49e76d068b23464a901eb67"
+      },
+      {
+        "path": "installed-sdl3/include/SDL3/SDL_hints.h",
+        "bytes": 170827,
+        "sha256": "d47a37c21db9dab22cadb985245d5f5b775930710a072954b5be930cf0b39a57"
+      },
+      {
+        "path": "linux32/steamclient.so",
+        "bytes": 50207500,
+        "sha256": "6d8e7e938ff44527a78e2550525c16a9f4605a88d5b20f4466aff311cc00a103"
+      }
+    ],
+    "linux_reference_commit": "a5ebb76233b79db01e82e061173cb73c6d2b5c6b",
+    "source_limit": "Cached SDL HIDAPI dispatcher identified by file hash only; PS5-specific implementation absent from saved source subset; not claimed exact source of Steam binary",
+    "ps5_type_string": {
+      "path": "linux32/steamclient.so",
+      "file_offset": "0xe21073",
+      "value": "PS5ControllerInput",
+      "limit": "type string, not complete backend trace"
+    },
+    "ps5_hidapi_option": {
+      "path": "ubuntu12_32/libSDL3.so.0",
+      "file_offset": "0x11a6e5",
+      "value": "SDL_JOYSTICK_HIDAPI_PS5"
+    },
+    "timing_lead": {
+      "setting": "gyro_auto_detect_polling_rate",
+      "linux64_registration_virtual_address": "0x1170ee1",
+      "linux64_help_virtual_address": "0xdb59e8",
+      "linux32_help_file_offset": "0xe5f1a4",
+      "static_default_string": "1",
+      "active_value_read": false,
+      "setting_changed": false,
+      "cause_confirmed": false
+    },
+    "dualsense_runtime_backend_verified": false,
+    "dualsense_hardware_test": false,
+    "driver_or_steam_changes": false
   }
 }

@@ -1,5 +1,11 @@
 # DualSense-Sensorausgabe als Referenz für GameSir
 
+Historischer Vergleich vom 15. Oktober. Die spätere experimentelle
+Gyro-evdev-Ausgabe und Eden-Abnahme stehen in [SDL_EDEN_GYRO.md](SDL_EDEN_GYRO.md).
+Der [Steam-/DualSense-Nachvergleich vom 18. Oktober](STEAM_GYRO_FEASIBILITY.md#dualsense-comparison-two-input-routes-not-just-a-different-name)
+trennt Sony-HID-Unterstützung vom allgemeinen SDL-evdev-Pfad und beschreibt
+die heute noch offenen Beschleunigungs-/Zeitverarbeitungsfragen.
+
 Stand: 15. Oktober 2026. Ausschließlich lokale Offline-Quellcodeprüfung;
 keine Geräteöffnung, Messung, Ausführung fremden Quellcodes oder Änderung der
 installierten Alpha. Dieser Bericht ergänzt die vorhandenen
