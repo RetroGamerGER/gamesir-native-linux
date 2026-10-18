@@ -38,11 +38,15 @@ show brief 100a/IF1 telemetry but no proven activation or continuous stream.
 Do not transmit the 8K heartbeat, apply report12 offsets, merge enumeration
 epochs or loosen native IF0 gates from that evidence. Keep keyboard/mouse data
 private and raw sensor units uncalibrated. Hardware transport requires new approval.
-The passive 100a/300-second recorder is an offline-prepared test tool, not an
-activation path. Read docs/HID_PASSIVE_CAPTURE.md; never invoke the motor-test
+The passive 100a/300-second and separate 90-second recorders are offline-prepared
+test tools, not an activation path. Read docs/HID_PASSIVE_CAPTURE.md; never invoke the motor-test
 coordinator for it. Require fresh source/boot/instance metadata, manager pause
 and empty ownership. A blocked 109c lease must not be cleared or bypassed to
 make a capture run. No release/resume, module load or recovery from test code.
+The short profile is a stream-presence smoke test, not physical paddle mapping
+or gyro calibration. Incomplete process inspection remains fail-closed;
+report PID/operation/FD/errno without argv or private paths. Never bypass a
+permission failure just because a descriptor appears to be a pseudo-FD.
 
 Passive getter results are observations of one instance, never authority over
 a replacement. Reconnect fixes must preserve actual faults, unknown-metadata

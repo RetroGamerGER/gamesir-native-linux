@@ -27,6 +27,12 @@ SCOPE = 'native-motor-comparison-300-handover-twelve-pulses-capture-end-only'
 DURATION, OUTER_TIMEOUT, TAIL = 450, 480, 30
 PASSIVE_SCOPE = 'passive-hid-100a-300'
 PASSIVE_DURATION, PASSIVE_OUTER_TIMEOUT = 300, 330
+PASSIVE_SHORT_SCOPE = 'passive-hid-100a-90'
+PASSIVE_SHORT_DURATION, PASSIVE_SHORT_OUTER_TIMEOUT = 90, 120
+PASSIVE_PROFILES = {
+    PASSIVE_SCOPE: (PASSIVE_DURATION, PASSIVE_OUTER_TIMEOUT),
+    PASSIVE_SHORT_SCOPE: (PASSIVE_SHORT_DURATION, PASSIVE_SHORT_OUTER_TIMEOUT),
+}
 GIB, MAX_LOG = 1024 ** 3, 16 * 1024 ** 2
 ASSET_NAMES = ('setup.sh', 'guest-check.py', 'identity-check.py', 'state-check.py')
 
@@ -81,7 +87,7 @@ def validate_passive_target(target):
 def verify_sources(manifest):
     result = {}
     paths = [Path(__file__).absolute()] + [ASSETS / name for name in ASSET_NAMES]
-    if manifest.get('scope') == PASSIVE_SCOPE:
+    if isinstance(manifest.get('scope'), str) and manifest['scope'] in PASSIVE_PROFILES:
         paths.append(ROOT / 'tools/native/hid_sidechannel_capture.py')
     for path in paths:
         regular(path)
@@ -150,10 +156,10 @@ def validate_ready(records, baseline, launched, now):
 class Capture:
     def __init__(self, manifest, output):
         self.manifest, self.parent = manifest, Path(output)
-        need(manifest.get('scope') in (SCOPE, PASSIVE_SCOPE), 'Wrong native capture scope')
-        self.passive = manifest['scope'] == PASSIVE_SCOPE
-        self.duration = PASSIVE_DURATION if self.passive else DURATION
-        self.outer_timeout = PASSIVE_OUTER_TIMEOUT if self.passive else OUTER_TIMEOUT
+        self.scope = manifest.get('scope')
+        need(self.scope in (SCOPE, *PASSIVE_PROFILES), 'Wrong native capture scope')
+        self.passive = self.scope in PASSIVE_PROFILES
+        self.duration, self.outer_timeout = PASSIVE_PROFILES[self.scope] if self.passive else (DURATION, OUTER_TIMEOUT)
         self.tail = 0 if self.passive else TAIL
         conf = manifest.get('usb_capture', {})
         need((conf.get('duration_seconds'), conf.get('outer_timeout_seconds')) == (self.duration, self.outer_timeout),
@@ -262,11 +268,11 @@ class Capture:
             host = self._metadata('state-check.py')
             identity_argument = {'target': self.manifest['target']}
             if self.passive:
-                identity_argument['capture_profile'] = PASSIVE_SCOPE
+                identity_argument['capture_profile'] = self.scope
             ident = self._metadata('identity-check.py', identity_argument)
             self.baseline = dict(host, identity=ident, target=self.manifest['target'])
             if self.passive:
-                self.baseline['capture_profile'] = PASSIVE_SCOPE
+                self.baseline['capture_profile'] = self.scope
             self._object('host-before.json', host)
             self._object('identity-before.json', ident)
             self._object('dumpcap-file-metadata.json', self.manifest['usb_capture']['dumpcap_file_metadata'])
@@ -279,7 +285,7 @@ class Capture:
                 '/usr/bin/env', '-i', 'PATH=/usr/bin', 'LANG=C', 'TZ=UTC', 'HOME=/',
                 '/usr/bin/unshare', '--mount', '--propagation', 'private',
                 '/usr/bin/bash', '-euc', self.sources['setup.sh'],
-                PASSIVE_SCOPE if self.passive else 'native-motor-comparison',
+                self.scope if self.passive else 'native-motor-comparison',
                 json.dumps(self.baseline, sort_keys=True), self.sources['guest-check.py'],
                 self.sources['identity-check.py']]
             self._object('command-argv.json', argv)
@@ -341,7 +347,7 @@ class Capture:
         need(not poller.poll(0), 'dumpcap exited before supervisor at ' + stage)
         if self.passive and now >= self.next_identity_check:
             identity = self._metadata('identity-check.py', {
-                'target': self.manifest['target'], 'capture_profile': PASSIVE_SCOPE})
+                'target': self.manifest['target'], 'capture_profile': self.scope})
             need(identity == self.baseline['identity'], 'Passive target instance/bindings changed at ' + stage)
             self.next_identity_check = time.monotonic() + 1
         if now >= self.last_check:
@@ -437,7 +443,7 @@ class Capture:
                 need(after == expected, 'Host mount/node/namespace changed')
                 if self.passive:
                     identity = self._metadata('identity-check.py', {
-                        'target': self.manifest['target'], 'capture_profile': PASSIVE_SCOPE})
+                        'target': self.manifest['target'], 'capture_profile': self.scope})
                     self._object('identity-after.json', identity)
                     need(identity == self.baseline['identity'], 'Passive target changed before final audit')
                     result['target_identity_bindings_pause_unchanged'] = True

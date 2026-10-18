@@ -5,9 +5,9 @@ from pathlib import Path
 host = json.loads(sys.argv[1])
 target = host['target']
 profile = host.get('capture_profile')
-if profile not in (None, 'passive-hid-100a-300'):
+if profile not in (None, 'passive-hid-100a-300', 'passive-hid-100a-90'):
     raise SystemExit('ABBRUCH: Unbekanntes Aufnahmeprofil')
-passive = profile == 'passive-hid-100a-300'
+passive = profile in ('passive-hid-100a-300', 'passive-hid-100a-90')
 if (target['port'] != '8-6' or str(target['busnum']) != '8' or str(target['devpath']) != '6'
         or not re.fullmatch(r'[0-9]{1,3}', str(target['devnum'])) or not 1 <= int(target['devnum']) <= 127):
     raise SystemExit('ABBRUCH: Erwartet Bus 8, Port 8-6 und frische Geräteadresse')
@@ -61,15 +61,20 @@ if passive:
     for proc in Path('/proc').iterdir():
         if not proc.name.isdigit():
             continue
+        operation, fd_number = 'cmdline-read', None
         try:
             argv = (proc / 'cmdline').read_bytes().decode(errors='replace').split('\0')
             if any(Path(arg).name.lower() in ('deadband', 'deadband.py') or
                    arg.startswith('/usr/share/deadband/') for arg in argv if arg):
                 raise SystemExit('ABBRUCH: Deadband ist geöffnet')
-            for fd in (proc / 'fd').iterdir():
+            operation = 'fd-list'
+            descriptors = list((proc / 'fd').iterdir())
+            for fd in descriptors:
                 try:
+                    operation, fd_number = 'fd-readlink', fd.name
                     if os.readlink(fd).removesuffix(' (deleted)') in forbidden:
                         raise SystemExit('ABBRUCH: Fremder USB-/hidraw-Zugriff auf das Zielgerät')
+                    operation = 'fd-stat'
                     descriptor = os.stat(fd)  # Metadata only; never open the referenced node.
                     if stat.S_ISCHR(descriptor.st_mode) and descriptor.st_rdev in forbidden_rdevs:
                         raise SystemExit('ABBRUCH: Fremder USB-/hidraw-Gerätealias geöffnet')
@@ -77,8 +82,14 @@ if passive:
                     continue
         except (FileNotFoundError, ProcessLookupError):
             continue
-        except PermissionError:
-            raise SystemExit('ABBRUCH: Prozesszugriffsprüfung unvollständig')
+        except PermissionError as exc:
+            # Preserve the failed operation without exposing argv or private paths.
+            # Unknown/inaccessible descriptors remain a hard failure, including
+            # pseudo-FDs: their textual link alone is not an ownership proof.
+            raise SystemExit('ABBRUCH: Prozesszugriffsprüfung unvollständig '
+                             f'(pid={proc.name} operation={operation} '
+                             f'fd={fd_number if fd_number is not None else "-"} '
+                             f'errno={exc.errno if exc.errno is not None else "unknown"})') from None
 elif not (identity['physical_port'] == target['port'] and identity['idVendor'] == '3537'
         and identity['idProduct'] == '109c' and identity['bNumInterfaces'] == '2'
         and all(identity[key] == str(target[key]) for key in ('busnum', 'devnum', 'devpath'))

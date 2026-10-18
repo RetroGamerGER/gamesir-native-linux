@@ -2,9 +2,28 @@
 
 # Projektstand
 
-Stand: 17. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
+Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**90-Sekunden-HID-Kurztest offline ergänzt, nicht gestartet:** Eigenes Profil
+mit 30 Sekunden Vorbereitung, 10 Sekunden Ruhe, 10 Sekunden Reaktionspuffer,
+30 Sekunden Mischtest und 10 Sekunden Schlussruhe einschließlich Abschlussreserve.
+300-/450-Sekunden-Profile bleiben erhalten. Der Kurztest prüft nur das Auftreten
+des Nebenkanals, keine einzelne Tastenzuordnung oder Gyrokalibrierung.
+
+Der vorherige 300-Sekunden-Anlauf brach vor Modulladen/Aufnahme an der
+Prozesszugriffsprüfung ab. Die heutige freigegebene lesende Root-Diagnose konnte
+624 Prozesse und 5.167 Deskriptoren ohne Zugriffsfehler prüfen; der frühere Fehler
+ist nicht reproduziert und sein konkreter Auslöser mangels alter Detaildaten
+unbekannt. Künftig protokolliert der Helfer PID, Operation, FD und errno und
+bricht weiterhin bei unvollständiger Prüfung ab. Keine Aufnahme, kein Resume
+oder Eingriff in laufenden Treiber, Bindungen oder Systemrechte. Neue Aufnahme
+braucht frische Vorprüfung, Manifest und Freigabe.
+[Befund, Kurzablauf und Grenzen](HID_PASSIVE_CAPTURE.md).
+100 gezielte Recorder-Tests und die vollständige Offline-Suite bestehen:
+940 Python-Fälle in 33 Batches sowie bestehende C-/Sanitizer-/statische Prüfungen.
+
+**Historischer Vorbereitungsstand vom 17. Oktober:**
 **Passiver 100a-HID-Test offline vorbereitet, Hardware-Go gesperrt:** Der
 Recorder hat jetzt ein eigenes 300-Sekunden-Profil mit separatem Einstieg,
 30-Sekunden-Vorbereitungsfenster, Reaktionspuffern und geschützter PCAPNG-

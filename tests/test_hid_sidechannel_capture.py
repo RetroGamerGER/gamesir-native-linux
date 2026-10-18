@@ -652,7 +652,7 @@ class PassiveGuardSourceTests(unittest.TestCase):
             self.assertEqual(command[command.index("-w") + 1], "-")
             self.assertNotIn("/dev/bus/usb", command)
 
-    def guard_fixture(self):
+    def guard_fixture(self, scope=capture.PASSIVE_SCOPE):
         target_value = target()
         resolved = "/sys/devices/synthetic/usb8/8-6"
         texts = {"/sys/bus/usb/devices/8-6/" + name: value for name, value in {
@@ -685,6 +685,10 @@ class PassiveGuardSourceTests(unittest.TestCase):
             "/proc/42/fd/3": SimpleNamespace(st_mode=stat.S_IFCHR | 0o666,
                                               st_rdev=os.makedev(1, 3))}
         failures = {}
+        def descriptor_metadata(operation, name, values):
+            if (operation, str(name)) in failures:
+                raise failures[(operation, str(name))]
+            return values[str(name)]
         class MemoryPath(PurePosixPath):
             def _read(self, values):
                 if str(self) in failures:
@@ -715,10 +719,10 @@ class PassiveGuardSourceTests(unittest.TestCase):
             output = io.StringIO()
             with patch("pathlib.Path", MemoryPath), \
                  patch.object(sys, "argv", ["synthetic-identity-check", json.dumps({
-                     "target": target_value, "capture_profile": capture.PASSIVE_SCOPE})]), \
-                 patch.object(os, "readlink", side_effect=lambda name: links[str(name)]), \
+                     "target": target_value, "capture_profile": scope})]), \
+                 patch.object(os, "readlink", side_effect=lambda name: descriptor_metadata("fd-readlink", name, links)), \
                  patch.object(os, "lstat", side_effect=lambda name, **kwargs: node_stats[str(name)]), \
-                 patch.object(os, "stat", side_effect=lambda name, **kwargs: node_stats[str(name)]), \
+                 patch.object(os, "stat", side_effect=lambda name, **kwargs: descriptor_metadata("fd-stat", name, node_stats)), \
                  patch.object(os, "write", side_effect=AssertionError("No hardware/log descriptor write")), \
                  patch.object(capture.subprocess, "run", side_effect=AssertionError("No process")), \
                  patch.object(capture.subprocess, "Popen", side_effect=AssertionError("No process")), \
@@ -739,6 +743,18 @@ class PassiveGuardSourceTests(unittest.TestCase):
         self.assertEqual(observed["interfaces"]["0"]["driver"], "xpad")
         self.assertEqual(observed["interfaces"]["1"]["driver"], "usbhid")
         self.assertEqual(observed["boot_id"], target()["boot_id"])
+
+    def test_short_profile_uses_identical_ownership_and_binding_guards(self):
+        fixture = self.guard_fixture(capture.PASSIVE_SHORT_SCOPE)
+        self.assertEqual(fixture.run()["idProduct"], "100a")
+        fixture.texts["/var/lib/gamesir-native/state.json"] = json.dumps({"paused": False, "leases": {}})
+        with self.assertRaisesRegex(SystemExit, "Manager"):
+            fixture.run()
+        fixture = self.guard_fixture(capture.PASSIVE_SHORT_SCOPE)
+        fixture.links["/proc/42/fd/3"] = "/private/device-alias"
+        fixture.node_stats["/proc/42/fd/3"] = fixture.node_stats["/dev/hidraw11"]
+        with self.assertRaisesRegex(SystemExit, "Gerätealias"):
+            fixture.run()
 
     def test_guard_requires_paused_manager_and_empty_ownership(self):
         for manager in ({"paused": False, "leases": {}},
@@ -790,6 +806,48 @@ class PassiveGuardSourceTests(unittest.TestCase):
                 fixture.links["/proc/42/fd/3"] = "/private/container/other-device-name"
                 fixture.node_stats["/proc/42/fd/3"] = fixture.node_stats[node]
                 with self.assertRaisesRegex(SystemExit, "Gerätealias"):
+                    fixture.run()
+
+    def test_inaccessible_process_metadata_names_exact_step_without_private_contents(self):
+        for operation, name in (("cmdline-read", "/proc/42/cmdline"),
+                                ("fd-list", "/proc/42/fd"),
+                                ("fd-readlink", "/proc/42/fd/3"),
+                                ("fd-stat", "/proc/42/fd/3")):
+            for code in (1, 13):  # EPERM and EACCES stay fail-closed.
+                with self.subTest(operation=operation, errno=code):
+                    fixture = self.guard_fixture()
+                    key = (operation, name) if operation.startswith("fd-") and operation != "fd-list" else name
+                    fixture.failures[key] = PermissionError(code, "private failure text must not leak")
+                    with self.assertRaises(SystemExit) as caught:
+                        fixture.run()
+                    message = str(caught.exception)
+                    self.assertIn("unvollständig", message)
+                    self.assertIn("pid=42", message)
+                    self.assertIn("operation=" + operation, message)
+                    self.assertIn("fd=" + ("3" if operation in ("fd-readlink", "fd-stat") else "-"), message)
+                    self.assertIn("errno=" + str(code), message)
+                    self.assertNotIn("private failure", message)
+                    self.assertNotIn("/proc/", message)
+
+    def test_vanished_process_or_descriptor_is_distinct_from_permission_failure(self):
+        for operation, name in (("cmdline-read", "/proc/42/cmdline"),
+                                ("fd-list", "/proc/42/fd"),
+                                ("fd-readlink", "/proc/42/fd/3"),
+                                ("fd-stat", "/proc/42/fd/3")):
+            for failure in (FileNotFoundError(2, "gone"), ProcessLookupError(3, "gone")):
+                with self.subTest(operation=operation, failure=type(failure).__name__):
+                    fixture = self.guard_fixture()
+                    key = (operation, name) if operation.startswith("fd-") and operation != "fd-list" else name
+                    fixture.failures[key] = failure
+                    self.assertEqual(fixture.run()["idProduct"], "100a")
+
+    def test_pseudo_descriptor_permission_failure_cannot_bypass_alias_check(self):
+        for link in ("socket:[123]", "pipe:[123]", "anon_inode:[eventfd]"):
+            with self.subTest(link=link):
+                fixture = self.guard_fixture()
+                fixture.links["/proc/42/fd/3"] = link
+                fixture.failures[("fd-stat", "/proc/42/fd/3")] = PermissionError(13, "denied")
+                with self.assertRaisesRegex(SystemExit, "operation=fd-stat.*errno=13"):
                     fixture.run()
 
 

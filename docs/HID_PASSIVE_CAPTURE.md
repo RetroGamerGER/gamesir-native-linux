@@ -1,14 +1,88 @@
 # Passive 100a HID sidechannel test — preparation only
 
-Date: 2026-10-17. PRE-ALPHA. Recorder changes and tests are offline only.
-The diagnostic work described below read existing manager state, journals and
-cached sysfs. No capture, release/resume, module operation, driver binding,
-USB command, application start or installed-file change was performed.
+Updated: 2026-10-18. PRE-ALPHA. Recorder changes and tests are offline only.
+Today's diagnostic read process metadata with approved elevated rights; it did
+not open any referenced device. No capture, release/resume, module operation,
+driver binding, USB command, application start or installed-file change occurred
+in this work. Historical recovery steps below had separate, consumed approvals.
 Gyro calibration remains paused. This document is not permission to run a test.
 
-## Read-only manager diagnosis
+## Access-check failure: what is and is not known
 
-The present `109c` instance is still bound to the native driver. The manager
+The separately approved 300-second attempt on 17 October stopped during its
+identity precheck, **before usbmon loading or recording**. The saved error was
+`ABBRUCH: Prozesszugriffsprüfung unvollständig`. That guard catches
+`PermissionError` from command-line reads, FD-directory listing, FD-link reading
+or FD metadata (`stat`). The historical message did not retain PID, operation,
+FD number or errno, so the exact original failure cannot be recovered from it.
+
+A bounded read-only root diagnostic on 18 October checked **624 processes and
+5,167 descriptors**, completing without a permission error; one disappearing
+entry was handled as an ordinary process/FD race. No device was opened: only
+`/proc` command-line readability, FD links and metadata were inspected. Arguments
+were not logged. This does **not reproduce or explain away** the earlier failure,
+prove the target is free, or authorize a capture. It also does not establish
+that permissions will remain sufficient during a future run.
+
+The offline correction retains the abort and now reports PID, operation, FD and
+errno. It never emits argv or resolved private paths. `EACCES` and `EPERM` remain
+fatal at every inspection stage, even for a socket, pipe or anonymous inode;
+their link text is not a reason to bypass metadata checks. Direct device paths,
+deleted handles and character-device aliases remain checked. Existing vanished
+process/FD handling remains separate. No host permissions or capabilities were
+changed to make this test pass.
+
+[Sanitized diagnostic evidence](evidence/HID_ACCESS_CHECK_20261018.json) records
+the observation and its limits. Private source/output/checksums remain under the
+ignored persistent `build/hid-access-diagnosis-20261018/` directory.
+
+## Proposed 90-second smoke test — not run
+
+The new scope `passive-hid-100a-90` has its own exact **90-second capture ceiling**
+and **120-second outer startup/cleanup limit**. The established 300/330-second
+passive and 450/480-second motor-recorder profiles remain separate. An old
+300-second manifest is never silently shortened; changed source pins require
+a fresh manifest and new capture approval.
+
+| Seconds from recorder request | Short-test phase |
+| --- | --- |
+| 0–30 | Preparation; verified-start cue states remaining time |
+| 30–40 | Rest |
+| 40–50 | Announced reaction buffer; wait for JETZT |
+| 50–80 | Mixed normal buttons, sticks, triggers, four paddles and slow movement |
+| 80–89 | Final rest |
+| 89–90 | Controlled closure reserve |
+
+This shortened test asks whether target IF1/EP84 traffic appears alongside
+ordinary IF0/EP82 input. Its mixed phase cannot establish which physical paddle
+owns which bit, IMU scaling, continuous long-run streaming or motor support.
+No activation command is sent. Full PCAPNG payloads (`-s 0`), timestamps,
+namespace/device isolation, exact-instance guards, private storage and checksum
+verification are unchanged. Actual cue times delimit analysis windows; human
+response need not be instantaneous.
+
+Before a future run, freshly verify `100a`, IF0 `xpad`, IF1 `usbhid`, manager
+pause/empty ownership, source hashes, free storage and complete process access.
+Inspect usbmon availability without loading it; a missing module needs separate
+approval. Present the exact fresh manifest and execution command for approval.
+There is no current hardware Go, new approved manifest or automatic retry.
+
+### Current offline validation — 18 October
+
+All **100 targeted recorder tests** passed: 50 passive/identity tests, 16 new
+short-profile tests and 34 existing recorder tests. The full `make test` suite
+passed **940 Python cases in 33 batches**, plus the existing C, sanitizer and
+static checks. Fake clocks, processes and in-memory metadata cover exact
+90/120-second bounds, distinct manifests, cue buffers, failure/stop paths,
+permission-denied diagnostics, disappearing entries and forbidden device aliases.
+Current asset hashes were rechecked; setup/mount and state guards are unchanged.
+No real sandbox, recorder, USB interface or installed driver was exercised by
+these tests. The separate read-only root diagnostic is the observation above,
+not a hardware test or clearance of the historical unknown error.
+
+## Historical read-only manager diagnosis — 17 October
+
+At that checkpoint the `109c` instance was still bound to the native driver. The manager
 has a matching **blocked** lease; it is not an unrelated record from a previous
 boot. Boot identity, device and parent sysfs lifetimes, PID, bus/address and
 driver all match the protected saved state. The installed manager's SHA256
@@ -46,11 +120,10 @@ private checksums. Serial numbers, hostnames, boot IDs and full device-lifetime 
 excluded from the public report. Packet-level evidence for this failed attempt
 does not exist, so the cause of missing matching IN reports remains open.
 
-## Required state before a future test
+## Historical recovery and required state before a future test
 
-There is currently **no hardware Go**. The manager is unpaused with a blocked
-lease, the device is `109c`, and usbmon is not loaded. The passive adapter must
-reject this state before starting a recorder.
+The initial diagnostic found an unpaused manager with a blocked lease, `109c`
+and no loaded usbmon. The passive adapter must reject that state.
 
 Recovery needs a separate, concrete authorization. Its intended sequence is:
 checked manager pause/release; inspect the actual return; if needed, an explicitly
@@ -60,13 +133,20 @@ Do not reset state files, call resume, guess a return packet or load modules
 as part of this offline preparation. Missing usbmon requires its own later
 module-load approval. The USB device's new address must not be guessed.
 
+Later on 17 October, separately authorized release and manual dongle
+removal/reinsertion retired the old lease after confirmed physical absence.
+The final saved stable observation was `100a`, IF0 `xpad`, IF1 `usbhid`, paused
+manager and empty ownership; the user confirmed normal KDE inputs. Those dated
+records are not fresh checks or reusable hardware authorization. The subsequent
+300-second attempt stopped on the access precheck described above.
+
 ## Recorder separation
 
 The old recorder is coupled to a 450-second native motor comparison and
 `109c`/Deadband preparation. Its hardware coordinator must not be repurposed
 for this passive test. The new entry point is
 [`hid_sidechannel_capture.py`](../tools/native/hid_sidechannel_capture.py),
-with the distinct scope `passive-hid-100a-300`.
+with distinct scopes `passive-hid-100a-300` and `passive-hid-100a-90`.
 
 It reuses the established isolation and finalization code in
 [`native_usb_capture.py`](../tools/native/native_usb_capture.py), while keeping
@@ -94,8 +174,9 @@ metadata and process descriptors, never USB, HID or native control nodes.
   no descriptor probing or vendor activation by the recorder.
 - Preserve the outer private mount namespace, all six isolated namespaces,
   zero capability sets, `NoNewPrivs=1`, UID/GID maps and post-exec process checks.
-- PCAPNG with `USB_LINUX_MMAPPED`, snaplen 0 and **at most 300 seconds**.
-  The outer 330-second bound covers startup/cleanup; it does not extend capture.
+- PCAPNG with `USB_LINUX_MMAPPED`, snaplen 0 and **at most 90 or 300 seconds**,
+  according to the explicit manifest. Outer limits are respectively 120 or 330
+  seconds for startup/cleanup; they do not extend capture.
 - Output uses `-w -` into an already opened private regular file descriptor.
   There is **no writable output mount inside the sandbox**. The coordinator
   stores `original-usbmon8.pcapng`, cues, manifests and audits under a new
@@ -117,7 +198,7 @@ inner SHA256SUMS. Completion requires the verified outer chain; `capture.passed`
 alone describes only the recorder audit. Persistence errors fail the wrapper
 without replacing the original cause or deleting evidence.
 
-## Human-paced phases
+## Existing 300-second human-paced phases
 
 After separate approval the visible terminal requires local **BEREIT**, ignoring
 case, before any capture starts. The start cue follows verified recorder
@@ -151,12 +232,15 @@ From the repository root, these commands only inspect files or use fake backends
 
 ```sh
 python -B tools/native/hid_sidechannel_capture.py show-plan
+python -B tools/native/hid_sidechannel_capture.py show-plan --profile 90
 python -B tests/test_hid_sidechannel_capture.py
+python -B tests/test_hid_short_capture.py
 python -B tests/test_native_usb_capture.py
 make test
 ```
 
-A later approved manifest contains the exact freshly checked target and dumpcap
+A later approved short-test manifest explicitly uses `scope=passive-hid-100a-90`
+with duration 90 and outer timeout 120. It contains the exact freshly checked target and dumpcap
 metadata plus source hashes. It can be checked without starting anything:
 
 ```sh
@@ -191,7 +275,7 @@ mechanism. Report `12` stays unknown; brief post-transition bursts do not prove
 fresh continuous IMU data. No `0f f2`, HID SET_REPORT, sensor scaling or motor
 parity is enabled by this adapter. See [offline findings](XPAD_HID_PROTOTYPE.md).
 
-## Offline validation result
+## Historical offline validation result — original 300-second revision
 
 The completed revision passed **46 new passive-adapter tests** and all
 **34 existing recorder tests**. `make test` passed **920 Python test cases in

@@ -68,12 +68,16 @@ danach separat freigegebene Dauerstrom-/Paddle-/Release-/Reconnect-Nachweise.
 Keine laufende Architektur ersetzen, bevor Input-Zusammenführung und alle
 vier Motoren samt Besitz/Stopps gleichwertig gelöst sind. Kalibrierung pausiert.
 
-Der [passive 300-Sekunden-Adapter](HID_PASSIVE_CAPTURE.md) ist nun separat
-vorbereitet; zuerst nach eigener Freigabe den lesend belegten blockierten
-`109c`-Zustand kontrolliert auflösen und eine saubere `100a`-Ausgangsinstanz
-bestätigen. Manager pausiert/ohne Besitz, usbmon-Verfügbarkeit und frische
-Hash-/Instanzmetadaten bleiben Aufnahmevoraussetzungen. Offline-Tests ersetzen
-keine neue Aufnahmefreigabe; Aktivierungsbefehle bleiben unbestätigt/gesperrt.
+Die [passiven 90-/300-Sekunden-Adapter](HID_PASSIVE_CAPTURE.md) sind separat
+offline vorbereitet. Der spätere, eigens freigegebene Rückweg bestätigte eine
+saubere `100a`-Ausgangsinstanz; der erste Aufnahmeversuch brach vor Modulladen
+an der Prozesszugriffsprüfung ab. Die lesende Diagnose vom 18. Oktober konnte
+diesen Fehler nicht reproduzieren. Genaue künftige Fehlerdiagnostik ist ergänzt;
+Zugriffsfehler werden nicht ignoriert. Als nächstes kommt ein gesondert
+freigegebener 90-Sekunden-Nebenkanal-Kurztest, noch kein Einzeltasten-Nachweis.
+Manager pausiert/ohne Besitz, vollständige Zugriffsprüfung, usbmon-Verfügbarkeit
+und frische Hash-/Instanzmetadaten bleiben Voraussetzungen. Offline-Tests ersetzen
+keine Aufnahmefreigabe; Aktivierungsbefehle bleiben unbestätigt/gesperrt.
 
 **Trigger-Bridge:** Der geprüfte eigenständige Forza-/Xodus-Nachweis wird als
 optionale Userspace-Komponente integriert, nicht in den Kernel verschoben.

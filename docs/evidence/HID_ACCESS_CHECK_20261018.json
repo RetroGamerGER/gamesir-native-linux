@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "scope": "Approved read-only process-metadata diagnosis; offline recorder changes only",
+  "previous_attempt": {
+    "date": "2026-10-17",
+    "result": "Aborted before usbmon loading and recording",
+    "saved_error": "ABBRUCH: Prozesszugriffspr\u00fcfung unvollst\u00e4ndig",
+    "exact_operation_pid_fd_errno_recorded": false
+  },
+  "current_diagnostic": {
+    "effective_uid": 0,
+    "processes_checked": 624,
+    "descriptors_checked": 5167,
+    "disappearing_entries": 1,
+    "errors": [],
+    "completed": true,
+    "elapsed_seconds": 0.024365430999978344,
+    "command_arguments_logged": false,
+    "device_nodes_opened": false,
+    "capture_started": false,
+    "driver_or_system_configuration_changed": false
+  },
+  "conclusion": {
+    "prior_error_reproduced": false,
+    "original_cause": "Unknown: historical exception discarded PID, operation, FD and errno",
+    "current_check_proves_target_free": false,
+    "future_capture_authorized": false,
+    "guard_remains_fail_closed": true,
+    "new_diagnostic_fields": [
+      "pid",
+      "operation",
+      "fd",
+      "errno"
+    ]
+  },
+  "private_evidence_sha256": {
+    "proc_check_stdout": "fe2dd84a84ee98ea7b08dc2f76bd0107b64d8b4382737fbb88b5ef4de005484f",
+    "diagnostic_source": "093ee76119b0148660cb7637652ff926d215888a2d2449c789a14d9b3eb7664b",
+    "checksum_manifest": "6ac7954b755c0ae55b9e2f01cd1434f7b2c2a40e4d7605ab224369341b78ee0c"
+  },
+  "privacy": "No process IDs, arguments, FD target paths, host paths, boot IDs or mount listings copied into this sanitized evidence."
+}

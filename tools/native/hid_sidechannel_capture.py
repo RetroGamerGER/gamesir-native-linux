@@ -20,14 +20,26 @@ import sys
 import time
 
 from native_usb_capture import (ASSETS, ASSET_NAMES, ROOT, CaptureHalt, PASSIVE_SCOPE,
-    PASSIVE_DURATION, PASSIVE_OUTER_TIMEOUT, attach, digest, need, regular, utc,
+    PASSIVE_DURATION, PASSIVE_OUTER_TIMEOUT, PASSIVE_SHORT_SCOPE, PASSIVE_PROFILES,
+    attach, digest, need, regular, utc,
     validate_passive_target, verify_sources)
 
 FINALIZE_GRACE_SECONDS = 1
 
 
-def phase_plan():
+def phase_plan(scope=PASSIVE_SCOPE):
     """Host cue times relative to guest recorder request, not a sensor clock."""
+    need(isinstance(scope, str) and scope in PASSIVE_PROFILES, 'Unknown passive phase profile')
+    if scope == PASSIVE_SHORT_SCOPE:
+        phases = [
+            ('prepare', 0, 30, 'Vorbereitung: Controller bequem ablegen.', 0),
+            ('rest', 30, 40, 'RUHE: Controller liegen lassen.', 0),
+            ('mixed', 40, 80, 'Normale Tasten, Sticks, Trigger und alle vier Zusatztasten betätigen; langsam bewegen. Nur Nebenkanal-Nachweis, keine Tastenzuordnung oder Kalibrierung.', 10),
+            ('final_rest', 80, 90, 'SCHLUSSRUHE: Controller ablegen. Letzte Sekunde ist Abschlussreserve.', 0),
+        ]
+        return [dict(name=name, start=start, end=end, instruction=instruction,
+                     buffer_seconds=buffer_seconds)
+                for name, start, end, instruction, buffer_seconds in phases]
     phases = [
         ('prepare', 0, 30, 'Vorbereitung: Controller bequem ablegen.', 0),
         ('rest', 30, 50, 'RUHE: Controller liegen lassen.', 0),
@@ -64,11 +76,13 @@ def _metadata_valid(value):
          and re.fullmatch(r'(?:[0-9a-f]{2})*', caps), 'Invalid cached capability bytes')
 
 
-def make_manifest(target, dumpcap_metadata):
+def make_manifest(target, dumpcap_metadata, *, scope=PASSIVE_SCOPE):
     """Use explicitly supplied cached metadata; do not inspect live host state."""
-    value = {'schema_version': 1, 'scope': PASSIVE_SCOPE, 'target': copy.deepcopy(target),
-             'usb_capture': {'duration_seconds': PASSIVE_DURATION,
-                 'outer_timeout_seconds': PASSIVE_OUTER_TIMEOUT,
+    need(isinstance(scope, str) and scope in PASSIVE_PROFILES, 'Unknown passive manifest scope')
+    duration, outer_timeout = PASSIVE_PROFILES[scope]
+    value = {'schema_version': 1, 'scope': scope, 'target': copy.deepcopy(target),
+             'usb_capture': {'duration_seconds': duration,
+                 'outer_timeout_seconds': outer_timeout,
                  'dumpcap_file_metadata': copy.deepcopy(dumpcap_metadata)}, 'sha256': {}}
     validate_passive_target(value['target'])
     _metadata_valid(value['usb_capture']['dumpcap_file_metadata'])
@@ -85,14 +99,15 @@ def validate_manifest(manifest):
     need(isinstance(manifest, dict) and set(manifest) == {
         'schema_version', 'scope', 'target', 'usb_capture', 'sha256'}, 'Unknown manifest fields')
     need(type(manifest['schema_version']) is int and manifest['schema_version'] == 1
-         and manifest['scope'] == PASSIVE_SCOPE, 'Wrong passive manifest version/scope')
+         and isinstance(manifest['scope'], str) and manifest['scope'] in PASSIVE_PROFILES, 'Wrong passive manifest version/scope')
+    duration, outer_timeout = PASSIVE_PROFILES[manifest['scope']]
     validate_passive_target(manifest['target'])
     conf = manifest['usb_capture']
     need(isinstance(conf, dict) and set(conf) == {
         'duration_seconds', 'outer_timeout_seconds', 'dumpcap_file_metadata'}
-        and type(conf['duration_seconds']) is int and conf['duration_seconds'] == PASSIVE_DURATION
-        and type(conf['outer_timeout_seconds']) is int and conf['outer_timeout_seconds'] == PASSIVE_OUTER_TIMEOUT,
-        'Only the approved 300/330 second limits are supported')
+        and type(conf['duration_seconds']) is int and conf['duration_seconds'] == duration
+        and type(conf['outer_timeout_seconds']) is int and conf['outer_timeout_seconds'] == outer_timeout,
+        'Recording limits differ from the explicit passive scope')
     _metadata_valid(conf['dumpcap_file_metadata'])
     need(isinstance(manifest['sha256'], dict), 'Missing source pins')
     checked = verify_sources(manifest)
@@ -174,14 +189,16 @@ def persist_result(output, value, owner):
     return {'report_sha256': digest(report_path), 'checksum_manifest_verified': True}
 
 
-def run_phases(recorder, *, clock=time.monotonic, sleep=time.sleep, emit=print):
+def run_phases(recorder, *, scope=PASSIVE_SCOPE, clock=time.monotonic, sleep=time.sleep, emit=print):
     """Only cues and owned-recorder guards; no USB commands or input readers."""
+    need(isinstance(scope, str) and scope in PASSIVE_PROFILES, 'Unknown passive phase profile')
+    duration, _ = PASSIVE_PROFILES[scope]
     origin = recorder.capture_started
     now = clock()
     need(type(origin) in (int, float) and math.isfinite(origin)
          and recorder.ready is not None and origin <= recorder.ready <= now < origin + 30,
          'Verified recorder/preparation clock required')
-    need(recorder.deadline == origin + PASSIVE_DURATION, 'Passive recording deadline differs')
+    need(recorder.deadline == origin + duration, 'Passive recording deadline differs')
     events = []
     def cue(event, phase, instruction):
         stamp = clock()
@@ -198,7 +215,7 @@ def run_phases(recorder, *, clock=time.monotonic, sleep=time.sleep, emit=print):
         need(clock() <= deadline + 2, 'Phase timing exceeded two-second cue tolerance: ' + label)
     cue('verified_start', 'prepare', 'AUFNAHME LÄUFT. Isolation geprüft. ' +
         f'Noch ungefähr {max(0, math.floor(origin + 30 - now))} Sekunden Vorbereitung.')
-    for phase in phase_plan():
+    for phase in phase_plan(scope):
         # The preparation phase has deliberately begun before verified readiness.
         if phase['start']:
             wait_until(origin + phase['start'], phase['name'])
@@ -208,7 +225,7 @@ def run_phases(recorder, *, clock=time.monotonic, sleep=time.sleep, emit=print):
         if phase['buffer_seconds']:
             wait_until(origin + phase['start'] + phase['buffer_seconds'], phase['name'] + '-buffer')
             cue('action_cue', phase['name'], 'JETZT: ' + phase['instruction'])
-    wait_until(origin + PASSIVE_DURATION - FINALIZE_GRACE_SECONDS, 'final-rest')
+    wait_until(origin + duration - FINALIZE_GRACE_SECONDS, 'final-rest')
     cue('capture_finish', 'final_rest', 'Messphasen beendet. Aufnahme wird kontrolliert geschlossen; keine Rückbindung.')
     return events
 
@@ -235,13 +252,13 @@ def execute(manifest, output, *, authorized=False, readiness=input, capture_fact
     try:
         recorder.start()
         cue_stream = recorder._file('phase-cues.jsonl')
-        run_phases(recorder, clock=clock, sleep=sleep, emit=recorded_emit)
+        run_phases(recorder, scope=checked['scope'], clock=clock, sleep=sleep, emit=recorded_emit)
         cue_stream.flush()
         os.fsync(cue_stream.fileno())
         cue_stream.close()
         result = recorder.finish()
         need(result.get('passed') is True, 'Passive recorder final audit failed; preserve evidence')
-        summary = {'scope': PASSIVE_SCOPE, 'capture': result, 'cue_count': len(cues),
+        summary = {'scope': checked['scope'], 'capture': result, 'cue_count': len(cues),
                    'hardware_commands_sent': False, 'drivers_changed': False,
                    'calibration_performed': False, 'automatic_retry': False}
         receipt = persist_result(output, summary, getattr(recorder, 'owner', None))
@@ -265,7 +282,7 @@ def execute(manifest, output, *, authorized=False, readiness=input, capture_fact
         except BaseException as stop_error:
             cleanup_errors.append('Owned recorder abort: ' + str(stop_error))
         try:
-            persist_result(output, {'scope': PASSIVE_SCOPE, 'capture': result,
+            persist_result(output, {'scope': checked['scope'], 'capture': result,
                 'primary_error': type(error).__name__ + ': ' + str(error),
                 'cleanup_errors': cleanup_errors, 'cue_count': len(cues),
                 'hardware_commands_sent': False, 'drivers_changed': False,
@@ -284,7 +301,9 @@ def execute(manifest, output, *, authorized=False, readiness=input, capture_fact
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command')
-    sub.add_parser('show-plan', help='File-only plan; no host metadata collection')
+    plan = sub.add_parser('show-plan', help='File-only plan; no host metadata collection')
+    plan.add_argument('--profile', choices=('300', '90'), default='300',
+                      help='Explicit duration profile; does not authorize execution')
     validation = sub.add_parser('validate', help='Validate existing ordinary manifest/source files only')
     validation.add_argument('--manifest', type=Path, required=True)
     live = sub.add_parser('execute', help='Not authorized by source code; requires a new explicit hardware approval')
@@ -294,9 +313,11 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.command in (None, 'show-plan'):
-            value = {'scope': PASSIVE_SCOPE, 'hardware_access': False, 'phases': phase_plan(),
-                'duration_ceiling_seconds': PASSIVE_DURATION,
-                'outer_timeout_seconds': PASSIVE_OUTER_TIMEOUT,
+            scope = PASSIVE_SHORT_SCOPE if getattr(args, 'profile', '300') == '90' else PASSIVE_SCOPE
+            duration, outer_timeout = PASSIVE_PROFILES[scope]
+            value = {'scope': scope, 'hardware_access': False, 'phases': phase_plan(scope),
+                'duration_ceiling_seconds': duration,
+                'outer_timeout_seconds': outer_timeout,
                 'clock': 'guest recorder request monotonic clock; preparation absorbs readiness latency',
                 'finalization_grace_seconds': FINALIZE_GRACE_SECONDS}
         elif args.command == 'validate':
