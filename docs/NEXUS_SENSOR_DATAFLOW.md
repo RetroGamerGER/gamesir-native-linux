@@ -1,6 +1,6 @@
 # Nexus: sechs Sensorfelder und nativer Kalibrierungspfad
 
-Stand: 15. Oktober 2026. Fortsetzung der
+Stand: 18. Oktober 2026. Fortsetzung der
 [Nexus-Paketanalyse](GAMESIR_NEXUS_RESEARCH.md), ausschließlich offline.
 **Ein physikalischer Gyro-Skalierungsfaktor wurde nicht bestimmt.** Die
 Fortsetzung mit alternativen Pfaden hat aber die zuvor offenen nativen
@@ -45,6 +45,9 @@ Vollständige private Belege bleiben unter
 `.local/research/20261015-gamesir-nexus/followup-{metadata,sensors,calibration,units}/`.
 Die zusätzlichen Belege und eigenen Leser liegen daneben in
 `alternative-{map,receive,config,consumers}/`.
+Der Folgepass vom 18. Oktober verwendet diese Quellen unverändert; neue
+private Belege liegen unter `build/nexus-followup-20261018/` im Arbeitsbaum.
+REA wurde dafür weder eingerichtet noch verwendet.
 Keine Binärdateien, vollständigen Disassemblierungen oder Herstellercode in Git.
 
 ## 1. Die sechs Felder: tatsächliche Typzuordnung
@@ -225,34 +228,103 @@ Der Nicht-E0-Antwortparser `0x18951a0` bildet aus einer 60-Byte-Hülle ein
 Antwortobjekt und kopiert Nutzbytes ab Index 5 beziehungsweise 6;
 Länge aus Byte 4 beziehungsweise für internen Typ 15 aus Big-Endian 4/5.
 Der Dispatcher `0x18949a0` behandelt interne Enumwerte 6/5/12/15/17/10.
-Diese Werte werden nicht ungeprüft zu USB-Befehlsnummern erklärt.
+Der Folgepass ordnet sie jetzt dem tatsächlichen Typ
+`Core.Profile.Templates.C2.CommandType` zu: Typdefinition Datei `0x99c195`,
+Typindex `0x503`. Der Dispatcher erzeugt `ProfilePacketInfo` (Typindex
+`0x51c`, EEType-RVA `0x24528`) und ruft dessen typgebunden aufgelösten
+Konstruktor `0x18951a0` auf. Dessen Feld `CommandId` bei Objektversatz `+8`
+ist laut Signatur genau dieses Enum; der Dispatcher liest dasselbe Feld.
+Die Zuordnung beruht damit nicht nur auf ähnlichen Zahlen.
+
+| Interner Enumwert | Belegter Name |
+|---:|---|
+| 6 | `Ack` |
+| 5 | `ReadProfileAck` |
+| 12 | `ReadCurrentProfileAck` |
+| 15 | `ProfileChangeNotification` |
+| 17 | `ProfileChangeReadProfileAck` |
+| 10 | `ReadFirmwareVersionAck` |
+
+Diese Namen erklären Profil-/Versionsantworten, keinen Sensor-Koeffizienten.
+Die interne Enumzuordnung ist keine Freigabe oder vollständige Spezifikation
+eines USB-Befehls. Aus den zusätzlichen Namen für EEPROM-Zugriffe wird kein
+sicherer Kalibrierungsabruf abgeleitet.
 Ein generischer Antwortkörper könnte auch numerische Kalibrierungsdaten
 transportieren; ein solcher konkret zugeordneter Körper wurde nicht gefunden.
 
-**Weiterer gezielter Ansatz, ausdrücklich unbestätigt:**
+### MessageC: Struktur belegt, Kalibrierungsnutzung unbestätigt
+
 `ID4XDevice.SendReceiveMessageC` nimmt einen `SettingTag:uint32` und liefert
 `Result`, `SettingTag`, `SettingType` als uint32 sowie `SettingValue:uint64`.
 Die native D4X-Methode `0x1cd0` verarbeitet dafür 4 Request- und 20 Antwortbytes.
-Die Haupt-DLL-Projektion ist bei `0x1e55460` aufgelöst. Es ist ein generischer
-getaggter Einstellungskanal. Ein Gain-/Offsetwert wäre darin darstellbar,
-aber **kein zugehöriger Sensor-Tag, Einheitenbezug oder Verbraucher ist belegt**.
-Keine direkten E8/E9-Aufrufer gefunden bedeutet hier keine Abwesenheit
-virtueller oder dynamischer Aufrufe. Der Kanal bleibt offen, statt ihn
-fälschlich als ausgeschlossene Kalibrierungsquelle zu behandeln.
+Das ist das Format an der Providergrenze, kein nachgewiesener vollständiger
+USB-Bericht. Die Antwortkopie liest UInt64 ab Pufferoffset 12 und schreibt
+es an Strukturversatz 16. Die Feldmap der Haupt-DLL bestätigt Versätze
+0/4/8/16; das ABI-Padding darf nicht in einen Wireparser übernommen werden.
+
+Die Haupt-DLL-Projektion `0x1e55460` wählt WinRT-Slot 16; der tatsächliche
+D4X-Vtableeintrag bei RVA `0x88e8` zeigt auf `0x1cd0`. **Neu beobachtet:**
+Nach einer möglichen Antwortkopie laufen die normalen Rückkehrpfade auf
+RVA `0x1e37` zusammen und setzen `HRESULT 0x80004005` (`E_FAIL`). Der
+abschließende Cookie-Prüfer `0x6510` erhält auf seinem normalen Rückweg
+EAX. Die Projektion benutzt Adapter `0x14b49c0`, der einen negativen HRESULT
+an einen bislang unbenannten Fehlerhelfer weitergibt.
+
+Das ist eine statisch belegte Auffälligkeit dieser gebündelten DLL-Version,
+**noch kein reproduzierter Anwendungsfehler**. Ein tatsächlich aufgerufener
+Nexus-Pfad mit konstantem SettingTag wurde nicht gefunden. Ob die Methode
+ungenutzt ist oder ein Aufrufer die Fehlermeldung behandelt, bleibt offen.
+Auch die fehlenden direkten E8/E9-Verweise schließen virtuelle oder
+Reflexionsaufrufe nicht aus.
+
+Unter 178 unabhängig gegengeprüften gemappten HJC-/D4X-Typen wurden 18
+Anwendungs-Enums gelesen. Dabei fand sich kein Sensor-SettingTag; die
+MessageC-Tag-/Typfelder sind UInt32 statt benannter Enums.
+`CalibrationVersion` auf `DeviceConfig`/`ModeConfig` ist ein String, kein
+numerischer Gain oder Bias. Dies ist eine begrenzte Metadatenprüfung,
+keine Aussage über sämtliche getrimmten oder dynamischen Typen.
+Ein Gain-/Offsetwert wäre im generischen Kanal darstellbar, aber **kein
+Sensor-Tag, Einheitenbezug oder Koeffizientenverbraucher ist belegt**.
+Der Rückgabefund senkt die Priorität dieses bislang hypothetischen Abrufs.
 
 ### Begrenzte Prüfung der Zustandsverbraucher
 
 Vier direkt auf den belegten KeyState-Typ verweisende Körper bei RVA
 `0x17d0870`, `0x17d0920`, `0x184c1f0` und `0x1863990` bereiten Argumente
 oder Boxing/Zustandskopien vor. Der native `GamepadStateChanged`-Ereignispfad
-`0x1d75190` → `0x1d75270` reicht Nutzdaten an asynchrone Verarbeitung weiter.
-In diesen Körpern wurde keine Umrechnung auf °/s oder rad/s gefunden;
-die dahinter liegenden indirekten Verbraucher sind damit nicht vollständig
-aufgelöst.
+`0x1d75190` → `0x1d75270` ist inzwischen bis zur WebView-Grenze verfolgt:
+
+```text
+GamepadStateChanged-Ereignis       0x1d75190
+Entrance.SendMessageToWeb         0x1d75270 → MoveNext 0x1d75390
+Entrance.InvokeWebMethod          0x1d75900 → MoveNext 0x1d75a20
+JsonConvert.SerializeObject       0x187b170 → intern 0x187b1d0
+WebView-Dispatchdelegate          0x1c04050 → MoveNext 0x1c04160
+CoreWebView2.ExecuteScriptAsync   0x1bf1200
+```
+
+Typgebundene Methodenmaps, zehn direkte Aufrufe einschließlich des
+Settingspfads und der Delegateverweis belegen den begrenzten Pfad. Er baut
+einen Aufruf `window.vueApp.sendFromBackend(...)` mit Ereignisname und
+generischen Argumenten auf. Die Serializer-Zuordnung ist ein echter
+Methodenbefund; Zahlen aus Stringformatierung sind dadurch keine
+Sensorkalibrierung.
+
+**Wichtige Grenze:** `JsonSerializer.CreateDefault` bei `0x15fe020` lädt
+einen globalen Settings-Delegate über Slot-RVA `0xd554e0`. Falls gesetzt,
+wird er indirekt aufgerufen und sein Ergebnis über
+`ApplySerializerSettings` (`0x15fd7e0`) angewandt. Ein lokal leeres
+Settingsargument beweist deshalb weder Converterfreiheit noch eine
+unveränderte Weitergabe aller Sensorfelder. Diese Konfiguration, weitere
+Subscriber und andere Feldproduzenten sind nicht vollständig aufgelöst.
 
 Im bereits extrahierten Web-JavaScript leitet `sendFromBackend` bei UTF8-
 Dateioffset 595061 `GamepadStateChanged` an Testbeobachter weiter, je nach
-Testmodus mit `Original` oder `Mapped`. Eine Textsuche nach Gyro/Accel
+Testmodus mit `Original` oder `Mapped`. Die jetzt abgegrenzten Funktionen
+beginnen bei UTF8-Offset 595033 (`sendFromBackend`) und 592724 (`Gt`, Ziel
+von `oi.fire`). Letztere verarbeitet Sticks, Trigger und generische
+Tastenübergänge; im geprüften Körper findet sich keine Gyro-Umrechnung.
+Eine Textsuche nach Gyro/Accel
 findet in dieser Datei keine Treffer. Auch das beweist keine globale
 Abwesenheit einer versteckten oder anders benannten Sensorauswertung.
 
@@ -391,6 +463,10 @@ Int32. Sieben benannte Zustandsdecoder lassen diese Felder null. Weitere
 untersuchte Empfangs-/Kopierpfade liefern keine Sensoreinheiten. Der native
 Kalibrierungs-Steuerpfad erreicht D4X.SendMessage und meldet Statusbooleans;
 die untersuchten Profilkonverter verarbeiten Konfiguration statt Rohmessung.
+Der Zustandsereignispfad erreicht generische JSON-/WebView-Weitergabe;
+Profilantworten sind typgebunden benannt. MessageC liefert in dieser DLL
+auf normalen Rückkehrpfaden E_FAIL; eine tatsächliche Verwendung als
+Sensor-Koeffizientenabruf ist weiterhin nicht belegt.
 
 **Plausibel, nicht vollständig bewiesen:** Die E0-Parser bekommen einen um
 vier Byte gekürzten bekannten Telemetriebericht; die Kalibrierung wird intern
@@ -398,7 +474,8 @@ im Gerät durchgeführt. Der generische MessageC-Einstellungskanal könnte
 Koeffizienten tragen. Keines davon belegt einen Gyrofaktor.
 
 **Weiter offen:** vollständiges Modell-/Providerframing, weitere indirekte
-Sensorproduzenten und Verbraucher, belegte MessageC-Tags/Antwortinhalte,
+Sensorproduzenten, JSON-Settings/Converter und weitere Verbraucher,
+belegte MessageC-Tags/Antwortinhalte,
 Sensoreinheiten, physische Achsen, Bias und Gyro-Sensitivität. Die frühere
 NativeFormat-/ExternalReferences- und Feldoffsetlücke ist geschlossen;
 der vollständige Sensordatenfluss der Anwendung bleibt offen. Die
@@ -415,14 +492,26 @@ Die anschließend ausdrücklich beauftragte [Firmware-Dateianalyse](GAMESIR_NEXU
 öffnet die zwölf äußeren Container und bestätigt 126 Eintrags-CRCs. Ihre
 MCU-/Packtoolkonfiguration liefert ebenfalls keinen Gyrofaktor. Die
 anschließende innere Analyse belegt Packed-Split, 48 Appcontainer und die
-vollständige Key-/No-Key-Beziehung. Globale Bankzuordnung, eigentliche
-Körperdekodierung und Sensorcode bleiben gezielte offene Fragen. Sie ersetzt
+vollständige Key-/No-Key-Beziehung. `app.bin`/`cfg_tool.bin` sind inzwischen
+mit gültigen Inhalts-CRC extrahiert. Globale Bank-/Modellauswahl,
+vollständige MCU-Dekodierung und Sensorcode bleiben gezielte offene Fragen.
+Die Extraktion ersetzt
 keinen Nachweis der Umrechnung zwischen Sensorregistern und unseren Reports.
 
-Die verbleibende Offline-Suche sollte sich auf konkrete Sensor-Tags und
-indirekte Empfänger des MessageC-/Antwortpfads begrenzen. Noch mehr beliebige
-Zahlenkonstanten liefern keinen verlässlichen Fortschritt. Kalibrierungs-
-Steuerbytes sind kein Ersatz für einen Koeffizientenabruf. Ein eigener
+**Priorität nach dem Folgepass:** die bereits extrahierte Controller-
+Firmware `app.bin` anhand ihrer Sensoranker weiter verfolgen. Für einen
+Faktor braucht es Sensorerkennung → Initialisierung/letzte wirksame
+Messbereichswahl → mögliche Nachskalierung → unsere USB-Rohwerte. Der
+Registerwert allein beweist nicht, dass USB-Werte unveränderte Registerzähler
+sind. Auch eine dekodierte Paketfirmware muss zur tatsächlich installierten
+Gerätefirmware passen; diese Zuordnung ist hier nicht hergestellt.
+
+Nexus bleibt ein ergänzender Pfad für konkrete Sensor-Tags, JSON-Settings
+oder weitere belegte Provider. Weitere beliebige Zahlenkonstanten liefern
+keinen verlässlichen Fortschritt. Kalibrierungs-Steuerbytes sind kein Ersatz
+für einen Koeffizientenabruf. REA bleibt ein mögliches Hilfswerkzeug, falls
+eine konkrete Analysegrenze mit den vorhandenen Werkzeugen nicht auflösbar
+ist; es wurde nicht eingerichtet. Ein eigener
 Gyrofaktor kann alternativ über spätere kontrollierte Referenzdrehungen
 gewonnen werden, ohne vorher den Sensorchip bestimmen zu müssen.
 Eine solche Messung braucht gesonderte Freigabe und gehört nicht zu diesem
@@ -438,6 +527,13 @@ zusätzlich mit explizitem deklarierendem Typ abgeglichen. PE-Adressabbildung,
 Funktionsgrenzen und Bytebereichshashes sind in den eigenen JSON-Belegen
 festgehalten. Ungeklärte gemeinsame Codeadressen werden nicht als Sensor-
 Produzenten ausgegeben. Keine vollständige AOT-Dekompilierung behauptet.
+Im Folgepass vom 18. Oktober: 178 Typmap-Prüfungen ohne Abweichung,
+drei eigene synthetische Integer-Lesertests einschließlich 1000
+deterministischer Roundtrips, zehn Callstellen, acht typgebundene Methoden,
+fünf Literale und zwei JS-Bereiche kontrolliert. Die zentralen PE-
+Funktionsgrenzen und Bereichshashes wurden zusätzlich unabhängig gegen die
+unveränderten Quelldateien geprüft. Das validiert diese statischen Befunde,
+keinen Hardwarepfad und keine physikalische Kalibrierung.
 
 Die Text-/Metadatenprüfungen ersetzen keinen Runtime- oder Hardwaretest.
 Dokumentationsänderung ohne Treiber-/Paketbau, Installation, Ausführung von

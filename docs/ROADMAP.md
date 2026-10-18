@@ -203,19 +203,28 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    verfolgen. [Belegte Datenflüsse](NEXUS_SENSOR_DATAFLOW.md): alle sechs
    Int32-Zugriffe aufgelöst, sieben geprüfte Eingabe-Zustandspfade lassen sie
    null; C2-Profilblock und /255 betreffen Konfiguration. D4X-Sendeweg und
-   F1-Firmwarebridge sind zugeordnet. Gezielt offen bleiben MessageC mit
-   getaggten UInt64-Werten ohne bekannten Kalibrierungstag, andere indirekte
-   Provider sowie vollständige Header-/Modellzuordnung. Kein Gyrofaktor oder
-   Koeffizientenabruf; keine globale Abwesenheit behaupten. Profil-/EEPROM-
-   Schreiben weiterhin von Rohdaten- und Kalibrierungsabrufen trennen.
+   F1-Firmwarebridge sind zugeordnet. Folgepass vom 18. Oktober: typgebundene
+   Profilantworten und generische JSON-/WebView-Weitergabe belegt. MessageC
+   liefert im geprüften D4X-Körper auf normalen Rückwegen E_FAIL; tatsächlicher
+   Caller und Sensor-Tag bleiben unbelegt. Diesen hypothetischen Abruf
+   nachrangig behandeln. Gezielt offen: globale JSON-Settings/Converter,
+   weitere Provider und vollständige Header-/Modellzuordnung. Kein Gyrofaktor
+   oder Koeffizientenabruf; keine globale Abwesenheit behaupten.
+   Profil-/EEPROM-Schreiben von Rohdaten- und Kalibrierungsabrufen trennen.
 3. Äußerer Firmwarecontainer inzwischen mit eigenem Offline-Leser geöffnet:
    zwölf Header/Tabellen und 126 logische Eintrags-CRC bestätigt. Weitere
    Firmware-Sensorsuche hat inzwischen den Packed-Split (Feld `+8`) und
    48 gespeicherte Appcontainer belegt; 24 komplette Inhaltspaare sind nach
    Key-/No-Key-Normalisierung gleich. Der anschließende Positionsdecoder
    bestätigt app.bin/cfg_tool.bin vollständig einschließlich Inhalts-CRC.
-   Jetzt MCU-Instruktionen und Sensorinitialisierung bis zum IMU-Report
-   verfolgen. Globale Bank-/Modellauswahl und der DV-Inhalt hinter dem
+   **Für den Gyrofaktor jetzt vorrangig:** MCU-Instruktionen und
+   Sensorinitialisierung bis zum IMU-Report verfolgen: Sensor-ID/gewählter
+   Pfad → letzter wirksamer Messbereich → mögliche Nachskalierung → USB.
+   Den aktiven Registerwert nicht ohne Nachweis mit der USB-Skala gleichsetzen;
+   Paketfirmware und tatsächlich installierte Version getrennt behandeln.
+   Bestehende Werkzeuge nutzen; REA bleibt Reserve, ohne Installation oder
+   Hersteller-Codeausführung in diesem Auftrag.
+   Globale Bank-/Modellauswahl und der DV-Inhalt hinter dem
    inneren Appbereich bleiben getrennt offen. MCU-Label
    AC695X und Flashversatz EOFFSET sind keine IMU-Kalibrierung. Key-/No-Key-/Kompatibilitäts- und
    Authentizitätsfragen bleiben getrennt offen. Keine Firmwareausführung

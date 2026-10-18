@@ -2,7 +2,7 @@
 
 # GameSir Nexus: statische Firmware- und Sensoranalyse
 
-Stand: 16. Oktober 2026. Untersucht wurde das lokal vorhandene Windows-Paket
+Stand: 18. Oktober 2026. Untersucht wurde das lokal vorhandene Windows-Paket
 **GameSir Nexus 2.1.23.0**. Dieser Bericht dokumentiert eigene Beobachtungen,
 Dateimetadaten und begrenzte statische Codeanalyse; Herstellerdateien werden
 nicht Bestandteil des Projekts.
@@ -24,16 +24,28 @@ Zielkandidaten. Ein vollständiger ISA-Decoder, der Sensor-Schreibpfad und
 aktives CTRL2_G fehlen weiterhin. Die älteren Fehlversuche unten behalten
 ihren historischen Umfang.
 
-**Vertiefung abgeschlossen:** Der [Sensor-/Kalibrierungsdatenfluss](NEXUS_SENSOR_DATAFLOW.md)
+**Sensorfolgepass:** Der [Sensor-/Kalibrierungsdatenfluss](NEXUS_SENSOR_DATAFLOW.md)
 belegt inzwischen alle sechs Int32-Feldzugriffe im gemeinsamen KeyState samt
 nativen Getter-/Setter-RVAs und Offsets. Sieben geprüfte Eingabe-Zustandspfade
 lassen die Sensorfelder null. C2-Profilblock und /255-Kurvennormierung sind
 Konfiguration; D4X-Sendemethode und F1-JL-Firmwarebridge sind zugeordnet.
 Kein physikalischer Gyrofaktor oder numerischer Kalibrierungsabruf gewonnen.
-MessageC und weitere indirekte Provider, vollständige Header-/Modellzuordnung
-und physisches Kalibrierungsframing bleiben offen. Die folgenden Grenzen der
+Der Folgepass vom 18. Oktober verfolgt den Zustandsereignispfad bis zur
+JSON-/WebView-Weitergabe und benennt die Profilantworten typgebunden.
+MessageC setzt in der gebündelten D4X-DLL auf normalen Rückkehrpfaden E_FAIL;
+ein realer Anwendungscaller oder Sensor-Tag ist weiterhin nicht belegt.
+Das ist kein reproduzierter Nexus-Bug. Globale JSON-Settings verhindern
+zudem die pauschale Aussage, alle Sensorwerte würden unverändert ausgegeben.
+Weitere Provider, vollständige Header-/Modellzuordnung und physisches
+Kalibrierungsframing bleiben offen. Die folgenden Grenzen der
 ersten Namens-/UI-Prüfung werden dadurch präzisiert, keine globale
 Abwesenheit anderer Sensorpfade behauptet.
+
+**Nächste Priorität:** Sensorwahl und letzte wirksame Initialisierung in
+der bereits extrahierten Controller-`app.bin`, anschließend die mögliche
+Nachskalierung bis zum USB-Bericht. Ein aktiver Messbereich allein ist
+noch kein Faktor für unsere USB-Rohwerte. Bestehende Werkzeuge werden
+weiterverwendet; REA bleibt Reserve und wurde nicht eingerichtet.
 
 ## 1. Quellen, Verfahren und Grenzen
 
@@ -645,6 +657,32 @@ Standarddecoders und keine Übernahme eines plausiblen Zahlenwerts.
 `.local/research/20261016-mcu-instructions/`. Nur eigene Befunde und Hashes
 versioniert; keine Herstellerbytes, Dekodierungsmasken oder Schlüssel in Git.
 Keine App-, Netzwerk-, Hardware-, Treiber- oder Kalibrierungsänderung.
+
+### Sensorverweise: begrenzter Folgepass vom 18. Oktober
+
+Die bestehenden `app.bin`-Dateien DV209/DV515/DV608 wurden erneut gegen ihre
+Hashes geprüft. Die bekannte Kalibriermeldung und ihre relative
+Textsenkenzuordnung sind unabhängig reproduzierbar. Für sieben weitere
+Sensorlogs wurden vollständige und verkürzte Adress-/Offsetkandidaten,
+relative 32-/22-Bit-Kandidaten und String-Innenpositionen geprüft.
+Ein neuer belastbarer Initialisierungs- oder Register-Schreibpfad wurde
+dadurch nicht gewonnen. Das schließt andere Adressierungsformen nicht aus.
+
+Ein konkreter Gegenbeleg verhindert eine Fehlzuordnung: Ein über alle drei
+Versionen stabiler scheinbarer Relativverweis auf `Sensor IS QMI8658`
+bei DV209-Dateioffset `0x285c0`, DV515/DV608 `0x286a0` gehört zu einem
+gespeicherten USB-HID-Deskriptorblock mit Längen 9+9+7+7
+(Interface/HID/zwei Endpunkte). Dessen erstes DWORD ergibt nur zufällig
+mit der Position die Sensorlogadresse. Der identische 32-Byte-Bereich hat
+SHA256 `eb8ebafb4b26a0dfaa13535882e39c28e767a7d5e88dfaa70f86e689ed8bd584`.
+Auch ein versionsstabiler rechnerischer Treffer beweist also keinen
+MCU-Codeverweis oder Sensorzugriff.
+
+Die konkrete Analysegrenze bleibt: kompakte Adress-/Speicher-/Argumentformen
+und verlässliche Code-/Datengrenzen. WHO_AM_I-Pfad, letzter CTRL2_G-Wert und
+Nachskalierung zum USB-Bericht sind weiterhin unbelegt. Bestehende
+Werkzeuge wurden genutzt; REA bleibt Reserve. Neue private Belege unter
+`build/nexus-followup-20261018/firmware/`, nur eigene Befunde/Hashes in Git.
 
 ### Exakte Sensorvariante erneut offen: gezielter WHO_AM_I-Abgleich
 

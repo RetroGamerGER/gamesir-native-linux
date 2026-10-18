@@ -471,6 +471,24 @@ und keine globale Abwesenheit einer Nexus-Umrechnung bewiesen. Laufzeit,
 experimentelle Accel-Ausgabe und SDL-Grenzen unverändert.
 [Datenfluss, Fundstellen und Konsequenz](NEXUS_SENSOR_DATAFLOW.md).
 
+**Nexus-Folgepass vom 18. Oktober, ohne REA:** Profilantworten jetzt über
+Typ-/Feld-/Methodenmaps mit dem C2-Enum verknüpft. Zustandsereignisse werden
+über generische JSON-Serialisierung an WebView/Testbeobachter geleitet;
+globale Serializer-Settings lassen mögliche Converter offen. Die konkrete
+MessageC-Methode setzt auch nach möglicher Antwortkopie auf normalen
+Rückwegen E_FAIL. Kein tatsächlicher Anwendungscaller oder Sensor-Tag
+belegt, daher kein reproduzierter Nexus-Bug behauptet. 178 Typmap-Prüfungen,
+drei eigene Integer-Lesertests und abgegrenzte Call-/Hashprüfungen bestanden.
+Kein Gyrofaktor. Nächste Priorität ist die vorhandene Controller-`app.bin`:
+Sensorwahl → letzte wirksame Initialisierung → mögliche Nachskalierung →
+USB-Rohwerte. Keine neue Kalibrierung, Hersteller-Codeausführung, Netzwerk-,
+Hardware- oder Laufzeitänderung; kein Push.
+Der anschließende begrenzte Firmware-Folgepass reproduziert die bekannten
+Kalibrierverweise in drei Appversionen, aber keinen neuen Sensorwriter.
+Ein versionsstabiler scheinbarer Sensorverweis ist als gespeicherter
+HID-Deskriptorblock widerlegt. Die verbleibende MCU-Decode-Lücke ist damit
+präziser dokumentiert; aktives CTRL2_G und Gyroskala bleiben unbekannt.
+
 **Firmware-Fortsetzung, nur offline:** Alle zwölf G7-Pro-Container geöffnet;
 Header/Tabellen sowie 126 logische Einträge mit CRC16 bestätigt. Die gelesene
 MCU-/Packtoolkonfiguration nennt AC695X, keinen IMU-Chip oder Gyrofaktor.
