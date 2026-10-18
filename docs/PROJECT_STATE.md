@@ -28,10 +28,21 @@ dieser Korrektur dekodiert in allen drei App-Versionen je 16 Masken-Einträge
 zum gleichen versionsinternen Helfer. Dessen P-Code liest einen Wert,
 verknüpft ihn mit dem Maskenregister per AND und schreibt ihn zurück. Das
 stützt einen allgemeinen maskierten Feld-Update-Helfer, aber keinen Bezug zu
-IMU oder Sensorregistern. Der Beschreiber bleibt unvollständig; Code- und
-Datengrenzen sind nicht global bewiesen. Kein WHO_AM_I-Pfad, CTRL2_G-Wert
-oder Gyrofaktor gewonnen; keine Firmwareausführung, Hardware- oder
-Treiberänderung. Gyrokalibrierung pausiert.
+IMU oder Sensorregistern. Eine byte-ausgerichtete Suche nach eingehenden
+kurzen und 22-Bit-Sprüngen fand keinen Treffer zu diesen Einträgen;
+indirekte Tabellen bleiben offen. Der Kalibrierungs-Loganker führt in allen
+drei geprüften Images zum Textlogger; danach setzt der Ausschnitt ein
+16-Bit-Nullwort an `((r0 + 0x115) << 1)`, wobei Basisobjekt und Bedeutung
+unbekannt bleiben. Im benachbarten `adc scan not over`-Block gibt es einen
+bedingten `CALLIND`, aber keine belegte IMU-Verbindung. Eingehende direkte
+Sprung-/Zeigerkandidaten auf beide Blöcke wurden in den geprüften Formen nicht
+gefunden. Der bekannte 64-Byte-IMU-Capture
+ist nicht mit einem Firmware-Produzenten oder den 60-Byte-Nexus-Parsern
+verbunden; die untersuchten Parser lassen die sechs Sensorfelder ungesetzt.
+Der Beschreiber bleibt unvollständig; Code- und Datengrenzen sind nicht
+global bewiesen. Kein WHO_AM_I-Pfad, CTRL2_G-Wert oder Gyrofaktor gewonnen;
+keine Firmwareausführung, Hardware- oder Treiberänderung. Gyrokalibrierung
+pausiert.
 
 **Normaler nativer Dauerbetrieb nach den HID-Aufnahmen wieder bestätigt:**
 Der Maintainer führte Resume selbst aus. Die anschließende rein lesende

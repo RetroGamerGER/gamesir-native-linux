@@ -103,10 +103,22 @@ values do not match zero extension. An isolated, private sign-extending
 decoder variant finds 16 mask-entry patterns in each of three app images;
 each branches to a shared handler whose decoded operations load a value,
 AND it with the mask register, and store it back. This supports a generic
-masked-update helper, not a sensor-register path. The decoder is incomplete;
-never infer code/data boundaries, sensor writes, or `CTRL2_G` from numeric
-matches alone. No target execution/emulation, hardware access, or driver
-edit. Calibration remains paused and the driver unchanged.
+masked-update helper, not a sensor-register path. A byte-aligned scan for
+the tested compact and 22-bit branch encodings found no incoming branch to
+these entries; indirect-table reachability remains open. The sole direct
+reference to `Enter Sensor Cal Mode!` still reaches the shared text logger.
+Its decoded follow-on stores a zero halfword at `((r0 + 0x115) << 1)`; the
+base object and meaning are unknown, and this is not a proven sensor-bus write.
+The adjacent `adc scan not over` block conditionally calls an indirect target,
+but no evidence links that dispatch to IMU setup. Tested direct-branch and
+exact-pointer scans found no incoming candidate to either block; other
+addressing forms and indirect-table reachability remain open.
+The captured 64-byte IMU report has not been linked to a firmware producer or
+to Nexus's 60-byte parsers; those parser paths leave the six sensor fields
+unset. The decoder is incomplete; never infer code/data boundaries, sensor
+writes, or `CTRL2_G` from numeric matches alone. No target execution/emulation,
+hardware access, or driver edit. Calibration remains paused and the driver
+unchanged.
 
 ## Public snapshot
 

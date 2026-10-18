@@ -237,11 +237,21 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    Nullerweiterung. Ein isolierter privater Decoderlauf findet je 16
    Maskeneinträge, die zu einem gemeinsamen maskierten Update-Helfer führen
    (Laden, AND mit Maske, Zurückschreiben). Das ist kein Sensorpfad.
-   Nächster Schritt bleibt eine belastbare Zuordnung dieses generischen
-   Helfers und weiterer Speicher-/Argumentformen zu konkreten Aufrufern;
-   WHO_AM_I, Sensorwahl, letzter CTRL2_G-Schreibwert und IMU-Reportpfad
-   bleiben unbelegt. Der Beschreiber und Code-/Datensegmentierung sind
-   weiterhin unvollständig.
+   Ein Scan der getesteten kompakten und 22-Bit-Sprungformen fand keine
+   eingehenden direkten Sprünge zu diesen Einträgen; indirekte Tabellen und
+   die Erreichbarkeit bleiben offen. Der Kalibrierungslog erreicht den
+   gemeinsamen Textlogger und wird gefolgt von einem Nullwort-Store an
+   `((r0 + 0x115) << 1)` mit ungeklärter Basis-/Objektsemantik. Der benachbarte
+   `adc scan not over`-Block enthält einen bedingten indirekten Aufruf, aber
+   keinen belegten IMU-Bezug. Geprüfte direkte Sprung- und exakte
+   Zeigerformen fanden keine eingehenden Kandidaten zu beiden Blöcken.
+   Nächster Schritt ist die Zuordnung der Adressraum-/Codeabbildung und des
+   Callback-Tabellenursprungs, ohne den ADC-Block als Sensorpfad zu etikettieren.
+   Die 64-Byte-Capture-IMU ist nicht mit einem Firmwareproduzenten oder den
+   60-Byte-Nexus-Parsern verbunden; deren untersuchte Pfade lassen die
+   Sensorfelder ungesetzt. WHO_AM_I, Sensorwahl, letzter CTRL2_G-Schreibwert
+   und IMU-Reportpfad bleiben unbelegt. Der Beschreiber sowie Code-/Daten-
+   segmentierung sind weiterhin unvollständig.
    [Werkzeugstand und neue Primärreferenzen](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
    Der MCU-Folgepass vom 18. Oktober belegt zusätzlich begrenzte kompakte
    Zielfelder/Maskenoperanden und eine getrennte Suffix-Adressabbildung.
