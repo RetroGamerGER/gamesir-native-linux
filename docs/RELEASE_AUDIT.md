@@ -8,8 +8,11 @@ settings the user confirmed SDL motion, matching direction/sensitivity and
 four independently assignable paddles with ordinary input preserved. The
 first observer-induced cancellation, manual recovery and separately approved
 successful run are retained in [the installation/test report](SDL_EDEN_GYRO.md).
-No new tag or push, persistent gyro option, accelerometer-axis claim, specific
-game acceptance or universal support is added. Existing release checkpoints
+An additional approved local change persisted experimental_gyro=1 in one
+modprobe file. Content/rights, effective options and unchanged runtime were
+verified without reloading or rebooting; actual gyro boot acceptance is pending.
+No new tag or push, accelerometer-axis claim, specific game acceptance or
+universal support is added. Existing release checkpoints
 below retain their historical scope; the [offline result](sdl-eden-gyro-validation.json)
 still describes the earlier device-free preparation.
 

@@ -44,10 +44,12 @@ maintain them and test their combinations alongside gyro. No push authorized.
 Revision alpha3-8 was subsequently installed under explicit permission. A
 separately approved activation and Eden controller-settings test confirmed
 SDL motion, matching directions/sensitivity, all four independently assignable
-paddles and preserved normal inputs. No particular game, persistent gyro
-configuration or new reboot/hotplug/PM test is proven. The current module
-was explicitly loaded with experimental_gyro=1; default boot configuration
-remains off. Do not restart calibration research from this qualitative result.
+paddles and preserved normal inputs. A later separate approval installed only
+the local /etc/modprobe.d/90-gamesir-native-gyro.conf opt-in. Its effective
+options and unchanged active runtime were checked; no module reload or reboot
+occurred. The local boot option is now persistent; the package default remains
+off. Actual gyro reboot/hotplug/PM and particular-game acceptance remain open.
+Do not restart calibration research from this qualitative result.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

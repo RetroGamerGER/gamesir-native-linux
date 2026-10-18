@@ -17,8 +17,13 @@ Abschlussprüfung: aktive native
 Ein erster Start wurde durch einen fehlerhaften privaten Prüfhelfer
 unterbrochen; Rückweg, Korrektur durch Wiederverwendung der vorhandenen
 Übergangsprüfung und der separat freigegebene Erfolgslauf sind dokumentiert.
-Noch keine dauerhafte Gyro-Moduloption, kein konkreter Spiel-/Hotplug-/Suspend-
-Langzeittest und kein Push. [Ergebnis und Grenzen](SDL_EDEN_GYRO.md#first-local-installation-and-eden-acceptance).
+Danach wurde unter eigener Freigabe ausschließlich die dauerhafte lokale
+Moduloption `experimental_gyro=1` eingerichtet. Dateiinhalt, Rechte und
+effektiver Ladebefehl geprüft; Dienst, Modul, Geräteinstanz und Sensorpaar
+blieben unverändert, beide IIO-Pufferschalter aus. Kein Neuladen oder Neustart.
+Die tatsächliche Gyro-Abnahme nach einem PC-Neustart, ein konkreter Spiel-/
+Hotplug-/Suspend-Langzeittest und der Push bleiben offen.
+[Ergebnis und Grenzen](SDL_EDEN_GYRO.md#persistent-opt-in-installed-after-acceptance).
 
 **Vorherige Offline-Vorbereitung:** Nach Annahme der bevorzugten
 Gyroeinstellung wurde ein zusätzliches, ausdrücklich aktivierbares evdev-

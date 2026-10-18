@@ -19,8 +19,9 @@ discovered dynamically. Bluetooth and wired operation are outside this tested sc
 The standard model has confirmed normal input and four independent extra buttons; ZZZ's four
 physical extra buttons remain unconfirmed. Steam paddle recognition needs the optional integration
 below. Standard `FF_RUMBLE` controls the grip motors; separate trigger motors
-need an application adapter through the local API. IMU output is experimental raw data: gyro
-calibration is paused, and calibrated SDL sensors are not available. See
+need an application adapter through the local API. Raw IMU remains available; revision 8 adds
+an opt-in experimental SDL gyro path with limited Eden controller-settings acceptance.
+Precise gyro calibration remains paused. See [gyro scope and activation](SDL_EDEN_GYRO.md) and
 [project status](../README.md#project-status-and-supported-scope).
 
 ## 1. Check the target system
@@ -118,6 +119,17 @@ For updates, the guard releases ownership, stops the service, and unloads only t
 native module. Check the new DKMS build, then deliberately restart/resume management; its pause
 persists. Kernel updates also need matching headers and a successful target DKMS build before
 booting. DKMS does not guarantee compatibility with every future kernel.
+
+### Optional persistent experimental gyro
+
+For a separately approved revision-8-or-later gyro activation, follow the
+[checked persistent-opt-in procedure](SDL_EDEN_GYRO.md#persistent-opt-in-installed-after-acceptance).
+The local file `/etc/modprobe.d/90-gamesir-native-gyro.conf` sets
+`options gs_native experimental_gyro=1`. Inspect existing options and the boot
+load path first; do not overwrite an existing file or reload a live driver
+without approval. This is a per-host choice, not the package default. In the
+recorded setup the option was already active, so persisting it required no
+runtime interruption. Actual post-reboot gyro acceptance is still pending.
 
 ## 5. Optional Steam and CachyOS Gamescope integration
 
@@ -239,6 +251,14 @@ systemd metadata and start a fresh session. Existing processes or a lingering us
 retain the old mapping. Remove only the exact project-added mapping if necessary; preserve unrelated
 SDL values, Steam names, and game profiles. Package removal alone does not erase inherited
 environments.
+
+If the experimental gyro opt-in was added separately, package removal does
+not own or remove `/etc/modprobe.d/90-gamesir-native-gyro.conf`. Review its
+contents and remove only that deliberately added file when opting out or
+completing removal; preserve other modprobe configuration. Removing the file
+does not alter an already loaded module. If a later boot-image rebuild copied
+it into an early-load path, review that image as well before declaring removal
+complete. The recorded activation itself did not rebuild boot images.
 
 ### Optional retained-state cleanup
 

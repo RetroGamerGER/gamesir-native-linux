@@ -120,10 +120,11 @@ is deliberately absent from the default module/service configuration.
 
 The separately approved first test loaded `experimental_gyro=1` explicitly
 after the reviewed package update. No persistent modprobe configuration was
-created: the running module has the option, but a later default load/boot does
-not automatically enable it. Persistent activation requires its own decision.
+created during that first test. The subsequent separately approved local
+persistent opt-in is recorded below; package defaults remain unchanged.
 The exact release/install/load/resume steps must use a fresh ownership check.
-An approved reload without this option returns to raw-IIO-only behavior.
+After reviewing/removing the persistent opt-in, an approved reload with the
+option disabled returns to raw-IIO-only behavior.
 No Steam or Eden configuration file was edited by the installation procedure.
 
 ## Offline verification
@@ -256,19 +257,22 @@ late hotplug or suspend was tested. No separate mapped SDL shared library was
 visible in the inspected Eden process; its bundled SDL version was not independently
 identified. The earlier source/time-domain limitations and gyro-only scope remain.
 
-## Persistent opt-in prepared after acceptance
+## Persistent opt-in installed after acceptance
 
-The maintainer requested persistence after reboot. Preparation is complete;
-**no persistent system configuration has been written at this checkpoint**.
-Fresh unprivileged checks found revision 8, the expected loaded/installed
+The maintainer separately approved the read-only checks and creation of
+exactly one persistent configuration file. **The local opt-in is installed
+and verified; a real reboot test remains pending.** No service restart,
+module reload, new binding, application change or reboot was performed.
+Fresh checks found revision 8, the expected loaded/installed
 module source version, active/enabled service, paired accessible sensor/gamepad
 nodes, no service drop-in, no conflicting module options and no early-load
 entry in readable modules-load/dracut configuration or the kernel command line.
 
-The proposed sole configuration change is the new root-owned, mode-0644 file
-`/etc/modprobe.d/90-gamesir-native-gyro.conf`, with this option:
+The sole system configuration change is the new root-owned, mode-0644 file
+`/etc/modprobe.d/90-gamesir-native-gyro.conf`, with these exact contents:
 
 ```conf
+# GameSir G7 Pro: explicitly enabled experimental SDL gyro profile.
 options gs_native experimental_gyro=1
 ```
 
@@ -279,13 +283,25 @@ enable_output=1 persistent_mode=1` confirmed that combination without loading
 anything. The current module already has the test option; writing the file
 does not require a release, reload, rebind, service restart or daemon-reload.
 
-Before an approved write, inspect root-protected manager status, the running
-gyro parameter and both current initramfs images read-only. If a conflicting
-configuration or an early-loading native module is found, stop and review the
-boot path instead of silently rebuilding images or changing other files.
-Require the destination to remain absent, then install only the reviewed file
-as root:root/0644. Verify exact content/ownership and the effective modprobe
-dependency listing, plus unchanged runtime state. No automatic reboot.
+The approved checks confirmed an active/unpaused manager without current
+errors and running experimental_gyro=Y. The normal initramfs contains no
+gs_native module. The fallback image includes the module, but inspection of
+its aliases, dependencies, module-load/configuration files, units, udev rules
+and dracut hooks found only its own dependency record: no automatic native
+load path. The two inspections covered 157 and 182 text files respectively.
+Neither image was rebuilt. Future early-load/configuration changes need a
+fresh review; module presence alone is not evidence of early loading.
+
+The destination was absent immediately before installation. Its exact bytes,
+root:root ownership, 0644 mode and SHA256 were verified:
+`5960ba3dff0e568341f88040162b81ebfa522f50e42662b11667925878767d51`.
+The normal modprobe dependency listing now includes experimental_gyro=1
+alongside all three service options;
+the effective configuration has exactly one native options line. These were
+read-only listings, not module loads. The service PID, loaded source version,
+USB identity/binding and paired accessible event nodes were unchanged before
+and after; final manager state remained healthy and both IIO buffer gates zero.
+Private command outputs and before/after metadata are retained with checksums.
 
 Rollback removes only this added file after verifying its identity/content;
 the currently loaded option remains until a separately approved reload/reboot.
@@ -296,5 +312,5 @@ Actual boot acceptance remains a separate user-led restart: confirm module
 option, active/unpaused manager and paired readable event nodes, then start
 Eden after native initialization. Retain the documented late-start/time-domain
 limitation; persistent configuration alone does not resolve it or prove boot
-behavior. No calibration, application configuration or hardware test is part
-of this preparation.
+behavior. No calibration, application configuration or additional hardware
+test was part of this persistent-configuration change.

@@ -103,8 +103,9 @@ computer.
 
 - **Gyro integration remains experimental.** The selected 0.07 °/s/raw profile
   has an opt-in SDL evdev path and one limited hardware acceptance in Eden's
-  controller settings. It is not enabled by default, and that test added no
-  persistent boot-time gyro option. Precise angle/bias calibration remains
+  controller settings. It is not enabled by default. A separately approved
+  local persistent opt-in is now configured and checked; its actual reboot
+  acceptance remains pending. Precise angle/bias calibration remains
   paused. The accelerometer stays raw IIO with experimental `8192 LSB/g`; its physical
   axes have not been established. See [SDL/Eden scope and test plan](docs/SDL_EDEN_GYRO.md).
 - **Trigger vibration has no confirmed universal games path.** Standard
