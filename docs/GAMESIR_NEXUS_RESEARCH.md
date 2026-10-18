@@ -53,7 +53,9 @@ Abwesenheit anderer Sensorpfade behauptet.
 der bereits extrahierten Controller-`app.bin`, anschließend die mögliche
 Nachskalierung bis zum USB-Bericht. Ein aktiver Messbereich allein ist
 noch kein Faktor für unsere USB-Rohwerte. Bestehende Werkzeuge werden
-weiterverwendet; REA bleibt Reserve und wurde nicht eingerichtet.
+weiterverwendet. Nach gesonderter Freigabe ist REA jetzt als getrenntes,
+wiederverwendbares lokales Analysewerkzeug eingerichtet; der unten
+beschriebene Jieli-Backend-Abgleich bleibt davon getrennt.
 
 ## 1. Quellen, Verfahren und Grenzen
 
@@ -787,6 +789,91 @@ Symbolen würde besonders bei Speicher-/Vergleichsbefehlen helfen.
 Weiter offen bleiben Sensorregister-Lese-/Schreibhelfer,
 Argument-/Vergleichssemantik und die letzte wirksame Initialisierung.
 **Kein aktiver CTRL2_G-Wert und kein physikalischer Gyrofaktor gewonnen.**
+
+### Lokales REA und neuer Jieli-Referenzkandidat, 18. Oktober
+
+Die spätere Freigabe erlaubt eine lokale Werkzeugumgebung auch für andere
+Programme. Sie ändert weder den installierten Treiber noch die pausierte
+Gyrokalibrierung. REA `6.5.0` ist auf den veröffentlichten Quellcommit
+`3b79af28e80785afce9f5998d8f03289402a1847` festgelegt; npm-SRI und lokale
+SHA256 wurden geprüft. Die Installation im Benutzerverzeichnis ignoriert
+sämtliche npm-Lifecycle-Skripte und aktiviert keine MCP-Anbindung. Ghidra
+`12.1.4` und ein separates Temurin-JDK `21.0.12.1+1` stammen aus geprüften
+offiziellen Releasearchiven. Keine Systempakete oder Agentenkonfigurationen
+werden dafür geändert. Die Werkzeuge behalten ihre eigenen Lizenzen;
+Herstellerdateien und Werkzeugbinärdateien gehören nicht ins Repository.
+
+**Wiederverwendbarer Starthelfer fertig:** `~/.local/bin/rea-local` bietet
+`check`, `native DATEI`, `javascript DATEI_ODER_ORDNER`, `managed DATEI`,
+`artifact DATEI` und `function DATEI 0xADRESSE`. Keine freien REA-Optionen,
+Debugger oder Zielprogrammstarts. Jeder Lauf erhält ein neues privates
+Verzeichnis unter `~/Documents/REA-Analysen`; nur eine nicht ausführbare
+Kopie wird lesend eingebunden. Original- und Kopiehash werden vor/nach
+dem Lauf verglichen. Vollständige Ergebnisse bleiben in `work/rea.stdout.json`
+und `work/rea.stderr.log`, der äußere Status enthält keine Targetauszüge.
+`completed=true` allein bestätigt Prozessabschluss und Dateiintegrität,
+nicht die fachliche Richtigkeit eines Analyseergebnisses.
+
+Fünf echte statische Prüfungen mit **eigenen synthetischen Dateien** bestehen:
+Windows-PE-Übersicht mit Ghidra, ELF-Funktion samt korrekt rekonstruierter
+Arithmetik `b + a * 3`, JavaScript-Exportanalyse, Artefaktklassifikation und
+PE/CLI-Metadaten einschließlich eigener Assemblykennung. Kein Testprogramm
+wurde ausgeführt. Der Managed-Pfad ist eine Metadatenprüfung, keine Zusage
+vollständiger C#-Dekompilierung. Alle fünf Läufe bestätigten Isolation sowie
+unveränderte Originale/Kopien. Die [eigenen Helfer und Tests](../tools/research/rea_local/launcher/rea_local.py)
+sind getrennt vom Treiber; `make test-rea-local` startet nur synthetische
+Metadaten-/Mocktests, niemals REA oder ein Analyseziel. Alle 39 Helfertests bestehen.
+
+Bewusste Grenzen: maximal 4096 Dateien, 256 MiB pro Datei, 1 GiB pro Eingabe,
+15 Minuten pro Lauf und 128 MiB je erzeugter Datei. Symlinks, Spezialdateien,
+wechselnde Eingaben und `/proc`, `/sys`, `/dev`, `/run` als Analysequelle
+werden abgewiesen. Host-Shellprofile, Steam und Dienste bleiben unverändert.
+Dies ist ein lokal geprüftes Isolationsmodell auf dem vorhandenen Linux-
+System, keine Garantie gegen sämtliche Parser- oder Kernel-Schwachstellen.
+
+Die gerätefreie Bubblewrap-Prüfung besteht mit sieben getrennten Namespaces,
+fünf leeren Capability-Sätzen, `NoNewPrivs=1`, privatem Home/Temp, lesenden
+Werkzeugmounts und verweigertem Netzwerk. Eine anfänglich zu strenge
+UID-Mapping-Erwartung stoppte vor REA: Bubblewrap `0.13.1` verwendet für
+`--dev` zwei Benutzernamensräume. Die zweite Mapping-Spalte bezieht sich auf
+den unmittelbaren Elternnamensraum, nicht Host-root. Der korrigierte Test
+prüft die genaue belegte Zuordnung; Rechte werden nicht angehoben.
+[Bubblewrap-Quellbeleg](https://github.com/containers/bubblewrap/blob/v0.13.1/bubblewrap.c#L3030-L3048).
+
+**Die MCU-Lücke löst REA nicht automatisch:** Die festgelegte Version bietet
+für rohe Dateien nur x86, x86_64, ARM, ARM64 und 6502 an. Die Datei darf
+deshalb nicht mit einem geratenen ARM-Profil geöffnet werden. Ghidra kann
+PE/ELF statisch bearbeiten; das ist kein Nachweis eines geeigneten Jieli-
+Loaders. Zusätzliche Firmware-Containerwerkzeuge sind bislang nicht
+installiert. Siehe [REA-Rohdateigrenzen](https://github.com/morluto/rea/blob/3b79af28e80785afce9f5998d8f03289402a1847/docs/raw-binary.md).
+
+Eine neue Recherche in öffentlichen Primärquellen findet tatsächlich einen
+passenden **Prüfkandidaten**, [Quarkslabs ghidra-jieli](https://github.com/quarkslab/ghidra-jieli).
+Das offizielle [BR23-SDK-Makefile von Jieli](https://github.com/Jieli-Tech/fw-AC63_BT_SDK/blob/master/apps/hid/board/br23/Makefile)
+verwendet `pi32v2`, `-mcpu=r3` und entsprechende Toolchainnamen. Das verbindet
+BR23 mit einer echten Compilerarchitektur; es identifiziert noch nicht den
+MCU oder ausgeführten Code unseres G7 Pro. Die Erweiterung wurde weder
+installiert noch auf Herstellerdateien ausgeführt.
+
+Die SLEIGH-Referenz ist unvollständig und muss gegen bekannte Bytes geprüft
+werden. Ihr [Immediate-Decoder](https://github.com/quarkslab/ghidra-jieli/blob/master/data/languages/pi32v2_ins_loadimm.sinc)
+passt zur langen Literalform und liefert eine überprüfbare positive
+8-Bit-Konstantenform. Gleichzeitig beschreibt er die `E040`-Klasse als
+Nullerweiterung, während unser früherer Maskenleser eine numerisch passende
+Vorzeichenerweiterung verwendet. Die frühere Formulierung, diese Zahlenfolge
+bestätige bereits die Instruktionssemantik, war deshalb zu stark: Bestätigt
+bleiben die Byte-/Zahlenkorrelationen, nicht die allgemeine MOV-Wirkung.
+Auch die PC-Basis der [relativen Transfers](https://github.com/quarkslab/ghidra-jieli/blob/master/data/languages/pi32v2_ins_progflow.sinc)
+ist vor einer Übernahme unabhängig abzugleichen. Weder externe SLEIGH-
+Semantik noch eigene empirische Felder werden allein zur Wahrheit erklärt.
+Das neue kurze signed6-Feld bleibt ein getrenntes Teilmuster.
+
+Nächster Firmware-Schritt: Decoderkandidat und bekannte Literal-/Transfer-
+Kontrollen gegeneinander prüfen, Codebereiche und Load-/Run-Abbildung
+explizit erhalten, dann Sensor-ID-Lesezugriff und letzte wirksame
+`CTRL2_G`-Initialisierung verfolgen. **Weiterhin kein aktiver Registerwert,
+kein bestätigter Sensor-Messbereich und kein Gyrofaktor.** Keine Firmware-
+ausführung, Emulation, Hardwareaktion oder Upload aus dieser Einrichtung.
 
 ### Exakte Sensorvariante erneut offen: gezielter WHO_AM_I-Abgleich
 

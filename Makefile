@@ -5,6 +5,11 @@ PYTHON ?= python
 
 test: test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-tools test-hardware-helper test-alpha test-steam test-trigger-bridge
 
+# Optional research-helper tests: synthetic metadata/mocks only, no REA launch.
+.PHONY: test-rea-local
+test-rea-local:
+	$(PYTHON) -B -m unittest discover -s tools/research/rea_local/launcher -p 'test_*.py' -v
+
 # Optional userspace shim only; never start Wine, contact a live broker or install.
 trigger-bridge:
 	mkdir -p build/trigger_bridge

@@ -82,6 +82,18 @@ identity and preload composition; never drop those guards to enable Steam.
 Synthetic API tests are not game acceptance. No supporting game is currently
 available for the planned Steam trigger test.
 
+## Local static research tools
+
+The optional `tools/research/rea_local` helper is separate from the runtime
+driver. Its five static lanes use private copied inputs and a verified
+network/device-isolated sandbox; never replace them with an unrestricted
+REA/MCP invocation or execute/emulate a target. Keep raw results private.
+Read the local-tool section of docs/GAMESIR_NEXUS_RESEARCH.md before use.
+REA 6.5.0 has no Jieli raw-code backend. The new external Pi32v2 candidate
+requires independent opcode/load-map validation; do not force ARM or infer
+CTRL2_G from numerical matches. Earlier mask correlations do not establish
+instruction semantics. Calibration remains paused and the driver unchanged.
+
 ## Public snapshot
 
 This export omits private development-session instructions and consumed

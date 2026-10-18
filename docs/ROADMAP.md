@@ -2,7 +2,7 @@
 
 # GameSir Native Linux: Roadmap
 
-Stand: 17. Oktober 2026. Prioritäten ergänzen den
+Stand: 18. Oktober 2026. Prioritäten ergänzen den
 [aktuellen Projektstand](PROJECT_STATE.md); historische Tests behalten ihren
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
@@ -222,8 +222,17 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    Pfad → letzter wirksamer Messbereich → mögliche Nachskalierung → USB.
    Den aktiven Registerwert nicht ohne Nachweis mit der USB-Skala gleichsetzen;
    Paketfirmware und tatsächlich installierte Version getrennt behandeln.
-   Bestehende Werkzeuge nutzen; REA bleibt Reserve, ohne Installation oder
-   Hersteller-Codeausführung in diesem Auftrag.
+   Bestehende Werkzeuge weiter nutzen. Nach späterer ausdrücklicher Freigabe
+   ist REA zusätzlich lokal und wiederverwendbar eingerichtet, mit
+   kopierten Eingaben, privater Ausgabe und Netzwerk-/Geräteisolation.
+   Keine Ausführung oder Emulation des untersuchten Herstellercodes.
+   REA 6.5.0 unterstützt Jieli-Rohcode nicht direkt. Den neu gefundenen
+   Quarkslab-Pi32v2-Decoder zuerst an bekannten Literal-/Transferstellen
+   prüfen; noch keine Installation dieser Erweiterung oder Bestätigung
+   ihrer Semantik. Insbesondere E040-Null-/Vorzeichenerweiterung und
+   PC-Basis der Transfers gegen eigene Belege abgleichen. Die bisherige
+   Maskenkorrelation bestätigt noch keine Instruktionswirkung.
+   [Werkzeugstand und neue Primärreferenzen](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
    Der MCU-Folgepass vom 18. Oktober belegt zusätzlich begrenzte kompakte
    Zielfelder/Maskenoperanden und eine getrennte Suffix-Adressabbildung.
    Darauf aufbauen, ohne eine vollständige ISA anzunehmen. Sensoranker

@@ -2660,5 +2660,74 @@
       "local-reference/findings.json": "b911169702c960dd6d7ccb327bdc0ab2b6c3bf26f0ebb3cf09630653a885553d",
       "stubs/findings.json": "404cf3034d728dcd63838fdcfd1036cde6e78d155e430ffe0acf15f458b8c47d"
     }
+  },
+  "local_rea_preparation_20261018": {
+    "scope": "Reusable local static tooling, separate from the installed driver; no vendor target execution, emulation, firmware upload, or hardware access.",
+    "rea": {
+      "version": "6.5.0",
+      "source_commit": "3b79af28e80785afce9f5998d8f03289402a1847",
+      "license": "MIT",
+      "tarball_sha256": "531717a06e92ca651aab52691190f916fac044272c01f875e22c5e293218e699",
+      "npm_sri_verified": true,
+      "lifecycle_scripts_executed": false,
+      "mcp_configured": false
+    },
+    "tools": [
+      {
+        "name": "Ghidra",
+        "version": "12.1.4",
+        "archive_sha256": "ddac49f903da9d5bac833e5cc79395098b9c33cfd3279be5f31bd00387d2d4db"
+      },
+      {
+        "name": "Temurin JDK",
+        "version": "21.0.12.1+1",
+        "archive_sha256": "ce79869e1307ed8ee1e2baa86a412b1eb5b75d10a01006d788a6f968bcfaee94"
+      },
+      {
+        "name": "Node",
+        "version": "24.19.0",
+        "provenance": "Byte-identical private copy of existing bundled workspace runtime; original build provenance not independently attested."
+      }
+    ],
+    "device_free_probe": {
+      "passed": true,
+      "namespaces_separated": 7,
+      "capability_sets_zero": 5,
+      "no_new_privs": 1,
+      "node_network_refused": true,
+      "host_home_and_hardware_hidden": true,
+      "rea_executed": false,
+      "vendor_input_mounted": false
+    },
+    "jieli_backend": {
+      "candidate": "https://github.com/quarkslab/ghidra-jieli",
+      "installed": false,
+      "tested_on_vendor_firmware": false,
+      "raw_architecture_supported_by_rea_6_5_0": false,
+      "manufacturer_reference": "https://github.com/Jieli-Tech/fw-AC63_BT_SDK/blob/master/apps/hid/board/br23/Makefile",
+      "limits": [
+        "BR23 pi32v2/r3 SDK reference is not a G7 Pro MCU identification.",
+        "E040 zero-extension in the external SLEIGH conflicts with earlier numerical sign-extension mask interpretation; instruction semantics require revalidation.",
+        "Relative-transfer PC origin and load/run mapping require independent controls.",
+        "Active CTRL2_G, actual chip and register-to-USB scale remain unknown."
+      ]
+    },
+    "static_cli_acceptance": {
+      "all_five_lanes_passed": true,
+      "own_synthetic_inputs_only": true,
+      "target_programs_executed": false,
+      "originals_and_staged_copies_unchanged": true,
+      "lanes": [
+        "native Windows PE overview through Ghidra",
+        "ELF function decompilation through Ghidra with expected arithmetic",
+        "JavaScript module/export analysis",
+        "artifact inspection",
+        "PE/CLI metadata inspection"
+      ],
+      "managed_limit": "Metadata inspection only, no C# decompilation acceptance.",
+      "mock_and_metadata_regression_tests": 39,
+      "system_packages_changed": false,
+      "driver_changed": false
+    }
   }
 }

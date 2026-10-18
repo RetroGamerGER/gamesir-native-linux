@@ -5,6 +5,19 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**REA lokal wiederverwendbar eingerichtet:** REA 6.5.0, separates Node,
+Ghidra 12.1.4 und JDK21 liegen im Benutzerverzeichnis. Der Starthelfer lässt
+nur fünf statische Analysewege zu, mit privater Eingabekopie, Hashkontrolle,
+Netzwerk-/Geräteisolation und lokalen Ergebnisdateien. Gerätefreie Probe
+und alle fünf echten CLI-Wege an eigenen synthetischen JS-/PE-/ELF-/CLI-
+Dateien bestanden; keine Testdatei ausgeführt. .NET-Metadatenprüfung ist
+keine vollständige C#-Dekompilierung. Keine MCP-Konfiguration, Systempakete,
+Treiber-/Hardwareänderung oder Hersteller-Upload. Die Gyrokalibrierung
+bleibt pausiert. [Werkzeuge, Abnahme und Grenzen](GAMESIR_NEXUS_RESEARCH.md#lokales-rea-und-neuer-jieli-referenzkandidat-18-oktober).
+Der neue externe Jieli/Pi32v2-Decoder ist ein ungeprüfter Kandidat, noch
+nicht installiert. E040-Semantik und Transfer-PC-Basis sind gegen frühere
+empirische Modelle abzugleichen. Kein CTRL2_G-Wert oder Gyrofaktor gewonnen.
+
 **Normaler nativer Dauerbetrieb nach den HID-Aufnahmen wieder bestätigt:**
 Der Maintainer führte Resume selbst aus. Die anschließende rein lesende
 Kontrolle bestätigt den zugehörigen erfolgreichen Bootstrap nach `109c`,
