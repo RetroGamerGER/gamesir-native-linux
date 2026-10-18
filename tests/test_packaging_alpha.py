@@ -163,6 +163,9 @@ class PackageTests(unittest.TestCase):
                              (ROOT / 'scripts/kernel_toolchain.py').read_bytes())
             for module in ('haptics_broker.py','gamesir_haptics.py','gamesir_mapping.py'):
                 self.assertTrue((staged / 'usr/lib/gamesir-native' / module).is_file())
+            rule = staged / 'usr/lib/udev/rules.d/70-gamesir-native-sensors.rules'
+            self.assertEqual(rule.read_bytes(), (ROOT / 'packaging/udev/70-gamesir-native-sensors.rules').read_bytes())
+            self.assertFalse((staged / 'etc/modprobe.d').exists())
             groups = (staged / 'usr/lib/sysusers.d/gamesir-native.conf').read_text()
             self.assertEqual([line for line in groups.splitlines() if line and not line.startswith('#')],
                              ['g gamesir-native-haptics -'])

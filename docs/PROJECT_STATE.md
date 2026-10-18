@@ -5,6 +5,16 @@
 Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**SDL-/Eden-Anbindung offline umgesetzt:** Nach Annahme der bevorzugten
+Gyroeinstellung wurde ein zusätzliches, ausdrücklich aktivierbares evdev-
+Gyrogerät für `109c` ergänzt. 0,07 °/s und beobachtete Achsen bleiben erhalten;
+SDL erhält rad/s, rohe IIO-Daten und Paddles bleiben unabhängig. Eden akzeptiert
+im geprüften Quellstand auch Gyro ohne Beschleunigung; dessen Zeitbasisgrenze
+bei spätem Hotplug ist dokumentiert. Alle vier Paddles sollen weiterhin eigenständig erkennbar und zuordenbar
+bleiben; ihre gemeinsame Nutzung mit Gyro ist offline geprüft. Noch kein neues
+Paket installiert, kein Hardware-/Eden-Test, keine Systemänderung oder Push.
+[Implementierung, Tests und nächster Freigabeschritt](SDL_EDEN_GYRO.md).
+
 **Erster Live-Test des Gyrofensters bestanden (18. Oktober):** Nach eigener
 Freigabe, frischer Instanz-/Buildprüfung und lokalem Go wurden 11.466
 kohärente Sensorwerte im unbegrenzt angelegten Vorschaufenster verarbeitet.

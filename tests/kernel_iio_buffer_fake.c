@@ -31,6 +31,9 @@ struct miscdevice { bool registered; };
 struct input_dev { int keys[KEY_CNT]; unsigned syncs; bool registered; };
 struct gsn_boot { struct kref ref; };
 struct gsn_device;
+/* Gyro registration/emission has its own extracted-code harness. */
+static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3], u64 ns)
+{ (void)g; (void)raw; (void)ns; }
 struct iio_buffer { unsigned refs; bool owner_released; };
 struct device { void *owner; };
 struct device_attribute { unsigned unused; };

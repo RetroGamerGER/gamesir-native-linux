@@ -34,7 +34,7 @@ struct fake_ff {
 	bool stopped;
 };
 struct input_dev {
-	const char *name, *phys;
+	const char *name, *phys, *uniq;
 	struct input_id id;
 	struct device dev;
 	void *drvdata;
@@ -56,6 +56,8 @@ struct file { void *private_data; };
 #define mutex_lock(p) do { assert(!(p)->held); (p)->held = true; } while (0)
 #define mutex_unlock(p) do { assert((p)->held); (p)->held = false; } while (0)
 
+static bool experimental_gyro;
+#define dev_name(d) "synthetic-interface"
 static bool persistent_mode = true, fail_input_alloc, fail_ff_create, fail_input_register;
 static unsigned int g_frees, input_frees, ff_frees, ff_owned_data_frees, stop_callbacks;
 static uintptr_t g_address;
@@ -167,6 +169,8 @@ static void input_free_device(struct input_dev *i)
 	}
 }
 struct gsn_device;
+/* Dedicated gyro harness exercises registration with the option enabled. */
+static int gsn_gyro_register(struct gsn_device *g) { return 0; }
 static void gsn_boot_cancel_device(struct gsn_device *g);
 static void gsn_boot_detach(struct gsn_device *g);
 static void gsn_neutral(struct gsn_device *g);

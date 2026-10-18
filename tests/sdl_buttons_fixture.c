@@ -16,7 +16,7 @@ static _Atomic unsigned queue_length, queue_position;
 static unsigned char pressed[KEY_MAX / 8 + 1];
 static unsigned ff_uploads, ff_plays;
 
-static int alpha(void) { return strstr(scenario(), "alpha17") != NULL; }
+static int alpha(void) { return strstr(scenario(), "alpha17") != NULL || !strcmp(scenario(), "observed-gyro"); }
 static int xpad(void) { return strstr(scenario(), "xpad11") != NULL; }
 /* Replay only captured input metadata, never actual USB/evdev traffic. */
 static int zzz(void) { return getenv("GS_VARIANT") && !strcmp(getenv("GS_VARIANT"), "105e"); }

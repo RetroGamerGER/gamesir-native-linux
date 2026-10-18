@@ -59,6 +59,35 @@ static void experimental_accel(void)
 
 int main(void)
 {
+	/* Exact selected profile, including signed endpoints and model/opt-in gates. */
+	gs_s16 observed[3] = {-32768, 32767, -1};
+	gs_s32 evdev[3] = {11, 22, 33};
+	for (unsigned pid = 0; pid < 65536; pid++) {
+		assert(gs_gyro_convert_observed(pid, 0, observed, evdev) == GS_SENSOR_NOT_READY);
+		if (pid != 0x109c)
+			assert(gs_gyro_convert_observed(pid, 1, observed, evdev) == GS_SENSOR_NOT_READY);
+	}
+	assert(evdev[0] == 11 && evdev[1] == 22 && evdev[2] == 33);
+	assert(gs_gyro_convert_observed(0x109c, 1, NULL, evdev) == GS_SENSOR_BAD_CONFIG);
+	assert(gs_gyro_convert_observed(0x109c, 1, observed, NULL) == GS_SENSOR_BAD_CONFIG);
+	assert(gs_gyro_convert_observed(0x109c, 1, observed, evdev) == GS_SENSOR_EXPERIMENTAL);
+	assert(evdev[0] == GS_GYRO_OBSERVED_MIN && evdev[1] == GS_GYRO_OBSERVED_MAX && evdev[2] == -7);
+	for (int value = -32768; value <= 32767; value++) {
+		observed[0] = observed[1] = observed[2] = value;
+		assert(gs_gyro_convert_observed(0x109c, 1, observed, evdev) == GS_SENSOR_EXPERIMENTAL);
+		for (unsigned i = 0; i < 3; i++)
+			assert(evdev[i] == value * 7);
+	}
+	struct gs_gyro_clock clock = {0};
+	assert(gs_gyro_timestamp(&clock, 1000000) == 1);
+	assert(gs_gyro_timestamp(&clock, 17000000) == 16001);
+	assert(gs_gyro_timestamp(&clock, 17000600) == 16001);
+	assert(gs_gyro_timestamp(&clock, 17001200) == 16002);
+	gs_gyro_pause(&clock);
+	assert(gs_gyro_timestamp(&clock, 600000000000ULL) == 16003);
+	clock.ticks_us = 0x7ffffffe;
+	assert(gs_gyro_timestamp(&clock, 600000003000ULL) == 1);
+	assert(gs_gyro_timestamp(&clock, 100) == 2);
 	experimental_accel();
 	gs_s16 raw[3] = {8192, 0, -8192};
 	gs_s32 out[3] = {101, 102, 103};

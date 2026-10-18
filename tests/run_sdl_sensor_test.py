@@ -58,7 +58,7 @@ def main():
         ("sensor-contract", ["clang", "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC",
             str(PROJECT / "src/gs_sensor.c"), "-o", str(BUILD / "sensor.so")]),
         ("fixture", ["clang", "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC",
-            str(PROJECT / "tests/sdl_evdev_fixture.c"), "-ldl", "-o", str(BUILD / "fixture.so")]),
+            str(PROJECT / "tests/sdl_buttons_fixture.c"), "-ldl", "-o", str(BUILD / "fixture.so")]),
         ("sdl3", ["clang", "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2",
             str(PROJECT / "tests/sdl_sensor_probe.c"), "-lSDL3", "-ldl", "-lm", "-o", str(BUILD / "probe3")]),
         ("sdl2", ["clang", "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-DTEST_SDL2",
@@ -74,6 +74,11 @@ def main():
         _fields_ = [("verified", c.c_uint32), ("resolution", c.c_uint32), ("axis", Axis * 3)]
     lib = c.CDLL(str(BUILD / "sensor.so"))
     lib.gs_sensor_convert.argtypes = [c.POINTER(Calibration), c.c_void_p, c.c_void_p]
+    lib.gs_gyro_convert_observed.argtypes = [c.c_uint16, c.c_int, c.c_void_p, c.c_void_p]
+    gyro = (c.c_int32 * 3)()
+    assert lib.gs_gyro_convert_observed(0x109c, 1, (c.c_int16 * 3)(*axes[:3]), gyro) == 1
+    assert list(gyro) == [value * 7 for value in axes[:3]]
+    observed = [0, 0, 0, *gyro]
     converted = []
     # Artificial 1 g and 90 degree/s references; NOT a real device calibration.
     for sample, resolution, numerator, denominator in [
@@ -85,9 +90,12 @@ def main():
     assert converted == [10000, 0, -10000, 9000, -9000, 0]
     results = []
     for version in [3, 2]:
-        for scenario in ["iio-only", "matching-uniq", "wrong-uniq", "missing-rz", "zero-resolution", "synthetic-converted"]:
+        for scenario in ["iio-only", "matching-uniq", "wrong-uniq", "missing-rz", "zero-resolution", "synthetic-converted", "observed-gyro"]:
             sample_raw = converted if scenario == "synthetic-converted" else raw
             accel_resolution, gyro_resolution = (10000, 100) if scenario == "synthetic-converted" else (8192, 16)
+            if scenario == "observed-gyro":
+                sample_raw = observed
+                accel_resolution, gyro_resolution = 0, 100
             if scenario == "zero-resolution":
                 accel_resolution = gyro_resolution = 0
             args = ["bwrap", "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL",

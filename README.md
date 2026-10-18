@@ -81,8 +81,10 @@ separates hardware results, offline tests and outstanding validation.
   motors. Three one-second pulses per motor were felt and stopped while
   input and raw IMU data continued. This proves the tested hardware commands,
   not universal game integration.
-- **Raw motion data:** all six gyro/accelerometer channels were observed.
-  Physical sensor axes, bias and the gyro scaling factor are not calibrated.
+- **Motion data:** all six raw gyro/accelerometer channels were observed.
+  Six gyro directions and a preferred 0.07 °/s/raw response were qualitatively
+  tested in the local diagnostic window. The optional SDL gyro integration
+  is offline-tested; real Eden/game acceptance remains pending.
 - **Forza Horizon 6 through Xodus Nexus:** one controlled run of the optional
   trigger bridge `0.1.0.alpha1-2` produced felt effects on both impulse
   triggers, pauses between effects and renewed vibration on later effects.
@@ -97,12 +99,11 @@ computer.
 
 ## Known Limitations
 
-- **Gyroscope calibration is paused.** Raw data is available, but calibrated
-  SDL gyro output and gyro-enabled game compatibility are not confirmed.
-  `8192 LSB/g` remains an experimental accelerometer assumption, not a gyro
-  factor. The coherent IIO buffer defaults to disabled; bounded live captures
-  and restoration passed one qualitative left-turn test workflow. Known-angle
-  reference calibration and the full physical axis mapping remain unverified.
+- **Gyro integration remains experimental.** The selected 0.07 °/s/raw profile
+  has an opt-in SDL evdev path; it is not enabled by default or validated in
+  Eden on hardware. Precise angle/bias calibration remains paused. The
+  accelerometer stays raw IIO with experimental `8192 LSB/g`; its physical
+  axes have not been established. See [SDL/Eden scope and test plan](docs/SDL_EDEN_GYRO.md).
 - **Trigger vibration has no confirmed universal games path.** Standard
   Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,
   with game-specified effect duration. Four-channel hardware support and the

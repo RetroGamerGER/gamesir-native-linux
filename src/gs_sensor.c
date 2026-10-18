@@ -4,6 +4,54 @@
 #include <linux/math64.h>
 #endif
 
+int gs_gyro_convert_observed(gs_u16 pid, int enabled,
+			     const gs_s16 raw[3], gs_s32 out[3])
+{
+	unsigned int i;
+
+	if (!enabled || pid != 0x109c)
+		return GS_SENSOR_NOT_READY;
+	if (!raw || !out)
+		return GS_SENSOR_BAD_CONFIG;
+	for (i = 0; i < 3; i++)
+		out[i] = (gs_s32)raw[i] * 7;
+	return GS_SENSOR_EXPERIMENTAL;
+}
+
+gs_u32 gs_gyro_timestamp(struct gs_gyro_clock *c, gs_u64 host_ns)
+{
+	gs_u64 delta, us;
+
+	/* First sample after pause starts a new integration segment. A backward
+	 * host clock is treated the same way, never as a giant unsigned delta.
+	 */
+	if (!c->last_ns || host_ns <= c->last_ns) {
+		us = 1;
+		c->fraction_ns = 0;
+	} else {
+		delta = host_ns - c->last_ns;
+#ifdef __KERNEL__
+		us = div_u64(delta, 1000);
+#else
+		us = delta / 1000;
+#endif
+		c->fraction_ns += (gs_u32)(delta - us * 1000);
+		if (c->fraction_ns >= 1000) {
+			us++;
+			c->fraction_ns -= 1000;
+		}
+	}
+	c->last_ns = host_ns;
+	c->ticks_us = (c->ticks_us + us) & 0x7fffffff;
+	return c->ticks_us;
+}
+
+void gs_gyro_pause(struct gs_gyro_clock *c)
+{
+	c->last_ns = 0;
+	c->fraction_ns = 0;
+}
+
 int gs_accel_convert_experimental(const struct gs_accel_experimental_scale *s,
 				  const gs_s16 raw[3], gs_s32 out[3])
 {

@@ -46,6 +46,9 @@ MODULE_PARM_DESC(test_pid, "Exact expected PID: 0x100a, 0x109c or experimental 0
 static bool enable_output;
 module_param(enable_output, bool, 0400);
 MODULE_PARM_DESC(enable_output, "Permit explicit native OUT activation; default false; persistent_mode selects service runtime");
+static bool experimental_gyro;
+module_param(experimental_gyro, bool, 0400);
+MODULE_PARM_DESC(experimental_gyro, "Opt-in 109c evdev gyro: observed axes, user-selected 0.07 dps/raw; no accelerometer calibration");
 static uint accel_counts_per_g_num = 8192;
 module_param(accel_counts_per_g_num, uint, 0400);
 MODULE_PARM_DESC(accel_counts_per_g_num, "EXPERIMENTAL replaceable acceleration counts/g numerator");
@@ -101,11 +104,14 @@ struct gsn_device {
 	struct urb *rx_urb;
 	u8 *rx_buf, *tx_buf;
 	struct input_dev *input;
+	struct input_dev *gyro_input;
+	struct gs_gyro_clock gyro_clock;
 	struct iio_dev *iio;
 	struct iio_buffer *iio_buffer;
 	struct miscdevice misc;
 	char *misc_name;
 	char phys[96];
+	char gyro_phys[96], sensor_uniq[112];
 	struct mutex io_lock; /* All sleeping USB OUT operations and teardown. */
 	spinlock_t lock; /* Runtime, sample, counters; also used by RX completion. */
 	spinlock_t report_lock; /* Serialize RX input reports against neutralization. */
@@ -122,6 +128,7 @@ struct gsn_device {
 	int stop_error;
 	bool ack_pending, stopping, output_used, stop_sent;
 	bool input_registered, iio_registered, misc_registered;
+	bool gyro_registered;
 	bool iio_buffer_active; /* report_lock: push vs buffer layout changes. */
 };
 
@@ -131,6 +138,7 @@ static bool gsn_boot_rx_teardown(struct gsn_device *g, int status, unsigned int 
 static void gsn_boot_detach(struct gsn_device *g);
 static void gsn_boot_cancel_device(struct gsn_device *g);
 static void gsn_quiesce(struct gsn_device *g, int state, int error);
+static int gsn_gyro_register(struct gsn_device *g);
 
 static u64 gsn_now_us(void)
 {
@@ -285,6 +293,7 @@ static int gsn_flush_motors(struct gsn_device *g)
 
 static void gsn_neutral(struct gsn_device *g);
 static void gsn_neutral_locked(struct gsn_device *g);
+static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3], u64 host_ns);
 
 /* io_lock held. report_lock is always outside rt.lock; input reporting never
  * holds rt.lock because FF callbacks arrive holding input's own event lock.
@@ -401,6 +410,8 @@ static void gsn_neutral_locked(struct gsn_device *g)
 	struct gs_frame zero = { .kind = GS_PAD_XINPUT };
 	unsigned int key;
 
+	gsn_gyro_report(g, zero.gyro, ktime_get_ns());
+	gs_gyro_pause(&g->gyro_clock);
 	if (!g->input_registered)
 		return;
 	gsn_pad(g, &zero);
@@ -410,6 +421,28 @@ static void gsn_neutral_locked(struct gsn_device *g)
 			input_report_key(g->input, key, 0);
 		input_sync(g->input);
 	}
+}
+
+/* Same accepted IMU packet as IIO; no extra USB consumer or buffer setup.
+ * MSC_TIMESTAMP also preserves unchanged-rate samples in evdev. Its clock
+ * is explicitly host-derived, with paused intervals excluded, NOT a claim
+ * of a firmware timestamp. input_event timestamps retain actual host time.
+ */
+static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3], u64 host_ns)
+{
+	gs_s32 values[3];
+	unsigned int i;
+
+	if (!g->gyro_registered ||
+	    gs_gyro_convert_observed(g->rt.pid, experimental_gyro, raw, values) !=
+	    GS_SENSOR_EXPERIMENTAL)
+		return;
+	input_set_timestamp(g->gyro_input, ns_to_ktime(host_ns));
+	for (i = 0; i < 3; i++)
+		input_report_abs(g->gyro_input, ABS_RX + i, values[i]);
+	input_event(g->gyro_input, EV_MSC, MSC_TIMESTAMP,
+		    gs_gyro_timestamp(&g->gyro_clock, host_ns));
+	input_sync(g->gyro_input);
 }
 
 static void gsn_imu(struct gsn_device *g, const struct gs_frame *f)
@@ -422,6 +455,7 @@ static void gsn_imu(struct gsn_device *g, const struct gs_frame *f)
 		__le16 accel[3];
 		__le16 gyro[3];
 		u32 padding;
+
 		__le64 count __aligned(8);
 		s64 timestamp;
 	} scan = {0};
@@ -443,6 +477,7 @@ static void gsn_imu(struct gsn_device *g, const struct gs_frame *f)
 	sample.sample_number = ++g->imu_packets;
 	g->sample = sample;
 	spin_unlock_irqrestore(&g->lock, flags);
+	gsn_gyro_report(g, f->gyro, sample.host_monotonic_ns);
 	/* No buffer activation, allocation, owner claim, USB command or sleeping
 	 * lock here. The single RX URB orders pushes; disconnect kills it before
 	 * unregistering IIO. Queue overflow must not fault normal gamepad input:
@@ -455,7 +490,7 @@ static void gsn_imu(struct gsn_device *g, const struct gs_frame *f)
 		}
 		scan.count = cpu_to_le64(sample.sample_number);
 		ret = iio_push_to_buffers_with_ts(g->iio, &scan, sizeof(scan),
-						 sample.host_monotonic_ns);
+						  sample.host_monotonic_ns);
 		if (ret < 0) {
 			spin_lock_irqsave(&g->lock, flags);
 			g->iio_push_errors++;
@@ -598,7 +633,7 @@ static ssize_t calibration_status_show(struct device *dev,
 }
 
 static ssize_t buffer_push_errors_show(struct device *dev,
-				      struct device_attribute *attr, char *buf)
+				       struct device_attribute *attr, char *buf)
 {
 	struct gsn_device *g = iio_device_get_drvdata(dev_to_iio_dev(dev));
 	unsigned long flags;
@@ -611,7 +646,7 @@ static ssize_t buffer_push_errors_show(struct device *dev,
 }
 
 static ssize_t buffer_stream_active_show(struct device *dev,
-					struct device_attribute *attr, char *buf)
+					 struct device_attribute *attr, char *buf)
 {
 	struct gsn_device *g = iio_device_get_drvdata(dev_to_iio_dev(dev));
 	unsigned long flags;
@@ -1907,6 +1942,14 @@ static int gsn_input_register(struct gsn_device *g)
 	g->input->id.product = g->rt.pid;
 	g->input->id.version = le16_to_cpu(g->udev->descriptor.bcdDevice);
 	g->input->dev.parent = &g->intf->dev;
+	if (experimental_gyro && g->rt.pid == 0x109c) {
+		/* Session association, not a claimed hardware serial. Nonempty and
+		 * distinct for simultaneous dongles and replacement bindings.
+		 */
+		snprintf(g->sensor_uniq, sizeof(g->sensor_uniq), "gsn-%s-%llu",
+			 dev_name(&g->intf->dev), (unsigned long long)g->identity.instance);
+		g->input->uniq = g->sensor_uniq;
+	}
 	for (i = 0; i < ARRAY_SIZE(keys); i++)
 		input_set_capability(g->input, EV_KEY, keys[i]);
 	if (gs_pid_native(g->rt.pid)) {
@@ -1928,9 +1971,45 @@ static int gsn_input_register(struct gsn_device *g)
 		if (ret)
 			return ret;
 	}
+	/* Publish sensors first so a consumer opening the new gamepad can find
+	 * its partner immediately. Both allocations are unwound on probe error.
+	 */
+	ret = gsn_gyro_register(g);
+	if (ret)
+		return ret;
 	ret = input_register_device(g->input);
 	if (!ret)
 		g->input_registered = true;
+	return ret;
+}
+
+static int gsn_gyro_register(struct gsn_device *g)
+{
+	unsigned int i;
+	int ret;
+
+	if (!experimental_gyro || g->rt.pid != 0x109c)
+		return 0;
+	g->gyro_input = input_allocate_device();
+	if (!g->gyro_input)
+		return -ENOMEM;
+	usb_make_path(g->udev, g->gyro_phys, sizeof(g->gyro_phys));
+	strlcat(g->gyro_phys, "/input1", sizeof(g->gyro_phys));
+	g->gyro_input->name = "GameSir G7 Pro Motion Sensors";
+	g->gyro_input->phys = g->gyro_phys;
+	g->gyro_input->uniq = g->sensor_uniq;
+	g->gyro_input->id = g->input->id;
+	g->gyro_input->dev.parent = &g->intf->dev;
+	__set_bit(INPUT_PROP_ACCELEROMETER, g->gyro_input->propbit);
+	input_set_capability(g->gyro_input, EV_MSC, MSC_TIMESTAMP);
+	for (i = ABS_RX; i <= ABS_RZ; i++) {
+		input_set_abs_params(g->gyro_input, i, GS_GYRO_OBSERVED_MIN,
+				     GS_GYRO_OBSERVED_MAX, 0, 0);
+		input_abs_set_res(g->gyro_input, i, GS_GYRO_OBSERVED_RESOLUTION);
+	}
+	ret = input_register_device(g->gyro_input);
+	if (!ret)
+		g->gyro_registered = true;
 	return ret;
 }
 
@@ -1975,6 +2054,13 @@ static void gsn_disconnect(struct usb_interface *intf)
 	gsn_boot_detach(g);
 	if (g->misc_registered)
 		misc_deregister(&g->misc);
+	if (g->gyro_registered) {
+		g->gyro_registered = false;
+		input_unregister_device(g->gyro_input);
+	} else {
+		input_free_device(g->gyro_input);
+	}
+	g->gyro_input = NULL;
 	if (g->input_registered) {
 		g->input_registered = false;
 		input_unregister_device(g->input);

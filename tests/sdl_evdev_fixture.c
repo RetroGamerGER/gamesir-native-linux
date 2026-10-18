@@ -149,6 +149,7 @@ int ioctl(int fd, unsigned long req, ...)
             break;
         case EV_ABS:
             for (unsigned i = 0; i < 6; i++) {
+                if (k == 2 && i < ABS_RX && !strcmp(scenario(), "observed-gyro")) continue;
                 if (k == 2 && i == ABS_RZ && !strcmp(scenario(), "missing-rz")) continue;
                 bit(arg, size, i);
             }
@@ -193,6 +194,7 @@ ssize_t read(int fd, void *buf, size_t size)
         e[i].input_event_usec = now.tv_nsec / 1000;
     }
     for (unsigned i = 0; i < 6; i++) {
+        if (i < ABS_RX && !strcmp(scenario(), "observed-gyro")) continue;
         if (i == ABS_RZ && !strcmp(scenario(), "missing-rz")) continue;
         e[i].type = EV_ABS; e[i].code = i; e[i].value = raw(i);
     }

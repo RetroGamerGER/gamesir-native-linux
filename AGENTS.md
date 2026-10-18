@@ -24,7 +24,24 @@ authorization. Never flash firmware or guess undocumented device commands.
 Document and verify the safe return to xpad. Deadband must retain a supported
 exclusive maintenance path; normal play must not depend on it.
 
-## Known boundaries
+## Current SDL/Eden implementation decision (18 October 2026)
+
+The user accepted the observed gyro response at 0.07 dps/raw, 1.00x display
+and requested SDL/Eden integration. This supersedes earlier prohibitions on
+**offline implementation** of that profile, not hardware/installation gates
+or evidence standards. Do not restart chip/factor/known-angle research.
+Read docs/SDL_EDEN_GYRO.md. Preserve the explicit experimental_gyro opt-in,
+109c-only scope, gyro-only evdev node, nonempty paired session identity and
+unchanged raw IIO. Do not infer accelerometer axes or add display gain to
+physical units. Default configuration stays off until separate activation.
+Eden's pinned input path accepts gyro-only; source-method tests are not an
+emulator acceptance test. Retain its documented initial timestamp-domain
+limitation; start Eden after native startup for the first approved test.
+No Eden GPL-3.0-or-later sources/binaries are distributable with our GPL-2.0-only
+sources. The user also requires independent assignable paddles;
+maintain them and test their combinations alongside gyro. No push authorized.
+
+## Historical boundaries and evidence
 
 VID3537; standard PIDs100a/109c; ZZZ105e remains experimental. Keep existing
 XInput/GIP/IMU formats and hardware-confirmed four-motor packet support.

@@ -1,0 +1,174 @@
+# SDL / Eden: opt-in GameSir gyro integration
+
+Status: 18 October 2026 — implemented and tested offline; **not installed or
+hardware-validated**. The existing live driver, manager, Steam configuration
+and Eden application have not been changed. No push or release approval.
+
+## Decision and scope
+
+The maintainer accepted the observed gyro directions and **0.07 degrees/s
+per raw count**, with the diagnostic window at 1.00x. Continue with that
+setting, without reopening the chip/factor search or the paused known-angle
+calibration. The display multiplier is not a physical conversion factor.
+The live window established a preferred qualitative response, not a measured
+scale/bias certificate. The new runtime profile is explicitly experimental.
+
+The new `experimental_gyro=1` module option enables the reviewed standard
+G7 Pro `3537:109c` profile. Default is off; `100a`, `105e` and other variants
+do not inherit this sensor assumption. It does not change USB initialization,
+controller configuration, the manager, the gamepad name, or motor ownership.
+
+## Data path
+
+```
+accepted 109c IMU packet
+  +-- unchanged raw sample / coherent IIO buffer
+  +-- GameSir G7 Pro Motion Sensors (evdev gyro)
+        +-- SDL Linux gamepad sensor API (rad/s)
+              +-- Eden SDL motion input (revolutions/s internally)
+```
+
+There is no second USB reader, userspace sensor daemon or IIO-buffer setup
+for this path. The optional sensor node has `INPUT_PROP_ACCELEROMETER`
+(the Linux motion-device classification, also used for gyroscopes),
+`ABS_RX/RY/RZ`, zero fuzz/flat, resolution **100 counts/(degree/s)** and
+values `7 * raw`. This represents 0.07 exactly with integer kernel arithmetic.
+The signed wire endpoints are preserved as −229376 through +229369.
+No rounding to an integer 14 LSB/(degree/s), double gain or 8192-derived
+gyro factor is used. The strict verified-calibration API remains unchanged.
+
+The observed right-handed body coordinates were `(G0, -G2, G1)` with
+X right, Y forward and Z out of the face. SDL uses X right, Y up/out of the
+face and Z towards the player: **SDL gyro = (G0, G1, G2)**. Positive
+pitch/front-up, yaw/left and roll/left-grip-down follow the recorded signs.
+The separate accelerometer remains raw IIO: no inferred accelerometer
+permutation, fabricated gravity vector or transplanted Sony calibration.
+This is a three-axis gyro integration, not complete six-axis sensor fusion.
+
+The gamepad and sensor share a nonempty per-binding `uniq` consisting of the
+current interface path and instance counter. It is a session association,
+not a claimed factory serial. Simultaneous dongles and new bindings receive
+distinct associations; no fixed physical USB port or event number is used.
+Sensors are registered before the gamepad, to be discoverable when it opens.
+Registration failures unwind through the existing probe cleanup. Disconnect
+kills RX before unregistering the sensor. Gamepad/paddle/FF ownership remains
+with the existing gamepad; the sensor exposes no buttons or force feedback.
+
+## Time and stopping
+
+Event timestamps use the same host monotonic receive time as the raw sample.
+`MSC_TIMESTAMP` carries a **host-derived active-stream microsecond counter**,
+not a firmware/hardware timestamp. The extra event preserves reports even
+when the angular-rate integers do not change. Sub-microsecond remainders are
+retained; the nonnegative 31-bit wrap matches SDL's Linux reader.
+
+The existing neutralization path emits a final zero-rate report and breaks
+the integration segment. The first subsequent sample advances the sensor
+clock by one microsecond rather than integrating the suspended/disconnected
+interval. Actual event timestamps still retain host elapsed time. No new
+USB commands, rebind attempts, auto-restarts or manufactured raw IIO samples
+are added. Raw IIO timestamp/count semantics are unchanged.
+
+## Eden reference and limits
+
+The locally observed AppImage filenames identify revision
+`e0d47f2790`; its full upstream commit is
+`e0d47f2790e3f758fa2188926a0bb2f56af6b310`. During preparation the local
+Steam Deck build was replaced by an amd64 build of that named revision.
+Neither application was executed, modified or assumed binary-identical to
+source. Its actual bundled SDL and real runtime remain to be checked during
+the separately approved application test.
+
+The [pinned Eden SDL backend](https://git.eden-emu.dev/eden-emu/eden/src/commit/e0d47f2790e3f758fa2188926a0bb2f56af6b310/src/input_common/drivers/sdl_driver.cpp)
+uses SDL 3, enables available gyro/accel independently and accepts either in
+`HasMotion`. The motion mapping is attached to the chosen gamepad. It converts
+SDL rad/s to revolutions/s and maps `(x,y,z)` to `(x,-z,y)`; **do not duplicate
+that conversion in our driver**. It uses nanosecond timestamps and supplies
+microsecond intervals to its motion stack. Source file SHA256:
+`ff6037c3d2cea0f590053f5517672a0f89d4e17f3c58b13fee1076048d49bb82`.
+
+The [motion integration code](https://git.eden-emu.dev/eden-emu/eden/src/commit/e0d47f2790e3f758fa2188926a0bb2f56af6b310/src/hid_core/frontend/motion_input.cpp)
+can integrate gyro while skipping unreliable acceleration correction.
+Gyro-only output provides no gravity-based drift correction or trustworthy
+accelerometer game actions. Eden applies its own thresholds and bias logic;
+its perceived response need not exactly reproduce the diagnostic window.
+SHA256: `50bef5fe01a7142eb5885c7860939cdbfaac36da806ca5f20c07d87f1d2d5ec5`.
+
+**Reproduced Eden input limitation:** initial SDL events can have zero sensor
+time, causing Eden to use host/application time. A later, smaller nonzero
+sensor clock is rejected until it catches up. This can affect late hotplug
+or enabling motion after the emulator has already been running. The optional
+reference-method test reproduces it; we do not claim to have fixed Eden.
+For the first test, finish native startup before starting Eden. Broader
+hotplug/time-domain handling needs a separately reviewed Eden/SDL fix or
+verified newer version, not a GameSir USB reset or artificial gyro scaling.
+
+Eden reference methods are tested only from a private supplied source file.
+No Eden GPL-3.0-or-later code, binary or derived test binary is shipped in this
+GPL-2.0-only repository/package. There is no Eden patch or application preload.
+SDL reference/provenance remains in [the earlier comparison](DUALSENSE_SENSOR_COMPARISON.md).
+
+## Access and installation boundary
+
+The source package now includes a narrow seat-local udev `uaccess` rule for
+our exact sensor node name and `gsn-*` association. It grants no raw USB/IIO
+access, no broad world-readable input permission and no input-group membership.
+Active KDE/Gamescope session ACLs still require live verification. The option
+is deliberately absent from the default module/service configuration.
+
+A future approved activation would add `experimental_gyro=1` to the module
+options after a reviewed package update and controlled release/reload. This
+is not a command to run now. The exact release/install/load/resume steps must
+be based on a fresh system/ownership check. Removing that one opt-in and
+performing an approved reload returns to the existing raw-IIO-only behavior.
+No current service or Steam configuration was changed during preparation.
+
+## Offline verification
+
+- `make test-sensor`: full signed 16-bit profile range, all PID/opt-in gates,
+  overflow-safe arithmetic, positive resolution, exact conversion and clock
+  pause/fraction/wrap handling; ASan/UBSan.
+- The extracted actual input registration/report functions test model gates,
+  distinct port/instance associations, allocation/registration failures,
+  sensor-only capabilities, unchanged-rate frames, neutralization clock,
+  retained paddle and grip-FF capabilities. Fake boundaries are not proof of
+  Linux-core concurrency or real udev permissions.
+- `make test-sdl`: installed SDL 3.4.18 plus SDL2-compat in audited device-free
+  Bubblewrap. Gyro-only discovery, rad/s values, wrong-identity rejection,
+  incomplete axes and invalid-resolution negative controls. The new profile
+  passes all 32 simultaneous A/paddle combinations with gyro enabled, plus
+  the existing independent button/axis/FF suite. No host device is opened.
+- Optional `python -B tests/check_eden_motion.py --source <private-sdl_driver.cpp>`:
+  exact pinned methods, six signed directions, units, intervals, duplicate/
+  backward handling and the time-domain limitation. No emulator execution.
+- Full regression suite and current-kernel build are required before commit.
+  Evidence is recorded in `build/results/`; raw private source stays ignored.
+
+## Next approved end-to-end test
+
+1. Fresh package/kernel/device/ownership check; close games and Eden.
+2. Review and approve the exact update/option/reload sequence and rollback.
+3. Confirm one `GameSir G7 Pro`, its sensor partner, matching nonempty identity
+   and session access. Keep current paddle integration intact.
+4. Start Eden after native initialization. Select the physical GameSir through
+   SDL and its motion source; enable motion if the UI requires it. Avoid a
+   virtual Xbox device substituted by a launcher which hides physical sensors.
+5. With no time pressure, test gyro directions/aiming, then ordinary inputs and
+   each paddle independently and together. All four paddles must
+   remain independently recognizable and assignable. Earlier application
+   results are not evidence of the new gyro build running in Eden.
+6. Close Eden and verify stable normal input. No unapproved reconnect, motor,
+   reference-angle calibration or additional stress test.
+
+Success means motion reaches the real emulator, the selected sensitivity is
+usable, and existing inputs survive. Offline API/method results alone do not
+constitute Eden/game hardware acceptance.
+
+### Recorded result
+
+The full `make test` run completed with 1,023 Python unittest cases plus the
+C/protocol/kernel-adapter checks. The separate SDL suite passed 14 sensor
+and 18 button/axis/FF scenarios. Kernel build for `7.2.11-1-garuda` has zero
+code warnings; its known compiler-environment advisory is Clang 23.1.1
+(kernel) versus 23.1.3 (module build). Kernel checkpatch and all five Clang
+analyzer translation units passed. [Sanitized result](sdl-eden-gyro-validation.json).

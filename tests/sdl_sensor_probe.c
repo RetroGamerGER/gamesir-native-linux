@@ -49,7 +49,7 @@ int main(void)
 #endif
     /* Explicit mapping isolates sensor discovery from the controller DB. */
     char mapping[512];
-    snprintf(mapping, sizeof(mapping), "%s,GameSir Offline Fixture,a:b0,b:b1,x:b2,y:b3,leftx:a0,lefty:a1,rightx:a3,righty:a4,lefttrigger:a2,righttrigger:a5,platform:Linux,", guid);
+    snprintf(mapping, sizeof(mapping), "%s,GameSir Offline Fixture,a:b0,b:b1,x:b2,y:b3,leftx:a0,lefty:a1,rightx:a3,righty:a4,lefttrigger:a2,righttrigger:a5,paddle1:b12,paddle2:b11,paddle3:b14,paddle4:b13,platform:Linux,", guid);
 #ifdef TEST_SDL2
     if (SDL_GameControllerAddMapping(mapping) < 0) return 2;
     SDL_GameController *pad = SDL_GameControllerOpen(0);
@@ -66,7 +66,7 @@ int main(void)
 #endif
     int absent = !strcmp(s, "iio-only") || !strcmp(s, "wrong-uniq");
     int expected_gyro = !absent && strcmp(s, "missing-rz");
-    int expected_accel = !absent;
+    int expected_accel = !absent && strcmp(s, "observed-gyro");
     int ok = count == 1 && gyro == !!expected_gyro && accel == expected_accel;
     float g[3] = {0}, a[3] = {0};
 #ifdef TEST_SDL2
@@ -83,6 +83,49 @@ int main(void)
     if (accel && !SDL_GetGamepadSensorData(pad, SDL_SENSOR_ACCEL, a, 3)) ok = 0;
 #endif
     int finite = 1;
+    if (!strcmp(s, "observed-gyro")) {
+        void (*push)(const unsigned *, const int *, unsigned) = dlsym(RTLD_DEFAULT, "gs_fixture_push_keys");
+        const unsigned codes[] = {304,704,705,706,707};
+        if (!push) return 2;
+        for (unsigned mask = 0; mask < 32; mask++) {
+            int keys[5];
+            for (unsigned i = 0; i < 5; i++) keys[i] = !!(mask & (1u << i));
+            push(codes, keys, 5); SDL_PumpEvents();
+#ifdef TEST_SDL2
+            const SDL_GameControllerButton buttons[] = {SDL_CONTROLLER_BUTTON_A,
+                SDL_CONTROLLER_BUTTON_PADDLE2, SDL_CONTROLLER_BUTTON_PADDLE1,
+                SDL_CONTROLLER_BUTTON_PADDLE4, SDL_CONTROLLER_BUTTON_PADDLE3};
+            for (unsigned i = 0; i < 5; i++) ok &= SDL_GameControllerGetButton(pad, buttons[i]) == keys[i];
+#else
+            const SDL_GamepadButton buttons[] = {SDL_GAMEPAD_BUTTON_SOUTH,
+                SDL_GAMEPAD_BUTTON_LEFT_PADDLE1, SDL_GAMEPAD_BUTTON_RIGHT_PADDLE1,
+                SDL_GAMEPAD_BUTTON_LEFT_PADDLE2, SDL_GAMEPAD_BUTTON_RIGHT_PADDLE2};
+            for (unsigned i = 0; i < 5; i++) ok &= SDL_GetGamepadButton(pad, buttons[i]) == keys[i];
+#endif
+        }
+        int released[5] = {0}; push(codes, released, 5); SDL_PumpEvents();
+        const int raw_buttons[] = {0,11,12,13,14};
+#ifdef TEST_SDL2
+        for (unsigned i = 0; i < 5; i++) ok &= !SDL_JoystickGetButton(j, raw_buttons[i]);
+        ok &= !SDL_GameControllerGetSensorData(pad, SDL_SENSOR_GYRO, g, 3);
+#else
+        for (unsigned i = 0; i < 5; i++) ok &= !SDL_GetJoystickButton(j, raw_buttons[i]);
+        ok &= SDL_GetGamepadSensorData(pad, SDL_SENSOR_GYRO, g, 3);
+#endif
+        printf("gyro_with_paddles_32_combinations=%s\n", ok ? "PASS" : "FAIL");
+    }
+#ifndef TEST_SDL2
+    if (!strcmp(s, "observed-gyro")) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_GAMEPAD_SENSOR_UPDATE)
+                printf("sensor-event type=%d host=%llu sensor=%llu data=%.9g,%.9g,%.9g\n",
+                    event.gsensor.sensor, (unsigned long long)event.gsensor.timestamp,
+                    (unsigned long long)event.gsensor.sensor_timestamp,
+                    event.gsensor.data[0], event.gsensor.data[1], event.gsensor.data[2]);
+        }
+    }
+#endif
     for (int i = 0; i < 3; i++) if (!isfinite(g[i]) || !isfinite(a[i])) finite = 0;
     if (!strcmp(s, "zero-resolution")) ok &= !finite;
     else if (!absent) {

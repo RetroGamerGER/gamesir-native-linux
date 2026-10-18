@@ -1,5 +1,15 @@
 # Public pre-alpha release audit
 
+## Unreleased SDL/Eden addition — 18 October 2026
+
+The opt-in 109c gyro input path is prepared and tested offline after the
+maintainer accepted the diagnostic response. It is not installed, hardware-
+validated in SDL/Eden, tagged or pushed. Existing release checkpoints below
+retain their historical scope. [New integration and limitations](SDL_EDEN_GYRO.md),
+[bounded offline result](sdl-eden-gyro-validation.json). No accelerometer axis
+claim, universal games support or default runtime activation is added.
+
+
 Current candidate `v0.1.0-pre-alpha.2`, 2026-10-17: the corrected optional
 bridge `0.1.0.alpha1-2` passed one approved Forza Horizon 6 / Xodus Nexus run.
 Both triggers were felt with pauses/restarts; normal inputs and grip rumble

@@ -555,3 +555,13 @@ Details, Altcode-Negativkontrollen und Beweisgrenzen:
 [Bootstrapkorrektur Garuda/CachyOS](BOOTSTRAP_CACHYOS_FIX.md).
 Diese Tests ersetzen weder USB-Core-Parallelität noch einen freigegebenen
 neuen Hardwarelauf und rekonstruieren keine fehlenden alten Transferdaten.
+
+## SDL/Eden gyro extension (offline)
+
+`make test-sensor test-sdl` covers the actual registration/report adapters,
+selected profile arithmetic and installed SDL inside device-free Bubblewrap,
+including simultaneous paddle combinations. `make test` retains the existing
+regressions; `make kernel-analyze` builds and inspects without loading.
+The optional `tests/check_eden_motion.py --source <private-sdl_driver.cpp>`
+accepts only the documented pinned hash and performs no download or emulator
+execution. See [SDL/Eden procedure](SDL_EDEN_GYRO.md) before any live action.

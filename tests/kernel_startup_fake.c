@@ -286,6 +286,9 @@ static unsigned session_ms = 30000;
 static struct mutex boot_list_lock;
 static struct list_head boot_list;
 struct gsn_device;
+/* Gyro registration/emission has its own extracted-code harness. */
+static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3], u64 ns)
+{ (void)g; (void)raw; (void)ns; }
 static void input_report_key(struct input_dev *, unsigned, int);
 static void input_report_abs(struct input_dev *, unsigned, int);
 static void input_sync(struct input_dev *);

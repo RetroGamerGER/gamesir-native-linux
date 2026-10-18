@@ -89,6 +89,7 @@ test-parser:
 
 test-sensor:
 	$(PYTHON) -B tests/run_sensor_contract_test.py
+	$(PYTHON) -B tests/check_kernel_gyro.py
 
 test-imu-diagnostic:
 	$(PYTHON) -B tests/test_imu_diagnostic.py

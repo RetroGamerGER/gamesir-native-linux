@@ -187,3 +187,13 @@ Gyrofaktor; Sony-Ausgabeauflösungen sind keine GameSir-Kalibrierung. Die
 verbindlichen Details und die offen benötigten Messungen stehen im
 [DualSense-/SDL-Vergleich](DUALSENSE_SENSOR_COMPARISON.md). Dieser Auftrag hat
 keine weitere Geräteschnittstelle implementiert oder registriert.
+
+## Optional SDL gyro (18 October 2026)
+
+The accepted IMU packet can additionally feed a separate evdev sensor node
+under `experimental_gyro=1`, restricted to 109c. It shares a per-binding
+nonempty `uniq` with the gamepad and exposes only the observed gyro axes at
+100 counts/(degree/s), seven output counts per raw count. No second USB
+reader or live IIO buffer is needed. Default remains off. See
+[SDL/Eden integration](SDL_EDEN_GYRO.md) for time, permissions, lifecycle and
+application limits; earlier raw-only architecture descriptions are historical.

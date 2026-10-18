@@ -27,6 +27,7 @@ DOCUMENT_FILES = (
     'docs/BOOTSTRAP_CACHYOS_FIX.md',
     'docs/evidence/CACHYOS_BOOTSTRAP_20261015.json',
     'docs/DUALSENSE_SENSOR_COMPARISON.md',
+    'docs/SDL_EDEN_GYRO.md', 'docs/sdl-eden-gyro-validation.json',
     'docs/EXPERIMENTAL_GYRO_TEST.md', 'docs/experimental-gyro-validation.json',
     'docs/COHERENT_IMU_CALIBRATION.md', 'docs/coherent-imu-validation.json',
     'docs/COHERENT_IMU_UPDATE.md', 'docs/evidence/COHERENT_IMU_INSTALL_20261016.json',
@@ -80,6 +81,7 @@ def source_files(root=ROOT):
         'packaging': ('VERSION', 'dkms.conf.in', 'prepare_remove.py',
                       'bin/gamesir-native', 'systemd/gamesir-native.service',
                       'sysusers/gamesir-native.conf',
+                      'udev/70-gamesir-native-sensors.rules',
                       'arch/PKGBUILD.in', 'arch/60-gamesir-native-release.hook',
                       'arch/60-gamesir-native-upgrade.hook'),
     }
@@ -179,6 +181,8 @@ def stage(dest, client, root=ROOT):
          'usr/lib/systemd/system/gamesir-native.service')
     copy(root / 'packaging/sysusers/gamesir-native.conf',
          'usr/lib/sysusers.d/gamesir-native.conf')
+    copy(root / 'packaging/udev/70-gamesir-native-sensors.rules',
+         'usr/lib/udev/rules.d/70-gamesir-native-sensors.rules')
     for hook in (root / 'packaging/arch').glob('*.hook'):
         copy(hook, f'usr/share/libalpm/hooks/{hook.name}')
     for doc in DOCUMENT_FILES:

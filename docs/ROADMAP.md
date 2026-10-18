@@ -7,6 +7,15 @@ Stand: 18. Oktober 2026. Prioritäten ergänzen den
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 
+## Aktuell: SDL / Eden
+
+Die bevorzugte Gyroeinstellung bleibt bei 0,07 °/s; keine neue Faktorsuche.
+Der optionale evdev-Gyropfad ist offline umgesetzt, inklusive SDL-Erkennung
+und gemeinsamer Paddle-Prüfung. Nächster Schritt: freigegebene Installation
+und echter Eden-Test, ohne Beschleunigungsachsen zu erfinden. Eden-Hotplug
+und Wechsel der Zeitbasis bleiben separat zu lösen; keine universelle
+Spielefreigabe. [Details](SDL_EDEN_GYRO.md).
+
 ## 1. Stabile Alpha und Release-Abnahme
 
 Lokal installiert: Manager-Reconnect-Korrektur in Paketrevision 6,
