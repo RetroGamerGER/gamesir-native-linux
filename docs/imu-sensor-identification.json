@@ -55,7 +55,7 @@
     }
   ],
   "next_required_evidence": [
-    "Complete compact operand/comparison/memory and architectural slot/ABI decoding, then WHO_AM_I -> ID compare -> sensor selection/init -> last effective CTRL2_G -> USB scaling. Expected firmware IDs must remain separate from actual chip ID.",
+    "Complete memory/compare/address-formation and architectural argument-role decoding, then WHO_AM_I -> ID compare -> sensor selection/init -> last effective CTRL2_G -> USB scaling. Two new compact operand/target fields and a separate RTOS load/run mapping are corroborated; neither identifies a sensor writer or actual chip ID.",
     "Exact-variant primary register definitions for LSM6DS3TR-C/LSM6DSO, including optional 125 dps and remaining fields; local Linux expected IDs and four normal gains already verified",
     "Proof of sensor-register to USB-report scaling, or an independently calibrated angular reference; neither implied by photo identification",
     "Original photo/QR/vendor reply with PCB context for independent archival review of the accepted user-confirmed identification"
@@ -457,5 +457,18 @@
       "main/local-who-reference.json": "57ceef691a92eed61cbe09b5959a40c6a27256ddcb8ca8dd60f80c019417887a",
       "empirical-review/who-id-findings.json": "b6f8c2e6e02284a9075b6569bddd7709773271ce5e5dbc017a26748517bc3fe0"
     }
+  },
+  "mcu_instruction_followup_20261018": {
+    "date": "2026-10-18",
+    "new_bounded_empirical_field_models": 2,
+    "load_run_mapping_corroborated": true,
+    "sensor_anchors_within_new_mapping": false,
+    "complete_mcu_isa_verified": false,
+    "sensor_initialization_routine_verified": false,
+    "active_ctrl2_g_value": null,
+    "active_gyro_full_scale_dps": null,
+    "gyro_factor": null,
+    "runtime_calibration_changed": false,
+    "details": "docs/nexus-source-manifest.json:mcu_init_followup_20261018"
   }
 }

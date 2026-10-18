@@ -224,6 +224,12 @@ Nächste eng begrenzte Offline-Arbeit nach vorheriger Erläuterung des Ansatzes:
    Paketfirmware und tatsächlich installierte Version getrennt behandeln.
    Bestehende Werkzeuge nutzen; REA bleibt Reserve, ohne Installation oder
    Hersteller-Codeausführung in diesem Auftrag.
+   Der MCU-Folgepass vom 18. Oktober belegt zusätzlich begrenzte kompakte
+   Zielfelder/Maskenoperanden und eine getrennte Suffix-Adressabbildung.
+   Darauf aufbauen, ohne eine vollständige ISA anzunehmen. Sensoranker
+   liegen außerhalb des Suffix; fehlende Speicher-/Vergleichs-/Argument-
+   semantik und eine belastbare Bytekodierungsreferenz bleiben die konkrete
+   Grenze. Keine weiteren beliebigen Zahlenfunde als Registerwriter ausgeben.
    Globale Bank-/Modellauswahl und der DV-Inhalt hinter dem
    inneren Appbereich bleiben getrennt offen. MCU-Label
    AC695X und Flashversatz EOFFSET sind keine IMU-Kalibrierung. Key-/No-Key-/Kompatibilitäts- und

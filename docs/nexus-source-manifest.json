@@ -2255,5 +2255,410 @@
     "private_evidence_manifest_sha256": "165154a82a80a49cfda0fbfac45a74afc039adb12d4315777a81ff3e36a9095f",
     "private_evidence_files_hashed": 19
   },
-  "current_mcu_sensor_status": "mcu_sensor_followup_20261016"
+  "current_mcu_sensor_status": "mcu_init_followup_20261018",
+  "mcu_init_followup_20261018": {
+    "date": "2026-10-18",
+    "scope": {
+      "offline_static_files_only": true,
+      "rea_used": false,
+      "vendor_execution_or_emulation": false,
+      "network_or_ssh": false,
+      "hardware_or_running_driver_changes": false,
+      "gyro_calibration_paused": true
+    },
+    "interpretation": "Bounded empirical operand/address fields only. No normative complete ISA, architectural register/ABI, real execution, selected chip or sensor-register write established.",
+    "sources": [
+      {
+        "variant": "JS_3103_DV_V209_No_Key",
+        "app_bytes": 379140,
+        "app_sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6",
+        "cfg_tool_sha256": "94f8645d7a639d25366e8b11af2d70ff83f58ef8c08380ccc51d5a7ff29bab23",
+        "startup_geometry": {
+          "app_end_literal_offset": "0x14",
+          "end_candidate": "0x1e5c9c4",
+          "source_literal_offset": "0x68",
+          "source_candidate": "0x1e4f7d8",
+          "length_literal_offset": "0x6e",
+          "length": 53740,
+          "destination_literal_offset": "0x62",
+          "destination_candidate": 0,
+          "source_file_offset": "0x4f718",
+          "end_file_offset": "0x5c904",
+          "source_plus_length_equals_file_end": true,
+          "prefix_0x90_sha256": "867dbeb8e0f52c806232f64e28deddeb7a38c90f8a10240d04ea6efc40a54f20",
+          "suffix_sha256": "7eab4da691f303b9b5218cff96753dc681161f08c1973194492a559ef854dc0e",
+          "control_flow_and_copy_semantics_verified": false
+        },
+        "rtos_name_literal_pairs": 25,
+        "example_name_reference": {
+          "string": "vTaskDelete",
+          "string_file_offset": "0x5a28d",
+          "run_candidate": "0xab75",
+          "references": [
+            {
+              "literal_offset": "0x59d2a",
+              "literal_slot": 0,
+              "literal_value": "0xab75",
+              "following_18byte_sha256": "6288637ae36adf50d2cae90a41b71f4014442eec158212592822985ac348cdba",
+              "relative_form_offset": "0x59d34",
+              "relative_target_file_offset": "0x590fe",
+              "relative_target_run_candidate": "0x99e6"
+            }
+          ]
+        },
+        "shared_low_run_text_sink_candidate": {
+          "file_offset": "0x590fe",
+          "run_candidate": "0x99e6",
+          "bytes": 96,
+          "sha256": "7b3b939387d3bcc3b5deca7d9025b2a3db22687b8742597b09ed77cb85fd4516",
+          "same_sink_ref_count": 10,
+          "all_known_relative_ref_count": 15,
+          "meaning": "Subset of RTOS-name literals followed by short argument and known relative22 form reaches this sink; assertion/log sink plausible, exact ABI/function not established. Other adjacent forms remain opaque."
+        },
+        "selected_sensor_anchors_outside_region": 8
+      },
+      {
+        "variant": "JS_3103_U_DV_V515_No_Key",
+        "app_bytes": 379364,
+        "app_sha256": "77e77be00ccd03d4c7dc6e469875c977988ffcbecac78a66cfe337c633308673",
+        "cfg_tool_sha256": "94f8645d7a639d25366e8b11af2d70ff83f58ef8c08380ccc51d5a7ff29bab23",
+        "startup_geometry": {
+          "app_end_literal_offset": "0x14",
+          "end_candidate": "0x1e5caa4",
+          "source_literal_offset": "0x68",
+          "source_candidate": "0x1e4f8b8",
+          "length_literal_offset": "0x6e",
+          "length": 53740,
+          "destination_literal_offset": "0x62",
+          "destination_candidate": 0,
+          "source_file_offset": "0x4f7f8",
+          "end_file_offset": "0x5c9e4",
+          "source_plus_length_equals_file_end": true,
+          "prefix_0x90_sha256": "e575f4e08cc20b309792361e42ad1f231fb8ab230291c08e1b048044c3e441e9",
+          "suffix_sha256": "b9d2256d26c29089f3a1814e79a0b3030d860efca967a8194270f24526ba2897",
+          "control_flow_and_copy_semantics_verified": false
+        },
+        "rtos_name_literal_pairs": 25,
+        "example_name_reference": {
+          "string": "vTaskDelete",
+          "string_file_offset": "0x5a36d",
+          "run_candidate": "0xab75",
+          "references": [
+            {
+              "literal_offset": "0x59e0a",
+              "literal_slot": 0,
+              "literal_value": "0xab75",
+              "following_18byte_sha256": "6288637ae36adf50d2cae90a41b71f4014442eec158212592822985ac348cdba",
+              "relative_form_offset": "0x59e14",
+              "relative_target_file_offset": "0x591de",
+              "relative_target_run_candidate": "0x99e6"
+            }
+          ]
+        },
+        "shared_low_run_text_sink_candidate": {
+          "file_offset": "0x591de",
+          "run_candidate": "0x99e6",
+          "bytes": 96,
+          "sha256": "8ce7522c05239b442ecb12aa63e79240634853718d4ba251f97d4f6a210e8edf",
+          "same_sink_ref_count": 10,
+          "all_known_relative_ref_count": 15,
+          "meaning": "Subset of RTOS-name literals followed by short argument and known relative22 form reaches this sink; assertion/log sink plausible, exact ABI/function not established. Other adjacent forms remain opaque."
+        },
+        "selected_sensor_anchors_outside_region": 8
+      },
+      {
+        "variant": "JS_3103_U_DV_V608_No_Key",
+        "app_bytes": 379364,
+        "app_sha256": "6c2155168aae2bfa01b8b391ec2295c4cbf0c27696a49a7d5a063eefdb22147b",
+        "cfg_tool_sha256": "94f8645d7a639d25366e8b11af2d70ff83f58ef8c08380ccc51d5a7ff29bab23",
+        "startup_geometry": {
+          "app_end_literal_offset": "0x14",
+          "end_candidate": "0x1e5caa4",
+          "source_literal_offset": "0x68",
+          "source_candidate": "0x1e4f8b8",
+          "length_literal_offset": "0x6e",
+          "length": 53740,
+          "destination_literal_offset": "0x62",
+          "destination_candidate": 0,
+          "source_file_offset": "0x4f7f8",
+          "end_file_offset": "0x5c9e4",
+          "source_plus_length_equals_file_end": true,
+          "prefix_0x90_sha256": "f31867a766f4525e2cf76cf17245e5389254ad85b345eb5ca989dc310f270287",
+          "suffix_sha256": "d1dfd4dcb036571724732d8f7d77e54872bdb03792c61684089b8308dea26385",
+          "control_flow_and_copy_semantics_verified": false
+        },
+        "rtos_name_literal_pairs": 25,
+        "example_name_reference": {
+          "string": "vTaskDelete",
+          "string_file_offset": "0x5a36d",
+          "run_candidate": "0xab75",
+          "references": [
+            {
+              "literal_offset": "0x59e0a",
+              "literal_slot": 0,
+              "literal_value": "0xab75",
+              "following_18byte_sha256": "6288637ae36adf50d2cae90a41b71f4014442eec158212592822985ac348cdba",
+              "relative_form_offset": "0x59e14",
+              "relative_target_file_offset": "0x591de",
+              "relative_target_run_candidate": "0x99e6"
+            }
+          ]
+        },
+        "shared_low_run_text_sink_candidate": {
+          "file_offset": "0x591de",
+          "run_candidate": "0x99e6",
+          "bytes": 96,
+          "sha256": "8ce7522c05239b442ecb12aa63e79240634853718d4ba251f97d4f6a210e8edf",
+          "same_sink_ref_count": 10,
+          "all_known_relative_ref_count": 15,
+          "meaning": "Subset of RTOS-name literals followed by short argument and known relative22 form reaches this sink; assertion/log sink plausible, exact ABI/function not established. Other adjacent forms remain opaque."
+        },
+        "selected_sensor_anchors_outside_region": 8
+      }
+    ],
+    "compact_forward_field": {
+      "formula": "h&e0cf==8004; d=((h>>8)&31)|((h&0x30)<<1); target=p+2+2*d. Positive cases only, bit6/other types not decoded.",
+      "corroborated_clusters": [
+        {
+          "name": "bitclear_operand_choices",
+          "bytes": 164,
+          "sha256": "095f0215c7bcbe04143aca5df1ef509bad5090acba3426721b3b1506ade761a2",
+          "versions": [
+            {
+              "source": "DV209",
+              "file_start": "0x12adc",
+              "file_end_exclusive": "0x12b80",
+              "target_candidate": "0x12b6a",
+              "corroborated_loci": 20
+            },
+            {
+              "source": "DV515",
+              "file_start": "0x12ae4",
+              "file_end_exclusive": "0x12b88",
+              "target_candidate": "0x12b72",
+              "corroborated_loci": 20
+            },
+            {
+              "source": "DV608",
+              "file_start": "0x12ae4",
+              "file_end_exclusive": "0x12b88",
+              "target_candidate": "0x12b72",
+              "corroborated_loci": 20
+            }
+          ]
+        },
+        {
+          "name": "other_operand_choices_A",
+          "bytes": 86,
+          "sha256": "30abbbaa5f04760f097f462c01f63244da22f71693b8eaa77af915cabcd038e7",
+          "versions": [
+            {
+              "source": "DV209",
+              "file_start": "0x36954",
+              "file_end_exclusive": "0x369aa",
+              "target_candidate": "0x369a6",
+              "corroborated_loci": 11
+            },
+            {
+              "source": "DV515",
+              "file_start": "0x36a34",
+              "file_end_exclusive": "0x36a8a",
+              "target_candidate": "0x36a86",
+              "corroborated_loci": 11
+            },
+            {
+              "source": "DV608",
+              "file_start": "0x36a34",
+              "file_end_exclusive": "0x36a8a",
+              "target_candidate": "0x36a86",
+              "corroborated_loci": 11
+            }
+          ]
+        },
+        {
+          "name": "other_operand_choices_B",
+          "bytes": 62,
+          "sha256": "4f0c29ff2a11bd04094e000c12df53233fd3be6d3beb2e78bb7df5ec03403f23",
+          "versions": [
+            {
+              "source": "DV209",
+              "file_start": "0x31c8e",
+              "file_end_exclusive": "0x31ccc",
+              "target_candidate": "0x31cc8",
+              "corroborated_loci": 7
+            },
+            {
+              "source": "DV515",
+              "file_start": "0x31d6e",
+              "file_end_exclusive": "0x31dac",
+              "target_candidate": "0x31da8",
+              "corroborated_loci": 7
+            },
+            {
+              "source": "DV608",
+              "file_start": "0x31d6e",
+              "file_end_exclusive": "0x31dac",
+              "target_candidate": "0x31da8",
+              "corroborated_loci": 7
+            }
+          ]
+        },
+        {
+          "name": "other_operand_choices_C",
+          "bytes": 58,
+          "sha256": "3eef70840b3e155ce140cb95f370bfa720dad28743e158f8cf5e0b7c8b6b146f",
+          "versions": [
+            {
+              "source": "DV209",
+              "file_start": "0x31ce2",
+              "file_end_exclusive": "0x31d1c",
+              "target_candidate": "0x31d18",
+              "corroborated_loci": 6
+            },
+            {
+              "source": "DV515",
+              "file_start": "0x31dc2",
+              "file_end_exclusive": "0x31dfc",
+              "target_candidate": "0x31df8",
+              "corroborated_loci": 6
+            },
+            {
+              "source": "DV608",
+              "file_start": "0x31dc2",
+              "file_end_exclusive": "0x31dfc",
+              "target_candidate": "0x31df8",
+              "corroborated_loci": 6
+            }
+          ]
+        }
+      ],
+      "corroborated_loci": 132,
+      "large_displacement_controls": [
+        {
+          "source": "DV209",
+          "file_offset": "0xd8fe",
+          "positive_halfword_displacement": 123,
+          "target_candidate": "0xd9f6",
+          "rejected_signed7_target": "0xd8f6",
+          "rejected_six_bit_target": "0xd976"
+        },
+        {
+          "source": "DV515",
+          "file_offset": "0xd900",
+          "positive_halfword_displacement": 123,
+          "target_candidate": "0xd9f8",
+          "rejected_signed7_target": "0xd8f8",
+          "rejected_six_bit_target": "0xd978"
+        },
+        {
+          "source": "DV608",
+          "file_offset": "0xd900",
+          "positive_halfword_displacement": 123,
+          "target_candidate": "0xd9f8",
+          "rejected_signed7_target": "0xd8f8",
+          "rejected_six_bit_target": "0xd978"
+        }
+      ],
+      "unknowns": "Only positive selected cases; lower-byte bit6/other classes, branch conditions, CALL/JUMP semantics and global code boundaries unverified."
+    },
+    "compact_mask_operand": {
+      "formula": "field=((h>>8)&31)|((h&0x10)<<1); signed6. At five mask-context words h&e0ef==2001; not a general opcode or ABI claim.",
+      "new_negative_mask_values": [
+        -2,
+        -3,
+        -5,
+        -9,
+        -17
+      ],
+      "new_mask_bits": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "local_mask_bits_with_prior_long_forms": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "checks_across_three_sources": 66,
+      "limits": "Operand-field corroboration in the local mask context, not MOV/AND/register/positive-constant or sensor-I/O semantics. The WHO IDs69/6a/6c do not fit signed6."
+    },
+    "load_run_mapping": {
+      "suffix_bytes": 53740,
+      "run_base_candidate": 0,
+      "startup_geometry_source_checks": 3,
+      "name_literal_pair_checks": 75,
+      "known_immediate_relative_followers": 45,
+      "shared_sink_followers": 30,
+      "sensor_anchors_rejected_as_outside_mapping": 24,
+      "executed_copy_loop_verified": false,
+      "physical_memory_kind_verified": false,
+      "limits": "All eight chosen sensor anchors are outside this corroborated suffix. Applying the low-run transformation to them would be an out-of-domain extrapolation and is rejected. No new sensor reference follows from this mapping."
+    },
+    "ambiguous_leaf_family": {
+      "conclusions": [
+        "c0/c8 word-family opcode, architectural destination, and value transform are not independently known.",
+        "Linear22c0..3ec0 and20c8/22c8/etc can fit different hypothesis value assignments; no unique numeric semantics follows.",
+        "0080 can be a shared terminator candidate but procedure boundaries/returnsemantics lack independent proof.",
+        "Densebyte-table-shapedflanks reinforce need to separate code/data; no branch-table interpretation asserted."
+      ],
+      "rejected_inferences": [
+        "Do not convert22c0to1/2/4 or20c8to16/32/65536 without independent arithmetic/control-flow/dataflow anchors.",
+        "Do not apply signed6 decoding of2041/3e11 to c0/c8 as though theysharedidenticalopcode.",
+        "No sensorregister write, WHO_AM_I/CTRL2_Gvalue, activefullscale, sensorbias orGyroSIunits derived."
+      ],
+      "mapping_to_new_signed6_form_verified": false
+    },
+    "local_isa_reference": {
+      "new_compatible_decoder_found": false,
+      "elf_symbols_or_register_headers_found": false,
+      "limits": "Targeted previously present archives and local references only; no complete filesystem absence claim. SDK compiler output/ISA byte-encoding reference still needed."
+    },
+    "verification": {
+      "compact_static_locus_checks": 201,
+      "compact_refusal_controls": 11,
+      "synthetic_field_controls": 192,
+      "layout_synthetic_test_methods": 6,
+      "stub_reader_synthetic_test_methods": 4,
+      "independent_root_field_and_layout_checks": true,
+      "old_evidence_files_unchanged": 174
+    },
+    "firmware_who_read_verified": false,
+    "firmware_id_compare_verified": false,
+    "sensor_selection_routine_verified": false,
+    "ctrl2_g_write_site_verified": false,
+    "active_ctrl2_g_value": null,
+    "active_gyro_full_scale_dps": null,
+    "sensor_register_to_usb_scaling_proven": false,
+    "gyro_factor": null,
+    "remaining_blocker": "Memory-load/store/compare semantics, architectural argument roles and sensor helper dataflow remain unresolved. Newly decoded numeric fields and relocated RTOS text do not identify the sensor initialization or last effective CTRL2_G write.",
+    "private_evidence_directory": "build/mcu-init-followup-20261018/",
+    "private_evidence_hashes": {
+      "compact/compact-field-findings.json": "c315c13668b6668e9aa24eb0d2464f12eaa98e8eeaca264be9d6df9c51f87d45",
+      "layout/layout-findings.json": "51a1880711b06055f45476e6e1c42ff1ac4a621fab16623b20f1026df4c284ef",
+      "local-reference/findings.json": "b911169702c960dd6d7ccb327bdc0ab2b6c3bf26f0ebb3cf09630653a885553d",
+      "stubs/findings.json": "404cf3034d728dcd63838fdcfd1036cde6e78d155e430ffe0acf15f458b8c47d"
+    }
+  }
 }

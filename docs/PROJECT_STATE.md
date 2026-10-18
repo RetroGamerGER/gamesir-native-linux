@@ -447,6 +447,21 @@ Keine neue Kalibrierung, Datenblatt-/Netzwerkabfrage
 oder Hardwareaktion. [Identifikation und CTRL2_G-Folgepass](IMU-STATISTIK-UND-SENSORIDENTIFIKATION.rst),
 [maschineller Quellenstatus](imu-sensor-identification.json).
 
+**MCU-Fortsetzung vom 18. Oktober, ohne REA:** Zwei weitere begrenzte
+Feldmodelle geprüft: kompakte positive Vorwärtsziele in vier getrennten
+Bereichen und signed6-Operanden im Maskenkontext. 132 kurze Zielfelder,
+drei Gegenbeispiele gegen falsche Displacementdeutungen und 66 Maskenwerte
+über drei Versionen passen. Startliterale und 75 RTOS-Textverweise stützen
+einen Suffix mit eigener Load-/Run-Abbildung; alle acht gewählten
+Sensoranker pro Version liegen außerhalb davon. Keine vollständige ISA,
+Register-/Speicher-/Vergleichssemantik oder Sensorinitialisierung gewonnen;
+CTRL2_G, Gyrofaktor und Register→USB-Skalierung bleiben offen.
+Eigene Grenz-/Packing-/Layouttests und unabhängige Bytekontrollen bestanden.
+Die blattartigen anderen Kompaktformen bleiben mehrdeutig. Details und
+Bereichshashes im [Nexus-Bericht](GAMESIR_NEXUS_RESEARCH.md) und
+[Quellmanifest](nexus-source-manifest.json). Keine Netzwerk-, Firmware-
+oder Hardwareaktion, keine Treiberänderung; Gyrokalibrierung pausiert.
+
 **Neue Offline-Forschung:** GameSir Nexus 2.1.23.0 aus dem lokalen Download
 statisch geprüft. Hauptpaket mit 223 Dateien, darunter zwölf G7-Pro-UFW-Dateien;
 native Geräte-/Versionsschnittstelle, GIP-Updater mit CRC-Pfaden und

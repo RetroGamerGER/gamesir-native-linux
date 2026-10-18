@@ -24,6 +24,14 @@ Zielkandidaten. Ein vollständiger ISA-Decoder, der Sensor-Schreibpfad und
 aktives CTRL2_G fehlen weiterhin. Die älteren Fehlversuche unten behalten
 ihren historischen Umfang.
 
+**MCU-Folgepass vom 18. Oktober:** Zwei weitere begrenzte Feldmodelle
+(kurze positive Zielfelder und signed6-Maskenoperanden) sind empirisch
+korroboriert. Außerdem ist für einen App-Suffix eine getrennte
+Load-/Run-Adressabbildung durch Startgeometrie und 75 Textverweise gestützt.
+Die Sensoranker liegen außerhalb dieses Suffix. Speicher-/Vergleichssemantik,
+Sensorinitialisierung und aktiver CTRL2_G-Wert bleiben offen; kein Faktor
+wird aus den neu lesbaren Zahlen allein abgeleitet.
+
 **Sensorfolgepass:** Der [Sensor-/Kalibrierungsdatenfluss](NEXUS_SENSOR_DATAFLOW.md)
 belegt inzwischen alle sechs Int32-Feldzugriffe im gemeinsamen KeyState samt
 nativen Getter-/Setter-RVAs und Offsets. Sieben geprüfte Eingabe-Zustandspfade
@@ -683,6 +691,102 @@ und verlässliche Code-/Datengrenzen. WHO_AM_I-Pfad, letzter CTRL2_G-Wert und
 Nachskalierung zum USB-Bericht sind weiterhin unbelegt. Bestehende
 Werkzeuge wurden genutzt; REA bleibt Reserve. Neue private Belege unter
 `build/nexus-followup-20261018/firmware/`, nur eigene Befunde/Hashes in Git.
+
+### MCU-Folgepass: getrennte Speicherabbildung und kompakte Formen
+
+Ein weiterer ausschließlich lokaler Folgepass verwendet die bisherigen
+Dateien und Werkzeuge, ohne REA oder Herstellercode auszuführen. Er trennt
+neu korroborierte Operand-/Adressfelder weiterhin von ungeklärter
+Instruktionswirkung, Registerbezeichnung, ABI und tatsächlich ausgeführtem
+Sensorcode. Die drei quellgeprüften Apps bleiben DV209, DV515 und DV608;
+sie sind nicht mit der installierten Controllerfirmware gleichgesetzt.
+
+**Kurze Zielfelder:** In vier getrennten, über alle drei Versionen
+byteidentischen Bereichen passt ein weiteres 2-Byte-Feldmodell. Für die
+geprüfte Klasse mit `h & 0xe0cf == 0x8004` ergibt sich:
+
+```text
+d = ((h >> 8) & 31) | ((h & 0x30) << 1)
+Ziel = Dateiposition + 2 + 2 × d
+```
+
+| DV209-Dateibereich, Ende exklusiv | Gemeinsamer Zielkandidat | Verschiebung in DV515/DV608 |
+|---|---|---|
+| `0x12adc…0x12b80` | `0x12b6a` | `+0x8` |
+| `0x36954…0x369aa` | `0x369a6` | `+0xe0` |
+| `0x31c8e…0x31ccc` | `0x31cc8` | `+0xe0` |
+| `0x31ce2…0x31d1c` | `0x31d18` | `+0xe0` |
+
+Insgesamt passen 132 ausgewählte Stellen zu den jeweiligen gemeinsamen
+Fortsetzungen. Ein weiterer Fall bei DV209 `0xd8fe`, DV515/DV608 `0xd900`
+hat Displacement 123 und erreicht `0xd9f6` beziehungsweise `0xd9f8`.
+Er widerlegt sowohl eine Verkürzung auf sechs Bits als auch eine signed7-
+Deutung. Das ist ein empirisch korroboriertes **positives** Zielfeld;
+andere Typbits, unter anderem Bit 6 im unteren Byte, werden nicht
+interpretiert. Keine universelle Sprung-/CALL-Semantik oder vollständige
+Instruktionssegmentierung behauptet.
+
+**Kompakte Maskenoperanden:** Fünf Wörter im bekannten Maskenkontext
+passen zu `field = ((h >> 8) & 31) | ((h & 0x10) << 1)` mit signed6-
+Vorzeichenerweiterung. Sie ergeben `−2/−3/−5/−9/−17`, also die
+Komplementmasken der Bits 0–4. Zusammen mit den bekannten langen Formen
+passen jetzt alle 22 lokalen Maskenwerte für Bits 0–21 über drei Versionen.
+Dies belegt Operandbits, keine MOV-/AND-Wirkung oder Registerrolle.
+Ein numerisch passendes `0x0f` oder `0x11` wäre weiterhin kein Sensorzugriff.
+Die WHO_AM_I-ID-Kandidaten `0x69/0x6a/0x6c` passen nicht in signed6.
+
+Die anders aufgebaute, bisher als blattartig bezeichnete 88-Byte-Folge
+bleibt mehrdeutig. Weder die Rolle des Nachfolgeworts noch ein Übergang
+zu belegten Langkonstanten ist dort nachgewiesen. Eine lineare Zahlenfolge
+und eine One-Hot-Deutung lassen sich ohne Datenflussanker nicht trennen.
+Das neue signed6-Modell wird ausdrücklich nicht auf diese andere Klasse
+übertragen; eine synthetische Datentabelle kann dieselbe Blattform liefern.
+
+**Load-/Run-Abbildung:** Drei zusammenpassende Startbereichsliterale
+benennen einen Suffix der Appdatei. Quelle plus Länge erreicht exakt das
+Dateiende; der benachbarte Zieladresskandidat ist null.
+
+| Appversion | Suffix-Dateianfang | Länge | Korroborierte Laufadressbasis |
+|---|---|---|---|
+| DV209 | `0x4f718` | `0xd1ec` | `0` |
+| DV515 / DV608 | `0x4f7f8` | `0xd1ec` | `0` |
+
+Die Geometrie ist nicht bloß aus dem Startbereich geraten: Je Version
+verweisen 25 vollständige Literalformen auf dort enthaltene RTOS-Namen
+unter genau dieser Abbildung. Beispiel DV209: `vTaskDelete` bei
+Dateioffset `0x5a28d` hat Laufadresskandidat `0xab75`, referenziert bei
+`0x59d2a`. In DV515/DV608 verschieben sich die Dateistellen um `0xe0`,
+die Laufadresse bleibt gleich. Von je 15 unmittelbar folgenden bekannten
+22-Bit-Transferformen erreichen zehn dieselbe Laufadresse `0x99e6`.
+Andere Nachfolger bleiben bewusst undekodiert. Das stützt einen eigenen
+Adressbereich, beweist aber noch keine ausgeführte Kopierschleife, keinen
+physischen RAM-Typ und keine Aufrufkonvention.
+
+Alle acht gewählten Sensoranker liegen **vor** diesem Suffix. Eine
+Umrechnung dieser Sensoradressen mit der Suffixbasis ist deshalb
+unzulässig und wird vom eigenen Bereichsleser zurückgewiesen. Die neue
+Abbildung allein löst die fehlenden Sensorverweise nicht auf.
+
+Neue private eigene Leser, Tests, Quell-/Bereichshashes und Kontrollen:
+`build/mcu-init-followup-20261018/`. Keine Herstellerbytes im öffentlichen
+Baum. Sechs synthetische Layouttests sowie 75 Namens-/Literalpaare,
+45 bekannte folgende Transferformen und 24 Bereichsausschlüsse wurden
+unabhängig geprüft. Die kompakten Feldmodelle bestehen 201 statische
+Fundstellenkontrollen, elf Ablehnungsfälle und 192 synthetische
+Packingkontrollen. Vier zusätzliche Eigenlesertests prüfen die Grenzen der
+blattartigen Kandidaten. Synthetische Tests validieren die eigenen Leser,
+keine ISA oder reale Ausführung. Die zentralen Feld-/Adresskontrollen
+wurden mit anderer Arithmetik zusätzlich unabhängig wiederholt.
+
+Die gezielte neue lokale Referenzprüfung der bereits vorhandenen Archive
+und Werkzeugreferenzen liefert weiterhin keinen passenden MCU-Backend,
+keine Opcodebeschreibung und keine SDK-/ELF-/Linkermap-Quelle. Das ist
+eine begrenzte Inventur, keine globale Aussage über sämtliche Dateien.
+Eine Bytekodierungsreferenz oder bekannter Compileroutput mit passenden
+Symbolen würde besonders bei Speicher-/Vergleichsbefehlen helfen.
+Weiter offen bleiben Sensorregister-Lese-/Schreibhelfer,
+Argument-/Vergleichssemantik und die letzte wirksame Initialisierung.
+**Kein aktiver CTRL2_G-Wert und kein physikalischer Gyrofaktor gewonnen.**
 
 ### Exakte Sensorvariante erneut offen: gezielter WHO_AM_I-Abgleich
 
