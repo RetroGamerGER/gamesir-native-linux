@@ -316,6 +316,88 @@ class CaptureEvidence(unittest.TestCase):
                     guided.verify_capture(capture, 77)
 
 
+class LocalQuestion(unittest.TestCase):
+    def dialog(self, *, answer=b"go\n", diagnostic=b"", code=0, pending=0, worker=None):
+        clock = Clock()
+        calls = []
+
+        class Child:
+            returncode = None
+            remaining = pending
+            terminated = False
+
+            def poll(self):
+                if self.remaining:
+                    self.remaining -= 1
+                    return None
+                self.returncode = code
+                return code
+
+            def terminate(self):
+                self.terminated = True
+                self.remaining = 0
+
+            def wait(self, **kwargs):
+                return code
+
+        child = Child()
+
+        def popen(argv, **kwargs):
+            calls.append((argv, kwargs))
+            kwargs["stdout"].write(answer)
+            kwargs["stdout"].flush()
+            kwargs["stderr"].write(diagnostic)
+            kwargs["stderr"].flush()
+            return child
+
+        with patch.object(guided.subprocess, "Popen", side_effect=popen), \
+                patch.object(guided.time, "monotonic_ns", clock.monotonic_ns), \
+                patch.object(guided.time, "sleep", clock.sleep):
+            result = guided.question("constructed question", worker=worker)
+        return result, calls, child
+
+    def test_cancel_is_default_and_explicit_go_tag_is_required(self):
+        result, calls, _ = self.dialog()
+        self.assertTrue(result)
+        command, options = calls[0]
+        self.assertEqual(command[command.index("--default") + 1], "cancel")
+        self.assertEqual(command[-4:], ["cancel", "Abbrechen", "go", "Go"])
+        self.assertNotIn("--defaultno", command)
+        self.assertFalse(options["shell"])
+        self.assertFalse(self.dialog(answer=b"cancel\n")[0])
+
+    def test_close_is_not_go_and_error_is_not_user_cancellation(self):
+        self.assertFalse(self.dialog(answer=b"", code=1)[0])
+        with self.assertRaisesRegex(ValueError, "Unknown option 'defaultno'"):
+            self.dialog(answer=b"", code=1, diagnostic=b"kdialog: Unknown option 'defaultno'.\n")
+
+    def test_bad_exit_or_missing_selection_fail_closed(self):
+        for answer, code in ((b"", 0), (b"yes\n", 0), (b"go\ncancel\n", 0), (b"go\n", 1), (b"go\n", 2)):
+            with self.subTest(answer=answer, code=code), self.assertRaises(ValueError):
+                self.dialog(answer=answer, code=code)
+
+    def test_output_and_diagnostic_bounds(self):
+        for answer, diagnostic in ((b"x" * 4097, b""), (b"go\n", b"x" * 4097)):
+            with self.subTest(diagnostic=bool(diagnostic)), self.assertRaisesRegex(ValueError, "diagnostic limit"):
+                self.dialog(answer=answer, diagnostic=diagnostic)
+
+    def test_worker_heartbeat_continues_while_dialog_waits(self):
+        heartbeats = []
+        worker = SimpleNamespace(pending=[], pulse=lambda: heartbeats.append(1))
+        self.assertTrue(self.dialog(pending=5, worker=worker)[0])
+        self.assertEqual(len(heartbeats), 5)
+
+    def test_worker_error_during_dialog_cannot_confirm_go(self):
+        worker = SimpleNamespace(pending=[{"event": "finished"}], pulse=lambda: None)
+        with self.assertRaisesRegex(ValueError, "worker stopped"):
+            self.dialog(pending=5, worker=worker)
+
+    def test_successful_explicit_choice_preserves_nonfatal_diagnostic(self):
+        with contextlib.redirect_stderr(io.StringIO()) as err:
+            self.assertTrue(self.dialog(diagnostic=b"constructed nonfatal Qt warning")[0])
+        self.assertIn("constructed nonfatal Qt warning", err.getvalue())
+
+
 class PhaseClock(unittest.TestCase):
     def setUp(self):
         self.clock = Clock()
@@ -628,6 +710,16 @@ class EndToEndFakeRun(unittest.TestCase):
     def test_axis_cancel_before_go_does_not_send_go(self):
         code, output, report, _ = self.execute([False], axis_only=True)
         self.assertEqual(code, 1)
+        self.assertNotIn("GO", self.links[0].sent)
+        self.assertTrue(report["cleanup"]["restored"])
+        self.assertFalse((output / "analysis.json").exists())
+
+    def test_dialog_startup_failure_retains_diagnostic_and_sends_no_go(self):
+        code, output, report, _ = self.execute(
+            [ValueError("KDE question failed: exit=1; Unknown option 'defaultno'")], axis_only=True)
+        self.assertEqual(code, 1)
+        self.assertIn("Unknown option 'defaultno'", report["failure"])
+        self.assertNotIn("Go declined", report["failure"])
         self.assertNotIn("GO", self.links[0].sent)
         self.assertTrue(report["cleanup"]["restored"])
         self.assertFalse((output / "analysis.json").exists())

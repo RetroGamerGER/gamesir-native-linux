@@ -14,9 +14,13 @@ und keine Treiberänderung. Die bekannte Winkelkalibrierung
 bleibt pausiert; die Vorbereitung erteilt keine Hardwarefreigabe.
 
 Nachtrag: Die separat freigegebene lesende Vorprüfung war erfolgreich.
-Der danach freigegebene erste Achsenlauf endete ohne lokale Go-Bestätigung
-vor der Geräteöffnung: null Sensorbeobachtungen, keine Pufferänderung.
-Unveränderter Zustand und private Prüfsummen bestätigt; keine Wiederholung.
+Der danach freigegebene erste Achsenlauf endete durch einen nachträglich
+reproduzierten Dialogfehler vor der Geräteöffnung: KDialog unterstützt die
+verwendete Option `--defaultno` nicht. Dies war keine bestätigte Nutzerabsage.
+Null Sensorbeobachtungen, keine Pufferänderung; unveränderter Zustand und
+private Prüfsummen bestätigt. Der korrigierte Dialog verwendet eine explizite
+Auswahl mit Abbrechen als Vorgabe und bewahrt Startfehler. Ein gerätefreier
+Fenstertest wurde als sichtbar bestätigt; noch kein neuer Sensorlauf.
 Noch kein Achsennachweis. [Einzelheiten](GYRO_AXIS_TEST.md#erster-freigegebener-anlauf-vor-der-aufnahme-beendet).
 
 **Entscheidung vom 18. Oktober: Funkanalyse zurückgestellt.** Der Empfang

@@ -19,6 +19,7 @@ import stat
 import statistics
 import subprocess
 import sys
+import tempfile
 import time
 
 from gamesir_imu_diagnostic import Bundle, GuidedCues
@@ -325,34 +326,57 @@ class WorkerLink:
 
 
 def question(message, *, yes="Go", no="Abbrechen", worker=None, cues=None):
-    """Desktop-owned, default-cancel question; never run from the root worker."""
-    command = ["/usr/bin/kdialog", "--title", "GameSir – Gyrotest", "--yes-label", yes,
-               "--no-label", no, "--defaultno", "--yesno", message]
-    child = subprocess.Popen(command, shell=False, stdin=subprocess.DEVNULL,
-                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    deadline = time.monotonic_ns() + 900_000_000_000
-    try:
-        while child.poll() is None:
-            if time.monotonic_ns() > deadline:
-                raise ValueError("local readiness question expired; no automatic Go")
-            if worker is not None:
-                worker.pulse()
-                if worker.pending:
-                    raise ValueError("worker stopped during the local readiness question")
-            if cues is not None:
-                cues.check()
-            time.sleep(.05)
-        if child.returncode not in (0, 1):
-            raise ValueError(f"KDE question failed: {child.returncode}")
-        return child.returncode == 0
-    finally:
-        if child.poll() is None:
-            child.terminate()
-            try:
-                child.wait(timeout=.5)
-            except subprocess.TimeoutExpired:
-                child.kill()  # Only our unprivileged KDE question, never the worker.
-                child.wait(timeout=.5)
+    """Explicit selected tag, default cancel; startup errors are not a user's No.
+
+    KDialog has no --defaultno. Its documented menu/default combination keeps
+    confirmation opt-in. Anonymous files prevent pipe backpressure while the
+    worker heartbeat continues; diagnostic/result size is checked every tick.
+    """
+    command = ["/usr/bin/kdialog", "--title", "GameSir – Gyrotest",
+               "--ok-label", "Auswahl bestätigen", "--cancel-label", "Abbrechen",
+               "--default", "cancel", "--menu", message, "cancel", no, "go", yes]
+    with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as errors:
+        child = subprocess.Popen(command, shell=False, stdin=subprocess.DEVNULL,
+                                 stdout=output, stderr=errors)
+        deadline = time.monotonic_ns() + 900_000_000_000
+        try:
+            while child.poll() is None:
+                if time.monotonic_ns() > deadline:
+                    raise ValueError("local readiness question expired; no automatic Go")
+                if any(os.fstat(f.fileno()).st_size > 4096 for f in (output, errors)):
+                    raise ValueError("KDE question output exceeds diagnostic limit")
+                if worker is not None:
+                    worker.pulse()
+                    if worker.pending:
+                        raise ValueError("worker stopped during the local readiness question")
+                if cues is not None:
+                    cues.check()
+                time.sleep(.05)
+            output.seek(0)
+            errors.seek(0)
+            answer, diagnostic = output.read(4097), errors.read(4097)
+            if len(answer) > 4096 or len(diagnostic) > 4096:
+                raise ValueError("KDE question output exceeds diagnostic limit")
+            diagnostic = diagnostic.decode("utf-8", errors="replace").strip()
+            if child.returncode not in (0, 1) or (child.returncode == 1 and diagnostic):
+                raise ValueError(f"KDE question failed: exit={child.returncode}; {diagnostic or 'no diagnostic'}")
+            if child.returncode == 1:
+                if answer.strip():
+                    raise ValueError("KDE question exit contradicts its selected answer")
+                return False  # Escape/close/cancel with no startup error.
+            if answer.strip() not in (b"cancel", b"go"):
+                raise ValueError("KDE question returned no recognized explicit selection")
+            if diagnostic:
+                print(f"KDE question diagnostic: {diagnostic}", file=sys.stderr, flush=True)
+            return answer.strip() == b"go"
+        finally:
+            if child.poll() is None:
+                child.terminate()
+                try:
+                    child.wait(timeout=.5)
+                except subprocess.TimeoutExpired:
+                    child.kill()  # Only our unprivileged KDE question, never the worker.
+                    child.wait(timeout=.5)
 
 
 def wait_seconds(seconds, cues, worker=None):

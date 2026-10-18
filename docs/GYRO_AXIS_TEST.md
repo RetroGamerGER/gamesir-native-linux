@@ -1,7 +1,8 @@
 # Qualitativer Gyro-Achsentest: zunächst nur links
 
-Stand: 18. Oktober 2026. **Offline vorbereitet; erster freigegebener Anlauf
-vor dem lokalen Go beendet, noch keine Sensoraufnahme.**
+Stand: 18. Oktober 2026. **Erster freigegebener Anlauf durch einen Dialogfehler
+vor der Aufnahme beendet; Dialog korrigiert und gerätefrei sichtbar bestätigt.
+Noch keine Sensoraufnahme.**
 Dieser Test untersucht Rohkanalreaktion und Vorzeichen beim waagerechten
 Linksdrehen. Kein bestimmter Winkel, Anschlagwinkel oder Bewegungsumfang ist
 erforderlich. Die physikalische Skalierung bleibt unbestätigt; die bekannte
@@ -42,6 +43,10 @@ Nicht senkrecht aufrichten, schütteln oder gegen einen Anschlag drücken.
 Nach Passwortprüfung und eigener Go-Bestätigung gibt es zunächst **30 Sekunden
 Vorbereitung ohne Sensoraufnahme**. Dann führen lokal getaktete KDE-Hinweise
 durch die Messung; Chatnachrichten sind keine Zeitbasis.
+Im Bereitschaftsfenster ist **Abbrechen** vorausgewählt. Zum Start ausdrücklich
+**Go** auswählen und **Auswahl bestätigen** drücken. Fenster schließen oder
+Abbrechen bestätigt keinen Start. Die spätere Bewegungsbestätigung verwendet
+dieselbe Auswahl mit **Nicht bestätigen** als Vorgabe.
 
 | Phase | Zeit | Handlung |
 | --- | --- | --- |
@@ -153,8 +158,14 @@ konkurrierenden IIO-Leser. Historische Managerfehler waren früheren
 Systemstarts zugeordnet; für die aktuelle Instanz kein Fehler gefunden.
 
 Beim anschließend separat freigegebenen Einzellauf lieferte das lokale
-Go-Fenster keine Startbestätigung. Der Grund für diese Dialogantwort ist
-nicht festgestellt. Der Helfer beendete den Versuch vor Öffnen des IIO-Knotens:
+Go-Fenster keine Startbestätigung. Der Nutzer meldete anschließend, dass
+überhaupt kein Fenster sichtbar war. Die nachträgliche gerätefreie Prüfung
+reproduzierte den Fehler: KDialog `26.08.2` kennt die vom Helfer verwendete
+Option `--defaultno` nicht und beendet sich mit Status 1. Der Helfer hatte
+stderr unterdrückt und diesen Status fälschlich als abgelehntes Go behandelt.
+Das war ein Helferfehler, kein nachgewiesener Abbruch durch den Nutzer.
+Die ursprünglichen Abschlussdateien bleiben als historische Evidenz unverändert.
+Der Helfer beendete den Versuch vor Öffnen des IIO-Knotens:
 null Beobachtungen/Scanbytes, kein Aufnahmestart, keine Konfigurationsversuche
 oder Pufferwrites. Abschluss ohne Bereinigungsfehler; eine lesende Nachprüfung
 bestätigte unveränderte Instanz und Einstellungen einschließlich deaktiviertem
@@ -162,3 +173,27 @@ Puffer und null Pufferfehlern. Private Abschlussdateien und SHA256-Prüfsummen
 wurden gesichert und kontrolliert. Kein Achsenergebnis, keine automatische
 Wiederholung und keine Änderung des laufenden Treibers. Ein neuer Anlauf
 benötigt eine neue konkrete Freigabe und frische Instanzprüfung.
+
+## Dialogkorrektur und gerätefreier Sichtbarkeitstest
+
+Der Helfer nutzt jetzt KDialogs dokumentierte Menüauswahl mit `--default cancel`.
+Nur der ausdrücklich ausgewählte Rückgabewert `go` erlaubt ein Fortsetzen;
+Status 0 allein genügt nicht. Fehlermeldungen werden begrenzt erfasst und bei
+Startfehlern im Fehlerbericht erhalten. Schließen/Abbrechen bleibt getrennt
+von Startfehlern. Während des Dialogs bleibt der Worker-Heartbeat aktiv.
+Kein Austausch des privilegierten Workers oder Treibers.
+
+Die ursprüngliche Option wurde mit `--help` ohne Fenster reproduziert
+(Status 1, `Unknown option 'defaultno'`); die korrigierte Befehlsform wird
+von der installierten Version akzeptiert (Status 0). Anschließend bestätigte
+der Nutzer im korrigierten Dialog ausdrücklich **Fenster ist sichtbar**.
+Dieser klar bezeichnete Fenstertest verwendete keinen Worker, kein sudo,
+keine Geräteöffnung und keinen Sensorpuffer. Er ist keine Sensorabnahme.
+
+Acht zusätzliche Regressionstests prüfen Auswahl statt bloßem Exitstatus,
+die echte Fehlerform, unbekannte/leere Antworten, Ausgabegrenzen, Heartbeat
+und Fehlererhalt ohne GO. Insgesamt 237 Tests mit
+`make test-imu-stream test-public-readme test-licensing` bestanden.
+Alte Manifeste enthalten nun veraltete Helferprüfsummen und dürfen nicht
+wiederverwendet werden. Vor einem neuen Messlauf frisch prüfen, neues Manifest
+und Ergebnisverzeichnis vorbereiten und eine neue konkrete Freigabe einholen.
