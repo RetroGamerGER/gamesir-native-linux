@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "method": "Existing known-direction captures only; last 15 seconds of motion, after 10 second exclusion, maximum absolute raw gyro below 10. Human motion labels retained; no new pose or angle assumed.",
+  "candidate_accel_axis_map": [
+    1,
+    2,
+    3
+  ],
+  "status": "evidence-backed experimental test candidate; not certified accelerometer calibration",
+  "baseline_inference": "Tastenfl\u00e4che oben, USB-Kante away: SDL +Y upward, A1 positive",
+  "limits": [
+    "Non-contiguous low-rate samples; gyro threshold alone does not prove zero translation.",
+    "No exact pose angles, six-face offset/gain calibration or independent reference.",
+    "Original blocks have different instances; no cross-instance sample concatenation or gyro scale calibration.",
+    "Candidate needs explicit supervised activation/acceptance approval."
+  ],
+  "hardware_access": false,
+  "sources": [
+    {
+      "direction": "pitch-forward",
+      "baseline_samples": 1247,
+      "held_samples": 83,
+      "baseline_accel_median_raw": [
+        146,
+        8230,
+        -13
+      ],
+      "held_accel_median_raw": [
+        -313,
+        -3602,
+        6044
+      ],
+      "physical_inference": "SDL +Z points upward: A2 positive",
+      "scans_sha256": "bfc3d7a82084c47520ad186b041944ce243f6f800e8caa1b49c966ad5b488d99",
+      "analysis_sha256": "9370bf73a1b36012cee70c9caeb7fc2d48455798a161bb8d3b5b4eeaaae3199f",
+      "cues_sha256": "3425267c3cedcdbd4671b4e12b0d9daf46068457193749943a91897ae514756d",
+      "capture_checksums_verified": true
+    },
+    {
+      "direction": "pitch-backward",
+      "baseline_samples": 1249,
+      "held_samples": 215,
+      "baseline_accel_median_raw": [
+        134,
+        8233,
+        -14
+      ],
+      "held_accel_median_raw": [
+        77,
+        999,
+        -9492
+      ],
+      "physical_inference": "SDL +Z points downward: A2 negative",
+      "scans_sha256": "4c51c2a98c7d320e97e80f1f91c01c5ef57d78ff2d147f68dea0853e92211e84",
+      "analysis_sha256": "7fd674ed678b10e1cc6651f1f58b4290068fd61a50dac793f4e7267359cd7cb9",
+      "cues_sha256": "701d26488223baa88b745b8eb0ec18b2b9b3ea9e5f51d58de20c2773580a98fa",
+      "capture_checksums_verified": true
+    },
+    {
+      "direction": "roll-left",
+      "baseline_samples": 1248,
+      "held_samples": 65,
+      "baseline_accel_median_raw": [
+        120.0,
+        8231.0,
+        -8.0
+      ],
+      "held_accel_median_raw": [
+        8253,
+        -1153,
+        -1594
+      ],
+      "physical_inference": "SDL +X points upward: A0 positive",
+      "scans_sha256": "7cd128580e9138844293a148d40a9513068cba6ab3366d8a03a951ecf16c99fe",
+      "analysis_sha256": "6ae6688a3466ca51eb443fbe54510d1f1a99a76a316800b2320d0adc14aa6039",
+      "cues_sha256": "c9ec92464574215150e11d6ef57574d250be93c515c12d48277593214779fdf0",
+      "capture_checksums_verified": true
+    },
+    {
+      "direction": "roll-right",
+      "baseline_samples": 1247,
+      "held_samples": 243,
+      "baseline_accel_median_raw": [
+        139,
+        8231,
+        -7
+      ],
+      "held_accel_median_raw": [
+        -8006,
+        -340,
+        -2214
+      ],
+      "physical_inference": "SDL +X points downward: A0 negative",
+      "scans_sha256": "2bf8d5b1d93f52ca4c41de7df1fc9c12922f6dfef4241f78ee9206c39d9985eb",
+      "analysis_sha256": "3d6a19f0e115647746d88cbf4ceb129009cf1e61087e5e903d8a906b7fc41838",
+      "cues_sha256": "0a8049ce9e08dc06f82668c2334108a39c5b6003a1c467bd71649794bba74fec",
+      "capture_checksums_verified": true
+    }
+  ],
+  "analysis_script_sha256": "c533cafa5172ef442df40425ca2f4fd9315c7719b83bfa802728dff13c1ff8dc"
+}

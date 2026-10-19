@@ -5,13 +5,22 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Updatevorbereitung auf Revision 9:** Vier vorhandene, prüfsummenverifizierte
+Aufnahmen liefern unabhängig vom Gyro-Mapping den Beschleunigungskandidaten
+`1,2,3`: A1 positiv bei Tastenfläche oben, A0 +/- bei linkem/rechtem Griff
+unten, A2 +/- bei Vorderkante unten/oben. Niedrige Drehrate während der
+gehaltenen Neigung ist ein qualitativer Nachweis für einen kontrollierten
+Test, keine vollständige Lage-/Skalen-/Bias-Kalibrierung. Paketstandard bleibt
+aus; Installation, Modulwechsel und Aktivierung sind hier nicht ausgeführt.
+[Updateablauf, Zahlen und Grenzen](STEAM_ACCEL_EXTENSION.md#update-preparation-and-independent-axis-evidence).
+
 **Korrektur offline vorbereitet:** Ein separater, standardmäßig deaktivierter
 Beschleunigungspfad ergänzt den bestehenden evdev-Gyropfad aus demselben
 IMU-Bericht und Zeitstempel. Keine erfundene Gravitation und keine zweite
 USB-Zuständigkeit. Ungültige oder fehlende explizite Beschleunigungsachsen
-verhindern das Aktivieren bereits vor USB-Registrierung. Die tatsächliche
-Beschleunigungsachsen-Zuordnung ist noch nicht bestätigt; synthetische
-Zuordnungen sind keine Hardwareempfehlung. Der installierte Treiber, Steam
+verhindern das Aktivieren bereits vor USB-Registrierung. Eine vollständige
+Beschleunigungskalibrierung fehlt; der spätere Testkandidat ist oben getrennt
+dokumentiert. Synthetische Zuordnungen sind keine Hardwareempfehlung. Der installierte Treiber, Steam
 und das angenommene Eden-Verhalten bleiben unverändert. Offline-Tests sind
 keine Steam-Live-Abnahme. [Implementierung und nächste Grenze](STEAM_ACCEL_EXTENSION.md).
 Gyrokalibrierung weiterhin pausiert; kein Push.

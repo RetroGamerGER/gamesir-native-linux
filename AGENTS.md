@@ -149,6 +149,14 @@ invalid activation before USB registration. Preserve same-report/time/sync,
 raw IIO, gyro-only defaults, Eden, paddles and output ownership. No installed
 change or live/Steam acceptance follows from offline success. Obtain actual
 accelerometer-frame evidence and separate activation approval first.
+The installation-preparation follow-up re-examined four checksum-verified
+known-direction captures at low angular rate during held tilts. Face-up A1+,
+left/right grip down A0+/-, and front down/up A2+/- independently support
+accel_axis_map=1,2,3 as an explicit supervised test candidate. Read
+steam-accel-held-pose-evidence.json and STEAM_ACCEL_EXTENSION.md. This is
+not gyro-map inference, six-pose calibration or verified device gain/bias.
+Do not force another precise-angle gyro test, silently enable the candidate,
+or claim Steam acceptance. Revision 9 is prepared; package defaults stay off.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

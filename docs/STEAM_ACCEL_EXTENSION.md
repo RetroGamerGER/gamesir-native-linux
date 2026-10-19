@@ -63,6 +63,65 @@ ownership. Keep existing stop/reconnect/suspend regression and fallback rules.
 A static nonzero-acceleration gate alone does not prove fusion will accept
 incorrect units/axes or that a particular Proton game will use gyro.
 
+## Update preparation and independent axis evidence
+
+A later request prepares package revision **0.1.0.alpha3-9** for installation;
+no installation or activation is recorded here. Re-examining the **existing**
+known-direction captures provides a test candidate without assuming that
+accelerometer and gyro share a frame. The original statement above records
+the evidence limit before this additional analysis; a full six-pose calibration
+is still absent.
+
+Capture and parent SHA256 sets were verified. Each capture retains its own
+instance; none is merged into a fictitious continuous session. After excluding
+the first ten seconds of the movement window, select samples with all three
+absolute gyro counts below ten. These are low-angular-rate observations during
+the instructed held tilt, not proof of zero translation or measured pose angle.
+
+| Human movement / held pose | Selected samples | Median A0, A1, A2 |
+| --- | ---: | --- |
+| Front edge down | 83 | -313, -3602, 6044 |
+| Front edge up | 215 | 77, 999, -9492 |
+| Left grip down | 65 | 8253, -1153, -1594 |
+| Right grip down | 243 | -8006, -340, -2214 |
+
+The instructed face-up starting rests all have dominant positive A1 (about
+8230 counts). With SDL +X right, +Y up/out of the face, +Z toward the player,
+the opposite held tilts independently support **SDL acceleration = (A0,A1,A2)**:
+left grip down makes +X point upward; front edge down makes +Z point upward.
+This supports explicit **`accel_axis_map=1,2,3` for a supervised experiment**.
+It is not derived from gyro axes, and not a certified calibration or automatic
+package default. [Sanitized evidence and limitations](steam-accel-held-pose-evidence.json).
+The earlier `-3,1,-2` test permutation remains synthetic only.
+
+A controlled activation may therefore propose the evidence-backed candidate
+instead of demanding a new precision-angle experiment. It still needs an
+explicit approval covering the actual module/configuration change and
+subsequent acceptance; no root operation follows automatically. Keep
+`experimental_accel` off by default and preserve the existing gyro-only
+configuration until that approval. No gyro scale change is proposed.
+
+### Prepared update sequence (permission gates retained)
+
+1. Inspect current manager ownership, USB identity and installed package/DKMS.
+2. Obtain approval for one release and verify returned 100a/xpad or verified
+   physical absence. A lingering 109c/xpad instance is not a proved mode return.
+   Stop on a failed return; no automatic replug or repeat.
+3. Review revision-9 package hash, contents and the retained revision-8 rollback
+   archive. Obtain approval for the exact package transaction and its hooks:
+   safe-return guard, service stop, unload only unused gs_native, DKMS rebuild,
+   systemd metadata and distribution snapshot/initramfs hooks. Preserve local
+   gyro options; do not resume automatically after installation.
+4. Separately approve the temporary acceleration profile and new module load,
+   paused service start and one native Resume with a bounded error-release.
+   Use the existing startup observer, not a new fatal-on-transient helper.
+5. Verify paired sensors, real acceleration and gyro, then user-guided Steam
+   gyro/Eden/paddle tests. No motor pulses or stored controller settings.
+6. For rollback remove only the newly approved accel override, release safely,
+   and reload the accepted gyro-only profile or install the saved revision-8
+   archive with its own approval. Never claim successful return from binding
+   alone. No persistence change, reboot or release/push follows from this plan.
+
 ## Reproduction (offline only)
 
 ```sh
