@@ -1,5 +1,15 @@
 # Public pre-alpha release audit
 
+## Guide-held response qualifies the zero display — 19 October 2026
+
+The maintainer subsequently clarifies that the gyro display works while Guide
+is held. The previous zero-rate observation remains historical; a complete
+absence of gyro response is no longer an accurate summary. The Guide dependency
+suggests an event/notification/refresh issue but does not establish a pure UI
+defect or the exact failing layer. Continuous operation without holding Guide
+and reconnect remain unaccepted. This is a human report, not another agent-run
+capture or an authorized runtime change. See the updated target evidence.
+
 ## Late Steam gyro acceptance failed — 19 October 2026
 
 [Updated target evidence](evidence/INPUT_PUBLICATION_INSTALL_20261019.json): after

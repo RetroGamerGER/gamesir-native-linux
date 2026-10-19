@@ -76,7 +76,8 @@
     "The matched sensor FD being open is not proof of actual read/event/cache/filter handling.",
     "The sequence resumes management after controller power-on; it is not autonomous late-power-on or radio-reconnect acceptance.",
     "Do not infer a kernel/compositor/Steam cause from the negative UI result alone.",
-    "No repeated bootstrap, radio-reconnect test, manual error Release, module reload or Steam modification followed."
+    "No repeated bootstrap, radio-reconnect test, manual error Release, module reload or Steam modification followed.",
+    "Subsequent human report: gyro display works while Guide is held; pure display-error diagnosis remains unproved."
   ],
   "private_evidence_sha256": {
     "installed-verification.json": "935936744d7a9156c7f170fc1ff79644ff092de12b3fa04ae868e97ef27f670d",
@@ -144,5 +145,24 @@
     "public_readme_tests": 7,
     "alpha_packaging_tests": 25,
     "test_log_sha256": "e24a744d10858450206936f3f7bf739f5fded5ae5da616439bcb3245c72bb778"
+  },
+  "guide_hold_followup": {
+    "date": "2026-10-19",
+    "evidence_kind": "maintainer report; no agent-directed additional test or live observation",
+    "initial_report": "Pressing Guide makes the gyro move; maintainer suspects a display issue.",
+    "clarification": "While holding the Guide button, the gyro display works.",
+    "guide_hold_dependent_display_response_reported": true,
+    "exact_numeric_trace_available": false,
+    "release_behavior_quantified": false,
+    "hypotheses": [
+      "Guide-dependent event processing, notification delivery or UI refresh.",
+      "A pure rendering defect remains possible but is not proved."
+    ],
+    "limits": [
+      "This qualifies the preceding zero-display observation; do not describe a complete absence of gyro response.",
+      "It does not establish continuous standalone gyro operation, actual event/cache behavior or the exact failing layer.",
+      "No new hardware commands, Steam changes, runtime changes, radio reconnect, restart, calibration or release were performed by the agent."
+    ],
+    "acceptance": "Continuous gyro display without holding Guide remains unaccepted."
   }
 }

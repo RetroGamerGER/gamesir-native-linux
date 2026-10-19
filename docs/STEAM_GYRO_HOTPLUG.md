@@ -2,7 +2,7 @@
 
 19 October 2026. **Kernel/client/manager integration implemented and tested
 OFFLINE at `f1f6c00`; subsequent CachyOS installation is recorded below,
-and the subsequent late Steam gyro-UI test failed.** This supersedes
+and continuous late Steam gyro operation remains unaccepted.** This supersedes
 the unintegrated prototype at `468ddc6`. The existing gyro/acceleration units,
 axis maps, raw IIO, paddles, FF and trigger ownership remain unchanged. During
 the initial offline integration no installed file, running module, Steam or
@@ -234,6 +234,29 @@ sensor events and SDL/downstream readiness offline before proposing another
 separately approved live observation. Installation and normal-input success
 remain valid. Original negative records and the earlier SDL mechanism remain
 separate evidence, not a universal explanation.
+
+## Human follow-up: display works while Guide is held
+
+After the zero-rate report the maintainer reports that pressing Guide makes
+the gyro react, then clarifies: **while holding Guide, the gyro display works**.
+This qualifies the earlier zero-display conclusion; it must not be summarized
+as complete absence of sensor response. It is a human observation without a
+new agent-run capture, numeric/event trace, measured release behavior or any
+new host/device access. The earlier records remain unchanged.
+
+A Guide-dependent event-pump, notification or UI-refresh path is plausible.
+A pure display defect is a hypothesis, not a proved diagnosis: the observation
+does not separate input/event/cache processing from notification delivery or
+rendering. The earlier static downstream map in STEAM_GYRO_DOWNSTREAM.md is a
+reference for that separation, not a trace of this run. It also does not rule
+out a driver-side or other data-path dependency. Do not infer normal game motion
+or full kernel-to-application acceptance solely from this conditional UI result.
+
+Continuous gyro display without holding Guide and radio-reconnect acceptance
+remain open. No Guide/keyboard keepalive, fake button event, Steam modification,
+new sensor selection or calibration is installed as a workaround. Existing
+normal-input/paddle success and the running system are preserved. Any new live
+comparison needs its own concrete approval.
 
 ## Reproduce without devices
 

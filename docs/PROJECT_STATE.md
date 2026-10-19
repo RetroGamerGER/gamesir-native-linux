@@ -5,6 +5,17 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Nachtrag: Gyro-Anzeige reagiert bei gehaltener Guide-Taste:** Der Nutzer
+präzisiert den vorangehenden Null-Befund: Solange Guide gedrückt bleibt,
+funktioniert die Gyro-Anzeige. Das ist eine gemeldete bedingte Reaktion,
+kein belegter vollständiger Sensorausfall. Ein reiner Anzeigefehler bleibt
+eine Hypothese; Ereignisverarbeitung, Benachrichtigung und Darstellung sind
+noch nicht voneinander getrennt. Keine neuen Zahlen-/Ereignisaufzeichnungen,
+keine quantifizierte Loslassfolge und kein zusätzlicher Agenten-Livetest.
+Gyrobetrieb ohne gehaltene Guide-Taste ist weiterhin nicht abgenommen.
+Laufender Treiber und Steam unverändert; frühere Beobachtung bleibt erhalten.
+[Präzisierter Anwendungsbefund](evidence/INPUT_PUBLICATION_INSTALL_20261019.json).
+
 **Revision-10-Steam-Gyrotest nach spätem Einschalten negativ:** Nach eigenem
 Neustart des Nutzers laufen Gaming Mode und der automatisch gestartete Dienst
 mit demselben neuen Modul. Ausgeschalteter Dongle zunächst 0575/usbhid, nach

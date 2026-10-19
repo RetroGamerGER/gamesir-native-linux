@@ -26,6 +26,12 @@ bevor die Lücke hinter dem offenen Sensorknoten gezielt offline eingegrenzt ist
 keine Steam-/Treiberänderung daraus automatisch ableiten.
 [Negativer Anwendungsnachweis](STEAM_GYRO_HOTPLUG.md#subsequent-controlled-late-arrival-run-steam-gyro-still-zero).
 
+Neuere Nutzerpräzisierung: Bei gehaltener Guide-Taste funktioniert die
+Gyro-Anzeige. Die verbleibende Guide-Abhängigkeit in Ereignisverarbeitung,
+Benachrichtigung oder Anzeige offline abgrenzen; reinen Darstellungsfehler nicht
+als bewiesen ausgeben. Kein Guide-Keepalive oder neuer Liveversuch daraus.
+[Guide-Nachtrag](STEAM_GYRO_HOTPLUG.md#human-follow-up-display-works-while-guide-is-held).
+
 ## Bazzite als mögliche Zielplattform
 
 Quellenvergleich abgeschlossen, noch kein Bazzite-Zielbau oder installierbares

@@ -67,6 +67,14 @@ perform the radio-reconnect test or change runtime automatically. No manual
 error-Release was authorized or executed. Leave the healthy normal-input runtime
 unchanged; record active/enabled and unpaused separately from the earlier pause.
 
+The maintainer then qualifies the all-zero UI report: the gyro display works
+while Guide is held. Preserve the earlier negative observation as history,
+but do not claim complete sensor nonresponse or a proved pure display bug.
+This is a human report, without an additional agent-run trace. Guide-dependent
+event/cache/notification/refresh handling remains unresolved; continuous gyro
+without held Guide and reconnect remain unaccepted. Do not add fake Guide
+keepalives, change runtime or start a live comparison from this report alone.
+
 ## Bazzite assessment (19 October 2026)
 
 Read STEAM_GAMESCOPE.md's Bazzite feasibility section before a distribution port.
