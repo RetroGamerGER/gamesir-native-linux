@@ -56,6 +56,13 @@ Dienst-/Bootstrap-Fall samt lesbarem Sensor. Steams Hauptprozess öffnet den
 Sensor auch mit geöffneter Gyro-Anzeige weiterhin nicht; Werte bleiben null.
 Neustart allein löste diesen Steam-Fall nicht. Ursache gezielt weiter
 eingrenzen; keine allgemeine Boot- oder Steam-Gyro-Abnahme daraus ableiten.
+Der folgende KDE-Test auf demselben CachyOS-PC ist positiv; lesend bestätigt
+Steam dort den geöffneten Sensor bei gleichem Boot, Profil und Gerätepaar.
+In Gamescope startete Steam vor dem nativen Controller, außerdem nutzt der
+Vendor-Launcher Steam-Deck-Optionen. Zuerst Startreihenfolge gegen Startmodus
+abgrenzen: normaler Steam-Neustart in Gamescope bei bereits vorhandenem Sensor
+nur nach eigener Freigabe. Kein neuer Treiberpatch oder künstlicher Boot-Delay
+auf Verdacht. [Sitzungsvergleich](STEAM_ACCEL_EXTENSION.md#same-host-kde-and-gamescope-comparison).
 Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
 
 ## Neu angefragte Steam-Gyro-Machbarkeit: offline geprüft

@@ -5,6 +5,18 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Sitzungsunterschied auf demselben CachyOS-PC bestätigt:** Der Nutzer meldet
+funktionierenden Steam-Gyro im KDE-Desktopmodus. Lesend geprüft: gleicher Boot,
+Kernel, Paketstand, Modulquellstand, Manager-PID, Profil und gepaarte Geräte;
+KDE-Steam öffnet zusätzlich den Sensor, Gamescope-Steam zuvor nur das Gamepad.
+Die Startreihenfolge ist ein offener Unterschied: Gamescope-Steam-Launcher
+startete bei etwa 18 Sekunden, der native Start war bei etwa 64 Sekunden fertig.
+Der Vendor-Launcher verwendet außerdem Steam-Deck-Optionen. Weder deren Einfluss
+noch ein Erkennungsrennen ist als Ursache bewiesen. Nächster gezielter Test unter
+eigener Freigabe: einmaliger normaler Steam-Neustart in Gamescope bei bereits
+vorhandenem Sensor. Kein Treiberpatch oder neuer Live-Versuch ausgeführt.
+[Vergleich und Grenzen](STEAM_ACCEL_EXTENSION.md#same-host-kde-and-gamescope-comparison).
+
 **Nach nutzergeführtem CachyOS-Neustart lesend bestätigt:** Dienst automatisch
 beim Boot gestartet (etwa 16 Sekunden), aktiv/aktiviert, keine automatischen
 Neustarts; neuer erfolgreicher Bootstrap und `109c/gs_native` beobachtet.

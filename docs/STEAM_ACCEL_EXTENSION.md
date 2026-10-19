@@ -466,3 +466,62 @@ paddles retain their earlier acceptance; no new post-boot physical button test
 was recorded here. No service/module/Steam changes, Resume, Release, capture,
 extra reboot or privilege escalation was performed by this check.
 [Sanitized post-boot evidence](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
+## Same-host KDE and Gamescope comparison
+
+The maintainer confirms that gyro works in KDE on the **same CachyOS machine**
+that showed three zero rates in Gamescope. Read-only SSH metadata corroborates
+a session difference: the later KDE Steam main process has both the gamepad
+and its paired motion node open, whereas the two Gamescope snapshots above
+show only the gamepad. Both inspections had zero FD-inspection errors. This
+is a human motion-UI result plus FD metadata, not a new sensor-stream or
+process-memory observation.
+
+The boot ID, kernel, package revision, module source version, manager PID,
+persisted profile hash, paired session identity and input node names/numbers
+match across the snapshots. Both nodes are readable by the session user.
+KDE Steam maps the same 32-bit SDL path; its stored file hash matches our
+previously reviewed target SDL. No driver reinstall or new calibration is
+indicated by this comparison. Matching metadata is not a new protected-lease
+or runtime-parameter attestation.
+
+Two differences remain confounded:
+
+- The vendor launcher in `gamescope-session-cachyos 1.1.6-1` supplies
+  `-steamos3 -steampal -steamdeck -gamepadui`. Our integration preserves that
+  launcher; these are its static default arguments, not a recovered command
+  line from the departed Gamescope process. The previous complete environment
+  is unavailable after the session switch. No sensor-disabling SDL hint was
+  found in the inspected vendor session script; that is not an exhaustive
+  audit of every Gamescope environment source.
+- The user service journal places Gamescope's Steam launcher start at
+  18.309 seconds into this boot, before native startup completed at 64.164
+  seconds. KDE Steam was started later, with the paired nodes already present.
+  These are launcher/native-ready markers, not timestamps of SDL's exact
+  discovery, first open or udev permission assignment.
+
+The checksum-verified SDL 3.4.18 reference in
+[the source manifest](sdl-source-manifest.json) pairs by `EVIOCGUNIQ` in
+`GetSensor()` / `LINUX_JoystickOpen()`. `MaybeAddDevice()` adds a newly found
+sensor to its list without attaching it to already-open joysticks;
+`LINUX_JoystickSetSensorsEnabled()` uses the previously selected partner.
+These findings make discovery/permission timing a plausible explanation,
+but that reference is not established as the exact source of Steam's binary.
+Our current `gsn_input_register()` already publishes the motion node before
+the gamepad. Kernel registration order alone does not establish userspace
+discovery or ACL order; a missing registration-order fix is not demonstrated.
+
+Recommended next discriminating test, **not executed or newly authorized**:
+in Gamescope, with the native controller and readable paired sensor already
+present, restart Steam once through its normal vendor launcher. Preserve the
+vendor flags, mapping, driver and options; compare the main process's motion
+FD and actual UI response. Success would support an initial discovery/order
+problem. Failure would leave launch-mode/environment or other Steam selection
+logic open. Do not install an arbitrary startup delay or remove Steam Deck
+flags on this evidence alone; neither would establish reliable hotplug.
+
+This comparison made no target writes, service/module/Steam changes, device
+opens, process-memory reads, capture, privilege escalation or push. The earlier
+Gamescope failures remain recorded. KDE success does not validate Gamescope,
+Proton gameplay, reconnect/suspend or full physical calibration.
+[Sanitized comparison and private-evidence hashes](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).

@@ -470,5 +470,93 @@
       "boot-read.json": "0ebbc5c1c54fa4cbb4a9c48513cb650e7e7e702bc25a840f1b555440968eb245",
       "gyro-ui-open-read.json": "19c366f1f1db550ffcf1422ce476986fed56b20f03504a58be9edffc3cbc14a8"
     }
+  },
+  "CachyOS_session_comparison": {
+    "date": "2026-10-19",
+    "stage": "KDE Steam gyro works on the same CachyOS host; Gamescope discovery remains unresolved",
+    "method": "Human report plus unprivileged read-only SSH metadata and vendor-script/cached-source inspection; no new motion stream or process-memory observation.",
+    "same_between_snapshots": {
+      "boot_id": true,
+      "kernel": true,
+      "core_package_revision": true,
+      "module_srcversion": true,
+      "manager_PID": true,
+      "persisted_profile_sha256": true,
+      "paired_nonempty_session_uniq": true,
+      "input_names_and_node_numbers": true,
+      "session_user_can_read_both_nodes": true
+    },
+    "KDE": {
+      "human_reports_Steam_gyro_works": true,
+      "main_Steam_has_gamepad_FD": true,
+      "main_Steam_has_motion_FD": true,
+      "FD_inspection_errors": 0,
+      "mapped_SDL_path_matches_previous_Gamescope_snapshot": true,
+      "stored_SDL_file_sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+      "new_per_button_or_axis_acceptance_requested": false
+    },
+    "Gamescope": {
+      "human_reports_all_three_Steam_rates_zero": true,
+      "main_Steam_has_gamepad_FD": true,
+      "main_Steam_has_motion_FD": false,
+      "FD_inspection_errors": 0,
+      "snapshots_with_same_FD_result": 2
+    },
+    "launch_differences": {
+      "vendor_package": "gamescope-session-cachyos 1.1.6-1",
+      "static_vendor_launcher_sha256": "bc2e16bbff2357091f04b7049b9fa40d3fc8d75e909c09310ebe39acc5c09621",
+      "static_default_arguments": [
+        "-steamos3",
+        "-steampal",
+        "-steamdeck",
+        "-gamepadui"
+      ],
+      "departed_process_command_line_captured": false,
+      "complete_previous_Gamescope_environment_recovered": false,
+      "Gamescope_launcher_started_boot_seconds": 18.309078,
+      "native_ready_boot_seconds": 64.163963,
+      "exact_SDL_discovery_open_or_ACL_timing_observed": false
+    },
+    "offline_reference": {
+      "SDL_version": "3.4.18",
+      "SDL_commit": "829a65d769d935c4852f8159e964312c0957260a",
+      "SDL_sysjoystick_c_sha256": "4c787e35305b959a680c19aedc661e90000259d0f6d2a520a169dc6821067178",
+      "hash_rechecked": true,
+      "pairs_sensor_at_joystick_open": true,
+      "inspected_late_sensor_add_does_not_reassociate_open_joystick": true,
+      "exact_source_of_Steam_binary_established": false,
+      "current_kernel_registers_motion_before_gamepad": true
+    },
+    "interpretation": {
+      "session_dependent_behavior_confirmed": true,
+      "exact_compositor_or_flag_cause_proven": false,
+      "discovery_order_or_permission_race_proven": false,
+      "driver_reinstallation_or_recalibration_indicated": false,
+      "limits": "Matching metadata is not a new protected-lease/module-instance/runtime-parameter attestation. Launch mode and startup timing both differ; reference SDL source does not prove exact Steam behavior."
+    },
+    "proposed_next_test": {
+      "description": "One normal Steam restart in Gamescope after native paired nodes exist and are readable, preserving vendor arguments, mapping and driver; compare motion FD and UI response.",
+      "executed": false,
+      "newly_authorized": false,
+      "system_or_driver_patch_prepared": false
+    },
+    "agent_actions": {
+      "read_only_on_target": true,
+      "sudo": false,
+      "service_or_module_change": false,
+      "Steam_restart_or_setting_change": false,
+      "device_open_or_capture": false,
+      "process_memory_read": false,
+      "gyro_calibration_resumed": false,
+      "push": false
+    },
+    "private_evidence_sha256": {
+      "comparison.json": "faf0984aafdc7c422ef114742e4519691103041fcdad5831600281afc4256aef",
+      "gamescope-static.txt": "f14169378e46eba7a6ce3e82389599cf4bc1765ac1213d177b6132ed3923da21",
+      "kde-read.json": "ad28e5cc1a6d86148733786b6d05f931d2011786d00499a0fe9d3627d2f36250",
+      "launcher-and-stop-timing-read.txt": "f3e9b23d4d63fd7f2c2400f2383ae72c9957c1abee96d2074b7b8bff20b82572",
+      "launcher-lifecycle.json": "9650e025fcb1d1cd6124f022aa4c71c0b192c889360f1f1226da626dcc6cc3eb",
+      "vendor-launcher-read.txt": "f89a8e815b12fae564fb51ec0191ba80200acb36819ba86fc32d59d353a2f5b7"
+    }
   }
 }

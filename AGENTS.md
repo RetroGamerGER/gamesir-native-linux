@@ -237,6 +237,17 @@ not motion, in two snapshots including a human-confirmed open gyro UI; the
 user reports all three rates zero. Reboot did not resolve this case. Runtime
 parameters/protected lease were not read; no sudo, device/process-memory open,
 start/reload/Resume/Release or Steam change. Keep Steam gyro failure open.
+The subsequent same-host KDE report is positive: read-only SSH confirms the
+same boot, kernel/package/module source, manager PID, profile and paired nodes;
+KDE Steam opens both nodes, Gamescope previously only the gamepad. Read
+STEAM_ACCEL_EXTENSION.md's same-host comparison. The Gamescope launcher started
+before native readiness and defaults to Steam Deck flags; timing and launch
+mode remain confounded, neither is a proved cause. Reference SDL pairs sensors
+at gamepad open, with no late-sensor reassociation in the inspected path; the
+kernel already publishes motion first. Do not claim a compositor defect, change
+the driver, strip flags or add an arbitrary boot delay. A normal Steam restart
+in Gamescope with nodes already present is a proposed separately approved test,
+not executed here. Preserve KDE success and the Gamescope failures separately.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;
