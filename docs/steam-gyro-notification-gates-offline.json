@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "scope": "Offline static files and own synthetic buffers only; no vendor execution, hardware, live processes, network, privileges or runtime changes",
+  "client": {
+    "path": "linux32/steamclient.so",
+    "sha256": "6d8e7e938ff44527a78e2550525c16a9f4605a88d5b20f4466aff311cc00a103",
+    "bytes": 50207500
+  },
+  "address_kind": "ELF32 virtual addresses; cited text file offset=VA-0x1000",
+  "text_anchors": [
+    {
+      "start": "0x1231b66",
+      "end_exclusive": "0x1231b7b",
+      "sha256": "82e3968af0a656b876e3539c5502c39af80d7ea40dea1f25eecb3a7dc1372dfd",
+      "fact": "Poll context originates from function argument"
+    },
+    {
+      "start": "0x1231caf",
+      "end_exclusive": "0x1231ce2",
+      "sha256": "b369515c45c46c9ebb736a9a5a156bd8cf218c84bb8cd9728f9d2279a73be486",
+      "fact": "Poll destination starts at context +0x180"
+    },
+    {
+      "start": "0x1231f05",
+      "end_exclusive": "0x1231f14",
+      "sha256": "892fef8b597f54329612b67ded987ae5a115dd1230ee6a1aa2567fc1bee89d27",
+      "fact": "Calls device abstraction virtual +0x34 with that destination"
+    },
+    {
+      "start": "0x12325b7",
+      "end_exclusive": "0x12325d7",
+      "sha256": "f63823d9b74b8a06d4f1638d96ccebd93511c38eac9beed2a4c45ff87e1c278f",
+      "fact": "Advances poll destination by controller-slot stride 0x210"
+    },
+    {
+      "start": "0x1243cc4",
+      "end_exclusive": "0x1243cd8",
+      "sha256": "85c85de423cb099458792cdb4a5dab1eff16bf5b51c450fca5754f577c495a66",
+      "fact": "Copies left acceleration to report +0x24/+0x26/+0x28"
+    },
+    {
+      "start": "0x1243972",
+      "end_exclusive": "0x1243991",
+      "sha256": "fd22d47fe7548d13fe56e8a02ec48f859b38598c0853aba1989bb99238de4210",
+      "fact": "Copies main acceleration only if flag0x4 present, to +0x58/+0x5a/+0x5c"
+    },
+    {
+      "start": "0x11f97cc",
+      "end_exclusive": "0x11f97de",
+      "sha256": "93efd1ff95afee6705452d9560b569dcedfd006209d09de2a7cbdacd970c9225",
+      "fact": "One initialization/reset path zeroes cached 176-byte report"
+    },
+    {
+      "start": "0x1347968",
+      "end_exclusive": "0x134798f",
+      "sha256": "cff001e6e0ee6a2860bad5828ce93fd857c1468911acdce7e0cf8fa5877671d6",
+      "fact": "CGyroSource consumes report +side*0x34+0x24 triple as acceleration"
+    },
+    {
+      "start": "0x1345550",
+      "end_exclusive": "0x1345576",
+      "sha256": "398ea3a9a7f9f25e6917d97ad75b0416861344dc8d01cd5f8f51867eaa7acc11",
+      "fact": "Feature type16 constructs CGyroSource with side0"
+    },
+    {
+      "start": "0x1345600",
+      "end_exclusive": "0x1345626",
+      "sha256": "d6c0752580d56c40e4a64763e4fd35bcf7ce207fa726bfda911f5ce96c938d49",
+      "fact": "Feature type10 constructs CGyroSource with side1"
+    },
+    {
+      "start": "0x129314c",
+      "end_exclusive": "0x129317c",
+      "sha256": "42df83cd37c6f00ac56957ce1d5db1350a036c32d9a73d8313b2c9a29b9bc47b",
+      "fact": "Feature lookup and optional creation; notification passes create=false"
+    },
+    {
+      "start": "0x1345f90",
+      "end_exclusive": "0x1345f9a",
+      "sha256": "9ec7650d053f7f5abaa6c5ceb7cd117984639e6ffc765fc1f1ac779ace0da342",
+      "fact": "Getter returns source+0x138"
+    },
+    {
+      "start": "0x1346155",
+      "end_exclusive": "0x1346169",
+      "sha256": "47185e673d64d15f462acefab21617e7cbc52858e7e6e1160d234a0c4d83b5e1",
+      "fact": "Constructor clears region covering source+0x194"
+    },
+    {
+      "start": "0x1347dc8",
+      "end_exclusive": "0x1347e41",
+      "sha256": "464a510efda949ae3be714758857b20f9d7492ed749256d9489fb85188bef562",
+      "fact": "Finite-quaternion publish path sets source+0x194=1, returned-state+0x5c"
+    },
+    {
+      "start": "0x123619b",
+      "end_exclusive": "0x12361e8",
+      "sha256": "9eb774ec3ce4fd15fe6c66f3741f172c3ec570d7bfe942ec84c524f0fc96bba9",
+      "fact": "Notification source-valid and any-nonzero selected acceleration gate"
+    },
+    {
+      "start": "0x1235edc",
+      "end_exclusive": "0x1235ef6",
+      "sha256": "bd3c8e2545e6442bef1279593cd4b87c89aa2f4b72b6cc4b802e52c7d6e823c2",
+      "fact": "Second IMU iteration advances cached-state base by0x34 and chooses type10"
+    },
+    {
+      "start": "0x1239620",
+      "end_exclusive": "0x1239667",
+      "sha256": "eb4a8adbd11ae7f5d2a8b83c9ed37c9cbe492499dfaf405881300ac795b86977",
+      "fact": "Per-controller per-flow counters; speed mode3 selects offset0xb960"
+    },
+    {
+      "start": "0x12361e8",
+      "end_exclusive": "0x1236200",
+      "sha256": "e1a97c4a2028fff8fe90fc02deb4864c03e9a1799216baaa7010a9d9537641c7",
+      "fact": "Positive speed subscription gates message construction"
+    },
+    {
+      "start": "0x1236e91",
+      "end_exclusive": "0x1236ebd",
+      "sha256": "9d50f1db25f6554c6f64a2c48eeeddca73bcb1acab130704ee64ffa195eaa220",
+      "fact": "Periodic notification pass over all16 controller slots"
+    }
+  ],
+  "layout": {
+    "controller_stride": 528,
+    "cached_report_offset": 384,
+    "imu_stride": 52,
+    "left_accel_report_offsets": [
+      36,
+      38,
+      40
+    ],
+    "main_accel_report_offsets": [
+      88,
+      90,
+      92
+    ],
+    "left_accel_slot_offsets": [
+      420,
+      422,
+      424
+    ],
+    "main_accel_slot_offsets": [
+      472,
+      474,
+      476
+    ],
+    "left_gyro_report_offsets": [
+      42,
+      44,
+      46
+    ],
+    "main_gyro_report_offsets": [
+      94,
+      96,
+      98
+    ],
+    "source_state_offset": 312,
+    "published_valid_source_offset": 404
+  },
+  "synthetic_checks": {
+    "case_count": 64,
+    "nonselected_side_negative_cases": 2,
+    "vtable_checks": 2,
+    "all_zero_accel_ever_passes": false,
+    "counterexamples": [
+      {
+        "side": 1,
+        "accel": [
+          0,
+          0,
+          0
+        ],
+        "gyro": [
+          0,
+          0,
+          0
+        ],
+        "valid": true,
+        "subscribed": true,
+        "passes": false
+      },
+      {
+        "side": 1,
+        "accel": [
+          0,
+          0,
+          0
+        ],
+        "gyro": [
+          1200,
+          -2400,
+          3600
+        ],
+        "valid": true,
+        "subscribed": true,
+        "passes": false
+      },
+      {
+        "side": 1,
+        "accel": [
+          0,
+          8192,
+          0
+        ],
+        "gyro": [
+          0,
+          0,
+          0
+        ],
+        "valid": true,
+        "subscribed": true,
+        "passes": true
+      },
+      {
+        "side": 1,
+        "accel": [
+          0,
+          8192,
+          0
+        ],
+        "gyro": [
+          1200,
+          -2400,
+          3600
+        ],
+        "valid": true,
+        "subscribed": true,
+        "passes": true
+      }
+    ],
+    "limitations": "Only independently reconstructed necessary gates/offsets; not actual Steam, source fusion, event routing or gameplay"
+  },
+  "decision": {
+    "static_gyro_only_ui_blocker_identified": true,
+    "blocker": "All-zero selected acceleration triple skips gyro notifications even with nonzero gyro, valid source and speed subscription",
+    "historical_live_branch_values_measured": false,
+    "exclusive_live_root_cause_proved": false,
+    "upstream_bug_vs_unsupported_contract_decided": false,
+    "runtime_fix_validated": false
+  }
+}

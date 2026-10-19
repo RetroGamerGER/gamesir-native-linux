@@ -22,8 +22,11 @@ The [subsequent downstream static investigation](STEAM_GYRO_DOWNSTREAM.md)
 traces instance-gated event routing, separate gyro packet conversion and the
 controller/IMU-specific UI feed. Its first affine conversion preserves 192 of
 194 saved movement vectors as nonzero; the early packet path can advance
-without acceleration. Later readiness/subscription/timing gates remain to be
-connected to the actual failed run. No exact discard cause or fix is proved.
+without acceleration. Its [notification-gate follow-up](STEAM_GYRO_DOWNSTREAM.md#notification-gate-follow-up)
+now maps a later gate to selected-side acceleration: all-zero acceleration
+skips gyro status notifications, even with gyro, valid source and subscription.
+This is a sufficient static blocker for the documented gyro-only UI path;
+the exclusive historical runtime cause and a working fix remain unverified.
 
 Preserve one shared implementation: `gs_native` owns USB; paired gamepad and
 motion evdev devices serve SDL/Eden and, if accepted, Steam Input. Raw IIO,

@@ -128,10 +128,18 @@ The subsequent offline downstream analysis is in docs/STEAM_GYRO_DOWNSTREAM.md.
 Instance routing, gyro-only early record turnover/conversion and a separate
 controller/IMU-indexed UI notification feed are statically identified. Do not
 claim the first quantizer erases motion: the saved movement replay preserves
-192/194 nonzero vectors. Later object/readiness/subscription/timing gates are
-not established for the failed run. Do not call the unidentified three-field
-notification gate acceleration, or equate UI RawSpeed with raw USB counts.
-No exact root cause or fix is proved; preserve working SDL/Eden and runtime.
+192/194 nonzero vectors. The subsequent notification-gate follow-up maps the
+previously unknown triple to acceleration through writer, cached-report base,
+lane stride and CGyroSource reader. Zero selected acceleration is a sufficient
+static blocker for UI gyro notifications, even with nonzero gyro, valid source
+and subscription. Read docs/steam-gyro-notification-gates-offline.json.
+Do not downgrade this back to an offset-only guess, or overstate it as the
+exclusive measured live cause or a universal Steam gameplay restriction.
+Source validity is a published finite-quaternion marker, not connectivity or
+calibration completion. UI RawSpeed is not raw USB counts. No fake gravity,
+forced flags, installed changes or new live observation follows automatically.
+Preserve accepted SDL/Eden, gyro-only opt-in and all other features; any real
+accel extension needs its own axes/units evidence and implementation request.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

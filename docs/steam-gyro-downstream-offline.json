@@ -70,7 +70,7 @@
     },
     {
       "va": "0x123619b",
-      "fact": "Before motion notifications checks returned object byte +0x5c and any nonzero 16-bit value in selected controller state +0x1a4/+0x1a6/+0x1a8. Meaning and live values of triplet not established"
+      "fact": "Checks source-state byte +0x5c and nonzero selected acceleration triple; writer/base/lane proof now recorded in steam-gyro-notification-gates-offline.json"
     },
     {
       "va": "0x1236578",
@@ -130,9 +130,10 @@
   },
   "missing_live_evidence": [
     "SDL event queue/watch callback delivery and device-object instance match",
-    "Internal packet consumer, motion-object readiness and exact triplet meaning",
+    "Historical values of source-valid marker and selected acceleration triple; additional failed gates not excluded",
     "Controller index, IMU index and notification subscriptions selected by actual UI",
     "Actual timing policy and downstream motion/antidrift state"
   ],
-  "conclusion": "Cause narrowed downstream of changing enabled SDL cache; exact failing gate not proved. No evidence justifying driver/Steam changes or fabricated acceleration."
+  "conclusion": "Follow-up identifies all-zero selected acceleration as a sufficient static blocker for UI gyro notifications. Exclusive historical live cause and runtime fix remain unverified.",
+  "notification_followup": "steam-gyro-notification-gates-offline.json"
 }

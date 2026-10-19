@@ -5,15 +5,31 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Steam-Folgepfad offline eingegrenzt:** Der ELF32-Client routet Gyroereignisse
+**Konkrete Steam-UI-Sperre offline identifiziert:** Die bisher unbekannte
+Dreierprüfung vor den Gyro-Benachrichtigungen prüft tatsächlich Beschleunigung.
+Schreibpfad, Cachebasis `0x180`, IMU-Abstand `0x34` und ein unabhängiger
+`CGyroSource`-Leser bestätigen das für beide Seiten. Sind alle drei Werte der
+gewählten Seite null, werden die Gyro-Statusmeldungen übersprungen – auch bei
+vorhandener Drehbewegung, gültigem Quellzustand und Abonnement. Unser bewusst
+Gyro-only ausgelegter evdev-Pfad kann deshalb die UI-Sperre nicht passieren,
+wenn dessen frischer Cache keine Beschleunigung enthält. Das ist eine
+hinreichende statische Erklärung für die Nullanzeige; die alleinige Ursache
+des damaligen Live-Laufs und eine Spieleinschränkung sind damit nicht bewiesen.
+Bereitschaftsmarker, Geräte-/Seitenzuordnung und Abonnementpfad sind ebenfalls
+weiter verfolgt. 64 eigene Modellfälle und zwei Gegenseitenfälle bestehen;
+keine Steam-Ausführung. [Fundstellen und Beweisgrenzen](STEAM_GYRO_DOWNSTREAM.md#notification-gate-follow-up).
+Keine Steam-/Treiberänderung, kein Live-Test oder Push; Gyrokalibrierung pausiert.
+
+**Vorheriger Zwischenstand – Steam-Folgepfad eingegrenzt:** Der ELF32-Client routet Gyroereignisse
 über die SDL-Instanz und führt separate Gyro-Paketfelder weiter, auch ohne
 gleichzeitiges Accel-Ereignis. Die erste Zahlenkonvertierung erhält in einer
 mathematischen Nachrechnung 192 von 194 gespeicherten Bewegungsvektoren als
 ungleich null. Steams Anzeige liest einen eigenen Statusstrom nach Controller-
 und IMU-Index; dessen Ausgangswerte sind null. Vor dessen Benachrichtigungen
-liegen weitere Objekt-, Bereitschafts- und Abonnementprüfungen. Ihre konkreten
-Laufzeitwerte und die vollständige Verbindung zur Filterverarbeitung sind
-noch unbelegt: keine abschließend bewiesene Ursache oder Treiberkorrektur.
+liegen weitere Objekt-, Bereitschafts- und Abonnementprüfungen. Am Zwischenstand
+`7203032` waren deren Laufzeitwerte und die vollständige Verbindung zur
+Filterverarbeitung noch unbelegt; die obige Folgeanalyse ergänzt den statischen
+Beschleunigungsblocker.
 Statische Fundstellen, Gegenbelege zur einfachen Accel-/Quantisierungshypothese
 und gezielte Restfragen sind [dokumentiert](STEAM_GYRO_DOWNSTREAM.md).
 Nur lokale Dateien und vorhandene Daten untersucht; kein Live-Test, sudo,

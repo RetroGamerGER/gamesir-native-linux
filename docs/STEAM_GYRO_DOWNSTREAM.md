@@ -1,10 +1,19 @@
 # Steam gyro: downstream static investigation
 
-19 October 2026. **Offline investigation; exact failing gate still unresolved.**
+19 October 2026. **A sufficient gyro-only UI blocker is now identified
+statically; the historical run's exclusive failing branch was not observed.**
 Steam's enabled SDL cache receives changing real gyro values, while its UI
 remains at zero in the completed observation. This follow-up narrows the
 remaining path without executing Steam, reading a live process/device, using
 privileges/network or modifying Steam, the driver or installed configuration.
+
+The [notification-gate follow-up below](#notification-gate-follow-up) resolves
+the previously unidentified three-field test: it checks the selected side's
+**acceleration**, not its angular velocity. All-zero acceleration skips the
+gyro notifications even if gyro values, source validity and subscriptions
+are present. This is a concrete contract mismatch for our documented
+gyro-only evdev interface, not a demonstrated defect in its working SDL/Eden
+delivery. Additional failed gates in the historical run remain possible.
 
 See [portable addresses, hashes and replay results](steam-gyro-downstream-offline.json)
 and the [previous live evidence](steam-gyro-observation-live-001.json).
@@ -107,9 +116,10 @@ The native notification producer at `0x1235db0` checks controller presence,
 object pointers and subscription state. Before its motion notifications,
 `0x123619b` checks a returned object's byte at offset `0x5c`, then requires
 at least one nonzero 16-bit field at selected controller-state offsets
-`0x1a4/0x1a6/0x1a8`. Their exact semantic meaning and the relevant live values
-are **not established**; do not label that triplet as acceleration or gyro
-merely from its position. The gyro-speed branch at `0x12361e8` checks a
+`0x1a4/0x1a6/0x1a8`. At the initial checkpoint their meaning was unknown.
+The follow-up below identifies them as acceleration by tracing the writer,
+cached report base, lane stride and independent sensor reader. Their live
+values were not sampled. The gyro-speed branch at `0x12361e8` checks a
 subscriber count before constructing its message at `0x1236578`; the send
 path references `SteamInputManager.NotifyGyroSpeedStateChanged#1` at
 `0x1236618`. These are additional possible reasons for an unchanged UI store,
@@ -127,15 +137,18 @@ alone is not a bug or evidence that wrap occurred in the failed path.
 
 ## Assessment and next targeted investigation
 
-Confirmed: delivery into enabled SDL, an instance-gated event path, separate
+At the initial checkpoint we confirmed delivery into enabled SDL, an instance-gated event path, separate
 gyro packet fields that can advance without accel, a conversion preserving
 the recorded motion, and a separate controller/side-specific UI feed with
-default zero values. **The exact cause of the zero display is not yet proved.**
+default zero values. The follow-up now identifies a sufficient static block
+on that UI path; it does not establish the exclusive historical runtime cause.
 
 The remaining investigation should follow the backend packet consumer into
 the motion object returned to the notification producer: identify the
 three-field/readiness gate, its writers and controller/side assignment, then
 connect those fields to speed-message production and timing/filter updates.
+The notification-gate follow-up below completes the field and source mapping;
+historical runtime subscription, source validity and event routing remain unmeasured.
 This is more specific than repeating SDL pairing tests or adding guessed
 sensor capabilities. Any later runtime observation would require a separate
 reviewed proposal and permission; none is started or authorized here.
@@ -144,6 +157,105 @@ Preserve the existing driver, accepted Eden motion, four independent paddles,
 grip FF, trigger bridge, raw IIO and single USB owner. No Steam setting,
 replacement library, synthetic accelerometer or driver change is recommended
 from this evidence. Gyro calibration remains paused; no push.
+
+## Notification-gate follow-up
+
+The [new evidence manifest](steam-gyro-notification-gates-offline.json) pins
+19 bounded ELF32 text regions by address and SHA256. Disassembly starts at
+known function/branch boundaries; nearest exported-symbol names printed by
+objdump are not treated as internal function names. RTTI independently
+identifies the relevant classes as `CGenericGamepadControllerAbstraction`
+and `CGyroSource`. No vendor code is executed or redistributed.
+
+### The unknown triple is acceleration
+
+The poll loop derives its destination from the passed context plus `0x180`
+(`0x1231cd7`), calls the device abstraction's virtual slot `+0x34` with that
+destination (`0x1231f11`) and advances it by `0x210` for each controller
+(`0x12325c4`). The generic abstraction's vtable maps that slot to the packet
+converter `0x1243770`. A separate snapshot reader at `0x11c52c8` copies the
+same context/slot `+0x180` report; an initialization/reset path at `0x11f97cc`
+zeroes its 176 bytes.
+
+The converter's acceleration branch uses the SDL acceleration flag `0x4`:
+`0x1243cc4` writes the left triple to report offsets `0x24/0x26/0x28`;
+`0x1243972` writes the main triple to `0x58/0x5a/0x5c` only when that flag is
+present. Gyro writes different fields, `0x2a/0x2c/0x2e` and
+`0x5e/0x60/0x62`. Thus gyro updates alone do not fill the acceleration triple.
+`CGyroSource` independently reads the same triple at
+`report + side*0x34 + 0x24` (`0x1347968`), scaling it for its acceleration/
+orientation calculations. This is a writer/reader mapping, not a guess from
+an offset or from three zero UI numbers.
+
+| Side | Report acceleration | Cached controller-state acceleration | Report gyro |
+| --- | --- | --- | --- |
+| Left / IMU 0 | `0x24, 0x26, 0x28` | `0x1a4, 0x1a6, 0x1a8` | `0x2a, 0x2c, 0x2e` |
+| Main / IMU 1 | `0x58, 0x5a, 0x5c` | `0x1d8, 0x1da, 0x1dc` | `0x5e, 0x60, 0x62` |
+
+The second notification iteration adds `0x34` to the selected cached-state
+base (`0x1235edc`). Its same three comparisons therefore test **main**
+acceleration at `0x1d8/0x1da/0x1dc`, not the unused left sensor. That rules
+out the interpretation that the new finding concerns only left Joy-Con data.
+
+### Source validity and subscriptions
+
+Notification lookup first asks for feature 16, then feature 10. The factory
+constructs the same `CGyroSource` with side 0 or 1 respectively
+(`0x1345550`, `0x1345600`). Lookup at `0x1293130` uses the feature cache;
+the notification calls pass `create=false`, so this path does not itself
+create a missing source.
+
+The source getter's virtual slot `+0x2c` returns `source + 0x138`
+(`0x1345f90`). Its tested state byte `+0x5c` is therefore source offset
+`0x194`. The constructor clears it; the finite-quaternion publication path
+sets it to 1 at `0x1347e29`. It is a published-state validity marker, not
+proof of current connectivity, freshness or completed software calibration.
+Its actual historical value remains unknown.
+
+The flow handler at `0x12395d0` accepts controller indices 0–15 and flow modes
+0–5; its index arithmetic makes mode 3 select the counter at
+`context + controller_index*24 + 0xb960`. The speed-notification branch tests
+that counter at `0x12361e8`, matching the UI's speed-flow mode 3. Both flow
+registration and the periodic 16-controller pass (`0x1236ea8`) invoke the
+notification producer. An absent subscription remains another possible
+runtime failure, but a valid subscription cannot bypass its acceleration gate.
+
+### What this establishes
+
+With the other guards assumed to pass, the selected notification block still
+requires **source validity AND at least one nonzero acceleration component**;
+speed messages additionally require a speed subscriber. A zero gyro vector
+does not itself fail this particular gate. Therefore ordinary stationary
+gravity from a real accelerometer can permit updates, whereas arbitrarily
+large gyro values with zero acceleration cannot. This is not a gyro deadzone.
+
+Our source registers only the three rotational evdev axes in
+`gs_gyro_register_input`; raw acceleration stays in IIO. Earlier SDL tests
+confirm gyro present and acceleration absent. In a freshly zeroed cache fed
+only by that contract, the acceleration fields remain zero and this Steam
+UI path cannot publish the gyro rates. That is a **sufficient static
+explanation of the observed zero display**, beyond the earlier general
+acceleration hypothesis.
+
+It does not prove this was the only failing condition, establish the exact
+historical branch values, or decide whether Valve considers gyro-only support
+an omission or unsupported contract. It also does not establish that every
+Steam gameplay/mouse/Steam Input API path uses this UI gate. Calibration
+progress notifications share the gated block, which can explain an apparently
+stalled wizard without proving that the internal calibration algorithm failed.
+
+An independent model on own zeroed buffers checked 64 combinations of side,
+acceleration, gyro, validity and subscription, plus two wrong-side negative
+cases. Nonzero gyro never satisfied the missing-acceleration gate; a nonzero
+component on the other side did not satisfy it either. Two static vtable
+cross-checks passed. These are selected-gate/offset counterexamples, **not
+tests of Steam execution, complete fusion or real hardware**.
+
+No forcing of validity/capability flags, synthetic gravity, modified Steam
+library or sensor-interface change follows from this investigation. A later
+integration proposal can address genuine acceleration with independently
+validated axes/units, or seek upstream gyro-only handling. Neither is
+implemented here; preserve the accepted Eden path and all other functions.
 
 ## Validation of this documentation change
 

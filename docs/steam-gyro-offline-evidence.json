@@ -430,5 +430,12 @@
     "static_only": true,
     "root_cause_proved": false,
     "runtime_changes": false
+  },
+  "notification_gate_followup": {
+    "date": "2026-10-19",
+    "evidence": "steam-gyro-notification-gates-offline.json",
+    "static_gyro_only_ui_blocker_identified": true,
+    "exclusive_live_root_cause_proved": false,
+    "runtime_changes": false
   }
 }

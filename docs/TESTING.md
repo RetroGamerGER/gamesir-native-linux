@@ -17,6 +17,14 @@ keine Aussage über Steams tatsächliche Delta-Zeit/Timingauswahl beweisen.
 Bei der Nachrechnung null als mögliche einzelne Stichprobe zulassen, keine
 Bewegung in jedem Sample unterstellen und keine Anzeigeabnahme behaupten.
 
+Die spätere Benachrichtigungsanalyse verknüpft Beschleunigungs-Schreibstellen,
+Cacheoffsets und `CGyroSource`-Leser mit der konkreten UI-Sperre. 19 statische
+Textbereiche sind mit SHA256 in `steam-gyro-notification-gates-offline.json`
+fixiert. Ein eigenes Puffermodell prüft 64 Kombinationen aus Seite, Accel,
+Gyro, gültiger Quelle und Abonnement sowie zwei Gegenseiten-Negativfälle.
+Diese logischen Gegenbeispiele führen weder Steam noch dessen Fusion aus.
+Sie beweisen keine historischen Laufzeitwerte oder vollständige Reparatur.
+
 Der vorhandene gerätefreie Sensorprüfer kann zusätzlich genau eine lokal
 vorhandene SDL3-Bibliothek prüfen:
 
