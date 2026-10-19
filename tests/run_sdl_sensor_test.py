@@ -35,6 +35,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sdl3-library", type=Path,
                         help="Test one local SDL3 shared library, mounted read-only; no Steam/client launch")
+    parser.add_argument("--check-steam-layout", action="store_true",
+                        help="Validate read-only cache offsets for the pinned Steam ELF32 SDL only")
     options = parser.parse_args()
     library = options.sdl3_library
     library_hash = None
@@ -52,6 +54,10 @@ def main():
             parser.error("Unsupported SDL ABI for this host")
         library_hash = hashlib.sha256(data).hexdigest()
         report = report / ("sdl3-" + library_hash[:16])
+    if options.check_steam_layout and library_hash != "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97":
+        parser.error("Cache layout check requires the reviewed Steam ELF32 SDL hash")
+    if options.check_steam_layout:
+        report = report / "cache-layout"
     build = BUILD / f"elf{target_bits}"
     abi_flags = ["-m32"] if target_bits == 32 else []
     build.mkdir(parents=True, exist_ok=True)
@@ -139,6 +145,8 @@ def main():
                 args.extend(["--ro-bind", str(library), "/sdl-override/libSDL3.so.0",
                     "--setenv", "LD_LIBRARY_PATH", "/sdl-override",
                     "--setenv", "GS_EXPECT_SDL3_LIBRARY", "/sdl-override/libSDL3.so.0"])
+            if options.check_steam_layout:
+                args.extend(["--setenv", "GS_CHECK_STEAM_LAYOUT", "1"])
             args.extend(["/usr/bin/python", "/tests/audit_sdl_sandbox.py", f"/tests/probe{version}"])
             output = run(args)
             filename = f"sdl{version}-{scenario}.log"
@@ -153,6 +161,7 @@ def main():
         "sdl3_override": None if library is None else {"path": str(library), "sha256": library_hash,
             "loaded_path_verified_by_probe": True},
         "target_bits": target_bits,
+        "steam_cache_layout_checked": options.check_steam_layout,
         "hardware_test": False, "privileged_actions": False, "kernel_changes": False,
         "fixture_scales": {"synthetic_not_G7_calibration": True, "accel_units_per_g": 8192, "gyro_units_per_degree_per_second": 16},
         "capture": "target-only excerpt: fixtures/sprint002-target.json", "record_line": index, "record": record,

@@ -272,7 +272,14 @@ current instance, later disabling it, discarding incoming events, or requiring
 acceleration/timing conditions in its downstream filter/calibration. Steam's
 backend was not executed by these tests. The zero-motion problem is not fixed.
 
-**Next separately approved diagnostic:** use one bounded read-only Steam
+**Prepared next diagnostic:** [the read-only cache observation plan](STEAM_GYRO_OBSERVATION_PLAN.md)
+now provides a pinned, offline-validated process-memory reader. It observes
+SDL's enabled flag and cached angular velocities without debugger attachment,
+target calls or device opens. This can locate the boundary before/after the
+cache, but cannot prove a particular downstream discard decision. No live run
+is authorized by its preparation.
+
+**Broader diagnostic question:** use one bounded read-only Steam
 observation while the user opens its gyro page and moves the controller.
 Distinguish (1) matching instance/sensor selection, (2) sensor activation and
 continued event reads, and (3) incoming angular velocities versus the displayed

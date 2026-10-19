@@ -82,6 +82,12 @@ SDL libraries. The stricter test caught and fixed extra empty SYN_REPORTs
 in the synthetic fixture; this is not a runtime driver defect. ELF32 testing
 now uses the committed runner. Steam's downstream filter remains unproved;
 do not infer a fix or rule out an acceleration requirement from SDL success.
+The prepared observer in docs/STEAM_GYRO_OBSERVATION_PLAN.md is not authorized
+to run yet. It reads only the pinned Steam ELF32 SDL cache and metadata after
+separate permission/local GO; no debugger attach, target calls or device opens.
+Unknown hashes, multiple targets and instance changes stop it. Cache updates
+prove delivery inside SDL, not Steam's downstream acceptance or exact discard
+reason. Do not silently substitute GDB/ptrace or invoke this live helper in tests.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

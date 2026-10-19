@@ -17,6 +17,41 @@
 #endif
 
 #ifndef TEST_SDL2
+static uint32_t cache_word(const void *address)
+{
+    uint32_t value;
+    memcpy(&value, address, sizeof(value));
+    return value;
+}
+
+/* Private diagnostic offset validation against public SDL getters. Called
+ * only in the audited synthetic sandbox with the runner's exact hash gate. */
+static int steam_cache_layout(SDL_Gamepad *pad, const void *base)
+{
+    if (sizeof(void *) != 4) return 0;
+    SDL_Joystick *joystick = SDL_GetGamepadJoystick(pad);
+    const unsigned char *j = (const unsigned char *)joystick;
+    const unsigned char *b = base;
+    if (cache_word(b + 0x3b3a00) != (uintptr_t)j ||
+        cache_word(b + 0x3aadec) != (uintptr_t)(b + 0x221030)) return 0;
+    int ok = cache_word(j) == SDL_GetJoystickID(joystick) &&
+        cache_word(j + 0x100) == 0 && cache_word(j + 0x58) == 1 &&
+        cache_word(j + 0x5c) == 1;
+    const char *path = (const char *)(uintptr_t)cache_word(j + 8);
+    ok &= path && !strcmp(path, SDL_GetJoystickPath(joystick));
+    const unsigned char *sensor = (const void *)(uintptr_t)cache_word(j + 0x60);
+    if (!sensor) return 0;
+    ok &= cache_word(sensor) == SDL_SENSOR_GYRO &&
+        sensor[4] == SDL_GamepadSensorEnabled(pad, SDL_SENSOR_GYRO);
+    float actual[3], expected[3];
+    memcpy(actual, sensor + 12, sizeof(actual));
+    ok &= SDL_GetGamepadSensorData(pad, SDL_SENSOR_GYRO, expected, 3);
+    for (unsigned i = 0; i < 3; i++)
+        ok &= isfinite(actual[i]) && fabsf(actual[i] - expected[i]) < .00001f;
+    printf("private_sdl32_cache_layout=%s\n", ok ? "PASS" : "FAIL");
+    return ok;
+}
+
 /* Independently written API-level regression for the observed Steam call
  * sequence. Executes SDL only, not Steam or copied proprietary code. */
 static int steam_sensor_sequence(SDL_Gamepad *pad, int resolution)
@@ -229,6 +264,8 @@ int main(void)
     }
 #ifndef TEST_SDL2
     if (!strcmp(s, "observed-gyro")) ok &= steam_sensor_sequence(pad, gyro_resolution);
+    if (!strcmp(s, "observed-gyro") && getenv("GS_CHECK_STEAM_LAYOUT"))
+        ok &= steam_cache_layout(pad, loaded.dli_fbase);
 #endif
     printf("scenario=%s gamepads=%d gyro=%d accel=%d finite=%d\ngyro(rad/s)=%.9g,%.9g,%.9g accel(m/s2)=%.9g,%.9g,%.9g\nresult=%s\n",
         s, count, gyro, accel, finite, g[0], g[1], g[2], a[0], a[1], a[2], ok ? "PASS" : "FAIL");

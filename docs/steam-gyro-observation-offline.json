@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "stage": "prepared; no Steam process memory read",
+  "method": "Read-only /proc/PID/mem sampling of pinned SDL cache; no debugger, target function or device open",
+  "library_sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+  "library_bytes": 3911164,
+  "abi": "ELF32 i386 little-endian",
+  "layout": {
+    "joystick_head_relative": "0x3b3a00",
+    "dynamic_api_slot_relative": "0x3aadec",
+    "expected_function_relative": "0x221030",
+    "joystick_fields": {
+      "instance": 0,
+      "path": 8,
+      "sensor_count": 88,
+      "sensor_enabled_count": 92,
+      "sensors": 96,
+      "next": 256
+    },
+    "sensor_stride": 24,
+    "sensor_fields": {
+      "type": 0,
+      "enabled": 4,
+      "values": 12
+    }
+  },
+  "validation": {
+    "offline_sdl_cases": 7,
+    "public_sdl_getter_comparison_passed": true,
+    "observer_mock_tests": 22,
+    "system_sdl_cases": 14,
+    "steam_gamescope_regressions": 40,
+    "license_tests": 3,
+    "readme_tests": 7,
+    "all_passed": true
+  },
+  "private_report_relative": "build/results/sdl-validation/sequence-v2/sdl3-770801484962a757/cache-layout",
+  "private_log_sha256": "f1b7226e47260b84bdea230f90397560478baba958bccde0afd539b47c360bf4",
+  "source_hashes": {
+    "tools/sdl/steam_gyro_observe.py": "1f7f166d0a435b036033f8b4e9c84d6ff78b4735d49b7d3abdedfaa2ded0820d",
+    "tests/test_steam_gyro_observe.py": "c583ac585d0388643a4f8f41c89a405e6726a339524341ac6fbcfb750b99a156",
+    "tests/run_sdl_sensor_test.py": "2007f4dd12f88a7133f02aae49fd2a965bd10d2cdb6f6ec53dca490a3b0f0e06",
+    "tests/sdl_sensor_probe.c": "787bdfa4c52e200ff6f98c2d45f8f84e0da7bce02eeef65e04d69a9a122861fe"
+  },
+  "live": {
+    "authorized": false,
+    "executed": false,
+    "seconds_proposed": 70,
+    "preparation_seconds": 30,
+    "local_go_required": true,
+    "process_stop": false,
+    "settings_change": false,
+    "device_open": false
+  },
+  "limits": [
+    "Cache sampling is not syscall/event tracing or proof of a downstream discard decision",
+    "Host observation time is not sensor sample time; no packet rate/loss inference",
+    "Double reads detect some races, not an atomic snapshot; no new device/process adoption"
+  ]
+}

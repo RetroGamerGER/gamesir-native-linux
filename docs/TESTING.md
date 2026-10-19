@@ -42,7 +42,17 @@ Das ist keine Korrektur des produktiven Treibers und kein Steam-Livetest.
 Die Bibliotheken werden nicht ins Repository übernommen. SDL-Erfolg beweist
 noch keine Freischaltung in Steam Input; [Befunde und Grenzen](STEAM_GYRO_FEASIBILITY.md).
 
+Der vorbereitete lesende Steam-Gyro-Beobachter hat ausschließlich künstliche
+Speicher-/Metadaten-Regressionen in `tests/test_steam_gyro_observe.py`, Teil von
+`make test-steam`. Seine versionsgebundenen SDL-Feldadressen werden zusätzlich
+mit `run_sdl_sensor_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so.0
+--check-steam-layout` in der gerätefreien Sandbox gegen SDLs öffentliche Getter
+geprüft. Das führt **keinen** Steam-Beobachtungslauf aus. Die gesondert
+freizugebenden Befehle und Aussagegrenzen stehen im
+[Beobachtungsplan](STEAM_GYRO_OBSERVATION_PLAN.md).
+
 ## Manager-Reconnect und veraltete Getter
+
 
 `python -B tests/test_manager_reconnect.py` verwendet die vorhandenen
 Repository-Fakes für Geräte, Zeit und Kindprozesse, ergänzt durch einen

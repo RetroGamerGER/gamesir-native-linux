@@ -5,6 +5,17 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Gezielte Steam-Beobachtung vorbereitet, noch nicht ausgeführt:** Ein auf die
+vorhandene 32-Bit-SDL-Version begrenzter Helfer kann deren Gyro-Aktivierung und
+zwischengespeicherte Drehraten im Steam-Prozess lesend beobachten. Kein
+Debugger-Anhängen, kein Aufruf im Zielprozess, keine Geräteöffnung. Die
+Feldadressen sind in der gerätefreien Sandbox gegen SDL-Getter geprüft;
+22 künstliche Guard-/Parserfälle bestehen. Vorgesehen sind frische Prüfungen,
+ein lokales Go, 30 Sekunden Vorbereitung und insgesamt 70 Sekunden Beobachtung.
+Das grenzt den Datenweg vor/hinter SDLs Cache ein, beweist aber keinen bestimmten
+Verwerfungsgrund in Steam. Ausführung inklusive Prozessspeicherzugriff benötigt
+eigene Freigabe. [Ablauf und Befehle](STEAM_GYRO_OBSERVATION_PLAN.md).
+
 **Steam-Gyro offline weiter eingegrenzt (19. Oktober):** Die statisch
 nachgewiesene Sensor-Einschaltfolge beider Steam-Client-ABIs aktiviert Gyro,
 Accel, Gyro-L und Accel-L; Rückgabefehler werden dort nicht ausgewertet.
