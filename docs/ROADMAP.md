@@ -7,6 +7,17 @@ Stand: 19. Oktober 2026. Prioritäten ergänzen den
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 
+## Bazzite als mögliche Zielplattform
+
+Quellenvergleich abgeschlossen, noch kein Bazzite-Zielbau oder installierbares
+Angebot. Gemeinsamen Treiber erhalten; Fedora-RPM-/akmods-Pfad, Kernel-/Image-
+Updatekopplung und eigenen Session-Adapter vorbereiten, sofern separat beauftragt.
+OpenGamepadUI/InputPlumber, Secure Boot/SELinux und Managerzustand beim Rollback
+berücksichtigen. Kein CachyOS-Unit-Drop-in blind übernehmen, kein Desktop-/Gyro-
+Stabilitätsversprechen aus dem Distributionswechsel. Vor einer zugesagten
+funktionsgleichen Ablösung Zielimage bauen und Kernfunktionen/Update/Rückweg
+abnehmen. [Machbarkeit und Entscheidung](STEAM_GAMESCOPE.md#bazzite-machbarkeitsprüfung-und-migrationsgrenze).
+
 ## Abgeschlossener Meilenstein: SDL / Eden
 
 Der Nutzer nimmt den aktuellen Gyro-Funktionsumfang als abgeschlossen an.

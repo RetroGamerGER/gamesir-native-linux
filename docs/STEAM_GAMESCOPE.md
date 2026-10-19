@@ -499,3 +499,139 @@ Nutzerannahme und SHA256-Liste liegen unter
 Boot-/Instanzkennungen bleiben außerhalb Git. Die Leseberichte wurden lokal
 unverändert gesichert; keine neue Paket-/Firmware-/Kerneldatei erzeugt oder
 installiert. Kein allgemeines Zuverlässigkeitsversprechen aus einem Bootfall.
+
+## Bazzite: Machbarkeitsprüfung und Migrationsgrenze
+
+Stand: 19. Oktober 2026. **Technisch plausibler Port, noch kein installierbares
+oder auf Bazzite validiertes Angebot.** Der Nutzer erwägt Bazzite als Ersatz
+für das bisherige CachyOS-Testsystem. Geprüft wurden unsere Quellen und aktuelle
+öffentliche Primärquellen; kein Bazzite-Zielsystem, Zielkernelbau, Containerbuild,
+Paketinstallationslauf oder Hardwaretest. Keine Änderung an laufenden Systemen,
+kein Image-Push und keine Veröffentlichung. Die früheren CachyOS-Ergebnisse
+belegen keine Bazzite-Abnahme.
+
+### Was übernommen werden kann und was angepasst werden muss
+
+| Bestandteil | Einschätzung und erforderliche Arbeit |
+| --- | --- |
+| Gemeinsamer Kerneltreiber | Protokollparser, Bootstrap, Gamepad/Paddles, IIO, optionaler evdev-Sensor und Viermotor-Runtime bleiben die gemeinsame Grundlage. Kein eigener Treiber je Distribution. Kompilieren gegen den exakten Zielkernel samt Konfiguration und `kernel-devel` ist noch erforderlich. Ein vorhandenes Garuda-/CachyOS-Modul ist kein Bazzite-Artefakt. |
+| Manager und Steuerprogramm | Vorhandenen systemd-Dienst, Besitz-/Startbudgetregeln und einmalige Freigabe weiterverwenden. Python-Anteile als Userspace-RPM, `gsnative-ctl` neu gegen die Zielumgebung bauen. Paketpfade und Abhängigkeiten prüfen; die vorhandene Client-/Service-Pfadvereinbarung gemeinsam erhalten. |
+| Paketierung und Updates | Die Arch-`PKGBUILD`-/ALPM-/DKMS-Paketierung ist nicht direkt übertragbar. Vorgeschlagen: eigener akmod/kmod-Bau und zum Zielkernel gehörendes RPM; Manager/CLI getrennt paketieren. Noch keine RPM-Spezifikation oder Bazzite-Baupipeline implementiert. |
+| Desktop-Steam/Paddles | Gemeinsamen geprüften Mappinghelfer erhalten. KDE-Menü, Autostart und Direktstart in der tatsächlich installierten Startkette prüfen; Bazzites eigenen Starter nicht durch unseren bisherigen `/usr/bin/steam`-Wrapper umgehen. Bestehende Benutzermappings und Hinweise erhalten. |
+| Gaming Mode | Eigener Bazzite-Adapter zur tatsächlichen Gamescope-Session erforderlich. Unser `steam-launcher.service`-Drop-in und `/usr/lib/steamos/steam-launcher` gelten ausdrücklich für CachyOS. Nicht blind auf Bazzite kopieren. |
+| Gyro und SDL/Eden | Gleicher gepaarter evdev-Vertrag und bestehendes experimentelles Profil sind Kandidaten. Sichtbare drei Achsen, richtige Richtung/Einheiten, Gerätezuordnung und Zugriff separat prüfen. Die gemeldete CachyOS-Startbedingung „Controller vor SteamOS eingeschaltet“ ist als offene Zuverlässigkeitsfrage mitzunehmen, keine erwiesene Bazzite-Einschränkung. |
+| Rumble/Trigger-Bridge | Griff-FF und Viermotor-Runtime erhalten. Broker-Gruppe, Socket und STOP bei Clientende/Trennung prüfen. Der Forza-/Xodus-Nachweis gilt für die bisherige Umgebung; Bazzite und Steam/Proton-Trigger sind nicht dadurch abgenommen. |
+
+Die Hardwarefunktion steckt überwiegend in unserem bestehenden Treiber. Dass
+die Schnittstellen unter Fedora grundsätzlich verfügbar sind, ersetzt weder
+einen erfolgreichen Zielbau noch einen Nachweis der Anwendungsintegration.
+Keine neue Sensorkalibrierung, Chip- oder Faktorsuche aus diesem Port ableiten.
+
+### Modulbau passend zum Systemabbild
+
+Bazzites geprüfter [Image-Bau](https://github.com/ublue-os/bazzite/blob/b13dde4526115b158e68e6861034b1c233dcf9b8/Containerfile#L35)
+wählt Kernel und externe Module gemeinsam über passende akmods-Artefakte.
+Universal Blues [akmods-Projekt](https://github.com/ublue-os/akmods/blob/d3958bd6c1a8301d74d46e3b1ed6d9164a434d2d/README.md)
+beschreibt vorkompilierte Kernel-/Modul-RPMs für verschiedene Kernelfamilien.
+Das ist ein vorhandener Integrationsweg, keine Zusage zur Aufnahme unseres
+Moduls durch Bazzite oder Universal Blue.
+
+**Empfohlener Dauerbetrieb, als Architekturvorschlag:** aus einem exakt
+identifizierten offiziellen Bazzite-Abbild ableiten, `gs_native` für dessen
+Kernel bauen/signieren und RPMs zusammen mit Manager und Steam-Adapter in
+dieses neue Abbild aufnehmen. Kernel, Modul und abhängige Userspace-Dateien
+gemeinsam prüfen und aktualisieren. Bei fehlendem Modulbau kein als
+funktionsfähig freigegebenes GameSir-Abbild ausliefern. Das benötigt eine eigene
+gepflegte Bau-/Updatepipeline; sie existiert derzeit nicht. Bazzite empfiehlt
+für Anpassungen sein [Image-Template](https://docs.bazzite.gg/Advanced/creating_custom_image/),
+ohne dafür den gesamten Distributionsquellcode zu forken.
+
+**Alternative für einen begrenzten ersten Versuch:** Fedora-RPMs auf das
+offizielle Abbild layern. Bazzite dokumentiert [RPM-Layering](https://docs.bazzite.gg/Installing_and_Managing_Software/rpm-ostree/)
+mit neuem Deployment und Neustart, weist aber auf mögliche Updatekonflikte hin.
+Ein RPM allein beweist keine verlässliche akmods-Neuerstellung bei jedem
+Kernelupdate. Den Bau-/Scriptletpfad, passende Devel-Pakete und die Zuordnung
+zum nächsten Deployment zuerst nachweisen. Keine laufende `/usr`-Schreibbarkeit
+erzwingen und keine DKMS-Arch-Installation per Container als Hostinstallation
+ausgeben. Ein Container eignet sich später zum Bau; der Treiber muss in den
+Hostkernel und der Manager in den Host-systemd integriert werden.
+
+### Bazzites Startkette und mögliche zweite Eingabeschicht
+
+Der geprüfte Bazzite-Quellstand verwendet im Deck-Bau
+`gamescope-session-ogui-steam`, aktiviert InputPlumber und berücksichtigt
+`gamescope-session-plus@ogui-steam.service`. Der Desktop-Starter ist
+[`bazzite-steam`](https://github.com/ublue-os/bazzite/blob/b13dde4526115b158e68e6861034b1c233dcf9b8/system_files/desktop/shared/usr/bin/bazzite-steam).
+Er erhält unter anderem Vendor-Optionen und Wayland-Verhalten. Diese
+distributionsspezifischen Schritte müssen erhalten bleiben. Der Quellstand
+ist nicht mit einer bestimmten veröffentlichten oder installierten Bazzite-
+Variante gleichzusetzen: tatsächlichen Image-Digest, Pakete, aktive Session,
+User-Units, `steam`-/`ogui-steam`-Konfiguration und Steam-Prozessumgebung prüfen.
+
+Die [Gamescope-Session-Referenz](https://github.com/ChimeraOS/gamescope-session/blob/73d2da84ace7f41006a0f85bd2fdb19ef593a464/usr/share/gamescope-session-plus/gamescope-session-plus#L120)
+liest ergänzende Session-Konfiguration aus `/etc` und dem Benutzerverzeichnis.
+Das ist ein Kandidat zum Einlesen unseres bestehenden Mappinghelfers, kein
+bereits getesteter Bazzite-Hook. Die wirkliche Vererbung bis zum Steam-Prozess
+nachweisen, auch wenn OpenGamepadUI oder ein separater User-Dienst Steam startet.
+Kein vollständiges `CLIENTCMD` kopieren oder Herstellerargumente fest einfrieren.
+
+InputPlumber/OpenGamepadUI können eine zusätzliche virtuelle Eingabeschicht
+bereitstellen. Es ist noch **nicht** belegt, dass sie unseren G7 Pro übernehmen
+oder Funktionen entfernen. Vor jeder Anpassung prüfen, ob Steam native oder
+virtuelle Geräte sieht und ob alle vier Paddles sowie der gepaarte Sensor
+erhalten bleiben. Bazzite enthält ein
+[gezieltes Ignore-Verfahren für externe Controller](https://github.com/ublue-os/bazzite/blob/b13dde4526115b158e68e6861034b1c233dcf9b8/system_files/deck/shared/usr/libexec/bazzite-inputplumber-ignorelist).
+Falls tatsächlich nötig, eine eng begrenzte Ausnahme für unsere Geräte prüfen;
+keine globale Abschaltung der Handheld-Steuerung oder ungeprüfte Ignore-Datei.
+Exklusiver nativer USB-Besitz und unbeeinträchtigte Wartung mit Deadband bleiben
+verpflichtend. Ein zweiter Hardwareleser ist keine Gyro-Reparatur.
+
+### Sicherheit, Updates, Rückbau und Umstiegsentscheidung
+
+- **Secure Boot:** Signierung und auf dem Ziel vertrauter Schlüssel müssen
+  zusammenpassen. Bazzites [Secure-Boot-Unterstützung](https://docs.bazzite.gg/General/Installation_Guide/secure_boot/)
+  vertraut unserem zusätzlichen Modul nicht automatisch. Eine eigene sichere
+  Signier-/Einmal-Enrolment-Lösung oder spätere offizielle Integration planen;
+  kein privater Vendor-Schlüssel verfügbar, keine privaten Schlüssel ausliefern.
+  Image-/RPM-Signatur und vom Kernel akzeptierte Modulsignatur getrennt prüfen.
+- **SELinux und Zugriff:** Die tatsächliche Zielpolicy und mögliche AVC-Denials
+  für Manager, Geräteknoten und Sockets prüfen. `uaccess` für den Sensor sowie
+  die bestehende Haptics-Gruppe erhalten. Keine pauschale Policy-Abschaltung,
+  kein Welt-Schreibrecht und keine aus einem Einzelfehler abgeleitete breite
+  Freigabe. Ob eine eigene kleine Policy erforderlich ist, ist noch offen.
+- **Transaktionen:** ALPM-`PreTransaction`-Hooks nicht als RPM-Scriptlets
+  übersetzen, die beim Imagebau oder Staging den laufenden Controller lösen.
+  Imagebau darf keine Host-Geräte betreiben. Kontrolliertes Dienstende,
+  persistente Pause und die überprüfte Rückgabe für tatsächliche Deaktivierung/
+  Entfernung erhalten; erste Aktivierung separat freigeben.
+- **Rollback:** Bazzite dokumentiert [vorherige Deployments und deren Sicherung](https://docs.bazzite.gg/Installing_and_Managing_Software/Updates_Rollbacks_and_Rebasing/rolling_back_system_updates/).
+  Das erleichtert den Rückweg nach einem fehlerhaften Systemupdate, garantiert
+  aber keinen fehlerfreien Desktop. Laut [rpm-ostree](https://coreos.github.io/rpm-ostree/administrator-handbook/#filesystem-layout)
+  bleibt `/var` deploymentübergreifend bestehen. Unser Managerzustand unter
+  `/var/lib/gamesir-native` und lokale Moduloptionen in `/etc` benötigen daher
+  eigene Kompatibilitäts-/Rückbauprüfungen. Ein OS-Rollback ist weder ein
+  USB-Wechsel `109c→100a` noch das automatische Löschen einer Verwaltungspause.
+
+Vor einem Umstieg mit zugesagter GameSir-Funktionsgleichheit erforderlich:
+
+1. Konkretes Bazzite-Image passend zur Hardware auswählen und per Digest
+   festhalten; Kernel/Devel-Konfiguration, Secure Boot, Policy und Session
+   lesend prüfen. Kein solcher Zielstand wurde in dieser Untersuchung geprüft.
+2. Fedora-Zielbau und RPM-Staging, Datei-/Rechte-/Abhängigkeitstests sowie
+   simulierte Update-/Entfernungs-/Rollbackfälle. Keine alten Kernelmodule
+   oder anderswo gebauten CLI-Binärdateien blind übernehmen.
+3. Erst nach eigener Freigabe kontrolliert installieren und aktivieren;
+   eindeutiger Bootstrap/Rückweg, normale Eingaben, vier unabhängige Paddles,
+   SDL-/Steam-Gyro und Eden bei Bedarf tatsächlich abnehmen. Griff-FF und
+   Trigger-Bridge behalten ihre eigenen Spiele-/Runtime-Abnahmegrenzen.
+4. Desktop und Gaming Mode, Boot mit Controller an/aus, spätes Einschalten,
+   Funk-Reconnect, USB-Hotplug und Suspend sowie ein Kernelupdate mit
+   geprüftem Rückweg. Gemeldete Startbedingung offen führen, bis sie im
+   jeweiligen Bazzite-Pfad gelöst oder ausdrücklich als Grenze angenommen ist.
+
+**Entscheidung:** Go für die Portierungsvorbereitung; noch kein Go für einen
+als funktionsgleich zugesagten Austausch des getesteten Systems. Es wurde kein
+grundsätzlicher Architekturblocker gefunden. Paket-/Kernel-/Sessionintegration
+und ihre Abnahme fehlen; ein Distributionswechsel allein belegt keine Lösung
+des nachträglichen Steam-Sensorproblems. Bestehende Treiberquellen, Mapping,
+Motorprotokoll und experimentelles Sensorprofil bleiben unverändert.

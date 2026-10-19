@@ -24,6 +24,20 @@ authorization. Never flash firmware or guess undocumented device commands.
 Document and verify the safe return to xpad. Deadband must retain a supported
 exclusive maintenance path; normal play must not depend on it.
 
+## Bazzite assessment (19 October 2026)
+
+Read STEAM_GAMESCOPE.md's Bazzite feasibility section before a distribution port.
+The request authorizes research as a possible CachyOS replacement, not system
+migration, package/image installation or new hardware tests. No Bazzite target
+build/acceptance or RPM spec exists. Keep the common kernel/protocol core;
+adapt Fedora akmod/kmod/RPM and the actual Bazzite session separately. Preserve
+vendor launch behavior and mapping conflict guards; current reference uses
+OpenGamepadUI/InputPlumber, not CachyOS's steam-launcher unit. Do not assume a
+particular image/session, disable input stacks/SELinux or claim Secure Boot
+trust from an image signature. Plan kernel-matched updates and persistent
+state/profile rollback handling. Late Steam gyro discovery remains open.
+No upload, push, calibration or running-driver change follows from this study.
+
 ## Current SDL/Eden implementation decision (18 October 2026)
 
 The user accepted the observed gyro response at 0.07 dps/raw, 1.00x display

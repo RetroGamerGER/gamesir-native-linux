@@ -5,6 +5,16 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Bazzite als mögliche Ablösung geprüft:** Quellen-/Dokumentationsvergleich
+ergibt einen plausiblen Port mit gemeinsamem Treiberkern. Erforderlich sind
+Fedora-akmod/kmod-/RPM-Paketierung und eine eigene Steam-/Gamescope-Einbindung;
+aktuelle Bazzite-Quellen berücksichtigen OpenGamepadUI und InputPlumber. Kein
+Bazzite-Zielsystem, Zielbau oder Hardwaretest geprüft. Empfehlung: Kernel und
+Modul gemeinsam im abgeleiteten Image pflegen; RPM-Layering bleibt gesondert zu
+validieren. Go zur Vorbereitung, keine zugesagte funktionsgleiche Migration.
+Nur Dokumentation/lokale Referenzdateien, keine System- oder Treiberänderungen.
+[Befunde, Quellen und Umstiegsgrenzen](STEAM_GAMESCOPE.md#bazzite-machbarkeitsprüfung-und-migrationsgrenze).
+
 **Steam-Gyro jetzt auch in Gamescope positiv gemeldet:** Nach nutzergeführtem
 Kernelupdate und Neustart läuft `7.2.11-1-cachyos-deckify` mit passenden Headern
 und Modulkennung. Kernpaket Revision 9 und Sensorprofil unverändert; Dienst
