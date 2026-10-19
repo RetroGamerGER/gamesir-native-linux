@@ -5,12 +5,26 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Gezielte Steam-Beobachtung vorbereitet, noch nicht ausgeführt:** Ein auf die
+**Steam-Beobachter: Identitätsprüfung offline korrigiert:** Die freigegebene
+Metadaten-Vorprüfung stoppte bei `Mapped/file identity differs`, nach gültigem
+SDL-Hash, vor jedem Prozessspeicherzugriff. Kein Beobachtungslauf wurde gestartet.
+Eine eigene künstliche Datei reproduziert auf Btrfs unterschiedliche
+Gerätekennungen in `stat` und `maps`; der bisherige Direktvergleich war falsch.
+Die konkrete abweichende Komponente der Steam-Prüfung wurde nicht protokolliert.
+Der Helfer prüft jetzt die tatsächlichen Dateien aller SDL-Speicherbereiche
+über reine `map_files`-Metadaten und vergleicht stat mit stat; kein Ausweichen
+auf Hash/Pfad allein. Dateiaustausch, fehlende Rechte und veränderte Bereiche
+stoppen weiterhin. 41 Beobachtertests sowie 40 Steam-/Gamescope- und zehn
+Lizenz-/README-Prüfungen bestehen. Der erhöhte Metadatenzugriff auf echte
+Steam-Mappings bleibt im nächsten gesondert freizugebenden Vorabcheck zu prüfen.
+Keine Installation, Steam-/Treiberänderung, Hardwareprüfung oder Push.
+
+**Gezielte Steam-Beobachtung weiterhin vorbereitet:** Ein auf die
 vorhandene 32-Bit-SDL-Version begrenzter Helfer kann deren Gyro-Aktivierung und
 zwischengespeicherte Drehraten im Steam-Prozess lesend beobachten. Kein
 Debugger-Anhängen, kein Aufruf im Zielprozess, keine Geräteöffnung. Die
 Feldadressen sind in der gerätefreien Sandbox gegen SDL-Getter geprüft;
-22 künstliche Guard-/Parserfälle bestehen. Vorgesehen sind frische Prüfungen,
+die Guard-/Parserfälle bestehen. Vorgesehen sind frische Prüfungen,
 ein lokales Go, 30 Sekunden Vorbereitung und insgesamt 70 Sekunden Beobachtung.
 Das grenzt den Datenweg vor/hinter SDLs Cache ein, beweist aber keinen bestimmten
 Verwerfungsgrund in Steam. Ausführung inklusive Prozessspeicherzugriff benötigt

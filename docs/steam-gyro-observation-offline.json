@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-10-19",
-  "stage": "prepared; no Steam process memory read",
+  "stage": "identity correction tested offline; new live attempt requires approval",
   "method": "Read-only /proc/PID/mem sampling of pinned SDL cache; no debugger, target function or device open",
   "library_sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
   "library_bytes": 3911164,
@@ -28,18 +28,20 @@
   "validation": {
     "offline_sdl_cases": 7,
     "public_sdl_getter_comparison_passed": true,
-    "observer_mock_tests": 22,
+    "observer_mock_tests": 41,
     "system_sdl_cases": 14,
     "steam_gamescope_regressions": 40,
     "license_tests": 3,
     "readme_tests": 7,
-    "all_passed": true
+    "all_passed": true,
+    "layout_checks": "Previous pinned SDL layout/getter results retained from d699c85; offsets unchanged",
+    "identity_correction_tests": "41 observer + 40 Steam/Gamescope + 3 licensing + 7 README tests passed"
   },
   "private_report_relative": "build/results/sdl-validation/sequence-v2/sdl3-770801484962a757/cache-layout",
   "private_log_sha256": "f1b7226e47260b84bdea230f90397560478baba958bccde0afd539b47c360bf4",
   "source_hashes": {
-    "tools/sdl/steam_gyro_observe.py": "1f7f166d0a435b036033f8b4e9c84d6ff78b4735d49b7d3abdedfaa2ded0820d",
-    "tests/test_steam_gyro_observe.py": "c583ac585d0388643a4f8f41c89a405e6726a339524341ac6fbcfb750b99a156",
+    "tools/sdl/steam_gyro_observe.py": "b8ab64387d6eeb011e97eb0e2f3e8bd031b541aef7bb95017ba9c04a98c4002c",
+    "tests/test_steam_gyro_observe.py": "a71cb2da19851344fd1c60d22f7328a2860559a656a043f3f9ac4f8eedef6f85",
     "tests/run_sdl_sensor_test.py": "2007f4dd12f88a7133f02aae49fd2a965bd10d2cdb6f6ec53dca490a3b0f0e06",
     "tests/sdl_sensor_probe.c": "787bdfa4c52e200ff6f98c2d45f8f84e0da7bce02eeef65e04d69a9a122861fe"
   },
@@ -51,11 +53,47 @@
     "local_go_required": true,
     "process_stop": false,
     "settings_change": false,
-    "device_open": false
+    "device_open": false,
+    "prior_precheck_authorized": true,
+    "precheck_executed": true,
+    "observation_executed": false,
+    "authorization_note": "Previous attempt consumed by stopped precheck; corrected helper requires fresh approval"
   },
   "limits": [
     "Cache sampling is not syscall/event tracing or proof of a downstream discard decision",
     "Host observation time is not sensor sample time; no packet rate/loss inference",
     "Double reads detect some races, not an atomic snapshot; no new device/process adoption"
-  ]
+  ],
+  "identity_correction": {
+    "original_precheck": {
+      "exit_status": 2,
+      "reason": "Mapped/file identity differs",
+      "process_memory_opened": false,
+      "observation_started": false,
+      "original_helper_sha256": "1f7f166d0a435b036033f8b4e9c84d6ff78b4735d49b7d3abdedfaa2ded0820d",
+      "log_sha256": "c54d70e839d6e33568b28ad52b848f0fd7beff1a356bed5f673b653e5117b1fd",
+      "exit_file_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "exact_differing_component_recorded": false
+    },
+    "offline_reproduction": {
+      "target": "own synthetic file, own process only",
+      "filesystem": "btrfs",
+      "stat_vs_maps_device_equal": false,
+      "stat_vs_maps_inode_equal": true,
+      "old_guard_accepts": false,
+      "unprivileged_own_map_files_stat_errno": 1
+    },
+    "fix": "Compare stat of hashed file/FD and every kernel map_files alias; retain maps identity separately, pin every segment, reject changed file and denied metadata without fallback",
+    "kernel_aliases_in_unit_tests": "synthetic filesystem aliases; real elevated traversal remains untested",
+    "test_log_sha256": "137f1e7cd3b38901e6fd0a1046677104818a0d1dc98b1694f8ab012fcf2bf6b6",
+    "fresh_approval_required": true,
+    "steam_access_during_fix": false,
+    "hardware_access": false,
+    "sudo_used_during_fix": false,
+    "network_used": false,
+    "offline_references": [
+      "Linux man-pages 6.19: proc_pid_map_files(5)",
+      "Linux man-pages 6.19: proc_pid_maps(5)"
+    ]
+  }
 }

@@ -20,6 +20,7 @@ import sys
 import time
 
 SDL_SHA = '770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97'
+SDL_BYTES = 3911164
 LIST_OFFSET = 0x3b3a00
 FUNCTION_SLOT = 0x3aadec
 FUNCTION_OFFSET = 0x221030
@@ -54,22 +55,62 @@ def maps_parse(text):
     return rows
 
 
-def library_identity(rows):
+def library_rows(rows):
     files = {x[6] for x in rows if 'libSDL3.so' in x[6]}
     require(len(files) == 1, 'Expected exactly one SDL3 library')
     path = Path(next(iter(files)))
-    require(path.is_absolute() and path.is_file(), 'Missing/deleted SDL library')
-    require(path.stat().st_size == 3911164, 'SDL file size not reviewed; stop')
-    data = path.read_bytes()
-    require(hashlib.sha256(data).hexdigest() == SDL_SHA, 'SDL version not reviewed; stop')
-    require(data[:6] == b'\x7fELF\x01\x01', 'Expected little-endian ELF32')
-    info = path.stat()
-    dev = f'{os.major(info.st_dev):02x}:{os.minor(info.st_dev):02x}'
-    own = [x for x in rows if x[6] == str(path)]
-    require(all(x[4] == dev and x[5] == info.st_ino for x in own), 'Mapped/file identity differs')
+    require(path.is_absolute() and not str(path).endswith(' (deleted)'), 'Missing/deleted SDL library')
+    own = tuple(x for x in rows if x[6] == str(path))
+    require(own and own[0][5] > 0 and all(x[4:6] == own[0][4:6] for x in own),
+            'Inconsistent SDL mapping identity')
     zero = [x for x in own if x[3] == 0]
     require(len(zero) == 1 and any('x' in x[2] for x in own), 'Ambiguous SDL load base')
-    return zero[0][0], str(path), info.st_dev, info.st_ino
+    return path, own, zero[0][0]
+
+
+def file_stamp(info):
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_size,
+            info.st_mtime_ns, info.st_ctime_ns)
+
+
+def verify_backing_files(proc, own, stamp):
+    # maps' device field need not equal stat.st_dev (reproduced on Btrfs).
+    # Follow each kernel map_files link with stat ONLY: compare stat to stat,
+    # including the subvolume device identity. Never open these links or
+    # fall back to path/hash alone if this privileged metadata check fails.
+    for start, end, *_ in own:
+        try:
+            mapped = (proc/'map_files'/f'{start:x}-{end:x}').stat()
+        except OSError as error:
+            raise Halt(f'Cannot stat mapped SDL backing file (errno {error.errno}); no fallback') from None
+        require(file_stamp(mapped) == stamp, 'Mapped SDL backing file identity differs')
+
+
+def library_identity(rows, proc):
+    path, own, base = library_rows(rows)
+    info = path.stat()
+    require(stat.S_ISREG(info.st_mode), 'SDL backing file is not regular')
+    require(info.st_size == SDL_BYTES, 'SDL file size not reviewed; stop')
+    stamp = file_stamp(info)
+    # Hash the same open file whose identity we verify, not successive path
+    # opens. Bound the read and reject replacement or modification mid-check.
+    with path.open('rb') as stream:
+        require(file_stamp(os.fstat(stream.fileno())) == stamp, 'SDL file changed before hash')
+        verify_backing_files(proc, own, stamp)
+        data = stream.read(SDL_BYTES + 1)
+        require(len(data) == SDL_BYTES and hashlib.sha256(data).hexdigest() == SDL_SHA,
+                'SDL version not reviewed; stop')
+        require(data[:6] == b'\x7fELF\x01\x01', 'Expected little-endian ELF32')
+        require(file_stamp(os.fstat(stream.fileno())) == stamp and file_stamp(path.stat()) == stamp,
+                'SDL file changed during hash')
+        verify_backing_files(proc, own, stamp)
+    return base, str(path), info.st_dev, info.st_ino, own, stamp
+
+
+def verify_library_mappings(rows, proc, library):
+    path, own, base = library_rows(rows)
+    require((base, str(path), own) == (library[0], library[1], library[4]), 'SDL mapping changed')
+    verify_backing_files(proc, own, library[5])
 
 
 def process_identity(pid, uid):
@@ -236,7 +277,7 @@ def main():
     process = process_identity(pid, uid)
     target = target_identity()
     proc = Path('/proc')/str(pid)
-    library = library_identity(maps_parse((proc/'maps').read_text()))
+    library = library_identity(maps_parse((proc/'maps').read_text()), proc)
     emit('precheck', pid=pid, sdl_sha256=SDL_SHA, **descriptors(pid,target),
          gamepad=Path(target[0][0]).name, sensor=Path(target[1][0]).name,
          process_memory_opened=False)
@@ -247,7 +288,7 @@ def main():
     ready,_,_ = select.select([sys.stdin],[],[],120)
     require(bool(ready) and sys.stdin.readline().strip().lower() == 'go', 'No local GO; no memory open')
     require(process_identity(pid,uid) == process and target_identity() == target, 'Instance changed before GO')
-    require(library_identity(maps_parse((proc/'maps').read_text())) == library, 'Library changed before GO')
+    require(library_identity(maps_parse((proc/'maps').read_text()), proc) == library, 'Library changed before GO')
     # Only metadata was read above. This is the sole process-memory open.
     with os.fdopen(os.open(proc/'mem', os.O_RDONLY | os.O_CLOEXEC), 'rb') as stream:
         memory = Memory(stream.fileno(), maps_parse((proc/'maps').read_text()))
@@ -257,10 +298,8 @@ def main():
             require(process_identity(pid,uid) == process and target_identity() == target,
                     'Process or controller instance changed')
             rows = maps_parse((proc/'maps').read_text())
-            # Compare mapped library identity/base without hashing every sample.
-            current = [x for x in rows if x[6] == library[1] and x[3] == 0]
-            require(len(current) == 1 and current[0][0] == library[0] and current[0][5] == library[3],
-                    'SDL mapping changed')
+            # Verify all pinned segments/backing files without hashing each sample.
+            verify_library_mappings(rows, proc, library)
             memory.rows = rows
             try:
                 node, instance, sensors, data = snapshot(memory,library[0],target[0][0])
@@ -289,7 +328,7 @@ def main():
             samples += 1
             time.sleep(.1)
         require(process_identity(pid,uid) == process and target_identity() == target, 'Final instance changed')
-        require(library_identity(maps_parse((proc/'maps').read_text())) == library, 'Final library check failed')
+        require(library_identity(maps_parse((proc/'maps').read_text()), proc) == library, 'Final library check failed')
     emit('complete', samples=samples, samples_skipped=busy_total,
          memory_bytes_read=memory.total, process_memory_closed=True,
          settings_changed=False, target_calls=False, debugger_attached=False)

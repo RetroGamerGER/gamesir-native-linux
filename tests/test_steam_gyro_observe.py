@@ -5,15 +5,199 @@ import importlib.util
 import contextlib
 import io
 import json
+import errno
+import hashlib
+import mmap
+import os
 import struct
+import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('observer', ROOT/'tools/sdl/steam_gyro_observe.py')
 m = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(m)
+
+
+class LibraryIdentityTests(unittest.TestCase):
+    """Own temporary files and fake proc links only; no Steam or sudo."""
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.library = self.root/'libSDL3.so.0'
+        self.payload = b'\x7fELF\x01\x01' + bytes(8192)
+        self.library.write_bytes(self.payload)
+        self.proc = self.root/'fake-proc'
+        (self.proc/'map_files').mkdir(parents=True)
+        # Deliberately different from stat.st_dev, as observed on Btrfs.
+        dev = self.library.stat().st_dev
+        self.map_dev = f'{os.major(dev):02x}:{os.minor(dev)+1:02x}'
+        ino = self.library.stat().st_ino
+        self.rows = m.maps_parse(
+            f'100000-101000 r--p 0 {self.map_dev} {ino} {self.library}\n'
+            f'101000-104000 r-xp 1000 {self.map_dev} {ino} {self.library}')
+        for a,b,*_ in self.rows:
+            (self.proc/'map_files'/f'{a:x}-{b:x}').symlink_to(self.library)
+        patches = contextlib.ExitStack()
+        self.addCleanup(patches.close)
+        patches.enter_context(patch.object(m, 'SDL_SHA', hashlib.sha256(self.payload).hexdigest()))
+        patches.enter_context(patch.object(m, 'SDL_BYTES', len(self.payload)))
+
+    def identity(self):
+        return m.library_identity(self.rows, self.proc)
+
+    def relink(self, index, target):
+        a,b,*_ = self.rows[index]
+        link = self.proc/'map_files'/f'{a:x}-{b:x}'
+        link.unlink()
+        link.symlink_to(target)
+
+    def test_btrfs_style_device_difference_accepts_same_backing_file(self):
+        info = self.library.stat()
+        old_dev = f'{os.major(info.st_dev):02x}:{os.minor(info.st_dev):02x}'
+        self.assertFalse(all(x[4] == old_dev and x[5] == info.st_ino for x in self.rows))
+        result = self.identity()
+        self.assertEqual(result[:4], (0x100000, str(self.library), info.st_dev, info.st_ino))
+        m.verify_library_mappings(self.rows, self.proc, result)
+
+    def test_ordinary_same_device_identity_also_accepted(self):
+        info = self.library.stat()
+        dev = f'{os.major(info.st_dev):02x}:{os.minor(info.st_dev):02x}'
+        self.rows = [(*x[:4],dev,*x[5:]) for x in self.rows]
+        self.identity()
+
+    def test_same_bytes_different_inode_rejected_for_every_segment(self):
+        copy = self.root/'copy'
+        copy.write_bytes(self.payload)
+        for i in range(len(self.rows)):
+            with self.subTest(segment=i):
+                self.relink(i,copy)
+                with self.assertRaisesRegex(m.Halt, 'backing file identity differs'):
+                    self.identity()
+                self.relink(i,self.library)
+
+    def test_same_inode_on_different_subvolume_not_accepted(self):
+        original = Path.stat
+        def stat(path, *args, **kwargs):
+            result = original(path,*args,**kwargs)
+            if path.parent == self.proc/'map_files':
+                fields = {name:getattr(result,name) for name in
+                          ('st_dev','st_ino','st_mode','st_size','st_mtime_ns','st_ctime_ns')}
+                fields['st_dev'] += 1
+                return SimpleNamespace(**fields)
+            return result
+        with patch.object(Path,'stat',stat):
+            with self.assertRaisesRegex(m.Halt,'backing file identity differs'): self.identity()
+
+    def test_map_files_denial_or_disappearance_stops_without_fallback(self):
+        original = Path.stat
+        for number in (errno.EPERM,errno.EACCES,errno.ENOENT):
+            def stat(path,*args,**kwargs):
+                if path.parent == self.proc/'map_files': raise OSError(number,'synthetic')
+                return original(path,*args,**kwargs)
+            with self.subTest(errno=number), patch.object(Path,'stat',stat):
+                with self.assertRaisesRegex(m.Halt,f'errno {number}.*no fallback'): self.identity()
+
+    def test_inconsistent_map_inode_rejected(self):
+        self.rows[1] = (*self.rows[1][:5],self.rows[1][5]+1,self.rows[1][6])
+        with self.assertRaisesRegex(m.Halt,'Inconsistent'): self.identity()
+
+    def test_deleted_mapping_rejected(self):
+        self.rows = [(*x[:6],x[6]+' (deleted)') for x in self.rows]
+        with self.assertRaisesRegex(m.Halt,'Missing/deleted'): self.identity()
+
+    def test_non_regular_file_rejected_before_open(self):
+        self.library.unlink()
+        self.library.mkdir()
+        with self.assertRaisesRegex(m.Halt,'not regular'): self.identity()
+
+    def test_wrong_size_or_hash_rejected(self):
+        self.library.write_bytes(b'wrong')
+        with self.assertRaisesRegex(m.Halt,'size not reviewed'): self.identity()
+        self.library.write_bytes(b'x'*len(self.payload))
+        with self.assertRaisesRegex(m.Halt,'version not reviewed'): self.identity()
+
+    def test_wrong_elf_abi_rejected_even_with_matching_hash(self):
+        wrong = b'\x7fELF\x02\x01'+self.payload[6:]
+        self.library.write_bytes(wrong)
+        with patch.object(m,'SDL_SHA',hashlib.sha256(wrong).hexdigest()):
+            with self.assertRaisesRegex(m.Halt,'ELF32'): self.identity()
+
+    def test_replacement_between_stat_and_open_rejected(self):
+        original = Path.open
+        def opening(path,*args,**kwargs):
+            if path == self.library:
+                path.rename(self.root/'previous')
+                original(path,'wb').close()
+            return original(path,*args,**kwargs)
+        with patch.object(Path,'open',opening):
+            with self.assertRaisesRegex(m.Halt,'changed before hash'): self.identity()
+
+    def test_replacement_during_hash_rejected(self):
+        original = hashlib.sha256
+        def digest(data):
+            self.library.rename(self.root/'previous')
+            self.library.write_bytes(self.payload)
+            return original(data)
+        with patch.object(m.hashlib,'sha256',digest):
+            with self.assertRaisesRegex(m.Halt,'changed during hash'): self.identity()
+
+    def test_in_place_change_during_hash_rejected(self):
+        original = hashlib.sha256
+        def digest(data):
+            self.library.write_bytes(b'x'*len(self.payload))
+            meta=self.library.stat()
+            os.utime(self.library, ns=(meta.st_atime_ns,meta.st_mtime_ns+1000000000))
+            return original(data)
+        with patch.object(m.hashlib,'sha256',digest):
+            with self.assertRaisesRegex(m.Halt,'changed during hash'): self.identity()
+
+    def test_mapping_replaced_during_hash_rejected(self):
+        copy=self.root/'copy'; copy.write_bytes(self.payload)
+        original=hashlib.sha256
+        def digest(data):
+            self.relink(1,copy)
+            return original(data)
+        with patch.object(m.hashlib,'sha256',digest):
+            with self.assertRaisesRegex(m.Halt,'backing file identity differs'): self.identity()
+
+    def test_sample_checks_all_segments_not_only_load_base(self):
+        saved=self.identity()
+        for field,value in ((1,0x105000),(2,'r--p'),(3,0x2000),(4,'01:02'),(5,22)):
+            changed=list(self.rows); row=list(changed[1]); row[field]=value; changed[1]=tuple(row)
+            with self.subTest(field=field), self.assertRaises(m.Halt):
+                m.verify_library_mappings(changed,self.proc,saved)
+
+    def test_sample_rejects_backing_file_replacement(self):
+        saved=self.identity()
+        copy=self.root/'copy'; copy.write_bytes(self.payload)
+        self.relink(1,copy)
+        with self.assertRaisesRegex(m.Halt,'backing file identity differs'):
+            m.verify_library_mappings(self.rows,self.proc,saved)
+
+    def test_multiple_libraries_rejected(self):
+        self.rows.append((*self.rows[0][:6],str(self.root/'other/libSDL3.so.0')))
+        with self.assertRaisesRegex(m.Halt,'exactly one SDL3'): self.identity()
+
+    def test_own_readonly_mapping_with_fake_proc_metadata(self):
+        # Real mmap of our synthetic bytes only; never load/execute the file.
+        # Kernel map_files traversal requires extra capabilities: the aliases
+        # remain synthetic. This is not validation against the Steam process.
+        with self.library.open('rb') as file, mmap.mmap(file.fileno(),0,access=mmap.ACCESS_READ):
+            self.rows = [row for row in m.maps_parse(Path('/proc/self/maps').read_text())
+                         if row[6] == str(self.library)]
+            self.assertEqual(len(self.rows),1)
+            a,b,*_=self.rows[0]
+            (self.proc/'map_files'/f'{a:x}-{b:x}').symlink_to(self.library)
+            # Fixture has no executable mapping; add only that synthetic flag
+            # to exercise library identification without executing anything.
+            self.rows[0]=(*self.rows[0][:2],'r-xp',*self.rows[0][3:])
+            self.identity()
 
 
 class FakeMemory:
@@ -136,11 +320,11 @@ class ObserverTests(unittest.TestCase):
         with patch.object(m.os,'pread',return_value=b'x'):
             with self.assertRaisesRegex(m.Halt,'Short'): memory.read(0x1000,4)
 
-    def test_changed_library_rejected_before_memory_access(self):
-        rows=m.maps_parse('100000-200000 r-xp 0 00:01 4 /fake/libSDL3.so.0')
-        with patch.object(Path,'is_file',return_value=True), patch.object(Path,'stat') as info, patch.object(Path,'read_bytes',return_value=b'wrong'):
-            info.return_value.st_size=3911164
-            with self.assertRaisesRegex(m.Halt,'not reviewed'): m.library_identity(rows)
+    def test_library_guard_failure_never_opens_process_memory(self):
+        opening=self.fake_main('--precheck')
+        with patch.object(m,'library_identity',side_effect=m.Halt('backing file identity differs')):
+            with self.assertRaisesRegex(m.Halt,'backing file identity differs'): m.main()
+        opening.assert_not_called()
 
     def fake_main(self, mode, answer='go\n'):
         stack=contextlib.ExitStack()
@@ -179,6 +363,12 @@ class ObserverTests(unittest.TestCase):
         opening=self.fake_main('--observe')
         with patch.object(m,'process_identity',side_effect=[('first',),('replacement',)]):
             with self.assertRaisesRegex(m.Halt,'Instance changed'): m.main()
+        opening.assert_not_called()
+
+    def test_library_failure_after_go_never_opens_memory(self):
+        opening=self.fake_main('--observe')
+        with patch.object(m,'library_identity',side_effect=[('initial',),m.Halt('backing file identity differs')]):
+            with self.assertRaisesRegex(m.Halt,'backing file identity differs'): m.main()
         opening.assert_not_called()
 
     def test_no_explicit_cli_mode_is_safe(self):

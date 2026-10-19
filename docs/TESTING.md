@@ -42,9 +42,17 @@ Das ist keine Korrektur des produktiven Treibers und kein Steam-Livetest.
 Die Bibliotheken werden nicht ins Repository übernommen. SDL-Erfolg beweist
 noch keine Freischaltung in Steam Input; [Befunde und Grenzen](STEAM_GYRO_FEASIBILITY.md).
 
-Der vorbereitete lesende Steam-Gyro-Beobachter hat ausschließlich künstliche
-Speicher-/Metadaten-Regressionen in `tests/test_steam_gyro_observe.py`, Teil von
-`make test-steam`. Seine versionsgebundenen SDL-Feldadressen werden zusätzlich
+Der vorbereitete lesende Steam-Gyro-Beobachter hat 41 Offline-Regressionen
+in `tests/test_steam_gyro_observe.py`, Teil von `make test-steam`. Sie verwenden
+künstlichen Speicher und eigene Dateien/Proc-Aliase. Ein eigener Read-only-mmap
+liest nur `/proc/self/maps`; kein Steam-/Gerätezugriff und keine erhöhten Rechte.
+Die korrigierte Identitätsprüfung deckt unterschiedliche stat-/maps-Geräte
+(auf Btrfs separat reproduziert), gleiche Inodes auf verschiedenen Geräten,
+identische Inhalte in anderen Dateien, fehlende/gesperrte `map_files`-Aliase,
+Dateiaustausch beim Hashen und geänderte Folgesegmente ab. Der Originalabbruch
+bleibt privat erhalten. Echte `map_files`-Rechte werden damit nicht behauptet;
+ein neuer Vorabcheck braucht separate Freigabe. Seine versionsgebundenen
+SDL-Feldadressen werden zusätzlich
 mit `run_sdl_sensor_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so.0
 --check-steam-layout` in der gerätefreien Sandbox gegen SDLs öffentliche Getter
 geprüft. Das führt **keinen** Steam-Beobachtungslauf aus. Die gesondert

@@ -82,10 +82,19 @@ SDL libraries. The stricter test caught and fixed extra empty SYN_REPORTs
 in the synthetic fixture; this is not a runtime driver defect. ELF32 testing
 now uses the committed runner. Steam's downstream filter remains unproved;
 do not infer a fix or rule out an acceleration requirement from SDL success.
-The prepared observer in docs/STEAM_GYRO_OBSERVATION_PLAN.md is not authorized
-to run yet. It reads only the pinned Steam ELF32 SDL cache and metadata after
-separate permission/local GO; no debugger attach, target calls or device opens.
-Unknown hashes, multiple targets and instance changes stop it. Cache updates
+The observer in docs/STEAM_GYRO_OBSERVATION_PLAN.md had one authorized metadata
+precheck, which stopped before process memory at `Mapped/file identity differs`.
+No cache observation ran. An own-file offline Btrfs reproduction shows that
+maps' device and stat.st_dev can differ legitimately; the failed log did not
+record the exact differing component. The corrected guard compares stat
+metadata of the hashed file/FD with every kernel map_files alias, and pins all
+SDL segments. Never weaken this to hash/path/inode-only acceptance or bypass
+denied alias access. It follows aliases with stat only, never opens them;
+elevated traversal is pending a fresh approved precheck. 41 observer regressions
+pass offline; no Steam process/device was accessed during the correction.
+A new attempt requires separate permission and local GO before process memory;
+no debugger attach, target calls or device opens. Unknown hashes, multiple
+targets and instance changes stop it. Cache updates
 prove delivery inside SDL, not Steam's downstream acceptance or exact discard
 reason. Do not silently substitute GDB/ptrace or invoke this live helper in tests.
 The first activation was interrupted by a private helper that mistakenly
