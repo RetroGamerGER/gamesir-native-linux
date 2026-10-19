@@ -157,6 +157,14 @@ steam-accel-held-pose-evidence.json and STEAM_ACCEL_EXTENSION.md. This is
 not gyro-map inference, six-pose calibration or verified device gain/bias.
 Do not force another precise-angle gyro test, silently enable the candidate,
 or claim Steam acceptance. Revision 9 is prepared; package defaults stay off.
+The later separately approved revision-9 package update completed (pacman 0,
+DKMS for 7.2.11-1-garuda and Qkk 143 entries/0 alterations). Read
+docs/evidence/STEAM_ACCEL_INSTALL_20261019.json. Its postcheck stopped on
+100a/xpad -> new 109c/xpad; the user reports inactivity shutdown, not a
+proved causal diagnosis. Preserve the failed guard report. Final checked
+service inactive/enabled, persistent pause true, empty leases/no native
+binding, module unloaded, existing gyro config unchanged. Do not auto-retry,
+load, resume or enable acceleration based on the package update approval.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

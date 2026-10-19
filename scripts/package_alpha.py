@@ -29,6 +29,7 @@ DOCUMENT_FILES = (
     'docs/DUALSENSE_SENSOR_COMPARISON.md',
     'docs/SDL_EDEN_GYRO.md', 'docs/sdl-eden-gyro-validation.json',
     'docs/STEAM_ACCEL_EXTENSION.md', 'docs/steam-accel-extension-validation.json',
+    'docs/evidence/STEAM_ACCEL_INSTALL_20261019.json',
     'docs/steam-accel-held-pose-evidence.json', 'docs/STEAM_GYRO_DOWNSTREAM.md',
     'docs/steam-gyro-downstream-offline.json', 'docs/steam-gyro-notification-gates-offline.json',
     'docs/steam-gyro-observation-live-001.json', 'docs/STEAM_GYRO_FEASIBILITY.md',

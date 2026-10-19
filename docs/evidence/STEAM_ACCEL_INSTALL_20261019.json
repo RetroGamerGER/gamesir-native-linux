@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "stage": "package installed; activation not performed; postcheck stopped on USB instance change",
+  "package": {
+    "name": "gamesir-native-dkms",
+    "version": "0.1.0.alpha3-9",
+    "sha256": "74994d3e19ae0d7a8c5f9b9758885c6656153b3a0c14c6cf9b404289c262f503",
+    "transaction_exit_code": 0,
+    "upgraded_from": "0.1.0.alpha3-8",
+    "transaction_packages": 1,
+    "integrity_entries": 143,
+    "integrity_alterations": 0
+  },
+  "kernel": {
+    "release": "7.2.11-1-garuda",
+    "dkms_installed": true,
+    "module_srcversion": "DF7D42B1E7909084ED9BEB1",
+    "vermagic": "7.2.11-1-garuda SMP preempt mod_unload",
+    "autoload_aliases": [],
+    "loaded_after_install": false,
+    "build_exit_code": 0,
+    "code_warnings": 0,
+    "environment_advisories": [
+      "DKMS deprecated CLEAN feature",
+      "Kernel Clang 23.1.1 versus module Clang 23.1.3"
+    ]
+  },
+  "runtime": {
+    "service": {
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "UnitFileState": "enabled",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "paused": true,
+    "unresolved_leases": 0,
+    "native_bindings": [],
+    "existing_gyro_config_unchanged": true,
+    "accel_override_created": false,
+    "resume_called": false,
+    "new_profile_activated": false
+  },
+  "postcheck": {
+    "passed": false,
+    "stopped_at": "USB identity assertion, before additional custom payload comparison",
+    "preinstall_pid": "100a",
+    "postinstall_pid": "109c",
+    "preinstall_driver": "xpad",
+    "postinstall_driver": "xpad",
+    "address_changed": true,
+    "same_physical_port": true,
+    "user_report": "Controller switched itself off due to inactivity; no deliberate reconnection reported.",
+    "cause_verified": false,
+    "limit": "Temporal context only; no proof that inactivity caused this exact enumeration. No native module was loaded when checked.",
+    "automatic_retry": false,
+    "recovery_commands_after_postcheck": false
+  },
+  "hooks": {
+    "return_guard_passed": true,
+    "unused_native_module_removed": true,
+    "dkms_rebuilt": true,
+    "systemd_metadata_reloaded": true,
+    "normal_and_fallback_initramfs_built": true,
+    "snapshot_pre_post_completed": true
+  },
+  "remaining": [
+    "Fresh state and explicit module/profile/service/resume permission before live activation.",
+    "No Steam/Eden/paddle/motor acceptance for revision 9 yet.",
+    "No persistent acceleration opt-in or reboot performed."
+  ],
+  "private_evidence_preserved": true,
+  "public_push": false
+}

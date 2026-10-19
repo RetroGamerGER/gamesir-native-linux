@@ -5,6 +5,17 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Revision 9 installiert, noch nicht aktiviert:** Das gesondert freigegebene
+Update von `gamesir-native-dkms` auf `0.1.0.alpha3-9` ist mit Exit 0 abgeschlossen.
+DKMS für `7.2.11-1-garuda`, Modul-srcversion und Paketintegrität passen
+(143 Einträge, keine Abweichung). Dienst gestoppt, Autostart unverändert
+aktiviert, Verwaltung weiterhin pausiert, keine Besitznachweise/native
+Bindungen und kein geladenes `gs_native`; bisherige Gyro-Konfiguration erhalten.
+Die Abschlussprüfung stoppte an einer neuen USB-Instanz `109c/xpad` statt
+`100a/xpad`. Nutzer meldet selbsttätiges Ausschalten durch Inaktivität;
+Ursache dieser konkreten Neuanmeldung nicht bewiesen. Keine automatische
+Reparatur, Wiederholung, Aktivierung oder Test. [Installationsbericht](evidence/STEAM_ACCEL_INSTALL_20261019.json).
+
 **Updatevorbereitung auf Revision 9:** Vier vorhandene, prüfsummenverifizierte
 Aufnahmen liefern unabhängig vom Gyro-Mapping den Beschleunigungskandidaten
 `1,2,3`: A1 positiv bei Tastenfläche oben, A0 +/- bei linkem/rechtem Griff

@@ -1,11 +1,13 @@
 # Steam gyro: real acceleration extension (offline preparation)
 
-19 October 2026. **Implemented and tested offline, not installed or activated.**
+19 October 2026. **Revision 9 installed under separate approval; not activated.**
+The implementation/test sections below record the preceding offline preparation.
 This prepares a correction for the [statically identified acceleration
 notification gate](STEAM_GYRO_DOWNSTREAM.md#notification-gate-follow-up).
 It does not establish Steam Input/gameplay acceptance or prove every gate in
-Steam's historical live run. No Steam library, configuration or installed
-module is modified. Gyro calibration remains paused.
+Steam's historical live run. No Steam library or configuration is modified. The later approved package
+installation is recorded below; the new module remains unloaded. Gyro
+calibration remains paused.
 
 ## Contract
 
@@ -153,3 +155,39 @@ The original gyro-only case and Steam sensor-enable/cache-layout checks remain.
 These are device-free integration tests, not live E2E acceptance.
 
 Results and build limitations: [offline validation](steam-accel-extension-validation.json).
+
+## Approved revision-9 installation result
+
+The maintainer separately approved one Release, its return checks, and then
+exactly the revision-9 package transaction including password entry and hooks.
+Release confirmed pause, empty leases and 100a/xpad. A fresh preinstall guard
+reconfirmed those conditions, zero module references, the current headers,
+revision-8 installation and pinned package SHA256 before invoking pacman.
+
+The one-package update from 0.1.0.alpha3-8 to **0.1.0.alpha3-9** exited 0.
+The installed guard verified safe return, stopped the service and removed only
+the unused native module. DKMS rebuilt/installed for `7.2.11-1-garuda` with
+source version `DF7D42B1E7909084ED9BEB1`, matching vermagic and no autoload
+aliases. Normal/fallback dracut images and pre/post snapshots completed.
+The existing Clang-version advisory (23.1.1 versus 23.1.3) and deprecated DKMS
+CLEAN feature were reported; the module build exited 0 with no code warnings.
+`pacman -Qkk` reports 143 entries and zero alterations. The existing local
+gyro configuration hash is unchanged; no acceleration override was created.
+
+**Postcheck stopped before activation:** the USB device had re-enumerated
+from 100a/xpad to a new 109c/xpad instance at the same port. The user reports
+that the controller switched itself off due to inactivity. This is temporal
+context, not a proved cause of that exact enumeration. The guard preserved
+its failed report and stopped before its additional custom payload comparison;
+the independent pacman integrity check had already passed. No automatic
+retry, repair, extra Release, module load or Resume followed.
+
+The checked final state is inactive/dead service with successful exit,
+autostart still enabled, persistent pause true, empty leases, no native
+bindings and no loaded gs_native. A 109c/xpad binding is **not** a confirmed
+return to 100a or a native-runtime test. Next activation requires a fresh
+state check and explicit approval. Gyro calibration remains paused; no Steam,
+Eden, paddle, motor or reboot test was performed by this transaction.
+
+Package SHA256: `74994d3e19ae0d7a8c5f9b9758885c6656153b3a0c14c6cf9b404289c262f503`.
+[Sanitized installation/check record](evidence/STEAM_ACCEL_INSTALL_20261019.json).
