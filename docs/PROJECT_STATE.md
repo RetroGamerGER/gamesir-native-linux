@@ -5,6 +5,20 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Steam-Folgepfad offline eingegrenzt:** Der ELF32-Client routet Gyroereignisse
+über die SDL-Instanz und führt separate Gyro-Paketfelder weiter, auch ohne
+gleichzeitiges Accel-Ereignis. Die erste Zahlenkonvertierung erhält in einer
+mathematischen Nachrechnung 192 von 194 gespeicherten Bewegungsvektoren als
+ungleich null. Steams Anzeige liest einen eigenen Statusstrom nach Controller-
+und IMU-Index; dessen Ausgangswerte sind null. Vor dessen Benachrichtigungen
+liegen weitere Objekt-, Bereitschafts- und Abonnementprüfungen. Ihre konkreten
+Laufzeitwerte und die vollständige Verbindung zur Filterverarbeitung sind
+noch unbelegt: keine abschließend bewiesene Ursache oder Treiberkorrektur.
+Statische Fundstellen, Gegenbelege zur einfachen Accel-/Quantisierungshypothese
+und gezielte Restfragen sind [dokumentiert](STEAM_GYRO_DOWNSTREAM.md).
+Nur lokale Dateien und vorhandene Daten untersucht; kein Live-Test, sudo,
+Netzwerk, Steam-/Treiberwechsel oder Push. Gyrokalibrierung bleibt pausiert.
+
 **Steam-Livebeobachtung erfolgreich: Gyro erreicht SDL, UI bleibt null.** Ein
 gesondert freigegebener Lauf mit `ef64ee5` bestand Vorprüfung, lokales Go,
 Terminalübergabe und Abschlussprüfung. 682 Stichproben über 70 Sekunden zeigen

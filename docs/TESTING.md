@@ -6,6 +6,17 @@ Voraussetzung: vorhandenes Python ≥ 3.11, Make und clang mit ASan/UBSan.
 
 ## Steam-SDL-Gyro ohne Steam-Start
 
+Die [Offline-Folgeanalyse](STEAM_GYRO_DOWNSTREAM.md) ergänzt die SDL-Prüfungen
+um gehashte statische ELF32-/UI-Fundstellen und eine mathematische Nachrechnung
+von 194 gespeicherten Bewegungsstichproben. Sie führt keinen Hersteller-Code
+aus und ersetzt weder einen Ereignismitschnitt noch Steams Filterpipeline.
+Prüfsummen, Adressart, Grenzen und aggregierte Ergebnisse stehen in
+`steam-gyro-downstream-offline.json`; keine privaten Rohprotokolle übernehmen.
+Die bisherige Beobachterdatei enthält keine Sensorzeitstempel und kann daher
+keine Aussage über Steams tatsächliche Delta-Zeit/Timingauswahl beweisen.
+Bei der Nachrechnung null als mögliche einzelne Stichprobe zulassen, keine
+Bewegung in jedem Sample unterstellen und keine Anzeigeabnahme behaupten.
+
 Der vorhandene gerätefreie Sensorprüfer kann zusätzlich genau eine lokal
 vorhandene SDL3-Bibliothek prüfen:
 

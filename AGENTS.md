@@ -124,6 +124,14 @@ no debugger attach, target calls or device opens. Unknown hashes, multiple
 targets and instance changes stop it. Cache updates
 prove delivery inside SDL, not Steam's downstream acceptance or exact discard
 reason. Do not silently substitute GDB/ptrace or invoke this live helper in tests.
+The subsequent offline downstream analysis is in docs/STEAM_GYRO_DOWNSTREAM.md.
+Instance routing, gyro-only early record turnover/conversion and a separate
+controller/IMU-indexed UI notification feed are statically identified. Do not
+claim the first quantizer erases motion: the saved movement replay preserves
+192/194 nonzero vectors. Later object/readiness/subscription/timing gates are
+not established for the failed run. Do not call the unidentified three-field
+notification gate acceleration, or equate UI RawSpeed with raw USB counts.
+No exact root cause or fix is proved; preserve working SDL/Eden and runtime.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

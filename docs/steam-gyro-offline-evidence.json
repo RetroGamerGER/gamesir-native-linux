@@ -422,5 +422,13 @@
     "privileged_actions": false,
     "installed_files_or_settings_changed": false,
     "push": false
+  },
+  "downstream_followup": {
+    "date": "2026-10-19",
+    "report": "STEAM_GYRO_DOWNSTREAM.md",
+    "evidence": "steam-gyro-downstream-offline.json",
+    "static_only": true,
+    "root_cause_proved": false,
+    "runtime_changes": false
   }
 }

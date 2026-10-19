@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "scope": "Static installed files and saved log only; no vendor execution, live process/device access, privileges, network or runtime changes",
+  "files": [
+    {
+      "path": "linux32/steamclient.so",
+      "sha256": "6d8e7e938ff44527a78e2550525c16a9f4605a88d5b20f4466aff311cc00a103",
+      "bytes": 50207500
+    },
+    {
+      "path": "steamui/sp.js",
+      "sha256": "5a28c25041d07e69cf591a414519e0cf970b6884c1a0106659dcd9f1fb9586f9",
+      "bytes": 16297789
+    }
+  ],
+  "binary_address_kind": "ELF32 virtual addresses, not runtime addresses; .text file offset = VA - 0x1000, cited constants VA = file offset",
+  "anchors": [
+    {
+      "va": "0x19c2e2b",
+      "fact": "Dispatches SDL event 0x659 to sensor path"
+    },
+    {
+      "va": "0x19c2f60",
+      "fact": "Requires event.which at +0x10 to equal device SDL instance at +0x08 before sensor handler call"
+    },
+    {
+      "va": "0x19c28c0",
+      "fact": "Sensor handler: standard gyro 2 and acceleration 1 use main lane; 4/3 use left lane; 6/5 have base-sensor fallback checks"
+    },
+    {
+      "va": "0x19c2c91",
+      "fact": "Standard gyro sensor_timestamp at ELF32 event +0x24/+0x28 divided by 100; low 32 bits retained"
+    },
+    {
+      "va": "0x19c299e",
+      "fact": "Gyro affine conversion followed by saturation and int16 storage"
+    },
+    {
+      "va": "0x19c2c58",
+      "fact": "Writes main gyro int16 values at record +0x1c/+0x1e/+0x20 and ORs flags 0x402"
+    },
+    {
+      "va": "0x19c22c0",
+      "fact": "Existing nonzero main-lane sensor tick causes old record to flush on next gyro event; no acceleration condition in this branch"
+    },
+    {
+      "va": "0x19c2074",
+      "fact": "Flush enqueues record; optional earlier branch alters button field +0x10, not sensor flags +0x0c"
+    },
+    {
+      "va": "0x19bf990",
+      "fact": "Backend reader takes pending record from device queue, representation-dependent copy, maximum 0x48 bytes"
+    },
+    {
+      "va": "0x1243959",
+      "fact": "Packet converter recognizes main gyro with (flags & 0x402)==0x402"
+    },
+    {
+      "va": "0x1243f83",
+      "fact": "Copies main gyro independently; absent acceleration bit 0x4 still branches to timing processing at 0x12439b0"
+    },
+    {
+      "va": "0x127fbb0",
+      "fact": "Sensor timing helper includes packet-rate estimation and configurable fallback; actual selected settings not measured"
+    },
+    {
+      "va": "0x1235db0",
+      "fact": "UI notification producer has controller presence, pointer and subscription gates"
+    },
+    {
+      "va": "0x123619b",
+      "fact": "Before motion notifications checks returned object byte +0x5c and any nonzero 16-bit value in selected controller state +0x1a4/+0x1a6/+0x1a8. Meaning and live values of triplet not established"
+    },
+    {
+      "va": "0x1236578",
+      "fact": "Gyro speed notification construction gated by subscriber count"
+    },
+    {
+      "va": "0x1236618",
+      "fact": "References SteamInputManager.NotifyGyroSpeedStateChanged#1"
+    }
+  ],
+  "ui_character_anchors": [
+    {
+      "offset": 9586996,
+      "module": 84508,
+      "fact": "Rate display reads GyroRawSpeed, not GyroFilteredSpeed; orientation reads GyroRawQuaternion"
+    },
+    {
+      "offset": 11411606,
+      "module": 35137,
+      "fact": "Feed store defaults gyro rates to zero; state separated by controller_index and imu_index"
+    },
+    {
+      "offset": 11426669,
+      "fact": "Gyro speed notification callback copies raw/filtered values; imu_index 1 selects main lane, others left"
+    },
+    {
+      "offset": 11434656,
+      "fact": "Mount/unmount starts/ends ControllerStateFlow; gyro speed flow_mode is 3, quaternion 2; selected side chooses main/left store"
+    }
+  ],
+  "conversion_model": {
+    "label": "Independent mathematical replay of affine clamp only; not Steam execution, full filter emulation or bit-exact x87 proof",
+    "constants": {
+      "offset_rad_s": 34.906585693359375,
+      "span_rad_s": 69.81317138671875,
+      "unsigned_span": 65535.0,
+      "signed_offset": 32768.0
+    },
+    "source_log_sha256": "2cce651492fec8c70590cf983eb6924f6fa5b3fb7c39bfc24a12c8933324af10",
+    "phase": "move",
+    "samples": 194,
+    "all_zero_vectors": 2,
+    "axis_ranges": [
+      [
+        -9873,
+        7522
+      ],
+      [
+        -5850,
+        5607
+      ],
+      [
+        -4780,
+        4158
+      ]
+    ]
+  },
+  "missing_live_evidence": [
+    "SDL event queue/watch callback delivery and device-object instance match",
+    "Internal packet consumer, motion-object readiness and exact triplet meaning",
+    "Controller index, IMU index and notification subscriptions selected by actual UI",
+    "Actual timing policy and downstream motion/antidrift state"
+  ],
+  "conclusion": "Cause narrowed downstream of changing enabled SDL cache; exact failing gate not proved. No evidence justifying driver/Steam changes or fabricated acceleration."
+}

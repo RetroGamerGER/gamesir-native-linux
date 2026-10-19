@@ -18,6 +18,13 @@ motion/UI acceptance remains unconfirmed despite confirmed delivery into SDL.
 The [live evidence below](#read-only-live-cache-observation--19-october-2026)
 does not identify a specific filter or discard decision.
 
+The [subsequent downstream static investigation](STEAM_GYRO_DOWNSTREAM.md)
+traces instance-gated event routing, separate gyro packet conversion and the
+controller/IMU-specific UI feed. Its first affine conversion preserves 192 of
+194 saved movement vectors as nonzero; the early packet path can advance
+without acceleration. Later readiness/subscription/timing gates remain to be
+connected to the actual failed run. No exact discard cause or fix is proved.
+
 Preserve one shared implementation: `gs_native` owns USB; paired gamepad and
 motion evdev devices serve SDL/Eden and, if accepted, Steam Input. Raw IIO,
 normal input, independent paddles, FF_RUMBLE and the optional trigger bridge
