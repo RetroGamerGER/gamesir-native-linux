@@ -1,5 +1,91 @@
 # Public pre-alpha release audit
 
+## Final unpublished-source check — 19 October 2026
+
+This checkpoint supersedes older publication decisions below. The current
+request is **audit first, then separate push approval**. No push, new tag,
+release, installation or runtime change is authorized or performed here.
+
+The freshly fetched public `main` is
+`947790b50a8f21e3c27d53e297ffabf469ff1a0a`. The reviewed implementation and
+Eden-documentation tip is `2e9c8539ca66722334a706849bef42c2fc08e7d7`, with
+78 unpublished commits and no missing upstream commits. The audit follow-up
+changes documentation and its checksum manifest only. The proposed publication
+is this complete public-repository history, not the separate private original
+history, a mirror push, new release tags or binary artifacts.
+
+### Fresh offline validation
+
+Tests ran from a fresh `git archive` extraction of that tip, without `.git`,
+private evidence, proprietary firmware or previously built project outputs:
+
+| Check | Result |
+| --- | --- |
+| `make test` | Passed: 1,171 Python tests across 42 suites, plus the default C, sanitizer, adapter, fixture and package checks; no skipped Python tests. |
+| `make test-sdl` | Passed: 18 button, 5 hotplug and 16 sensor scenarios using synthetic devices and the installed SDL libraries. No controller access. |
+| `make test-gyro-viewer` | 14 offscreen GUI tests passed. |
+| `make test-rea-local` | 39 tests passed with synthetic inputs/backends; no manufacturer application or firmware execution. |
+| `make kernel` | Built for `7.2.11-1-garuda`, matching vermagic, zero code warnings and zero unexpected warnings. The known compiler advisory remains: kernel Clang 23.1.1 versus build Clang 23.1.3. Module not loaded or installed. |
+| Documentation | All local Markdown file/directory links resolve. README warning and GPL/UAPI checks pass. Eden steps preserve the existing executable/arguments and have an application-only rollback. |
+| Build-source archives | Core, Steam, Gamescope and trigger-bridge archives each reproduce byte-for-byte in two generations from the reviewed source. Explicit member lists, source bytes, license files and neutral ownership metadata are checked. No binary package installation or release upload. |
+
+The CachyOS module build and target checks remain the separately recorded
+historical evidence; this final audit does not reconnect to a target or claim
+a fresh CachyOS build. Offline regression success is not additional hardware,
+Steam Input, game, suspend or reconnect acceptance.
+
+### Publication privacy and provenance
+
+The initial scan covers every newly reachable object, including intermediate
+versions and commit messages: 78 commits, 579 file blobs (17,767,854 bytes)
+and 287 trees. All 88 commits reachable from the reviewed public tip use the
+approved public GitHub-noreply identity for both author and committer. No
+private email, host/home reference, credential, private key or real network
+address was identified. The final documentation commit is checked again
+before requesting permission; these counts identify the initial frozen tip.
+
+Reviewed matches are public attribution already present upstream, public
+noreply metadata, Windows/firmware version numbers, the reserved test address,
+a systemd instance-unit name and synthetic example/sandbox paths. Existing
+authorship and third-party notices are retained. This is a bounded pattern
+scan and manual review, not a guarantee against every possible secret format.
+
+No new binary blobs, device captures, manufacturer packages/firmware, symlinks,
+submodules or private working directories occur in the unpublished trees.
+Own, reduced protocol fixtures are explicitly documented; they are not raw
+USB captures or bundled firmware. The withdrawn Eden launcher prototype stays
+private and absent from the publication tree and package lists. GPL-2.0-only,
+COPYING and the Linux-syscall-note UAPI exception remain unchanged. Static
+research reports do not license or distribute their proprietary reference files.
+
+Five stale documentation hashes were found in SHA256SUMS at the initial tip;
+the audit follow-up regenerates the manifest after the documentation updates.
+Historical source/evidence manifests retain their original meaning and are
+not rewritten as fresh measurements. Raw audit logs and build outputs remain
+private and excluded from Git.
+
+### Decision and remaining limits
+
+The source is suitable for a **PRE-ALPHA source push after explicit approval**,
+subject to the final clean-tree, manifest and archive checks recorded with the
+local audit commit. This is not a stable-release recommendation or a new tag.
+Core package revision is `0.1.0.alpha3-10`; existing optional component versions
+remain unchanged. No package-version bump is needed for this documentation audit.
+
+- Revision 10 was installed and tested on CachyOS. The late-power-on Steam
+  gyro case failed; later Guide-held display response does not close it.
+  README now states this instead of describing an uninstalled preparation.
+- Eden's manual Gamescope launch workaround is application-tested: physical
+  pad and sensor opened, gyro without Guide, four independent paddles and
+  ordinary inputs accepted. It is documentation only, not kernel/installer/
+  Control Center automation, and does not solve Steam's gyro display case.
+- Removing both inherited SDL filters can expose other controllers within
+  Eden. Selection and duplicate-input checks remain necessary; global Steam
+  Input/SDL settings and the existing paddle mapping remain unchanged.
+- Precise gyro calibration stays paused. ZZZ feature coverage, general
+  trigger support in Steam/Proton, repeated reconnect, suspend and long-term
+  reliability remain limited as documented. No new stability promises.
+
 ## Gamescope metadata identity corrected offline — 19 October 2026
 
 The second separately approved metadata attempt reached the remote program,

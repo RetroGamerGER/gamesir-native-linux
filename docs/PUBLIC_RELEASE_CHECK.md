@@ -12,7 +12,17 @@ local build logs or binary-package build metadata. Historical export manifests
 remain historical; each release has its own exact artifact manifest.
 Publication approval never authorizes system installation or hardware work.
 
-## Privacy decision
+## Current public-history checkpoint — 19 October 2026
+
+The [latest audit](RELEASE_AUDIT.md#final-unpublished-source-check--19-october-2026)
+checks the unpublished descendants of the already public repository, including
+intermediate file contents and commit metadata. This is a different history
+from the private original described below. No private original commits are to
+be pushed. The current audit requests a new, explicit permission before any
+source push; historical conditional approvals below are not current authority.
+The Eden/Gamescope workaround remains a tested manual compatibility note.
+
+## Historical private-source privacy decision
 
 The complete reachable history through `3e620f3` was inspected: 93 commits,
 1,515 reachable objects including 1,037 distinct file blobs, 18,670,815 blob

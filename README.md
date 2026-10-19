@@ -57,7 +57,7 @@ record their exact source and component-package versions.
 | GameSir G7 Pro, 2.4 GHz dongle, observed `3537:100a` → `3537:109c` | Controlled native startup, gamepad input, raw IMU and individual motor tests recorded. No general firmware or edition guarantee. |
 | G7 Pro Zenless Zone Zero edition, `3537:105e` | **Experimental:** a bounded native input/raw-IMU run and return to `xpad` were confirmed. Complete paddle, motor, Steam and long-term validation is still missing for this edition. |
 | Garuda Linux with KDE Plasma, x86_64 | Recorded builds and controlled tests with `7.2.9-2-garuda` and `7.2.11-1-garuda`; feature coverage differs between recorded runs. |
-| CachyOS Handheld Edition with Gamescope, x86_64 | Controlled startup/input testing with `7.2.9-2-cachyos-deckify`, Steam paddles and one boot followed by controller power-on confirmed. This is not a Valve SteamOS compatibility claim. |
+| CachyOS Handheld Edition with Gamescope, x86_64 | Recorded builds and controlled tests with `7.2.9-2-cachyos-deckify` and `7.2.11-1-cachyos-deckify`; input/paddles and limited startup cases confirmed. Steam gyro has the startup/reconnect limits below. This is not a Valve SteamOS compatibility claim. |
 | Other controllers, wired/Bluetooth operation, distributions and kernels | Not validated by this project's current hardware evidence. |
 
 This matrix describes recorded configurations, not a minimum-kernel promise
@@ -89,10 +89,12 @@ separates hardware results, offline tests and outstanding validation.
   paddles with ordinary input preserved. In-game acceptance remains separate.
   A later controlled test with optional real evdev acceleration confirmed all
   three gyro rates respond in Steam's UI, with ordinary input and independent
-  paddles retained. This experimental profile is also saved and verified in a
-  local opt-in; actual reboot acceptance remains pending. This is not Proton
-  game acceptance. The user subsequently reports Eden continues working with
-  this profile; no new per-axis measurements were recorded. See
+  paddles retained. This experimental profile is saved in a local opt-in.
+  A subsequent CachyOS Gamescope reboot case succeeded with the controller
+  already on before Steam started; late arrival and reconnect remain limited.
+  Eden also passed the later Gaming Mode application test using the manual
+  launch workaround below. These results are not Proton-game or general
+  lifecycle acceptance; no new physical calibration was performed. See
   [the activation record](docs/STEAM_ACCEL_EXTENSION.md).
 - **Forza Horizon 6 through Xodus Nexus:** one controlled run of the optional
   trigger bridge `0.1.0.alpha1-2` produced felt effects on both impulse
@@ -109,18 +111,18 @@ computer.
 ## Known Limitations
 
 - **Gyro integration remains experimental.** The selected 0.07 °/s/raw profile
-  has an unresolved late-power-on/reconnection limitation in Gamescope. An
-  [offline-tested kernel/manager readiness correction](docs/STEAM_GYRO_HOTPLUG.md)
-  is prepared in revision 10; actual Gamescope late-power-on/reconnect acceptance
-  is still pending. It has not been installed by this preparation.
-  The existing profile has an opt-in SDL evdev path and one limited hardware
-  acceptance in Eden's controller settings. It is not enabled by default. A
-  separately approved local persistent opt-in is now configured and checked; its actual reboot
-  acceptance remains pending. Precise angle/bias calibration remains
-  paused. Raw IIO remains unchanged. Separate opt-in evdev acceleration uses
-  experimental `8192 LSB/g` and an evidence-backed qualitative axis map;
-  full physical calibration, detailed six-axis regression and persistent-accel
-  reboot acceptance remain open. See [SDL/Eden scope](docs/SDL_EDEN_GYRO.md)
+  has an unresolved late-power-on/reconnection limitation in Gamescope. The
+  [kernel/manager readiness change](docs/STEAM_GYRO_HOTPLUG.md) in revision 10
+  passed offline checks and was installed and tested on CachyOS, but **did not
+  resolve the late-power-on Steam gyro case**. A later user report describes
+  gyro display updates only while Guide is held; the cause remains unresolved.
+  Do not treat revision 10 or the separate Eden workaround as a verified Steam
+  gyro hotplug fix. The SDL evdev profile is opt-in and not enabled by default.
+  Precise angle/bias calibration remains paused. Raw IIO remains unchanged.
+  Separate opt-in evdev acceleration uses experimental `8192 LSB/g` and an
+  evidence-backed qualitative axis map; full physical calibration, repeated
+  lifecycle tests and general boot reliability remain open despite the limited
+  successful boot report. See [SDL/Eden scope](docs/SDL_EDEN_GYRO.md)
   and [Steam result/limits](docs/STEAM_ACCEL_EXTENSION.md).
 - **Trigger vibration has no confirmed universal games path.** Standard
   Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,

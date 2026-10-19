@@ -2,6 +2,18 @@
 
 # Projektstand
 
+**19. Oktober 2026 — abschließender GitHub-Check:** Der gesamte bislang
+unveröffentlichte öffentliche Projektstand einschließlich des manuellen
+Eden-Hinweises wird vor einer neuen Push-Freigabe geprüft. Die frische
+Quellkopie besteht die vollständigen Offline-Tests, gerätefreie SDL-Prüfungen,
+GUI-/Analysehelfer-Tests und den lokalen Modulbau. Die README stellt jetzt
+klar, dass Revision 10 den späten Steam-Gyrofall trotz Installation/Test
+nicht behoben hat. Private Originalhistorie, Firmware, Aufzeichnungen und
+der zurückgezogene Eden-Starthelfer bleiben ausgeschlossen. Details und
+Nachweisgrenzen stehen im [Abschlussaudit](RELEASE_AUDIT.md#final-unpublished-source-check--19-october-2026).
+Kein Push, Tag oder Release ohne nächste ausdrückliche Freigabe; keine
+Systemänderungen oder neuen Hardwaretests. Gyrokalibrierung bleibt pausiert.
+
 **19. Oktober 2026 — Eden im Gaming Mode bestätigt; Workaround nur als
 Dokumentation:** Der geerbte SDL-Ausschlussfilter versteckte den echten
 GameSir vor Eden. Nach gesicherten, manuell geänderten Startoptionen öffnet

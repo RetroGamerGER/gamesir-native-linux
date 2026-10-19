@@ -16,6 +16,16 @@ changes locally. No public remote, tag, upload or push without explicit
 maintainer approval. Preserve third-party notices and source provenance.
 Own sources use GPL-2.0-only; preserve the UAPI Linux-syscall-note exception.
 
+## Final publication checkpoint (19 October 2026)
+
+The latest request is a final check of the entire unpublished public history,
+including Eden documentation, offline tests and private-data exclusion, then
+presentation for explicit push approval. See the latest RELEASE_AUDIT.md entry.
+Earlier push permissions are superseded by this gate. No tag/release, runtime
+change or new hardware test is included. Keep the Eden workaround manual and
+application-scoped; the withdrawn launcher remains outside Git. Do not describe
+revision 10 as an accepted Steam gyro hotplug fix. Calibration stays paused.
+
 ## Hardware safety
 
 No module loading/unloading, driver rebinding, identity switch, active motor
