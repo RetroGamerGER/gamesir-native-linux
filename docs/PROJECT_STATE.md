@@ -5,6 +5,20 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Steam-Livebeobachtung erfolgreich: Gyro erreicht SDL, UI bleibt null.** Ein
+gesondert freigegebener Lauf mit `ef64ee5` bestand Vorprüfung, lokales Go,
+Terminalübergabe und Abschlussprüfung. 682 Stichproben über 70 Sekunden zeigen
+aktiviertes Gyro derselben SDL-Instanz; alle drei Achsen ändern sich während
+der Bewegung deutlich. Ein gleichzeitig aktualisierter Snapshot wurde erkannt
+und ausgelassen. Der Prozessspeicherzugriff ist geschlossen; Exit 0 und
+SHA256-Prüfungen sind bestätigt. Der Nutzer meldet weiterhin drei Nullwerte in
+Steam und normale Eingaben/flüssigen Desktop. Damit ist die Lieferung bis in
+Steams eigene SDL nachgewiesen; die weitere Ereignis-/Auswahl-/Filter-/UI-
+Verarbeitung bleibt zu klären. Keine bewiesene Verwerfungsursache, keine
+Kalibrierung oder Steam-Spielabnahme. Steam, Treiber, Dienste und Sensorpuffer
+blieben unverändert. Kein weiterer Versuch oder Push.
+[Befund und Grenzen](STEAM_GYRO_FEASIBILITY.md#read-only-live-cache-observation--19-october-2026).
+
 **sudo-/Konsole-Eingabeweg offline korrigiert:** Auch der folgende freigegebene
 Lauf bestand die Metadatenprüfung, stoppte aber an der vorgezogenen
 Vordergrundprüfung. Eine neue Nachbildung mit zwei eigenen PTYs bildet den
@@ -18,7 +32,7 @@ nach dem Lesen bleiben zwingend; erst danach werden alle Identitäten erneut
 geprüft. 49 Beobachter-, 15 Terminal-/Monitor-, 40 Steam-/Gamescope- und zehn
 Lizenz-/README-Prüfungen bestehen offline. Alle drei früheren Abbrüche bleiben
 erhalten. Kein sudo, Live-Versuch, Steam-/Treiberzugriff oder Push bei dieser
-Korrektur. Die echte Desktop-Abnahme braucht weiterhin eine neue Freigabe.
+Korrektur. Der später separat freigegebene Desktop-Lauf bestand; siehe oben.
 [Befehle, Belege und Grenzen](STEAM_GYRO_OBSERVATION_PLAN.md).
 
 **Steam-Beobachter: Go-Weitergabe offline korrigiert:** Die danach freigegebene

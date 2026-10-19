@@ -10,10 +10,13 @@ The later user-operated Steam check and read-only diagnosis are recorded below.
 
 ## Decision
 
-**Steam's locally bundled SDL3 can consume our existing gyro-only evdev
-contract, with the paddles intact. Actual Steam Input motion remains
-unconfirmed: its gyro UI is available, but the first manual check showed no
-movement.** Passing an SDL probe does not execute the Steam motion backend.
+**Steam's actual ELF32 SDL cache now receives live gyro data.** One separately
+approved read-only observation on 19 October recorded 682 enabled samples,
+including changing values on all three axes during movement. The user reports
+Steam's three displayed rates remained zero. Thus downstream Steam Input
+motion/UI acceptance remains unconfirmed despite confirmed delivery into SDL.
+The [live evidence below](#read-only-live-cache-observation--19-october-2026)
+does not identify a specific filter or discard decision.
 
 Preserve one shared implementation: `gs_native` owns USB; paired gamepad and
 motion evdev devices serve SDL/Eden and, if accepted, Steam Input. Raw IIO,
@@ -276,8 +279,8 @@ backend was not executed by these tests. The zero-motion problem is not fixed.
 now provides a pinned, offline-validated process-memory reader. It observes
 SDL's enabled flag and cached angular velocities without debugger attachment,
 target calls or device opens. This can locate the boundary before/after the
-cache, but cannot prove a particular downstream discard decision. No live run
-is authorized by its preparation.
+cache, but cannot prove a particular downstream discard decision. Its preparation
+authorized no live run; the later separately approved result is recorded below.
 
 **Broader diagnostic question:** use one bounded read-only Steam
 observation while the user opens its gyro page and moves the controller.
@@ -291,6 +294,49 @@ Steam, or emit sensor/USB commands as part of that observation. Prepare the
 exact tracing method before asking for this approval. Only if evidence locates
 the failure in six-axis processing should a real acceleration extension be
 considered, with separately supported physical axis/sign mapping.
+
+## Read-only live cache observation — 19 October 2026
+
+One separately approved run using observer commit `ef64ee5` completed with
+exit 0 after a fresh successful precheck, human local GO and confirmed terminal
+handover. Both before/after process, controller and pinned-library checks
+passed. The observer read 89,469 bytes in bounded cache/identity accesses and
+closed its sole process-memory descriptor. No debugger, target call, device
+open, Steam setting, USB command, IIO buffer, service or driver change occurred.
+No application was restarted. Original logs, exit statuses and SHA256 manifests
+remain private and persistent; [sanitized evidence](steam-gyro-observation-live-001.json).
+
+| Phase | Cached samples | Gyro enabled |
+| --- | ---: | ---: |
+| Preparation, 30 s | 293 | 293 |
+| Rest, 10 s | 97 | 97 |
+| Slow mixed movement, 20 s | 194 | 194 |
+| Setting down, 10 s | 98 | 98 |
+
+All 682 samples belong to the same SDL instance; Steam retained one gamepad FD
+and one sensor FD in each snapshot. One concurrent update was detected and
+omitted, within the existing stop thresholds. In the movement phase, the
+three cached axis ranges were approximately [-10.518, 8.015], [-6.232, 5.974]
+and [-5.092, 4.430] rad/s, with 184/180/182 distinct sampled values. Median
+vector magnitude rose from 0.00212 rad/s at rest to 3.655 rad/s while moving.
+Preparation and setting-down movements are allowed and are not calibration
+windows. Cache observation rate is not device polling rate or loss evidence.
+
+The user explicitly confirms **all three Steam UI rates stayed zero during
+movement**, while ordinary buttons, sticks, triggers and desktop operation
+remained normal after the run. This localizes the remaining diagnostic boundary
+after delivery to SDL's selected cache: event consumption, downstream selection,
+motion filtering/calibration or UI handling. It does not prove intentional
+discard, rule out a later selection mismatch, validate every event/timestamp,
+or establish an accelerometer requirement. No specific cause or fix is claimed.
+
+The direct sudo/Python invocation and bounded blocking GO read also passed
+their first actual desktop observation, after the preserved failed attempts.
+This is one success, not universal sudo/TTY compatibility. No repeat is
+authorized. The next useful work is offline inspection of Steam's handling
+after SDL sensor updates, keeping the successful Eden/gyro and paddle contract
+intact. No synthetic acceleration, replacement library or driver change is
+justified by this result.
 
 ## Routes to Proton games
 

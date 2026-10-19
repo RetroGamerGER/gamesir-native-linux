@@ -108,8 +108,17 @@ Never pipe GO, substitute a terminal, remove the gate or retry automatically.
 49 observer and 15 terminal/monitor tests pass offline; all signals/processes
 in the model are test-owned. The live helper signals no other process and
 changes no terminal groups. No sudo, Steam process or controller access occurred
-during the correction. Actual sudo/desktop acceptance still needs a new approved
-run; no observed policy setting or universal monitor reliability is claimed.
+during the correction. A later separately approved ef64ee5 desktop run completed
+with exit 0, human GO and confirmed handover: 682 enabled cache samples, one
+concurrent update omitted, unchanged final identities and closed memory FD.
+Read docs/steam-gyro-observation-live-001.json and the live section of
+docs/STEAM_GYRO_FEASIBILITY.md. Real motion changes all three SDL cache axes,
+while the user reports all three Steam UI rates remain zero; normal inputs and
+desktop remain normal. Delivery into Steam's SDL is now proved for this run.
+Downstream event/selection/filter/UI handling remains unresolved: do not claim
+intentional discard, accelerometer dependency or a specific defect/fix. Preserve
+Eden, paddles and current driver; no fake acceleration or extra raw USB reader.
+One successful observer run is not universal monitor/lifecycle acceptance.
 A new attempt requires separate permission and local GO before process memory;
 no debugger attach, target calls or device opens. Unknown hashes, multiple
 targets and instance changes stop it. Cache updates

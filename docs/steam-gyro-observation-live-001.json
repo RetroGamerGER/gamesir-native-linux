@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "kind": "approved_steam_gyro_cache_observation",
+  "source_commit": "ef64ee5",
+  "observer_sha256": "64e92215716f665731f624b05690387610f78970b5dd3376fe06d1516a0471ac",
+  "scope": "One bounded read-only cache observation inside pinned Steam ELF32 SDL; no device opens or debugger",
+  "sdl_sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+  "precheck_exit": 0,
+  "observer_exit": 0,
+  "duration_s": 70,
+  "samples": 682,
+  "samples_skipped_concurrent_update": 1,
+  "enabled_samples": 682,
+  "one_sdl_instance": true,
+  "fd_counts_all_samples": {
+    "gamepad": 1,
+    "sensor": 1
+  },
+  "phase_counts": {
+    "prepare": 293,
+    "rest": 97,
+    "move": 194,
+    "settle": 98
+  },
+  "movement": {
+    "samples": 194,
+    "enabled_samples": 194,
+    "axis_min_rad_s": [
+      -10.517877578735352,
+      -6.232047080993652,
+      -5.092172622680664
+    ],
+    "axis_max_rad_s": [
+      8.014552116394043,
+      5.97426176071167,
+      4.429994583129883
+    ],
+    "axis_distinct_values": [
+      184,
+      180,
+      182
+    ],
+    "median_vector_magnitude_rad_s": 3.6551629433575927,
+    "max_vector_magnitude_rad_s": 10.530708989880162
+  },
+  "rest_median_vector_magnitude_rad_s": 0.0021160992822086234,
+  "memory_bytes_read": 89469,
+  "process_memory_closed": true,
+  "final_identity_checks_passed": true,
+  "local_go_accepted": true,
+  "terminal_handover_confirmed": true,
+  "user_feedback": {
+    "steam_ui": "all_three_zero_during_motion",
+    "normal_gamepad_and_desktop": true
+  },
+  "conclusion": "Live motion values reach the SDL cache inside Steam; zero display remains unexplained in downstream Steam handling/selection/filter/UI",
+  "limits": [
+    "Cache sampling does not trace every sensor event, prove intentional discard or identify a specific downstream fault",
+    "No physical calibration, controller polling-rate/packet-loss proof, Steam gameplay acceptance or full lifecycle test",
+    "Host observation timestamps; the mixed movement does not establish new physical axis calibration"
+  ],
+  "changes": {
+    "steam_settings": false,
+    "driver": false,
+    "services": false,
+    "usb_commands": false,
+    "sensor_buffer": false,
+    "application_restart": false,
+    "push": false
+  },
+  "evidence_sha256": {
+    "precheck.jsonl": "288f926239a41d95a3abfbd367be2ad6cd7a944286a1f6cf6c8d64afc2024bdb",
+    "observation.jsonl": "2cce651492fec8c70590cf983eb6924f6fa5b3fb7c39bfc24a12c8933324af10",
+    "precheck.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "observation.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "private_analysis_sha256": "b83a1593a9602554167de63d19db92f00503835245bb4301ce3f932ad008f489"
+}

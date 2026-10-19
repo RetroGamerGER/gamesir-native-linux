@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-10-19",
-  "stage": "sudo monitor handover corrected offline; new live attempt requires approval",
+  "stage": "offline preparation archive; subsequent separately approved live observation completed",
   "method": "Read-only /proc/PID/mem sampling of pinned SDL cache; no debugger, target function or device open",
   "library_sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
   "library_bytes": 3911164,
@@ -52,7 +52,7 @@
   },
   "live": {
     "authorized": false,
-    "executed": false,
+    "executed": true,
     "seconds_proposed": 70,
     "preparation_seconds": 30,
     "local_go_required": true,
@@ -61,10 +61,10 @@
     "device_open": false,
     "prior_precheck_authorized": true,
     "precheck_executed": true,
-    "observation_executed": false,
-    "authorization_note": "Third attempt stopped at upfront foreground guard before GO/memory; corrected monitor handover requires fresh approval",
+    "observation_executed": true,
+    "authorization_note": "One separately approved run completed; no approval for an automatic repeat",
     "latest_precheck_exit": 0,
-    "latest_observer_exit": 2
+    "latest_observer_exit": 0
   },
   "limits": [
     "Cache sampling is not syscall/event tracing or proof of a downstream discard decision",
@@ -191,5 +191,6 @@
     "network_used": false,
     "new_live_attempt": false,
     "fresh_approval_required": true
-  }
+  },
+  "subsequent_live_result": "steam-gyro-observation-live-001.json"
 }

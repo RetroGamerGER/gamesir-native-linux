@@ -1,8 +1,10 @@
 # Prepared read-only Steam gyro observation
 
-19 October 2026. **Identity prechecks passed; two terminal attempts stopped
-before memory. The sudo-monitor correction is tested offline and awaits a
-new approval. No cache observation executed.**
+19 October 2026. **One separately approved corrected run completed: 682 cache
+samples, clean close and unchanged final identities. SDL receives live motion;
+the user reports Steam's UI still shows zero. No repeat is authorized.**
+See [the result](STEAM_GYRO_FEASIBILITY.md#read-only-live-cache-observation--19-october-2026)
+and [portable evidence](steam-gyro-observation-live-001.json).
 This is a one-run diagnostic proposal requiring separate approval. It does
 not install anything or change the working driver, Steam configuration,
 gyro profile, paddles, rumble or raw IIO path.
@@ -198,8 +200,9 @@ Fresh process/controller/library checks still follow before any memory open.
 40 Steam/Gamescope and ten license/README tests. They cover both historical
 failures, the nested monitor handover, cancel/no-input, strict Enter/line size,
 pipe rejection, alarm restoration and the enclosing deadline's original error.
-The actual sudo/desktop path remains pending one new separately approved run;
-the simulation is not live acceptance. Preserve all three failed-attempt logs.
+The actual sudo/desktop path was pending at that preparation checkpoint; one
+later separately approved run completed, as linked above. The simulation by
+itself was not live acceptance. Preserve all three failed-attempt logs.
 No automatic repeat is authorized. References were read locally from installed
 Linux man-pages, `sudo(8)`, `sudoers(5)` and GNU `timeout --help`; no reference
 text/code was copied and no network access was used.
