@@ -1,10 +1,12 @@
 # Gamescope: later power-on and gyro reconnection
 
 19 October 2026. **Kernel/client/manager integration implemented and tested
-OFFLINE; revision 10 is not installed or hardware-accepted.** This supersedes
+OFFLINE at `f1f6c00`; subsequent CachyOS installation is recorded below,
+and the subsequent late Steam gyro-UI test failed.** This supersedes
 the unintegrated prototype at `468ddc6`. The existing gyro/acceleration units,
-axis maps, raw IIO, paddles, FF and trigger ownership remain unchanged. No
-installed file, running module, Steam or controller was changed or opened.
+axis maps, raw IIO, paddles, FF and trigger ownership remain unchanged. During
+the initial offline integration no installed file, running module, Steam or
+controller was changed or opened.
 The separately requested CachyOS check reads kernel/header metadata over SSH
 and builds selected sources in an unprivileged working directory only.
 Calibration remains paused. Historical SDL reproduction below retains its scope.
@@ -177,6 +179,61 @@ observe late power-on and radio reconnect in Gamescope, motion FD/UI response,
 normal input/paddles, Eden and haptic ownership/STOP. Suspend and application-
 startup races remain separate acceptance cases. Keep enough human preparation
 buffer; no test is started by this implementation.
+
+## Separately approved installation and paused start
+
+The [19 October installation record](evidence/INPUT_PUBLICATION_INSTALL_20261019.json)
+confirms one upgrade to revision 10 on the matching CachyOS kernel, all 118
+payload files, real DKMS build with no compiler warning, matching module
+srcversion/vermagic, retained sensor configuration and unchanged Steam packages.
+The known deprecated DKMS `CLEAN` advisory was retained, not silently repaired.
+Snapshot hooks created 137/138 and the initramfs hook completed.
+
+A separate maintainer request then started the service once. It remains enabled;
+the revision-10 module and processed-input monitor are active, but the manager
+is deliberately paused with no leases/native bindings. No Resume occurred.
+After the approved physical replug with controller reported off, the new USB
+instance is still 109c/xpad. Read-only session/process metadata shows KDE and
+no Gamescope. This precheck stops before takeover or sensor testing. Do not
+adopt the unowned 109c, repeat the replug automatically or call this a successful
+Gamescope correction. A verified supported start and actual Gaming Mode are
+still required; subsequent actions retain their individual approval boundary.
+
+## Subsequent controlled late-arrival run: Steam gyro still zero
+
+The user rebooted after an unsuccessful KDE-to-Gaming-Mode transition. The
+new boot confirms revision 10's service autostart, same kernel/module source
+and Gaming Mode. The off-state device was 0575/usbhid and ignored; a separately
+approved normal power-on produced a supported 100a/xpad source. Steam was
+already running. One approved Resume then completed native bootstrap and
+confirmed publication of that exact 109c instance. No second Resume or manual
+error Release was issued. This sequence resumes management **after** power-on;
+it does not establish autonomous late-power-on/reconnect acceptance.
+
+The existing device-free observation policy needed three new legitimate phases
+before the run: `input_check`, `awaiting_sensor`, `publishing_input`. They require
+native 109c, remain nonactive, retain the original deadline and exact known-gap
+quarantine, and cannot bypass errors or final lease attestation. 34 regressions
+pass, including actual observer-loop waiting for final `active`. Only the copied
+observer changes; no installed driver, manager or Steam file is changed by it.
+
+The kernel handoff, original source, same parent, lease/tokens and publication
+attempt are attested. The processed-input monitor and manager report no current
+failure. At first the Steam main-process snapshot opens just the pad; after
+the user opens the gyro UI it opens **both** readable paired pad/motion nodes
+with matching session `uniq`. This differs from the earlier no-motion-FD case.
+It does not prove read calls, SDL cache updates or downstream notification.
+
+The user reports all three gyro UI rates remain zero during motion, while
+normal inputs and all four independent paddles including combinations/release
+work. **The requested late Steam gyro test fails despite successful native
+publication.** No radio-reconnect repetition, Steam restart/calibration, motor
+test or further runtime change follows. Do not present the ordering correction
+as a complete fix or infer the exact remaining cause; inspect the actual
+sensor events and SDL/downstream readiness offline before proposing another
+separately approved live observation. Installation and normal-input success
+remain valid. Original negative records and the earlier SDL mechanism remain
+separate evidence, not a universal explanation.
 
 ## Reproduce without devices
 

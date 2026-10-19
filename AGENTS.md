@@ -46,6 +46,27 @@ or running configuration.
 Both Garuda and CachyOS builds pass; no installation, live action or push is
 authorized by this implementation. Calibration stays paused.
 
+The subsequent explicit installation approval installed revision 10 on the
+CachyOS target; a separate service-start request loaded the new module/monitor
+with management still paused and empty ownership. Read the follow-up evidence
+in docs/evidence/INPUT_PUBLICATION_INSTALL_20261019.json. After approved replug,
+the new device remains 109c/xpad and the observed session is KDE, not Gamescope.
+No Resume or hardware test ran. Do not infer 100a return, adopt unowned 109c,
+repeat replug or claim Gamescope acceptance; clarify prerequisites first.
+
+A later user-led reboot reaches Gaming Mode. Off-state 0575/usbhid is ignored;
+approved normal power-on yields 100a/xpad. One separately approved Resume
+attests 109c, exact lease/tokens and input publication. The observer-only policy
+now recognizes input_check/awaiting_sensor/publishing_input (34 regressions),
+without changing installed code or weakening deadlines/error/final proof.
+Steam ran before power-on and, after its gyro UI opens, has both readable paired
+nodes open. User reports all gyro UI rates zero, normal input/paddles working.
+This is a FAILED late Steam gyro application test, not complete hotplug acceptance
+or proof of the downstream cause. Do not infer reads from an open FD, retry,
+perform the radio-reconnect test or change runtime automatically. No manual
+error-Release was authorized or executed. Leave the healthy normal-input runtime
+unchanged; record active/enabled and unpaused separately from the earlier pause.
+
 ## Bazzite assessment (19 October 2026)
 
 Read STEAM_GAMESCOPE.md's Bazzite feasibility section before a distribution port.

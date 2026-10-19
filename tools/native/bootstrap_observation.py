@@ -18,7 +18,8 @@ class ObservationError(RuntimeError):
 
 
 TRANSITION_PHASES = frozenset(("bootstrapping", "locating", "attesting"))
-STARTUP_PHASES = TRANSITION_PHASES | {"waiting_input", "active"}
+PUBLICATION_PHASES = frozenset(("input_check", "awaiting_sensor", "publishing_input"))
+STARTUP_PHASES = TRANSITION_PHASES | PUBLICATION_PHASES | {"waiting_input", "active"}
 PORT = re.compile(r"[1-9][0-9]*-[1-9][0-9]*(?:\.[1-9][0-9]*)*")
 EMPTY_BASES = {"idVendor": 16, "idProduct": 16, "bConfigurationValue": 10,
                "busnum": 10, "devnum": 10}
@@ -79,7 +80,7 @@ def _healthy_status(status, port):
     phase = entry.get("phase")
     if type(phase) is not str or phase not in STARTUP_PHASES:
         raise ObservationError("Unexpected manager phase: " + repr(phase))
-    if entry.get("pid") != ("109c" if phase == "active" else "100a"):
+    if entry.get("pid") != ("109c" if phase == "active" or phase in PUBLICATION_PHASES else "100a"):
         raise ObservationError("Manager source/native identity changed")
     if type(entry.get("busy")) is not bool:
         raise ObservationError("Invalid manager operation state")
@@ -118,7 +119,7 @@ class StartupWindow:
         self.check_deadline(now)  # Even clean 'active' must arrive in time.
         phase, errors = _healthy_status(status, self.port)
         quarantined = _error_map(errors, self.port)
-        if quarantined and phase not in TRANSITION_PHASES:
+        if quarantined and phase not in TRANSITION_PHASES | PUBLICATION_PHASES:
             raise ObservationError("Metadata gap outside the expected USB transition")
         return StartupObservation(phase, quarantined)
 

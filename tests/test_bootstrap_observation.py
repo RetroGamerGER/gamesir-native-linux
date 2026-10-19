@@ -55,7 +55,7 @@ def status(phase="bootstrapping", *, port=PORT, error="", port_errors=None,
         "ok": True, "paused": False, "scan_error": "",
         "port_errors": {} if port_errors is None else port_errors,
         "devices": {port: {
-            "pid": "109c" if phase == "active" else "100a",
+            "pid": "109c" if phase in ("active", "input_check", "awaiting_sensor", "publishing_input") else "100a",
             "phase": phase, "error": error, "busy": busy,
             "bootstrap_diagnostic": {} if diag is None else diag,
         }},
@@ -70,6 +70,24 @@ class StartupObservationTests(unittest.TestCase):
     def rejected(self, value, *, now=12.0):
         with self.assertRaises(policy.ObservationError):
             self.window().check_status(value, now)
+
+    def test_deferred_publication_is_native_but_not_active(self):
+        for phase in ("input_check", "awaiting_sensor", "publishing_input"):
+            with self.subTest(phase=phase):
+                sample = status(phase, diag=diagnostic())
+                self.assertEqual(self.window().check_status(sample, 1).phase, phase)
+                sample["devices"][PORT]["pid"] = "100a"
+                self.rejected(sample)
+
+    def test_publication_wait_retains_original_deadline_and_exact_gap_rules(self):
+        for phase in ("input_check", "awaiting_sensor", "publishing_input"):
+            with self.subTest(phase=phase):
+                sample = status(phase, port_errors={PORT: metadata_error()})
+                self.assertTrue(self.window().check_status(sample, 89.9).quarantined)
+                self.rejected(sample, now=90)
+                self.rejected(status(phase, port_errors={PORT: "permission denied"}))
+                self.rejected(status(phase, error="Input publication failed", diag=diagnostic()))
+                self.rejected(status(phase, diag=diagnostic(-19, 1)))
 
     def test_observed_empty_configuration_does_not_cancel_live_bootstrap(self):
         window = self.window()
@@ -368,6 +386,20 @@ class VirtualStartup:
 
 
 class ActualObservationLoopTests(unittest.TestCase):
+    def test_pending_publication_never_attests_before_confirmed_active(self):
+        fake = VirtualStartup([
+            status("input_check", diag=diagnostic()),
+            status("awaiting_sensor", diag=diagnostic()),
+            status("publishing_input", diag=diagnostic()),
+            status("active", diag=diagnostic()),
+        ])
+        proof, final_status = fake.run()
+        self.assertTrue(proof)
+        self.assertEqual(final_status["devices"][PORT]["phase"], "active")
+        self.assertEqual(fake.calls.count("wait"), 3)
+        self.assertEqual(fake.calls.count("inventory"), 1)
+        self.assertEqual(fake.calls.count("attest"), 1)
+
     def test_real_abort_shape_recovers_only_after_clean_active_and_full_attestation(self):
         fake = VirtualStartup([
             status("waiting_input"),

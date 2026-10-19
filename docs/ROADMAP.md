@@ -18,6 +18,14 @@ Kernel-/Header-/Modulstand und Zustand erneut prüfen; echte späte Einschalt-/
 Reconnect-Abnahme unter Gamescope steht aus. Keine Steam-Neustarts, globale Wartezeit oder Bibliotheksersetzung.
 [Implementierung, Nachweise und Grenzen](STEAM_GYRO_HOTPLUG.md).
 
+Der separat freigegebene Revision-10-Realtest ist nach Installation und
+bestätigter nativer Veröffentlichung negativ: Steam öffnet inzwischen beide
+gepaarten Knoten, die drei Gyro-Anzeigen bleiben laut Nutzer null. Normale
+Eingaben und Paddles funktionieren. Keine weitere Wiederverbindung testen,
+bevor die Lücke hinter dem offenen Sensorknoten gezielt offline eingegrenzt ist;
+keine Steam-/Treiberänderung daraus automatisch ableiten.
+[Negativer Anwendungsnachweis](STEAM_GYRO_HOTPLUG.md#subsequent-controlled-late-arrival-run-steam-gyro-still-zero).
+
 ## Bazzite als mögliche Zielplattform
 
 Quellenvergleich abgeschlossen, noch kein Bazzite-Zielbau oder installierbares

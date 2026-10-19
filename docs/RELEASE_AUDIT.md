@@ -1,5 +1,29 @@
 # Public pre-alpha release audit
 
+## Late Steam gyro acceptance failed — 19 October 2026
+
+[Updated target evidence](evidence/INPUT_PUBLICATION_INSTALL_20261019.json): after
+user reboot and normal power-on with Steam already running, one approved Resume
+attests native 109c and exact input publication. Steam later opens both paired,
+readable nodes, but the user reports all three gyro UI rates stay zero. Normal
+inputs and independent paddles pass. This is a failed motion-application case,
+not a validated complete hotplug fix. No further radio-reconnect attempt or
+runtime change follows. Service remains active/enabled and manager unpaused;
+installation, native startup and existing basic inputs remain confirmed.
+The observer-only three-phase update has 34 offline regressions; it changes no
+installed runtime. Release acceptance remains blocked by the unresolved gyro case.
+
+## Subsequent target installation — 19 October 2026
+
+[Evidence](evidence/INPUT_PUBLICATION_INSTALL_20261019.json): revision 10 installed
+on CachyOS, matching real DKMS build and all 118 payload files verified. A
+separately requested start loads the new module and readiness monitor; service
+is active/enabled but management remains paused. Steam integrations and the
+sensor opt-in are unchanged. The next read-only precheck finds a new unowned
+109c/xpad instance and KDE, not Gamescope; no Resume or hardware test follows.
+This closes installation/start checks only, not late-power-on/reconnect or
+release acceptance. The preparation checkpoint below retains its original scope.
+
 ## Integrated readiness correction — 19 October 2026
 
 Revision `0.1.0.alpha3-10` prepares the optional kernel/client/manager publication

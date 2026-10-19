@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "source_commit": "f1f6c00b4fe4d293b731236e9a4fb0e3ab6acfd4",
+  "target": "CachyOS Handheld test system",
+  "package": "gamesir-native-dkms 0.1.0.alpha3-10",
+  "package_sha256": "4ffde2350230580f8a87348da5445a9cdb6040311dcbcafcc161fd08d1d6f6e0",
+  "package_transactions": 1,
+  "pacman_returncode": 0,
+  "matched_payload_files": 118,
+  "kernel": "7.2.11-1-cachyos-deckify",
+  "module_srcversion": "B7FC108CAF9094E1FAFB057",
+  "vermagic": "7.2.11-1-cachyos-deckify SMP preempt mod_unload",
+  "autoload_aliases": [],
+  "dkms_installed": true,
+  "actual_dkms_compiler_warnings": 0,
+  "known_dkms_advisory": "Deprecated feature: CLEAN; build/install passed; no automatic config change",
+  "snapshots": [
+    137,
+    138
+  ],
+  "initramfs_rebuilt": true,
+  "steam_integration_unchanged": true,
+  "gamescope_integration_unchanged": true,
+  "sensor_config_sha256": "9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2",
+  "historical_failure_records_retained": 5,
+  "service_start": {
+    "separately_authorized": true,
+    "calls": 1,
+    "active": true,
+    "enabled": true,
+    "module_loaded": true,
+    "parameters": {
+      "bootstrap_mode": "Y",
+      "enable_output": "Y",
+      "persistent_mode": "Y",
+      "defer_input": "Y",
+      "experimental_gyro": "Y",
+      "experimental_accel": "Y",
+      "accel_axis_map": "1,2,3",
+      "accel_counts_per_g_num": "8192",
+      "accel_counts_per_g_den": "1"
+    },
+    "processed_input_monitor_enabled": true,
+    "monitor_error": "",
+    "manager_paused": true,
+    "managed_devices": 0,
+    "leases": 0
+  },
+  "later_replug_check": {
+    "usb": {
+      "pid": "109c",
+      "interface_driver": "xpad",
+      "native_bindings": [],
+      "same_port": true,
+      "new_enumeration": true
+    },
+    "service": {
+      "active": true,
+      "enabled": true
+    },
+    "session": {
+      "desktop": "KDE",
+      "type": "wayland",
+      "gamescope_processes": 0,
+      "steam_running": true
+    },
+    "result": "preconditions_not_met_no_resume_no_test",
+    "maintainer_report": "Dongle replugged; wireless controller off"
+  },
+  "resume_calls": 1,
+  "gyro_tests": 1,
+  "push": false,
+  "limits": [
+    "Installation, autostart and native publication passed; late Steam gyro UI test failed.",
+    "The matched sensor FD being open is not proof of actual read/event/cache/filter handling.",
+    "The sequence resumes management after controller power-on; it is not autonomous late-power-on or radio-reconnect acceptance.",
+    "Do not infer a kernel/compositor/Steam cause from the negative UI result alone.",
+    "No repeated bootstrap, radio-reconnect test, manual error Release, module reload or Steam modification followed."
+  ],
+  "private_evidence_sha256": {
+    "installed-verification.json": "935936744d7a9156c7f170fc1ff79644ff092de12b3fa04ae868e97ef27f670d",
+    "service-start-report.json": "4ae1580192a3f00f5ed49f1183b806bf7b38f36c83404e1d8a65d84d231dc56b",
+    "replug-check-001.json": "df09e9247f13cb1658305477814cc7f83099fb8564548d1cbd091b2e251d1984",
+    "native-activation-proof.json": "6d7cb0c727c03853ede8d0fd23aa01f87b5e5a3997e839ad222f8b5472f46e45",
+    "late-power-on-negative-001.json": "afe55e0755f72c09db594efe6db7f59a222d5a98decadc483d5f4b266609a13e",
+    "resume.stdout.log": "8e360b97b4a658695d21d962a624d4072907a4c27e9e850728a9b69643ff7241",
+    "resume.stderr.log": "3aed2702b994db46ef638edad6cb8c25c2f1748832a62895b95a305622f08948"
+  },
+  "subsequent_followup": {
+    "user_led_reboot": true,
+    "same_kernel_and_module_source": true,
+    "service_autostart_confirmed": true,
+    "gaming_mode_session_confirmed": true,
+    "powered_off_usb": {
+      "pid": "0575",
+      "driver": "usbhid",
+      "not_claimed": true
+    },
+    "separately_authorized_power_on": true,
+    "power_on_source": {
+      "pid": "100a",
+      "driver": "xpad"
+    },
+    "steam_started_before_power_on": true,
+    "resume_issued_after_power_on": true,
+    "one_checked_native_bootstrap": true,
+    "native_pid": "109c",
+    "driver": "gs_native",
+    "publication_confirmed": true,
+    "current_manager_phase": "active",
+    "current_manager_paused": false,
+    "current_manager_errors": false,
+    "new_kernel_faults_in_observed_window": false,
+    "paired_uniq_match": true,
+    "motion_and_gamepad_readable_by_session_user": true,
+    "steam_main_process_opened_both_nodes": true,
+    "steam_restarted_by_agent": false,
+    "manual_failure_release_calls": 0,
+    "radio_reconnect_test_performed": false,
+    "human_feedback": {
+      "gyro_ui_axes": "all three remain zero during reported movement",
+      "normal_buttons_sticks_triggers": "work normally",
+      "four_paddles": "independent, including simultaneous press/release"
+    },
+    "result": "late Steam motion acceptance FAILED despite confirmed kernel publication and open paired nodes",
+    "observer_only_offline_correction": {
+      "new_phases": [
+        "input_check",
+        "awaiting_sensor",
+        "publishing_input"
+      ],
+      "regressions_passed": 34,
+      "wrong_pid_fault_deadline_and_active_attestation_guards_preserved": true,
+      "installed_runtime_changed": false,
+      "source_sha256": "3d01744bcab66568de61c3a73a56ad5bce9317cc55ac59eb8208e02972e3a735",
+      "test_sha256": "0ca029063abcd7357d4a03325cd9dbbe7c86f67cd0b54feaf0690232337c4e43"
+    }
+  },
+  "followup_validation": {
+    "observer_tests": 34,
+    "hardware_helper_regressions": "passed",
+    "license_tests": 3,
+    "public_readme_tests": 7,
+    "alpha_packaging_tests": 25,
+    "test_log_sha256": "e24a744d10858450206936f3f7bf739f5fded5ae5da616439bcb3245c72bb778"
+  }
+}

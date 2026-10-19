@@ -5,6 +5,35 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Revision-10-Steam-Gyrotest nach spätem Einschalten negativ:** Nach eigenem
+Neustart des Nutzers laufen Gaming Mode und der automatisch gestartete Dienst
+mit demselben neuen Modul. Ausgeschalteter Dongle zunächst 0575/usbhid, nach
+separat freigegebenem Einschalten 100a/xpad. Genau ein anschließend freigegebenes
+Resume bestätigt Bootstrap nach 109c, exakte Lease und zweistufige Gamepad-
+Veröffentlichung. Manager aktiv/unpausiert, kein aktueller Fehler; keine neue
+Kernelwarnung im beobachteten Fenster. Steam lief bereits vor dem Einschalten
+und öffnet nach der Gyro-Anzeige beide lesbaren, sitzungsgleich gepaarten Knoten.
+Der Nutzer meldet trotzdem alle drei Gyro-Werte null, normale Eingaben und vier
+unabhängige Paddles funktionieren. Damit ist der gewünschte Steam-Gyrofall
+**nicht bestanden**. Keine weitere Wiederverbindung oder Wiederholung; kein
+manueller Fehler-Release und keine anschließende Laufzeitänderung. Die Ursache
+hinter dem offenen Sensorknoten bleibt offen; FD offen beweist keine Datenlesung.
+Der reine Beobachter wurde vorher offline um die drei neuen Bereitschaftsphasen
+ergänzt (34 Tests); Deadline, Fehler-/Instanzprüfung und Attestation bleiben.
+[Installations-, Übernahme- und negativer Anwendungsnachweis](evidence/INPUT_PUBLICATION_INSTALL_20261019.json).
+
+**Revision 10 auf CachyOS installiert und pausiert gestartet:** Genau eine
+freigegebene Pakettransaktion, DKMS für `7.2.11-1-cachyos-deckify`, 118
+bytegeprüfte Nutzdateien und neue Modulkennung bestätigt. Sensor-Konfiguration,
+Steam-/Gamescope-Erweiterungen und Fehlerhistorie erhalten; Snapshots 137/138
+und Initramfs erfolgreich. Der anschließend separat angeforderte Dienststart
+lädt das neue Modul einschließlich `defer_input=1`; Autostart bleibt aktiviert,
+Manager aber pausiert und ohne Leases/native Bindung. Nach freigegebenem
+Neustecken bleibt der neue Dongle unter 109c an xpad; aktive Sitzung ist KDE,
+kein Gamescope-Prozess sichtbar. Deshalb kein Resume oder Sensortest. Das ist
+noch keine Gamescope-Reconnect-Abnahme und keine bewiesene 100a-Rückkehr.
+[Installations-/Startnachweis und offene Testvoraussetzungen](evidence/INPUT_PUBLICATION_INSTALL_20261019.json).
+
 **Gyro-Bereitschaft jetzt offline an Kernel und Manager angebunden:** Revision 10
 bereitet optionale zweistufige Input-Veröffentlichung vor. Der Manager wartet
 nach nativer Attestation auf die verarbeitete Sensorbenachrichtigung und
