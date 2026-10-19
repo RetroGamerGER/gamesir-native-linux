@@ -208,6 +208,15 @@ sensor acceptance. Read STEAM_ACCEL_EXTENSION.md's transfer assessment. The
 target remains revision 6; no GameSir device was visible and protected ownership
 was not read. No install, target file write, activation or hardware approval
 follows. Do not copy a Garuda-built module or apply new options to revision 6.
+The later installation request passed the real GCC target build and, after
+a no-device-baseline precheck halt, one separately authorized connected-device
+transaction. CachyOS now has revision 9 and the identical local six-axis opt-in;
+111 payload files, DKMS/srcversion/vermagic, rights/options and unchanged
+Steam/Gamescope passed. Final return is 100a/xpad, empty leases, paused=true,
+service inactive/enabled and module absent. The earlier stopped report and six
+resolved historical failures remain intact. No start/Resume/test was authorized
+after that update; activation and actual sensor/application acceptance still
+need their own concrete permission. Do not call the installed update active.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

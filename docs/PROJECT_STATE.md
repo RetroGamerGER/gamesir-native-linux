@@ -5,6 +5,18 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**CachyOS auf Revision 9 aktualisiert, noch nicht aktiviert:** Der echte
+GCC-Zielbau und anschließend das separat freigegebene Paketupdate von
+alpha3-6 auf alpha3-9 sind bestanden. DKMS für `7.2.9-2-cachyos-deckify`,
+alle 111 Nutzdateien, 143 Paketeinträge ohne Änderung und Modulkennung passen.
+Sensor-Konfiguration bytegleich zum angenommenen Profil angelegt und geprüft.
+Steam/Gamescope unverändert. Kontrollierte Rückgabe zu `100a/xpad` bestätigt;
+Dienst inaktiv/weiter aktiviert, Modul entladen, Pause aktiv und Besitz leer.
+Der erste Vorcheck stoppte vor jedem Paket-/Konfigurationsaufruf wegen des
+inzwischen verbundenen Controllers; Originalnachweis bleibt erhalten. Der
+neue Anlauf war separat freigegeben. Kein Dienststart/Resume, kein Sensor- oder
+Spieletest nach dem Update. [Ergebnis und nächste Grenze](STEAM_ACCEL_EXTENSION.md#cachyos-revision-9-installation-passed-activation-pending).
+
 **CachyOS-/Gamescope-Übernahme lesend geprüft:** Kernpaket noch Revision 6;
 laufender Kernel `7.2.9-2-cachyos-deckify`, passende Header und DKMS/GCC-Werkzeuge
 vorhanden. Dasselbe Revision-9-Quellpaket und experimentelle Sensorprofil sind

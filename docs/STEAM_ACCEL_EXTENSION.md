@@ -349,3 +349,46 @@ made. The active/enabled service retained its PID and zero restarts, and the
 loaded source version stayed unchanged. No build, installation, file write on
 the target, module/service action, device open or hardware test occurred.
 [Sanitized assessment](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
+## CachyOS revision-9 installation: passed, activation pending
+
+The subsequent installation request first completed the real unprivileged
+GCC build for `7.2.9-2-cachyos-deckify`: zero warnings, matching vermagic and
+no automatic USB aliases. The reviewed revision-9 package, prior revision-6
+rollback archive and exact local motion profile were copied over SSH with
+verified hashes. No module was loaded by that build or transfer.
+
+The first privileged precheck stopped before calling pacman or installing
+the configuration: a GameSir device had appeared after the earlier no-device
+baseline. The user confirmed connection. Preserve that stopped report;
+it is not evidence of a new driver defect. A subsequent read-only manager
+inspection confirmed one healthy active native instance and its matching
+lease. Older resolved failure records remained historical context.
+
+The maintainer separately approved exactly one new connected-device update
+with its controlled return, package hooks and motion configuration. The
+upgrade hook verified release, stopped the service and removed the unused
+module. Pacman updated **only gamesir-native-dkms, revision 6 to 9**, exiting
+0. DKMS installed for the matching CachyOS kernel. Its actual make log has
+zero warnings/errors; the known deprecated DKMS CLEAN advisory is separate.
+The distribution's initcpio generation, Limine update and pre/post snapshots
+completed. No kernel package upgrade or manually requested reboot occurred.
+
+Verification matched all **111 regular payload files**, 143 package entries
+with zero alterations, source version `DF7D42B1E7909084ED9BEB1`, matching
+vermagic and no autoload aliases. The new root:root/0644 motion config has
+SHA256 `9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2`,
+byte-identical to the accepted opt-in on the other test host. Ordinary
+modprobe listings combine its profile with all service options without a load.
+Package defaults stay off. Steam/Gamescope packages and integration hashes
+remain unchanged; their 17/15-entry checks report zero alterations. No Steam
+restart was performed.
+
+Final checked state: **100a/xpad**, no native binding or loaded native module,
+empty leases, saved pause true, service inactive/dead with successful exit,
+existing autostart enablement retained. All six older failure records remain.
+This confirms the return state, not a new physical input-function test.
+No post-update service start, Resume, sensor or game test followed. Actual
+Gamescope sensor ACL/stream/UI acceptance, reboot and lifecycle behavior still
+require their separately approved steps. Gyro calibration remains paused.
+[Sanitized installation record](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).

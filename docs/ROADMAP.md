@@ -39,6 +39,11 @@ Freigabe: tatsächliche Boot-/Lebenszyklusabnahme. Der
 Nutzer bestätigt inzwischen die weitere Funktion von Eden; zusätzliche
 Einzelmessungen wurden dazu nicht dokumentiert. Keine neue Winkel-/Gyrofaktorsuche und kein
 universelles Proton-Spieleversprechen. [Resultat und Grenzen](STEAM_ACCEL_EXTENSION.md).
+Das CachyOS-/Gamescope-Testsystem ist danach separat auf dasselbe Revision-9-
+Kernpaket samt lokalem Sensorprofil aktualisiert und geprüft. Es bleibt nach
+bestätigter Rückgabe pausiert, Dienst inaktiv/aktiviert und Modul entladen.
+Nächste dortige Grenze: eigens freigegebene Aktivierung und Sensor-/UI-Abnahme;
+die erfolgreiche Installation ist kein Live-Nachweis.
 Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
 
 ## Neu angefragte Steam-Gyro-Machbarkeit: offline geprüft

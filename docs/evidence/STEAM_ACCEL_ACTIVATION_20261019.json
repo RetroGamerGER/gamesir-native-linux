@@ -144,7 +144,7 @@
   },
   "CachyOS_readonly_transfer_assessment": {
     "date": "2026-10-19",
-    "scope": "Unprivileged read-only SSH compatibility assessment of the CachyOS/Gamescope test host; not installation or hardware acceptance.",
+    "scope": "Historical read-only assessment before the separately authorized installation recorded below.",
     "kernel": "7.2.9-2-cachyos-deckify",
     "kernel_package": "linux-cachyos-deckify 7.2.9-2",
     "headers_package": "linux-cachyos-deckify-headers 7.2.9-2",
@@ -223,5 +223,98 @@
     "release_or_resume": false,
     "hardware_device_open": false,
     "push": false
+  },
+  "CachyOS_installation": {
+    "date": "2026-10-19",
+    "stage": "installed and configured; not activated",
+    "package": "gamesir-native-dkms 0.1.0.alpha3-9",
+    "previous_package": "0.1.0.alpha3-6",
+    "kernel": "7.2.9-2-cachyos-deckify",
+    "package_sha256": "74994d3e19ae0d7a8c5f9b9758885c6656153b3a0c14c6cf9b404289c262f503",
+    "unprivileged_target_build": {
+      "passed": true,
+      "compiler": "gcc (GCC) 16.2.1 20260810",
+      "family": "gcc",
+      "warnings": 0,
+      "module_sha256": "67c8a94f1b9ad2edbeccda2ba9112056aaddb21342685b7a5cb9412a197975ad",
+      "loaded_or_installed": false
+    },
+    "initial_precheck_halt": {
+      "reason": "GameSir appeared after the earlier no-device baseline; user confirmed connection.",
+      "package_calls": 0,
+      "config_install_calls": 0,
+      "original_report_preserved": true,
+      "not_a_driver_failure_diagnosis": true
+    },
+    "separately_authorized_connected_attempt": {
+      "package_calls": 1,
+      "config_install_calls": 1,
+      "pacman_returncode": 0,
+      "active_instance_and_lease_checked": true,
+      "upgrade_hook_controlled_release_passed": true,
+      "no_automatic_retry": true
+    },
+    "installed_verification": {
+      "dkms_status": "gamesir-native/0.1.0.alpha3, 7.2.9-2-cachyos-deckify, x86_64: installed",
+      "module_srcversion": "DF7D42B1E7909084ED9BEB1",
+      "module_vermagic": "7.2.9-2-cachyos-deckify SMP preempt mod_unload",
+      "autoload_aliases": [],
+      "payload_files_match_archive": 111,
+      "package_entries": 143,
+      "altered_files": 0,
+      "installed_DKMS_make_log_warnings": 0,
+      "installed_DKMS_make_log_errors": 0,
+      "known_DKMS_advisory": "Deprecated feature CLEAN; not a compiler diagnostic",
+      "initcpio_and_Limine_update_succeeded": true,
+      "pre_and_post_snapshots_completed": true
+    },
+    "motion_config": {
+      "path": "/etc/modprobe.d/90-gamesir-native-gyro.conf",
+      "created": true,
+      "sha256": "9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2",
+      "owner": "root:root",
+      "mode": "0644",
+      "same_bytes_as_accepted_local_profile": true,
+      "options": "experimental_gyro=1 experimental_accel=1 accel_axis_map=1,2,3 accel_counts_per_g_num=8192 accel_counts_per_g_den=1",
+      "effective_combined_options_verified_without_load": true,
+      "package_defaults_changed": false
+    },
+    "final_state": {
+      "service_active": false,
+      "service_enabled": true,
+      "module_loaded": false,
+      "paused": true,
+      "leases_empty": true,
+      "native_bindings_empty": true,
+      "observed_USB_PID": "100a",
+      "observed_IF0_driver": "xpad",
+      "mode_return_independently_checked": true,
+      "normal_input_function_tested_after_update": false,
+      "historical_failure_records_retained": 6
+    },
+    "Steam_and_Gamescope": {
+      "packages_unchanged": true,
+      "integration_file_hashes_unchanged": true,
+      "integrity_entries": [
+        17,
+        15
+      ],
+      "altered_files": 0,
+      "restart_performed": false
+    },
+    "limits": {
+      "service_start_or_resume_performed_after_update": false,
+      "sensor_access_or_UI_acceptance_after_update": false,
+      "motor_or_gameplay_test": false,
+      "reboot_tested": false,
+      "gyro_calibration_resumed": false,
+      "push": false
+    },
+    "private_evidence_sha256": {
+      "installation_report": "ccede43c447b2d52664af990be4af2a0b6ebdce3ff3d0efd6804f151d5cf95e5",
+      "pacman_log": "8ea8b4fb709d566eb56ab545ce504f46c4dcc3b7867d15680b38a13527c3dbb6",
+      "installed_DKMS_make_log": "3f9491b4929ad1cc12498529818c73dba5d896307d10732f61265a51b8d29e96",
+      "first_stopped_precheck": "f74c040787a6f18471ac996da73f2454482787b451d2a565c490ba9a7481803b"
+    }
   }
 }
