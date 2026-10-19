@@ -9,15 +9,14 @@ Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 
 ## Priorität: Gyro bei spätem Einschalten / Wiederverbinden in Gamescope
 
-Offline-Test reproduziert die fehlende nachträgliche SDL-Sensorzuordnung;
-Sensor-zuerst besteht in System-SDL und drei gespeicherten Steam-SDL-Versionen.
-Getesteten Bereitschaftsprototyp in eine optionale zweistufige Input-Veröffentlichung
-zwischen Kernel/Client/Manager überführen. Verarbeitete Sensorbenachrichtigung,
-aktive Sitzungsrechte und exakte Geräteinstanz vor Gamepad-Veröffentlichung
-prüfen; begrenzte Wartezeit und bestehenden Fehler-/Rückweg erhalten. Noch kein
-installierbares Update oder echte Gamescope-Reconnect-Abnahme. Keine Steam-
-Neustarts, globale Wartezeit oder Bibliotheksersetzung als Reparatur ausgeben.
-[Prototyp, Tests und ausstehende Implementierung](STEAM_GYRO_HOTPLUG.md).
+Offline-Reproduktion und zweistufiger Kernel-/Client-/Manager-Pfad sind jetzt
+implementiert. Der bestehende Sensorvertrag, Roh-IIO, Paddles und Haptik bleiben
+erhalten; verarbeitete Sensorbenachrichtigung, Sitzungszugriff und exakte Instanz
+gehen der Gamepad-Veröffentlichung voraus. Modulbauten für die vorhandenen
+Garuda- und CachyOS-7.2.11-Kernel sind bestanden. Vor später Installation
+Kernel-/Header-/Modulstand und Zustand erneut prüfen; echte späte Einschalt-/
+Reconnect-Abnahme unter Gamescope steht aus. Keine Steam-Neustarts, globale Wartezeit oder Bibliotheksersetzung.
+[Implementierung, Nachweise und Grenzen](STEAM_GYRO_HOTPLUG.md).
 
 ## Bazzite als mögliche Zielplattform
 

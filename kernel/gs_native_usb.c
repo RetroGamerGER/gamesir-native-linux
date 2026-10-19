@@ -47,6 +47,9 @@ static bool enable_output;
 module_param(enable_output, bool, 0400);
 MODULE_PARM_DESC(enable_output, "Permit explicit native OUT activation; default false; persistent_mode selects service runtime");
 static bool experimental_gyro;
+static bool defer_input;
+module_param(defer_input, bool, 0400);
+MODULE_PARM_DESC(defer_input, "Opt-in two-phase persistent 109c six-axis input; requires updated manager, default false");
 module_param(experimental_gyro, bool, 0400);
 MODULE_PARM_DESC(experimental_gyro, "Opt-in 109c evdev gyro: observed axes, user-selected 0.07 dps/raw; no accelerometer calibration");
 static uint accel_counts_per_g_num = 8192;
@@ -153,6 +156,9 @@ struct gsn_device {
 	bool ack_pending, stopping, output_used, stop_sent;
 	bool input_registered, iio_registered, misc_registered;
 	bool gyro_registered;
+	bool input_deferred, publication_cancelled, have_deferred_pad, last_guide;
+	struct gs_frame deferred_pad;
+	u8 deferred_extras[2];
 	bool iio_buffer_active; /* report_lock: push vs buffer layout changes. */
 };
 
@@ -319,6 +325,24 @@ static void gsn_neutral(struct gsn_device *g);
 static void gsn_neutral_locked(struct gsn_device *g);
 static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3],
 			    const gs_s16 accel[3], u64 host_ns);
+static int gsn_input_control(struct gsn_device *g, unsigned int cmd, void __user *user);
+
+/* report_lock held. Preserve held buttons while the gamepad is unpublished. */
+static void gsn_extras(struct gsn_device *g, const u8 extras[2])
+{
+	memmove(g->deferred_extras, extras, 2);
+	g->last_guide = !!(extras[0] & 1);
+	if (!g->input_registered)
+		return;
+	input_report_key(g->input, BTN_MODE, g->last_guide);
+	input_report_key(g->input, KEY_RECORD, !!(extras[0] & 2));
+	input_report_key(g->input, BTN_TRIGGER_HAPPY1, !!(extras[0] & 8));
+	input_report_key(g->input, BTN_TRIGGER_HAPPY2, !!(extras[0] & 16));
+	input_report_key(g->input, BTN_TRIGGER_HAPPY3, !!(extras[1] & 1));
+	input_report_key(g->input, BTN_TRIGGER_HAPPY4, !!(extras[1] & 2));
+	input_report_key(g->input, BTN_TRIGGER_HAPPY5, !!(extras[0] & 32));
+	input_sync(g->input);
+}
 
 /* io_lock held. report_lock is always outside rt.lock; input reporting never
  * holds rt.lock because FF callbacks arrive holding input's own event lock.
@@ -437,6 +461,9 @@ static void gsn_neutral_locked(struct gsn_device *g)
 
 	gsn_gyro_report(g, zero.gyro, NULL, ktime_get_ns());
 	gs_gyro_pause(&g->gyro_clock);
+	g->have_deferred_pad = false;
+	memset(g->deferred_extras, 0, sizeof(g->deferred_extras));
+	g->last_guide = false;
 	if (!g->input_registered)
 		return;
 	gsn_pad(g, &zero);
@@ -532,14 +559,7 @@ static void gsn_imu(struct gsn_device *g, const struct gs_frame *f)
 			spin_unlock_irqrestore(&g->lock, flags);
 		}
 	}
-	input_report_key(g->input, BTN_MODE, !!(f->extras[0] & 1));
-	input_report_key(g->input, KEY_RECORD, !!(f->extras[0] & 2));
-	input_report_key(g->input, BTN_TRIGGER_HAPPY1, !!(f->extras[0] & 8));
-	input_report_key(g->input, BTN_TRIGGER_HAPPY2, !!(f->extras[0] & 16));
-	input_report_key(g->input, BTN_TRIGGER_HAPPY3, !!(f->extras[1] & 1));
-	input_report_key(g->input, BTN_TRIGGER_HAPPY4, !!(f->extras[1] & 2));
-	input_report_key(g->input, BTN_TRIGGER_HAPPY5, !!(f->extras[0] & 32));
-	input_sync(g->input);
+	gsn_extras(g, f->extras);
 }
 
 static void gsn_rx(struct urb *urb)
@@ -576,12 +596,20 @@ static void gsn_rx(struct urb *urb)
 		gs_runtime_note_input(&g->rt, kind, gsn_now_ms());
 		spin_unlock_irqrestore(&g->lock, flags);
 		if (kind == GS_PAD_XINPUT || kind == GS_PAD_GIP) {
-			gsn_pad(g, &frame);
+			g->deferred_pad = frame;
+			g->have_deferred_pad = true;
+			if (kind == GS_PAD_XINPUT)
+				g->last_guide = frame.guide;
+			if (g->input_registered)
+				gsn_pad(g, &frame);
 		} else if (kind == GS_IMU) {
 			gsn_imu(g, &frame);
 		} else if (kind == GS_GUIDE) {
-			input_report_key(g->input, BTN_MODE, frame.guide);
-			input_sync(g->input);
+			g->last_guide = frame.guide;
+			if (g->input_registered) {
+				input_report_key(g->input, BTN_MODE, frame.guide);
+				input_sync(g->input);
+			}
 			if (frame.ack) {
 				spin_lock_irqsave(&g->lock, flags);
 				if (!g->stopping && g->rt.session_active) {
@@ -1843,6 +1871,8 @@ static long gsn_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	int ret = 0;
 
 	/* BOOTSTRAP must not hold old io_lock across the USB disconnect. */
+	if (cmd == GSN_GET_INPUT_STATUS || cmd == GSN_PUBLISH_INPUT)
+		return gsn_input_control(g, cmd, user);
 	if (cmd == GSN_BOOTSTRAP) {
 		if (copy_from_user(&request, user, sizeof(request)))
 			return -EFAULT;
@@ -1910,6 +1940,7 @@ static long gsn_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			gsn_stop(g, true);
 		break;
 	case GSN_STOP:
+		g->publication_cancelled = true;
 		ret = gsn_stop(g, false);
 		break;
 	case GSN_END_SESSION:
@@ -1961,6 +1992,8 @@ static int gsn_input_register(struct gsn_device *g)
 	unsigned int i;
 	int ret;
 
+	g->input_deferred = defer_input && persistent_mode && experimental_gyro &&
+		experimental_accel && g->rt.pid == 0x109c;
 	g->input = input_allocate_device();
 	if (!g->input)
 		return -ENOMEM;
@@ -2012,9 +2045,100 @@ static int gsn_input_register(struct gsn_device *g)
 	ret = gsn_gyro_register(g);
 	if (ret)
 		return ret;
+	if (g->input_deferred)
+		return 0;
 	ret = input_register_device(g->input);
 	if (!ret)
 		g->input_registered = true;
+	return ret;
+}
+
+/* USB device lock serializes against disconnect/PM; io_lock against END/STOP.
+ * No USB transfer, re-registration, new identity or start permission here.
+ */
+static int gsn_input_control(struct gsn_device *g, unsigned int cmd, void __user *user)
+{
+	struct gsn_input_publish request = {0};
+	struct gsn_input_status status = { .abi_version = GSN_ABI_VERSION };
+	unsigned long flags;
+	bool guide;
+	int ret = 0;
+
+	if (cmd != GSN_GET_INPUT_STATUS && cmd != GSN_PUBLISH_INPUT)
+		return -ENOTTY;
+	if (!capable(CAP_SYS_ADMIN))
+		return -EPERM;
+	if (cmd == GSN_PUBLISH_INPUT && copy_from_user(&request, user, sizeof(request)))
+		return -EFAULT;
+	usb_lock_device(g->udev);
+	mutex_lock(&g->io_lock);
+	if (g->intf->dev.driver != &gsn_driver.driver || usb_get_intfdata(g->intf) != g ||
+	    READ_ONCE(g->intf->condition) != USB_INTERFACE_BOUND ||
+	    !device_is_registered(&g->intf->dev) || g->rt.state == GS_DISCONNECTED) {
+		ret = -ENODEV;
+		goto out;
+	}
+	if (cmd == GSN_GET_INPUT_STATUS) {
+		status.flags = (g->input_deferred ? GSN_INPUT_DEFERRED : 0) |
+			(g->input_registered ? GSN_INPUT_PUBLISHED : 0) |
+			(g->gyro_registered ? GSN_INPUT_SENSOR : 0);
+		status.port_token = g->identity.port;
+		status.instance_token = g->identity.instance;
+		if (g->gyro_registered) {
+			strscpy(status.sensor_name, dev_name(&g->gyro_input->dev),
+				sizeof(status.sensor_name));
+			strscpy(status.uniq, g->sensor_uniq, sizeof(status.uniq));
+			status.gyro_resolution = input_abs_get_res(g->gyro_input, ABS_RX);
+			status.accel_resolution = input_abs_get_res(g->gyro_input, ABS_X);
+		}
+		ret = copy_to_user(user, &status, sizeof(status)) ? -EFAULT : 0;
+		goto out;
+	}
+	if (request.abi_version != GSN_ABI_VERSION || request.reserved ||
+	    !request.port_token || !request.instance_token ||
+	    request.port_token != g->identity.port ||
+	    request.instance_token != g->identity.instance) {
+		ret = -EINVAL;
+		goto out;
+	}
+	spin_lock_irqsave(&g->lock, flags);
+	if (!g->input_deferred || !g->gyro_registered || !g->boot_handoff ||
+	    !persistent_mode || g->rt.pid != 0x109c || g->stopping || g->resuming ||
+	    g->pm_quiesced || g->publication_cancelled || g->rt.state != GS_RUNNING ||
+	    g->rt.error || !g->rt.session_active)
+		ret = -ENODEV;
+	else if (g->input_registered)
+		ret = -EALREADY;
+	spin_unlock_irqrestore(&g->lock, flags);
+	if (ret)
+		goto out;
+	ret = input_register_device(g->input);
+	if (ret)
+		g->publication_cancelled = true; /* Uncertain registration is never retried. */
+	if (!ret) {
+		spin_lock_irqsave(&g->report_lock, flags);
+		g->input_registered = true;
+		/* RX may latch a fault during sleeping input registration. Preserve
+		 * published ownership for cleanup, but never replay held input then.
+		 */
+		if (READ_ONCE(g->rt.state) != GS_RUNNING) {
+			gsn_neutral_locked(g);
+			ret = -EIO;
+			spin_unlock_irqrestore(&g->report_lock, flags);
+			goto out;
+		}
+		guide = g->last_guide;
+		if (g->have_deferred_pad)
+			gsn_pad(g, &g->deferred_pad);
+		gsn_extras(g, g->deferred_extras);
+		g->last_guide = guide;
+		input_report_key(g->input, BTN_MODE, guide);
+		input_sync(g->input);
+		spin_unlock_irqrestore(&g->report_lock, flags);
+	}
+out:
+	mutex_unlock(&g->io_lock);
+	usb_unlock_device(g->udev);
 	return ret;
 }
 
@@ -2071,6 +2195,7 @@ static void gsn_quiesce(struct gsn_device *g, int state, int error)
 	mutex_lock(&g->io_lock);
 	spin_lock_irqsave(&g->lock, flags);
 	g->stopping = true;
+	g->publication_cancelled = true;
 	gs_runtime_halt(&g->rt, state, error);
 	spin_unlock_irqrestore(&g->lock, flags);
 	mutex_unlock(&g->io_lock);
@@ -2342,6 +2467,8 @@ static struct usb_driver gsn_driver = {
 
 static int __init gsn_init(void)
 {
+	if (defer_input && !persistent_mode)
+		return -EINVAL;
 	if (gsn_sensor_options())
 		return -EINVAL;
 	if (persistent_mode && (!bootstrap_mode || !enable_output))

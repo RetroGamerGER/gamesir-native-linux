@@ -302,6 +302,7 @@ static void msleep_interruptible(unsigned);
 static bool signal_pending(void *p);
 static bool capable(unsigned cap) { return admin; }
 static int usb_submit_urb(struct urb *, int);
+static int gsn_input_control(struct gsn_device *g,unsigned int cmd,void *user) { assert(!"Publication covered by gyro adapter harness");return -ENOTTY; }
 #include "kernel-startup-functions.h"
 
 static struct usb_device root, hub, replacement_hub, old_usb, new_usb, other_usb;

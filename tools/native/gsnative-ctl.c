@@ -352,6 +352,41 @@ static bool token_number(const char *text, unsigned long long *out)
 	return true;
 }
 
+static int input_command(int fd, bool publish, unsigned long long port, unsigned long long instance)
+{
+	struct gsn_input_status status = {0};
+	struct gsn_input_publish request = { .abi_version = GSN_ABI_VERSION,
+		.port_token = port, .instance_token = instance };
+
+	if (!port || !instance || check_boot_owner(fd, port, instance, "INPUT"))
+		return 1;
+	if (publish && ioctl(fd, GSN_PUBLISH_INPUT, &request)) {
+		perror("PUBLISH_INPUT; no retry");
+		return 1;
+	}
+	if (ioctl(fd, GSN_GET_INPUT_STATUS, &status)) {
+		perror("GET_INPUT_STATUS");
+		return 1;
+	}
+	if (status.abi_version != GSN_ABI_VERSION || status.flags & ~7u ||
+	    status.port_token != port || status.instance_token != instance ||
+	    !memchr(status.sensor_name, 0, sizeof(status.sensor_name)) ||
+	    !memchr(status.uniq, 0, sizeof(status.uniq)))
+		return 1;
+	/* Kernel-generated names only; no user-controlled JSON string escaping. */
+	for (const char *p = status.sensor_name; *p; p++)
+		if ((*p < '0' || *p > '9') && (*p < 'a' || *p > 'z')) return 1;
+	for (const char *p = status.uniq; *p; p++)
+		if ((*p < '0' || *p > '9') && (*p < 'a' || *p > 'z') &&
+		    !strchr("-.:", *p)) return 1;
+	printf("input-publication {\"flags\":%u,\"port\":%llu,\"instance\":%llu,"
+	       "\"sensor\":\"%s\",\"uniq\":\"%s\",\"gyro\":%u,\"accel\":%u}\n",
+	       status.flags, (unsigned long long)status.port_token,
+	       (unsigned long long)status.instance_token, status.sensor_name, status.uniq,
+	       status.gyro_resolution, status.accel_resolution);
+	return publish && !(status.flags & GSN_INPUT_PUBLISHED) ? 1 : 0;
+}
+
 int main(int argc, char **argv)
 {
 	struct stat st;
@@ -362,18 +397,21 @@ int main(int argc, char **argv)
 
 	if (argc == 2 && !strcmp(argv[1], "--self-test"))
 		return self_test();
-	if (argc < 3 || (strcmp(argv[1], "info") && strcmp(argv[1], "sample") && strcmp(argv[1], "session") && strcmp(argv[1], "bootstrap") && strcmp(argv[1], "boot-info") && strcmp(argv[1], "end") && strcmp(argv[1], "resume"))) {
+	if (argc < 3 || (strcmp(argv[1], "input-info") && strcmp(argv[1], "publish-input") && strcmp(argv[1], "info") && strcmp(argv[1], "sample") && strcmp(argv[1], "session") && strcmp(argv[1], "bootstrap") && strcmp(argv[1], "boot-info") && strcmp(argv[1], "end") && strcmp(argv[1], "resume"))) {
 		printf("gsnative-ctl --help | --self-test\ngsnative-ctl info /dev/gsnative-INTERFACE [--expect-port TOKEN --expect-instance TOKEN]\ngsnative-ctl sample /dev/gsnative-INTERFACE\ngsnative-ctl session /dev/gsnative-INTERFACE [SECONDS 1..%u]\ngsnative-ctl bootstrap /dev/gsnative-INTERFACE [--handoff-xpad]\ngsnative-ctl boot-info /dev/gsnative-INTERFACE\ngsnative-ctl end /dev/gsnative-INTERFACE [--expect-port TOKEN --expect-instance TOKEN]\ngsnative-ctl resume /dev/gsnative-INTERFACE\nStatus commands info/boot-info return 4 only if open reports a busy control node.\nHardware operations require separate user approval.\n", GSN_TOOL_MAX_SESSION_SECONDS);
+		puts("gsnative-ctl input-info|publish-input /dev/gsnative-INTERFACE --expect-port TOKEN --expect-instance TOKEN\nOptional deferred input only; publication never retries or starts USB output.");
 		return argc == 1 || (argc == 2 && !strcmp(argv[1], "--help")) ? 0 : 2;
 	}
-	if ((!strcmp(argv[1], "end") || !strcmp(argv[1], "info")) && argc != 3 &&
+	bool input_op = !strcmp(argv[1], "input-info") || !strcmp(argv[1], "publish-input");
+	if (input_op && argc != 7) return 2;
+	if ((!strcmp(argv[1], "end") || !strcmp(argv[1], "info") || input_op) && argc != 3 &&
 	    (argc != 7 || strcmp(argv[3], "--expect-port") || strcmp(argv[5], "--expect-instance") ||
 	     !token_number(argv[4], &expected_port) || !token_number(argv[6], &expected_instance)))
 		return 2;
 	if ((!strcmp(argv[1], "session") && (argc > 4 || (argc == 4 && !number(argv[3], 1, GSN_TOOL_MAX_SESSION_SECONDS, &seconds)))) ||
 	    (!strcmp(argv[1], "bootstrap") && (argc > 4 || (argc == 4 && strcmp(argv[3], "--handoff-xpad")))) ||
 	    (strcmp(argv[1], "session") && strcmp(argv[1], "bootstrap") && strcmp(argv[1], "end") &&
-	     strcmp(argv[1], "info") && argc != 3))
+	     strcmp(argv[1], "info") && !input_op && argc != 3))
 		return 2;
 	path = argv[2];
 	if (strncmp(path, "/dev/gsnative-", 14) || !path[14] || strchr(path + 14, '/')) {
@@ -387,7 +425,7 @@ int main(int argc, char **argv)
 		perror("open native test node");
 		/* Only a passive status open can be retried without an uncertain action. */
 		if (saved_errno == EBUSY &&
-		    (!strcmp(argv[1], "info") || !strcmp(argv[1], "boot-info")))
+		    (!strcmp(argv[1], "info") || !strcmp(argv[1], "boot-info") || !strcmp(argv[1], "input-info")))
 			return 4;
 		return 1;
 	}
@@ -396,7 +434,9 @@ int main(int argc, char **argv)
 		close(fd);
 		return 1;
 	}
-	if (!strcmp(argv[1], "end") || !strcmp(argv[1], "resume"))
+	if (input_op)
+		ret = input_command(fd, !strcmp(argv[1], "publish-input"), expected_port, expected_instance);
+	else if (!strcmp(argv[1], "end") || !strcmp(argv[1], "resume"))
 		ret = service_command(fd, !strcmp(argv[1], "resume"), expected_port, expected_instance);
 	else if (!strcmp(argv[1], "info") && expected_port &&
 		 check_boot_owner(fd, expected_port, expected_instance, "INFO"))

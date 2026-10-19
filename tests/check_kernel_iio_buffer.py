@@ -20,7 +20,7 @@ import gamesir_iio_buffer
 from test_iio_buffer_setup import FakeBackend
 
 
-NAMES = ["gsn_delete", "gsn_imu", "gsn_sample_snapshot", "gsn_iio_raw",
+NAMES = ["gsn_delete", "gsn_extras", "gsn_imu", "gsn_sample_snapshot", "gsn_iio_raw",
          "buffer_push_errors_show", "buffer_stream_active_show", "gsn_iio_preenable",
          "gsn_iio_postenable", "gsn_iio_predisable", "gsn_quiesce",
          "gsn_disconnect", "gsn_suspend", "gsn_resume"]

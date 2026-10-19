@@ -5,20 +5,20 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Später Gamescope-Gyrostart offline eingegrenzt, Korrekturprototyp vorbereitet:**
-System-SDL und drei gespeicherte Steam-SDL-Bibliotheken reproduzieren fehlende
-Sensorzuordnung, wenn das Gamepad vor der Sensorerkennung geöffnet wird. Auch
-„Sensor vorhanden, zunächst nicht lesbar“ reproduziert dies; spätere Freigabe
-repariert den offenen Handle nicht. Sensor-zuerst funktioniert hingegen bei
-laufendem SDL und Wiederverbindung. Ein isolierter, sitzungsgebundener
-Bereitschaftsprototyp verhindert die ungünstige Reihenfolge in der Simulation.
-20 SDL-Fälle und 15 reine Policytests bestanden. Kein Beweis der ausschließlichen
-Live-Ursache, kein fertiger Kernel-/Manager-Handschlag und kein installierbares
-Update. Dafür sind zweistufige Input-Veröffentlichung und echte Nachweise der
-verarbeiteten Sensorbenachrichtigung/Sitzungsrechte noch anzubinden.
-Kernel-/Manager-Laufzeitquellen, laufendes System/Steam und Paketversionen
-unverändert; nur Dokumente zur Paket-Dateiliste ergänzt, kein Live-Zugriff.
-[Befunde, Prototyp und konkrete Integrationsgrenze](STEAM_GYRO_HOTPLUG.md).
+**Gyro-Bereitschaft jetzt offline an Kernel und Manager angebunden:** Revision 10
+bereitet optionale zweistufige Input-Veröffentlichung vor. Der Manager wartet
+nach nativer Attestation auf die verarbeitete Sensorbenachrichtigung und
+Sitzungsleserechte; der Kernel veröffentlicht anschließend genau das vorbereitete
+Gamepad derselben Instanz. Neue private Befehle, feste Deadline, Neustart-/Abbruch-
+und Fehlerhistorie sowie gehaltene normale/Paddle-Eingaben sind offline getestet.
+Kerneldefault bleibt ohne Deferral; die vorbereitete Dienstdatei fordert den
+neuen Pfad für das bestehende opt-in Sechsachsenprofil an. Kein Steam-Neustart,
+kein Eingriff in laufende Software, keine Installation oder Hardwareabnahme.
+Modulbau für `7.2.11-1-garuda` und separat für `7.2.11-1-cachyos-deckify`
+bestanden: gleiche Quellen, passende Header/Modulkennung; CachyOS GCC ohne
+Warnungen, Garuda ohne Codewarnungen mit dokumentiertem Compiler-Versionshinweis.
+Der CachyOS-Bau erfolgt unprivilegiert im gesonderten Arbeitsordner über SSH.
+[Implementierung, Tests und nächste Freigabegrenze](STEAM_GYRO_HOTPLUG.md).
 
 **Bazzite als mögliche Ablösung geprüft:** Quellen-/Dokumentationsvergleich
 ergibt einen plausiblen Port mit gemeinsamem Treiberkern. Erforderlich sind

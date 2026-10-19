@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0-only
-"""Offline prototype for a two-phase input publication contract.
+"""Metadata-only policy for the optional two-phase input publication contract.
 
 Consumes already attested metadata. Does not read devices, sysfs or udev,
-publish input devices, control a service, or grant USB ownership. Not imported
-by the installed manager. See docs/STEAM_GYRO_HOTPLUG.md before integration.
+publish input devices, control a service, or grant USB ownership. The manager
+supplies processed-event/access proof; the kernel revalidates publication.
 """
 from dataclasses import dataclass
 from enum import Enum
@@ -49,7 +49,7 @@ class PublicationGate:
     """One bounded gate for one already owned binding; no retry/reconnect loop.
 
 PUBLISH is a plan, NOT proof of publication or permission for a later mutation.
-A future backend must atomically revalidate the bound kernel instance when
+The backend must atomically revalidate the bound kernel instance when
 applying it, then acknowledge success with that same node/session proof.
 """
     def __init__(self, binding: Binding, now: float, timeout: float = 3.0):
@@ -102,7 +102,7 @@ applying it, then acknowledge success with that same node/session proof.
                         self.binding, sensor.node_token)
 
     def acknowledge(self, current: Binding, node_token: str):
-        """Acknowledge the future backend's successful, revalidated operation.
+        """Acknowledge the backend's successful, revalidated operation.
 
 This method does not perform that operation. A failed/uncertain backend must
 report the original error and use the manager's existing guarded cleanup.

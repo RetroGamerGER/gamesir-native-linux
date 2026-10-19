@@ -33,6 +33,7 @@ test-public-readme:
 	$(PYTHON) -B tests/test_public_readme.py
 
 test-alpha:
+	$(PYTHON) -B tests/test_input_publication.py
 	$(PYTHON) -B tests/test_kernel_toolchain.py
 	$(PYTHON) -B tests/test_service_manager.py
 	$(PYTHON) -B tests/test_manager_reconnect.py

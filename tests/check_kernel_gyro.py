@@ -7,7 +7,7 @@ import subprocess
 from project_paths import PROJECT, BUILD, RESULTS
 
 source = (PROJECT / 'kernel/gs_native_usb.c').read_text()
-names = ['gsn_sensor_options', 'gsn_input_register', 'gsn_gyro_register', 'gsn_gyro_report']
+names = ['gsn_sensor_options', 'gsn_input_register', 'gsn_gyro_register', 'gsn_gyro_report', 'gsn_pad', 'gsn_extras', 'gsn_input_control']
 blocks = []
 for name in names:
     match = re.search(r'^static [^;{}]*\b' + name + r'\([^;{}]*\)\n\{', source, re.M)

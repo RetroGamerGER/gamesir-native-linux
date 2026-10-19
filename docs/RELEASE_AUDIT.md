@@ -1,5 +1,23 @@
 # Public pre-alpha release audit
 
+## Integrated readiness correction — 19 October 2026
+
+Revision `0.1.0.alpha3-10` prepares the optional kernel/client/manager publication
+handshake and includes its backend/shared policy in the explicit package list.
+[Current implementation and limits](STEAM_GYRO_HOTPLUG.md) supersede the
+prototype-only checkpoint below; it is retained as historical evidence.
+Module build, complete offline regressions, real-adapter guards and dual-ABI
+client checks are recorded separately in `input-publication-offline.json`.
+Garuda `7.2.11-1-garuda` and CachyOS `7.2.11-1-cachyos-deckify` builds pass
+against their matching prepared headers. CachyOS has zero warnings; Garuda has
+zero code warnings and the recorded Clang-version advisory. Only selected
+sources are transferred for the unprivileged CachyOS build, not an installer.
+No installation, running-driver/Steam change, hardware acceptance, public push
+or release/tag is part of this work. Future live acceptance must
+prove actual late power-on/reconnect, ordinary input/paddles and retained
+sensor/output ownership. Existing opt-ins, GPL/UAPI exceptions and release gates
+remain unchanged. The prepared service adds only explicit defer_input selection.
+
 ## Offline gyro hotplug preparation — 19 October 2026
 
 The [new discovery study](STEAM_GYRO_HOTPLUG.md) adds 20 device-free SDL runs

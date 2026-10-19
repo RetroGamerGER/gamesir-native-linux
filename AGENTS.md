@@ -24,22 +24,27 @@ authorization. Never flash firmware or guess undocumented device commands.
 Document and verify the safe return to xpad. Deadband must retain a supported
 exclusive maintenance path; normal play must not depend on it.
 
-## Offline Gamescope gyro hotplug preparation (19 October 2026)
+## Offline Gamescope gyro hotplug integration (19 October 2026)
 
-Read docs/STEAM_GYRO_HOTPLUG.md before implementing the next correction.
-Five synthetic cases pass with system SDL and three stored Steam SDLs (20
-runs): late/unreadable sensor leaves an already-open gamepad without gyro;
-sensor-first hotplug/reconnect works in the same process. This reproduces a
-sufficient mechanism, not the exclusive historical Gamescope cause. The
-pure tools/sdl/input_pair_readiness.py prototype and its 15 tests do not run
-in the manager or publish real devices. Do not claim it is an installable fix.
-Prepare optional two-phase kernel/client/manager input publication only with
-exact owned-session and processed-sensor/access proof, bounded waiting and
-existing cleanup/lease/error preservation. A node/database entry alone is
-not completion; old input numbers/UIDs do not authorize replacement sessions.
-No active-pad re-registration, Steam restart/library replacement, permission
-widening or fixed boot sleep. Keep raw IIO, accepted axes/scale, paddles,
-FF and trigger STOP/ownership intact. No new live action or push authorized.
+Read docs/STEAM_GYRO_HOTPLUG.md. Revision 10 now integrates the shared policy,
+processed-libudev backend, checked client and optional two-phase kernel input
+publication. This supersedes the unintegrated prototype at 468ddc6. Preserve
+all real-motion units/axes and existing raw IIO, paddles, FF and trigger STOP.
+The module defaults defer_input off; prepared service requests it, effective
+only for persistent 109c with the six-axis opt-in. Exact tokens, current binding,
+processed node lifetime and seat-access proof are required; no sysfs/database-
+only readiness. Bounded child account/access check opens no device, changes no
+parent credentials or ACLs. No-active-seat publication is defined separately.
+Keep the ten-second deadline and attempt/first-error record across restarts;
+missing fresh receipts do not authorize retries. Release/cleanup is distinct
+from startup budget. Never claim END/xpad binding proves 109c became 100a.
+No active-pad re-registration, Steam restart, global sleep, library/preload
+replacement or wider permissions. Offline tests/build are not real Gamescope
+reconnect or PM acceptance. The separately requested CachyOS build transfers
+only selected sources to an unprivileged working directory, not an installer
+or running configuration.
+Both Garuda and CachyOS builds pass; no installation, live action or push is
+authorized by this implementation. Calibration stays paused.
 
 ## Bazzite assessment (19 October 2026)
 

@@ -23,14 +23,40 @@ import subprocess
 import sys
 import time
 
+# Same installed directory; the source checkout retains the shared SDL policy.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+if (Path(__file__).resolve().parent.parent / 'sdl/input_pair_readiness.py').is_file():
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'sdl'))
+from input_pair_readiness import Action, Binding, PublicationGate
+from input_readiness import ProcessedInputs, ReadinessError
+
 PORT = re.compile(r"[1-9][0-9]*-[1-9][0-9]*(?:\.[1-9][0-9]*)*")
 INFO = re.compile(r"pid=(100a|109c|105e) state=(\d+) error=(-?\d+) OUT=([01]) session=([01])\b")
 PAD = re.compile(r"\bpad=(\d+)\b")
 BOOT = re.compile(r"^bootstrap state=(\d+) error=(-?\d+) failed_stage=(\d+) pad=([01]) imu=([01]) handover=([01]) port_token=(\d+) instance_token=(\d+)$", re.M)
 RETURN_SECONDS = 30
 HANDOFF_SECONDS = 5
-JOB_SECONDS = {"bootstrap": 40, "boot-info": 3, "info": 3, "end": 5, "resume": 10}
-READ_ONLY = frozenset(("info", "boot-info"))
+JOB_SECONDS = {"bootstrap": 40, "boot-info": 3, "info": 3, "end": 5, "resume": 10,
+               "input-info": 3, "publish-input": 3}
+READ_ONLY = frozenset(("info", "boot-info", "input-info"))
+INPUT_READY_SECONDS = 10
+
+
+def input_status(output, tokens):
+    lines = [line.removeprefix('input-publication ') for line in output.splitlines()
+             if line.startswith('input-publication ')]
+    if len(lines) != 1:
+        raise Unsafe('Missing or ambiguous input publication status')
+    value = json.loads(lines[0])
+    if (type(value) is not dict or value.keys() != {'flags', 'port', 'instance', 'sensor', 'uniq', 'gyro', 'accel'} or
+            any(type(value[k]) is not int for k in ('flags', 'port', 'instance', 'gyro', 'accel')) or
+            not 0 <= value['flags'] <= 7 or [value['port'], value['instance']] != tokens or
+            type(value['sensor']) is not str or not re.fullmatch(r'input[0-9]{1,10}', value['sensor']) or
+            type(value['uniq']) is not str or not re.fullmatch(r'gsn-[0-9.:-]{1,100}', value['uniq']) or
+            not 0 < value['gyro'] <= 1000000 or not 0 < value['accel'] <= 1000000 or
+            not value['flags'] & 4):
+        raise Unsafe('Invalid exact-instance six-axis publication status')
+    return value
 START_PIDS = frozenset(("100a", "105e"))
 NATIVE_PIDS = frozenset(("109c", "105e"))
 STATUS_BUSY_EXIT = 4  # C client: only a getter's open(EBUSY), never an ioctl failure.
@@ -196,6 +222,12 @@ class Entry:
     absent_since: float | None = None
     bootstrap_diagnostic: dict = field(default_factory=dict)
     pending_status: tuple | None = None
+    publication_deadline: float = 0
+    publication_attempted: bool = False
+    publication_gate: object = None
+    publication_meta: dict = field(default_factory=dict)
+    publication_reason: str = ''
+    publication_failure: str = ''
 
 
 class Manager:
@@ -237,6 +269,15 @@ class Manager:
                           bootstrap_started=record.get("bootstrap_started", False),
                           end_succeeded=record.get("end_succeeded", False),
                           bootstrap_diagnostic=checked_diagnostic(record.get("bootstrap_diagnostic", {})))
+            entry.publication_deadline = record.get('publication_deadline', 0)
+            entry.publication_attempted = record.get('publication_attempted', False)
+            entry.publication_failure = record.get('publication_failure', '')
+            if (type(entry.publication_deadline) not in (int, float) or
+                    not 0 <= entry.publication_deadline < 1e12 or
+                    type(entry.publication_attempted) is not bool or
+                    type(entry.publication_failure) is not str or
+                    len(entry.publication_failure.encode()) > 1024):
+                raise Unsafe('Invalid saved input publication state')
             if record.get("candidate"):
                 entry.candidate = Device(**record["candidate"])
             entry.after_attest = record.get("after_attest", "failed")
@@ -253,7 +294,8 @@ class Manager:
             elif entry.device.pid in NATIVE_PIDS and entry.kernel_tokens:
                 entry.candidate = entry.device
                 entry.after_attest = ("returning" if entry.end_attempted else
-                                     "active" if entry.phase == "active" else "failed")
+                                     "active" if entry.phase in ('active', 'input_check', 'awaiting_sensor', 'publishing_input')
+                                     and not entry.error else "failed")
                 entry.phase = "attesting"
             elif entry.candidate and entry.kernel_tokens:
                 entry.phase = "attesting"
@@ -297,7 +339,12 @@ class Manager:
                 raise Unsafe("No kernel ownership proof for END")
             entry.end_attempted = True
             self.remember(entry)  # A crash may not repeat an uncertain END.
-        needs_tokens = operation == "end" or (operation == "info" and target.pid in NATIVE_PIDS)
+        needs_tokens = operation in ('end', 'input-info', 'publish-input') or (operation == "info" and target.pid in NATIVE_PIDS)
+        if operation == 'publish-input':
+            if entry.publication_attempted:
+                raise Unsafe('Input publication already attempted; no repeat')
+            entry.publication_attempted = True
+            self.remember(entry)
         entry.job = self.host.start(operation, target, entry.kernel_tokens if needs_tokens else None)
         entry.operation = operation
         entry.deadline = self.clock() + JOB_SECONDS[operation]
@@ -305,6 +352,8 @@ class Manager:
         entry.timed_out = False
 
     def fail(self, entry, message, phase="failed"):
+        if entry.phase in ('input_check', 'awaiting_sensor', 'publishing_input') and not entry.publication_failure:
+            entry.publication_failure = message.encode('utf-8', 'replace')[:1024].decode('utf-8', 'ignore')
         entry.status_conflict = ""
         entry.status_conflicts = 0
         if entry.error == message and entry.phase in ("failed", "blocked"):
@@ -326,7 +375,7 @@ class Manager:
         source = entry.bootstrap_diagnostic.get("source_instance", entry.device.token)
         record = {"port": entry.device.port, "source_instance": source,
                   "origin_pid": entry.origin_pid,
-                  "message": entry.error.encode("utf-8", "replace")[:1024].decode("utf-8", "ignore"),
+                  "message": (entry.publication_failure or entry.error).encode("utf-8", "replace")[:1024].decode("utf-8", "ignore"),
                   "bootstrap_diagnostic": entry.bootstrap_diagnostic,
                   "resolution": resolution}
         self.recent_failures = [old for old in self.recent_failures
@@ -390,6 +439,9 @@ class Manager:
             "bootstrap_started": entry.bootstrap_started,
             "end_succeeded": entry.end_succeeded,
             "bootstrap_diagnostic": entry.bootstrap_diagnostic,
+            "publication_deadline": entry.publication_deadline,
+            "publication_attempted": entry.publication_attempted,
+            "publication_failure": entry.publication_failure,
         }
         if self.leases.get(entry.device.port) == record:
             return
@@ -438,6 +490,8 @@ class Manager:
 
     def status(self):
         return {"paused": self.paused, "scan_error": self.scan_error,
+                "input_readiness": {"enabled": getattr(self.host, 'readiness_enabled', False),
+                                    "monitor_error": getattr(self.host, 'input_error', '')},
                 "recent_failures": self.recent_failures,
                 "port_errors": self.port_errors,
                 "returned": self.returned(),
@@ -449,6 +503,8 @@ class Manager:
                                 "observed_driver": self.observed[p].driver if p in self.observed else None,
                                 "bootstrap_diagnostic": e.bootstrap_diagnostic,
                                 "status_conflict": e.status_conflict,
+                                "input_publication": e.publication_reason,
+                                "input_publication_failure": e.publication_failure,
                                 "status_retry_in": max(0, e.next_check - self.clock())
                                 if e.status_conflict else 0}
                             for p, e in self.entries.items()}}
@@ -558,7 +614,14 @@ class Manager:
         operation = entry.operation
         rc, output = result
         current = devices.get(entry.device.port)
-        if operation in READ_ONLY:
+        if operation == 'publish-input' and (entry.timed_out or rc):
+            # Preserve the completed mutation's first result even if the next
+            # metadata scan is incomplete. Never reissue an uncertain publish.
+            entry.job, entry.operation, entry.pending_status = None, '', None
+            excerpt = output.encode('utf-8', 'replace')[-700:].decode('utf-8', 'ignore')
+            self.fail(entry, f'Input publication failed: rc={rc} timeout={entry.timed_out}; ' + excerpt)
+            return
+        if operation in READ_ONLY or operation == 'publish-input':
             # The process may complete after the tick's initial enumeration.
             # Its passive result never authorizes action on a replacement.
             if entry.pending_status is None and rc == STATUS_BUSY_EXIT and self.clock() >= entry.deadline:
@@ -659,7 +722,43 @@ class Manager:
             entry.next_check = self.clock()
             self.remember(entry)
             if entry.phase == "active":
-                self.notice("ready", current, "Persistent native runtime; IMU scale remains experimental")
+                if getattr(self.host, 'readiness_enabled', False) and current.pid == '109c':
+                    entry.phase = 'input_check'
+                    if not entry.publication_deadline:
+                        entry.publication_deadline = self.clock() + INPUT_READY_SECONDS
+                    self.remember(entry)
+                    self.start(entry, 'input-info')
+                else:
+                    self.notice("ready", current, "Persistent native runtime; IMU scale remains experimental")
+        elif operation in ('input-info', 'publish-input'):
+            if entry.timed_out or rc or current != entry.device or current.driver != 'gs_native':
+                excerpt = output.encode('utf-8','replace')[-700:].decode('utf-8','ignore')
+                self.fail(entry, f'Input publication {operation} failed: rc={rc} timeout={entry.timed_out}; '
+                          + excerpt if current == entry.device else 'Input publication exact instance changed')
+                return
+            try:
+                meta = input_status(output, entry.kernel_tokens)
+                binding = self.host.input_binding(current, meta)
+                if meta['flags'] & 2:
+                    entry.phase = 'active'
+                    entry.publication_reason = 'Exact input publication confirmed'
+                    entry.next_check = self.clock()
+                    self.remember(entry)
+                    self.notice('ready', current, entry.publication_reason)
+                elif operation == 'publish-input' or entry.publication_attempted:
+                    self.fail(entry, 'Uncertain input publication; cleanup only, no repeat')
+                elif meta['flags'] != 5:
+                    self.fail(entry, 'Expected an unpublished deferred sensor pair')
+                else:
+                    if not entry.publication_deadline:
+                        entry.publication_deadline = self.clock() + INPUT_READY_SECONDS
+                    entry.publication_meta = meta
+                    entry.publication_gate = PublicationGate(binding,
+                        entry.publication_deadline - INPUT_READY_SECONDS, INPUT_READY_SECONDS)
+                    entry.phase = 'awaiting_sensor'
+                    self.remember(entry)
+            except (ValueError, ReadinessError, Unsafe) as error:
+                self.fail(entry, 'Input publication metadata: ' + str(error))
         elif operation == "info":
             if entry.timed_out:
                 self.fail(entry, "Native status client exceeded deadline")
@@ -887,7 +986,7 @@ class Manager:
             try:
                 current = devices.get(port)
                 if entry.job is not None:
-                    if self.inhibited and entry.operation in ("bootstrap", "resume") and not entry.cancel_requested:
+                    if self.inhibited and entry.operation in ("bootstrap", "resume", 'publish-input') and not entry.cancel_requested:
                         self.host.cancel(entry.job)
                         # It may have completed before cancellation reached it.
                         # Keep the operation so its handoff proof is not lost.
@@ -955,6 +1054,26 @@ class Manager:
                     continue
                 if entry.phase == "active" and now >= entry.next_check:
                     self.start(entry, "info")
+                elif entry.phase == 'input_check':
+                    if now >= entry.publication_deadline:
+                        self.fail(entry, 'Input readiness status deadline; cleanup only')
+                    elif now >= entry.next_check:
+                        self.start(entry, 'input-info')
+                elif entry.phase == 'awaiting_sensor':
+                    if now >= entry.publication_deadline:
+                        self.fail(entry, 'Input readiness deadline; cleanup only')
+                        continue
+                    self.host.observe_guard(current)
+                    binding = self.host.input_binding(current, entry.publication_meta)
+                    sensor = self.host.input_sensor(binding, entry.publication_meta)
+                    decision = entry.publication_gate.observe(binding, sensor, self.clock())
+                    entry.publication_reason = decision.reason
+                    if decision.action == Action.ABORT:
+                        self.fail(entry, 'Input readiness: ' + decision.reason)
+                    elif decision.action == Action.PUBLISH:
+                        entry.phase = 'publishing_input'
+                        self.remember(entry)
+                        self.start(entry, 'publish-input')
                 elif entry.phase == "waiting_input" and now >= entry.next_check:
                     self.start(entry, "info")
                 elif entry.phase == "resuming" and now >= entry.next_check:
@@ -976,6 +1095,8 @@ class Manager:
                     self.defer_observation(entry, self.port_errors[port])
                 elif not self.retire_obsolete_status(entry, fresh.get(port)):
                     self.fail(entry, str(error), "blocked")
+            except (ReadinessError, subprocess.SubprocessError) as error:
+                self.fail(entry, 'Input readiness: ' + str(error))
             except (OSError, Unsafe) as error:
                 self.fail(entry, str(error), "blocked")
 
@@ -984,6 +1105,8 @@ class Manager:
                 continue
             if self.inhibited or device.pid not in START_PIDS or device.token in self.attempted:
                 continue
+            if getattr(self.host, 'input_error', ''):
+                continue  # Failed monitor must not authorize another takeover.
             if device.driver != "xpad":
                 continue  # Never adopt an unrelated unbound or foreign device.
             if not self.budget_available(port):
@@ -1036,6 +1159,38 @@ class Host:
     def __init__(self, client, state, sysfs=Path("/sys"), proc=Path("/proc")):
         self.client, self.state, self.sysfs, self.proc = str(client), Path(state), Path(sysfs), Path(proc)
         self.boot_id = None
+        self.readiness_enabled = False
+        self.inputs = None
+        self.input_error = ''
+
+    def configure_inputs(self):
+        parameters = self.sysfs / 'module/gs_native/parameters'
+        if not (parameters / 'defer_input').is_file():
+            return  # Legacy, nondeferred kernel; no new operation required.
+        self.readiness_enabled = all((parameters / name).read_text().strip() == 'Y'
+                                    for name in ('defer_input', 'experimental_gyro', 'experimental_accel'))
+        if self.readiness_enabled:
+            self.inputs = ProcessedInputs()  # Before any claim or bootstrap.
+
+    def input_binding(self, device, meta):
+        if meta['uniq'] != f"gsn-{device.interface}-{meta['instance']}":
+            raise ReadinessError('Kernel motion identity differs from exact binding tokens')
+        return Binding(device.parent, device.token + ':' + str(meta['instance']),
+                       str((self.sysfs / 'bus/usb/devices' / device.interface).resolve(strict=True)), meta['uniq'])
+
+    def input_sensor(self, binding, meta):
+        if self.input_error:
+            raise ReadinessError(self.input_error)
+        self.inputs.drain()
+        return self.inputs.sensor(binding, meta['sensor'], meta['gyro'], meta['accel'])
+
+    def drain_inputs(self):
+        if self.inputs and not self.input_error:
+            try:
+                self.inputs.drain()
+            except (OSError, ReadinessError, UnicodeError) as error:
+                self.input_error = str(error)
+                self.log('input_monitor_failed', message=self.input_error)
 
     def log(self, event, **values):
         print(json.dumps({"event": event, **values}), flush=True)
@@ -1261,7 +1416,7 @@ class Host:
         argv = [self.client, operation, device.node]
         if operation == "bootstrap" and device.pid == "100a":
             argv.append("--handoff-xpad")
-        elif operation == "end" or (operation == "info" and device.pid in NATIVE_PIDS):
+        elif operation in ('end', 'input-info', 'publish-input') or (operation == "info" and device.pid in NATIVE_PIDS):
             if (not isinstance(kernel_tokens, list) or len(kernel_tokens) != 2 or
                     any(type(value) is not int or not 0 < value < 2**64 for value in kernel_tokens)):
                 raise Unsafe("Native operation requires exact positive kernel ownership tokens")
@@ -1399,7 +1554,9 @@ def daemon(args):
     private_directory(args.state)
     lock = (args.runtime / "daemon.lock").open("a")
     fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    manager = Manager(Host(args.client, args.state))
+    host = Host(args.client, args.state)
+    host.configure_inputs()
+    manager = Manager(host)
     # The service unit loads only this explicit opt-in configuration.
     for name in ("bootstrap_mode", "enable_output", "persistent_mode"):
         if (Path("/sys/module/gs_native/parameters") / name).read_text().strip() != "Y":
@@ -1428,6 +1585,7 @@ def daemon(args):
     stop_deadline = None
     try:
         while True:
+            host.drain_inputs()
             if stop and stop_deadline is None:
                 # A system shutdown is not the user's persistent Deadband pause.
                 manager.stopping = True
@@ -1449,6 +1607,8 @@ def daemon(args):
                 with conn:
                     serve_connection(conn, manager)
     finally:
+        if host.inputs:
+            host.inputs.close()
         if haptic_server:
             haptic_server.close()
         server.close()

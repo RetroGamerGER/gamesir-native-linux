@@ -110,8 +110,9 @@ computer.
 
 - **Gyro integration remains experimental.** The selected 0.07 °/s/raw profile
   has an unresolved late-power-on/reconnection limitation in Gamescope. An
-  [offline discovery study and readiness prototype](docs/STEAM_GYRO_HOTPLUG.md)
-  reproduces a relevant SDL ordering failure; it is not an installable fix.
+  [offline-tested kernel/manager readiness correction](docs/STEAM_GYRO_HOTPLUG.md)
+  is prepared in revision 10; actual Gamescope late-power-on/reconnect acceptance
+  is still pending. It has not been installed by this preparation.
   The existing profile has an opt-in SDL evdev path and one limited hardware
   acceptance in Eden's controller settings. It is not enabled by default. A
   separately approved local persistent opt-in is now configured and checked; its actual reboot

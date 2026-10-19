@@ -84,4 +84,30 @@ struct gsn_boot_status {
  * this already bootstrapped native instance, never an identity transition.
  */
 #define GSN_RESUME _IO('G', 0x78)
+/* Additive ABI 1: optional two-phase input publication, never a USB command.
+ * Names identify this binding's kernel objects, not persistent hardware IDs.
+ */
+#define GSN_INPUT_DEFERRED 1
+#define GSN_INPUT_PUBLISHED 2
+#define GSN_INPUT_SENSOR 4
+struct gsn_input_status {
+	__u32 abi_version;
+	__u32 flags;
+	__aligned_u64 port_token;
+	__aligned_u64 instance_token;
+	__u32 gyro_resolution;
+	__u32 accel_resolution;
+	char sensor_name[32];
+	char uniq[112];
+};
+
+struct gsn_input_publish {
+	__u32 abi_version;
+	__u32 reserved;
+	__aligned_u64 port_token;
+	__aligned_u64 instance_token;
+};
+
+#define GSN_GET_INPUT_STATUS _IOR('G', 0x79, struct gsn_input_status)
+#define GSN_PUBLISH_INPUT _IOW('G', 0x7a, struct gsn_input_publish)
 #endif

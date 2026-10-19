@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "base_commit": "468ddc69084cc7c2dd42a9437e7b23c931c6f697",
+  "candidate_package": "0.1.0.alpha3-10",
+  "status": "integrated_offline_tested_not_installed",
+  "hardware_access": false,
+  "steam_changes": false,
+  "running_driver_changes": false,
+  "installation": false,
+  "push": false,
+  "kernel_default_defer_input": false,
+  "prepared_service_requests_defer_input": true,
+  "scope": "Only persistent standard 109c with both opt-in gyro and real acceleration uses two-phase publication",
+  "validation": {
+    "new_python_tests": 25,
+    "client_abi_variants": [
+      32,
+      64
+    ],
+    "client_command_cases": 28,
+    "private_status_bytes": 176,
+    "private_request_bytes": 24,
+    "make_test": true,
+    "make_test_sdl": true,
+    "kernel_actual_adapter": "Passed real extracted registration/control code with synthetic input/USB/locks; held input/paddles, wrong tokens, PM/STOP/fault/copy/capability, one-shot failure/duplicate and in-flight fault",
+    "startup_actual_adapter_scenarios": 246,
+    "iio_actual_adapter_groups": 47,
+    "clang_analyzer": [
+      {
+        "translation_unit": "gs_native_usb",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_protocol",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_sensor",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_runtime",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_startup",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      }
+    ],
+    "checkpatch_returncode": 0,
+    "sparse": "not installed; not executed",
+    "staged_manager_isolated_import": true,
+    "staged_payload_files": 118,
+    "final_license_tests": 3,
+    "final_public_readme_tests": 7,
+    "final_alpha_packaging_tests": 25
+  },
+  "module": {
+    "kernel_release": "7.2.11-1-garuda",
+    "module_sha256": "87ddba4578617b1f0643accc72c105f5377c453b2db51199596f52b1fcda2b62",
+    "vermagic": "7.2.11-1-garuda SMP preempt mod_unload",
+    "autoload_aliases": [],
+    "build_status": "passed_with_environment_warning",
+    "warnings": 1,
+    "code_warnings": 0,
+    "environment_warnings": [
+      {
+        "kind": "kernel_compiler_mismatch",
+        "message": "warning: the compiler differs from the one used to build the kernel",
+        "kernel_compiler": "clang version 23.1.1",
+        "module_compiler": "clang version 23.1.3"
+      }
+    ],
+    "dependencies": "ff-memless,industrialio,kfifo_buf",
+    "loaded_or_installed": false
+  },
+  "source_hashes": {
+    "include/uapi/gs_native.h": "05b1328412664c59e17b9548ec594d6fb633fc2c60c5d66e414ae6d81f24fb7a",
+    "kernel/gs_native_usb.c": "61a0f6c77b7dc4091afceb92c37be44ce5eb05cbccfeec916e25734ad3751835",
+    "packaging/arch/PKGBUILD.in": "b92ef4a9e87cc2c349fd181c9f9cdf569d551b00b449009735e2700f8f94b5e1",
+    "packaging/systemd/gamesir-native.service": "83a9c0f8f6dead298904e338ba5b45cc1bc1865ac1622229d4660c0d7db89238",
+    "scripts/package_alpha.py": "5991d89931447bb62ba79a623959a289b8b43cf14befdb47914ddfd8e5b22b81",
+    "tests/check_kernel_gyro.py": "fc900d60d6f71662935da33c1a7efb33bbce492d890aa0c24ae205032ed93f12",
+    "tests/check_kernel_iio_buffer.py": "3ae1aaca634e6774898f403e19e4c3ef41400292cf999ef2f58d7c2640272418",
+    "tests/check_kernel_startup.py": "db2a0a5421c60e8e11599c18c2b5c9980d3a6d923f9ea481408d7932321c83f0",
+    "tests/input_publication_client_fake.c": "8035b5f2e72eb7845aa5f265caa23ac746b628e99dfaa0a56ef7f015e9c1e7e8",
+    "tests/kernel_ff_lifetime_fake.c": "fea9ecd307ad6117b0a2d6badf479e7308a11a1317769ed18919fa9008bc9671",
+    "tests/kernel_gyro_fake.c": "e062e55392adcb1cc6ace8771449be303347736a5e4a88252eb4a6713eafb629",
+    "tests/kernel_startup_fake.c": "1361ffc2688c8f25ace87cc93a7229754e524db3cd9db8b89054c86e6793729f",
+    "tests/test_input_publication.py": "23d9f3b66db12a9d0d61947e9bd0e9c5faee5aa9db6a328c8865cc6c42b0875f",
+    "tools/native/gsnative-ctl.c": "ffeafe1a1f39436e801fe62b05d1a3dea397a58d0181e1c7b4dcb612c1f0e701",
+    "tools/sdl/input_pair_readiness.py": "33436e2e2d0625de4541a24c7c199d1b021f03d5ff8d33673e4bed1699a2ee4c",
+    "tools/service/gamesir_native.py": "f6e6e91c45dfa2dc5ac8c7c2ed7c5f76b867d26c2ed21ab98ecb81608f8e37da",
+    "tools/service/input_readiness.py": "aacd5562b31a818563e90bff0564aaa926e791b275be0d0bd076a0b3ab8e550e"
+  },
+  "private_log_sha256": {
+    "build/input-publication-regression-final.log": "d65fe961b07ae41c89736d6d7f0ed5de68bee7b7e6f70d1a82dd96284024798d",
+    "build/input-publication-sdl-final.log": "6b9abb33766eeee1db00c874a9e64376c0fd966b23798d545c7749bc5b8b396b",
+    "build/input-publication-kernel-final.log": "f42df7efa0a1e9309bb9606399300996444bafcc67f728f341cd666d1d8d3ab2",
+    "build/input-publication-static-final.log": "dba8d3afa55a30ee739f9720f6ca719e32905997851d161fdec555390978ecf0",
+    ".local/integration/input-publication-cachyos-20261019/target-build.json": "90931f33fab0323ecdae1548751605823a0c542c8b98419aa3be19d38332231a",
+    "build/input-publication-final-docs.log": "3ce4cb06f879b1fb1f8d4d505d3b79b14e1410d6bddb8488d73c73b2a7fb6258",
+    "build/input-publication-package-final.json": "13d11fc67260d75203623cf5e9fcb07abf463c8a30fa3fafccaada467d957e11"
+  },
+  "limits": [
+    "No actual udev/logind/Steam/Gamescope or device lifecycle acceptance",
+    "Synthetic backend does not prove kernel race freedom or all ACL/session switch timing",
+    "Garuda and CachyOS matched-header builds passed; no installation or runtime acceptance of revision 10 on either system",
+    "Failed intermediate adapter/static logs retained; required diagnostics and sanitizers were not disabled",
+    "Gyro/acceleration units and calibration unchanged; calibration remains paused"
+  ],
+  "cachyos_module": {
+    "kernel_release": "7.2.11-1-cachyos-deckify",
+    "module_sha256": "1f74759bcf5e3da615742754251aeb52960f84428d698c7f9ef0bd128a8f7dc9",
+    "vermagic": "7.2.11-1-cachyos-deckify SMP preempt mod_unload",
+    "autoload_aliases": [],
+    "build_status": "passed",
+    "warnings": 0,
+    "code_warnings": 0,
+    "environment_warnings": [],
+    "dependencies": "industrialio,kfifo_buf,ff-memless",
+    "loaded_or_installed": false,
+    "compiler": "gcc (GCC) 16.2.1 20260810",
+    "compiler_family": "gcc",
+    "header_compiler": "\"gcc (GCC) 16.2.1 20260810, GNU ld (GNU Binutils) 2.47\"",
+    "srcversion": "B7FC108CAF9094E1FAFB057",
+    "kernel_unchanged": true,
+    "unprivileged_build": true,
+    "transferred_sources": 17,
+    "source_hashes": {
+      "kernel/Kbuild": "f21d59fe9f74b142fcddf85196522fb1254620d153cc95ad824f2ef2232c80a6",
+      "kernel/gs_native_usb.c": "61a0f6c77b7dc4091afceb92c37be44ce5eb05cbccfeec916e25734ad3751835",
+      "kernel/gs_protocol.c": "42fb43ef9bbd5ba4aca92bc574449e96584ae199aac5bd14175f6ff2797799c2",
+      "kernel/gs_sensor.c": "21a0139076915c42930b1fac162abbd569b8e9174b47b6b6126a454e83a8f466",
+      "kernel/gs_runtime.c": "fc39657ca5e5b1e0c58d3561950e1f5fce002d6052a415c7690a8a6d46e7eeca",
+      "kernel/gs_startup.c": "2ef3534bc2d2c8dfadb25e293d6167e66a8be2b75d3c792b64b069b9e92fd23a",
+      "src/gs_protocol.c": "a15845841821a59e3e14c479228159543a9775fea66177995e642a937d2b83b5",
+      "src/gs_protocol.h": "8d5484199d626fc02e7618e05b4f64939b76737f75d8ea1e6e539eecaa6ef71c",
+      "src/gs_sensor.c": "bfb4541dc3bfb521c2c8ff53d13570799c10439d717877f3bc833ac8b61820d0",
+      "src/gs_sensor.h": "53e19250084c85deef6c8c2f1ff84138eacec4fe0edb0fe51c69bda5149b3f30",
+      "src/gs_runtime.c": "1326ea5128384740a0399e8f01e082353d4f01d556b59bc1bb56dc4b31ec2298",
+      "src/gs_runtime.h": "a84e48c3517fa22ca24a090a7b875f26bfc3bcbbac12ee3a76d39fb81f4ad57a",
+      "src/gs_startup.c": "0362a6690965e906fc876602deb501cc3eb40a802c9cd8b2f0f4a51444d5dddc",
+      "src/gs_startup.h": "e9c6df96d68be8cdf171a15906c592d6892bd47931049f4be8ade5118adb6c15",
+      "include/uapi/gs_native.h": "05b1328412664c59e17b9548ec594d6fb633fc2c60c5d66e414ae6d81f24fb7a",
+      "scripts/build_kernel.py": "0145a8633c32a20db424b852af7ba1afa53bd17126f1d4f315b8e90cea127bb2",
+      "scripts/kernel_toolchain.py": "211cee0eb5eac6ffb3f8776cbb9679361e7f6806a91be8a19f76b777d376a507"
+    }
+  }
+}

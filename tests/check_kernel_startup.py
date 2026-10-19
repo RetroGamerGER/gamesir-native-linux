@@ -17,7 +17,7 @@ names = ['gsn_boot_delete', 'gsn_now_us', 'gsn_now_ms', 'gsn_delete', 'gsn_seque
          'gsn_resume_session', 'gsn_failed_boot_owned', 'gsn_end', 'gsn_ioctl',
          'gsn_sample_snapshot', 'gsn_play_effect', 'gsn_suspend', 'gsn_resume',
          'gsn_pre_reset', 'gsn_shutdown', 'gsn_pad', 'gsn_neutral', 'gsn_neutral_locked',
-         'gsn_rx', 'gsn_imu', 'gsn_boot_rx_teardown', 'gsn_boot_old_rx', 'gsn_boot_retire_rx']
+         'gsn_rx', 'gsn_extras', 'gsn_imu', 'gsn_boot_rx_teardown', 'gsn_boot_old_rx', 'gsn_boot_retire_rx']
 # Whole source blocks, never a translated/reimplemented copy of the adapter.
 def function(name):
     match = re.search(r'^static [^;{}]*\b' + name + r'\([^;{}]*\)\n\{', source, re.M)

@@ -35,6 +35,7 @@ DOCUMENT_FILES = (
     'docs/steam-gyro-downstream-offline.json', 'docs/steam-gyro-notification-gates-offline.json',
     'docs/steam-gyro-observation-live-001.json', 'docs/STEAM_GYRO_FEASIBILITY.md',
     'docs/STEAM_GYRO_HOTPLUG.md', 'docs/steam-gyro-hotplug-offline.json',
+    'docs/input-publication-offline.json',
     'docs/EXPERIMENTAL_GYRO_TEST.md', 'docs/experimental-gyro-validation.json',
     'docs/COHERENT_IMU_CALIBRATION.md', 'docs/coherent-imu-validation.json',
     'docs/COHERENT_IMU_UPDATE.md', 'docs/evidence/COHERENT_IMU_INSTALL_20261016.json',
@@ -78,6 +79,7 @@ def source_files(root=ROOT):
              'scripts/package_alpha.py', 'scripts/kernel_toolchain.py',
              'tools/native/gsnative-ctl.c',
              'tools/service/gamesir_native.py', 'tools/service/haptics_broker.py',
+             'tools/service/input_readiness.py', 'tools/sdl/input_pair_readiness.py',
              'tools/haptics/gamesir_haptics.py', 'tools/sdl/gamesir_mapping.py']
     patterns = {
         'kernel': ('gs_native_usb.c', 'gs_protocol.c', 'gs_sensor.c',
@@ -180,6 +182,8 @@ def stage(dest, client, root=ROOT):
     copy(client, 'usr/lib/gamesir-native/gsnative-ctl', 0o755)
     copy(root / 'tools/service/gamesir_native.py', 'usr/lib/gamesir-native/gamesir_native.py')
     copy(root / 'tools/service/haptics_broker.py', 'usr/lib/gamesir-native/haptics_broker.py')
+    copy(root / 'tools/service/input_readiness.py', 'usr/lib/gamesir-native/input_readiness.py')
+    copy(root / 'tools/sdl/input_pair_readiness.py', 'usr/lib/gamesir-native/input_pair_readiness.py')
     copy(root / 'tools/haptics/gamesir_haptics.py', 'usr/lib/gamesir-native/gamesir_haptics.py')
     copy(root / 'tools/sdl/gamesir_mapping.py', 'usr/lib/gamesir-native/gamesir_mapping.py')
     copy(root / 'packaging/prepare_remove.py', 'usr/lib/gamesir-native/prepare_remove.py')

@@ -56,7 +56,7 @@ struct file { void *private_data; };
 #define mutex_lock(p) do { assert(!(p)->held); (p)->held = true; } while (0)
 #define mutex_unlock(p) do { assert((p)->held); (p)->held = false; } while (0)
 
-static bool experimental_gyro;
+static bool experimental_gyro, experimental_accel, defer_input;
 #define dev_name(d) "synthetic-interface"
 static bool persistent_mode = true, fail_input_alloc, fail_ff_create, fail_input_register;
 static unsigned int g_frees, input_frees, ff_frees, ff_owned_data_frees, stop_callbacks;

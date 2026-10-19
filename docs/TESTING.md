@@ -674,9 +674,10 @@ execution. See [SDL/Eden procedure](SDL_EDEN_GYRO.md) before any live action.
 
 ## Offline late-sensor / hotplug investigation
 
-`python -B tests/test_input_pair_readiness.py` tests the unintegrated publication
-gate using metadata only. `make test-sdl-hotplug` runs five scenarios against
-system SDL in the existing audited device-free sandbox. An explicitly selected
+`python -B tests/test_input_pair_readiness.py` tests the shared publication
+gate using metadata only. `python -B tests/test_input_publication.py` exercises
+the integrated manager/backend and actual client with fake syscalls on both
+ABIs. `make test-sdl-hotplug` runs five scenarios against system SDL in the existing audited device-free sandbox. An explicitly selected
 stored Steam SDL3 library can be tested with
 `python -B tests/run_sdl_hotplug_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so.0`.
 This starts the synthetic probe only, never Steam. There are no host input,

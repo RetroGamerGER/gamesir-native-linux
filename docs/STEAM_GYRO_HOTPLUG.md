@@ -1,11 +1,13 @@
 # Gamescope: later power-on and gyro reconnection
 
-19 October 2026. **Offline investigation and correction prototype, not an
-installable fix or hardware acceptance.** The running driver, manager, Steam,
-session files and remote system were not accessed or changed. No Steam/client,
-controller, uinput or USB/IIO device was used. There was no web lookup or source
-download; SDL probes use an isolated network namespace. The full-suite debug
-lookup caveat is retained below. Calibration stays paused.
+19 October 2026. **Kernel/client/manager integration implemented and tested
+OFFLINE; revision 10 is not installed or hardware-accepted.** This supersedes
+the unintegrated prototype at `468ddc6`. The existing gyro/acceleration units,
+axis maps, raw IIO, paddles, FF and trigger ownership remain unchanged. No
+installed file, running module, Steam or controller was changed or opened.
+The separately requested CachyOS check reads kernel/header metadata over SSH
+and builds selected sources in an unprivileged working directory only.
+Calibration remains paused. Historical SDL reproduction below retains its scope.
 
 ## Result and evidence boundary
 
@@ -57,108 +59,139 @@ access-denial switch models an unavailable sensor. They do not execute real
 udev/logind ACL processing, Steam event handling or Gamescope. No actual
 compositor defect or universally necessary Steam restart is established.
 
-## Prepared correction: a bounded two-phase publication gate
+## Implemented optional two-phase publication
 
-The prototype is `tools/sdl/input_pair_readiness.py`. It is **not imported by
-the current manager, included in the installed package, or connected to an
-input-publication command**. It is intentionally a reviewable policy prototype
-before changing a working kernel/manager lifecycle.
+`defer_input` defaults to **false** in the module. The prepared revision-10
+service requests it explicitly, while the kernel actually defers only persistent
+standard-109c bindings with **both** experimental gyro and real acceleration
+enabled. Gyro-only, default-off motion, 100a and experimental 105e retain their
+existing registration path. Old clients retain their behavior when the new
+option is not selected; do not combine an old manager with explicit deferral.
+A new manager using a kernel without this parameter takes the legacy path.
+A coordinated future update must verify the actual loaded parameter/module.
 
-The proposed sequence for the opt-in standard-109c motion profile is:
+1. The daemon establishes a filtered libudev **processed `udev`** monitor before
+   any claim/bootstrap. It never treats raw kernel creation, a sysfs node or
+   a udev database entry alone as completed sensor readiness.
+2. The kernel prepares the gamepad and registers the existing motion node first,
+   retaining raw IIO and the single USB reader. Gamepad input is not reported
+   into an unregistered input object. The last pad/extra/guide state is retained
+   and replayed on publication; idle neutralization clears this retained state.
+3. After successful bootstrap and exact native-token attestation, the manager
+   queries `input-info`, then enters `awaiting_sensor`. It matches the expected
+   native interface, shared session `uniq`, sysfs input/event objects and the
+   character-node lifetime to a processed receipt. Reused event numbers cannot
+   inherit readiness from another binding, port or dongle.
+4. The active seat UID is read through libsystemd. A bounded child resolves
+   account/groups, drops its own real/effective/saved credentials and calls
+   `access(2)` as that user **without opening the device**. Parent credentials,
+   ACLs and permissions are untouched. No active seat is a defined headless
+   case: once the processed receipt exists, publish normally; a later login
+   discovers both existing nodes. Unknown seat/access-check failures are errors.
+5. Only then does the manager issue **one** checked `publish-input`. The kernel
+   takes USB-device then I/O locks, verifies the live binding, exact tokens,
+   successful handoff, persistent 109c runtime and nonquiesced/nonfaulted state,
+   then registers the prepared gamepad. It does not send USB commands, change
+   identity, re-register an active pad or restart Steam. The following status
+   read must confirm publication before the manager reports `active`/`ready`.
 
-1. Attest the exact owned native binding using existing kernel/session tokens.
-   Prepare the gamepad and publish the existing motion node. Keep the raw IIO,
-   IMU stream, existing scale/axes and single USB owner.
-2. Observe the **processed** input hotplug notification for that exact motion
-   node and check access for the intended active session. Match the binding,
-   nonempty shared `uniq`, native interface and input-node lifetime; an event
-   number, PID or earlier udev database entry is insufficient.
-3. Only then publish the prepared gamepad once, after a fresh exact-instance
-   check in the kernel. SDL can discover the usable sensor before opening the
-   newly announced gamepad. There is no Steam restart, fake gyro capability,
-   controller identity change or global delay.
-4. A replacement/disconnect invalidates the old gate. A new binding needs its
-   own existing manager ownership/start checks and a new gate. This is not a
-   new USB-retry authority. Multiple dongles cannot lend each other readiness.
-5. Timeout, invalid six-axis metadata or an uncertain publication must retain
-   the original error and use existing verified cleanup. Never claim fallback
-   or input publication succeeded merely because a plan was returned.
+The private ABI gains additive `GSN_GET_INPUT_STATUS` / `GSN_PUBLISH_INPUT`
+commands, with fixed 176-/24-byte layouts checked in ELF32 and ELF64 clients.
+Existing structs and ABI version remain unchanged. Names/tokens are temporary
+kernel/session identifiers, not hardware serials. Unknown commands and malformed,
+wrong-instance or non-admin requests fail; STOP, END, PM/quiesce and disconnect
+prevent pending publication. Registration failure consumes publication permission.
+A fault during sleeping registration is reported as failure while retaining the
+actual published state for cleanup; it cannot be claimed as a clean nonpublication.
+The adapter tests model this case. They do not prove real kernel race freedom.
 
-The prototype checks missing/old processed-node proof, unavailable access,
-invalid resolution, changed hub/interface/instance, disappearance, duplicate
-events, a fixed deadline and mismatched acknowledgements. Publication is a plan
-until explicitly acknowledged. It does **not** provide atomic system-level
-TOCTOU protection; the future kernel operation must supply that protection.
-Its three-second synthetic deadline tests boundedness, not a recommended
-production startup delay or a measured hardware requirement.
+## Deadlines, supervision and recovery
 
-The gated SDL scenario models the intended ordering using ordinary test-file
-publication. It does not exercise an implemented kernel/manager handshake.
-The sensor-first ordering also passes without the gate; this is evidence for
-the precondition, not evidence that the prototype modified SDL's behavior.
+Readiness has a fixed ten-second deadline after native attestation, not a
+fixed startup sleep or a limit on normal play. Getter conflicts/duplicate events
+cannot extend it. Account/access checking is bounded to one second, including
+potential NSS work, and runs only while waiting. There is no automatic Steam,
+USB or controller restart loop and no wider device access permission.
 
-## Remaining implementation before an installation candidate
+The lease persists the original deadline, publication-attempt latch and first
+publication failure. Waiting does not consume new start budget or remove END/
+cleanup authority. Release while waiting uses the existing attested END path.
+Timeout, missing receipt, monitor overflow, denied access or failed publication
+retain the first cause in status/failure history even if cleanup later fails.
+A failed monitor inhibits further takeover and is visible in `status`.
 
-**No-Go for installation of this prototype as a gyro-hotplug fix.** Existing
-production package versions and installed behavior remain unchanged. Necessary
-work is now explicit, rather than another unbounded firmware/gyro investigation:
+After manager restart, an already-published exact instance can be recovered via
+fresh kernel proof/status without another publish. An attempted but unpublished
+operation is cleanup-only. A never-attempted pending instance retains its old
+deadline and requires a fresh processed receipt; the new daemon does not invent
+one from stored metadata. If none arrives, it fails within the original budget.
+This deliberately favors an explicit recovery over an uncertain mutation.
 
-- Add an optional, backward-compatible two-phase input-publication operation
-  to the private kernel/client contract. Old clients keep their current behavior.
-  Validate exact native instance tokens under the existing lifetime locks;
-  reject publication after STOP, suspend/quiesce, disconnect or replacement.
-  Do not unregister/re-register an active gamepad to manufacture a reconnect.
-- Integrate the gate into the existing manager with a processed-input-event
-  backend established before takeover. A sysfs node or `udev` database entry
-  alone must not stand in for completed notification and session access.
-  Pin the input-node lifetime, preserve cleanup authority/start-budget separation,
-  failure persistence and leases across manager/client interruption. No global
-  `udevadm settle`, permissions widening or polling/restart loop.
-- Define no-active-session, denied ACL, missing notification and timeout behavior
-  without blocking ordinary controls indefinitely or claiming a successful
-  automatic `109c`→`100a` return. The existing guarded manual path remains valid.
-- Execute the actual registration/teardown adapter with fake kernel objects,
-  manager restart/timeout/disconnect regressions and packaged-kernel/client
-  compatibility tests. Build the module and package only after the handshake
-  is implemented. This study does not bump a package version or generate an
-  installer containing a nonfunctional gate.
-- Under separate permission, validate actual Gamescope discovery/FDs/UI for
-  later power-on and radio reconnect, then combined ordinary input/paddles,
-  Eden, FF and trigger ownership/STOP. Cover application-start races and
-  suspend separately. Passing synthetic inotify tests cannot replace this.
+The existing return guard remains authoritative: **END or xpad binding is not
+a proved 109c→100a identity change**. If the USB device stays 109c, the manager
+reports blocked/manual recovery; it does not guess a reset or mode-switch
+packet. Disconnect/replacement invalidates the old permission. Startup, fallback,
+PM and haptic-owner policies outside this readiness phase are retained.
 
-A source-level SDL improvement for late sensor association remains an upstream
-alternative, but patching/replacing Steam's private library or injecting a global
-preload is not selected. The current approach preserves the accepted evdev
-contract and keeps the remedy in our own kernel/manager boundary.
+A successful seat-access snapshot cannot atomically guarantee a future Steam
+open while a user is switching sessions or ACLs change. Kernel tokens protect
+binding/publication identity, not that application race. No full Gamescope
+hotplug, arbitrary seat transition or suspend guarantee follows from offline tests.
+The earlier SDL failure remains a sufficient mechanism, not the proved exclusive
+cause of the historical Gamescope case. No Steam patch/library replacement or
+global preload is introduced; the preload fixture remains test-only.
+
+## Validation and next boundary
+
+[Integrated offline evidence](input-publication-offline.json) records the final
+source hashes, tests and module result. `make test` includes 25 new Python tests
+for manager/processed receipts/access/cleanup/restart plus 28 actual-client
+command cases over two ABIs. The extracted real registration/control adapter
+checks exact tokens, capability/copy failures, legacy opt-in, STOP/PM/fault
+rejection, failed/duplicate publication, an in-flight registration fault and
+held standard/paddle replay. Existing startup, FF-lifetime, raw IIO, broker,
+manager and package regressions remain required, not replaced by the prototype.
+
+The source/package allowlist now includes the shared policy and processed-input
+backend in the manager directory. Source-only staging verifies these files;
+no package hook activates the service as part of this work. Package release is
+prepared as `0.1.0.alpha3-10`; no installer is executed or transferred.
+The same kernel/protocol/UAPI sources are built against matching prepared headers:
+
+| Kernel | Toolchain | Build result |
+| --- | --- | --- |
+| `7.2.11-1-garuda` | Clang 23.1.3 | Passed; zero code warnings, one recorded compiler-version advisory (kernel Clang 23.1.1) |
+| `7.2.11-1-cachyos-deckify` | GCC 16.2.1, matching header compiler | Passed; zero warnings, matching vermagic, no automatic USB aliases |
+
+The CachyOS build uses only 17 explicit source/build-helper files transferred to
+a fresh user-owned working directory over the existing SSH connection. All 17
+hashes are verified before and after compilation, and the running kernel stays
+the same. No sudo, package hooks, DKMS installation, service operation or module
+load is performed. The module remains a build artifact, not runtime acceptance.
+
+**Build preparation passed for both kernels; controlled first hardware
+acceptance remains open. No unattended deployment acceptance.** Before any installation,
+verify matching target kernel/headers, package/module/client versions and the
+saved gyro opt-in. Then obtain separate permission for update/activation and
+observe late power-on and radio reconnect in Gamescope, motion FD/UI response,
+normal input/paddles, Eden and haptic ownership/STOP. Suspend and application-
+startup races remain separate acceptance cases. Keep enough human preparation
+buffer; no test is started by this implementation.
 
 ## Reproduce without devices
 
 ```sh
-python -B tests/test_input_pair_readiness.py
-make test-sdl-hotplug
-python -B tests/run_sdl_hotplug_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so.0
+DEBUGINFOD_URLS= LLVM_SYMBOLIZER_OPTS=--no-debuginfod make test
+DEBUGINFOD_URLS= LLVM_SYMBOLIZER_OPTS=--no-debuginfod make test-sdl
+python -B scripts/build_kernel.py
+python -B scripts/analyze_kernel.py
 ```
 
-Use a full source checkout with existing Bubblewrap/clang/SDL and multilib for
-ELF32. The runner does not install dependencies or start Steam. The existing
-sandbox auditor verifies six isolated namespaces, zero capabilities,
-NoNewPrivs and no host input/USB/IIO nodes before the child creates its fake
-input directory. Only the explicitly selected SDL file is mounted read-only;
-its loaded path and before/after hash are checked. The test-only preload is
-confined to that child. Logs remain under ignored `build/results/sdl-hotplug/`.
-The full regression suite still covers existing paddles, IIO, FF, manager and
-packaging; no new combined real-hardware acceptance is implied.
-
-Final `make test` passes, as does `make test-sdl` (18 existing button scenarios,
-16 existing sensor scenarios and the five system-SDL hotplug scenarios).
-Accepted regression commands set `DEBUGINFOD_URLS=` and
-`LLVM_SYMBOLIZER_OPTS=--no-debuginfod` for those test processes only. The first
-suite attempt timed out in an existing ASan ownership-bug negative control;
-the inherited environment enabled external debug-symbol lookup. That lookup
-was not traced, so it is not a proved exclusive timeout cause. The isolated
-control and full final suite pass with external lookup disabled. A subsequent
-package regression also caught the new README link missing from the explicit
-document allowlist; the two report files are now included, not the prototype.
-Original interrupted/failed logs are retained alongside final results in ignored
-`build/gyro-hotplug-*.log`. No sanitizer check was disabled or test timeout raised.
+All outputs stay under ignored `build/`. No module is loaded, no service changed,
+no real input/USB/IIO node opened. Synthetic syscall fixtures run only inside
+the existing audited device-free Bubblewrap namespace. The earlier 20 SDL
+reproduction cases and their original hashes stay historical at `468ddc6`;
+current integrated evidence is separate. No current-cache compatibility beyond
+the pinned references is implied. No external symbols are downloaded by the
+accepted regression commands. Failed intermediate build/analyzer logs are
+retained; no sanitizer or required diagnostic was disabled to get a pass.
