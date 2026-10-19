@@ -18,9 +18,10 @@ limits below remain explicit; milestone closure does not claim those passed.
 Follow-up (19 October): the separately approved
 [real-acceleration extension](STEAM_ACCEL_EXTENSION.md) is now loaded and
 accepted in Steam's gyro UI with ordinary inputs and independent paddles.
-This is a temporary six-axis profile; the historical Eden acceptance below
-still refers to gyro-only operation. Six-axis Eden regression and persistent
-accel/reboot acceptance remain separate. No gyro calibration is reopened.
+This is a temporary six-axis profile. The user subsequently reports Eden
+continues working; no new per-axis details were supplied. The detailed
+historical Eden acceptance below still refers to gyro-only operation;
+persistent accel/reboot acceptance remains separate. No gyro calibration is reopened.
 
 ## Decision and scope
 

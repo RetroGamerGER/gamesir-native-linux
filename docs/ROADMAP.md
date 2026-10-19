@@ -33,8 +33,9 @@ Die separat freigegebene Revision 9 ist installiert und mit temporärem
 realem Beschleunigungsprofil nativ gestartet. Steam zeigt jetzt alle drei
 Gyro-Achsen an; normale Eingaben und unabhängige Paddles wurden bestätigt.
 Das löst die Nullanzeige dieses Laufs. Nächste Schritte unter eigener Freigabe:
-Eden mit sechs Achsen gegenprüfen, dauerhafte lokale Accel-Konfiguration und
-Boot-/Lebenszyklusabnahme. Keine neue Winkel-/Gyrofaktorsuche und kein
+Dauerhafte lokale Accel-Konfiguration und Boot-/Lebenszyklusabnahme. Der
+Nutzer bestätigt inzwischen die weitere Funktion von Eden; zusätzliche
+Einzelmessungen wurden dazu nicht dokumentiert. Keine neue Winkel-/Gyrofaktorsuche und kein
 universelles Proton-Spieleversprechen. [Resultat und Grenzen](STEAM_ACCEL_EXTENSION.md).
 Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
 

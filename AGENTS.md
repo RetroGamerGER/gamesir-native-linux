@@ -184,6 +184,14 @@ Do not continue claiming the UI fix is untested, or expand it into a Proton
 game/six-axis Eden/lifecycle/calibration acceptance. No persistent accel file
 was written. Preserve temporary profile and working features; persistence,
 extra app/hardware tests and public push need their own approval.
+The maintainer subsequently reports "Eden funktioniert auch weiterhin".
+Record continued functional use with this profile; do not invent repeated
+axis/button/calibration/lifecycle measurements or require precision gyro
+calibration again. A file-only persistence candidate is prepared and validated
+with modprobe --show-depends (no load): update the existing local gyro file to
+include accel=1, map 1,2,3, 8192/1. It has not been written to /etc. Separate
+explicit approval is still required; do not restart/reload/reboot as part of
+that file-only action or change package defaults.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

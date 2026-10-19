@@ -5,6 +5,16 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Eden funktioniert weiterhin (Nutzerrückmeldung):** Der Nutzer bestätigt nach
+dem Steam-Test die weitere Funktion von Eden mit dem laufenden Profil.
+Keine zusätzlichen Einzelachsen-, Tasten-, Kalibrierungs- oder Langzeitwerte
+wurden dazu erhoben. Die vorbereitete dauerhafte Option ergänzt nur die
+bestehende lokale Gyro-Moduldatei um Accel/Achsen 1,2,3 und 8192/1; ein
+gerätefreier modprobe-Ausgabevergleich besteht. Systemdatei noch unverändert,
+keine neue Aktivierung oder neuer Test durch diese Dokumentation. Für das
+Schreiben der Datei und einen späteren Neustart bleiben getrennte Freigaben
+nötig. [Rückmeldung und Konfigurationsvorschlag](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
 **Steam-Gyroanzeige mit realem Beschleunigungspfad erfolgreich:** Nach getrennten
 Freigaben sind Release/Rückkehr, temporärer Profilwechsel und genau ein neuer
 nativer Bootstrap bestätigt. `100a` → `109c/gs_native`, attestierte neue Instanz

@@ -8,9 +8,9 @@ complete physical calibration. No Steam library/configuration was modified.
 
 The running experimental profile is gyro 0.07 dps/raw, acceleration 8192
 counts/g and explicit accel map 1,2,3. Acceleration is not enabled by package
-default and no persistent accel option was written. Earlier gyro-only Eden
-acceptance remains recorded separately; Eden with this six-axis profile and
-reboot/persistence still need review. Gyro calibration remains paused.
+default and no persistent accel option was written. Earlier gyro-only Eden acceptance remains recorded separately. The user
+subsequently reports that Eden continues working with this profile; no new
+per-axis measurements were reported. Persistence/reboot still need approval. Gyro calibration remains paused.
 
 Implementation, preparation, installation and intermediate stopped checks
 below retain their original stages and limits. The later approved activation
@@ -259,3 +259,40 @@ qualitative acceleration map and scale remain experimental. Six-axis Eden,
 reboot/persistent opt-in, lifecycle and shared output acceptance remain
 separate; earlier gyro-only Eden/FF/bridge evidence must not be relabelled
 as new combined hardware acceptance. [Activation record](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
+## Eden follow-up and persistence proposal
+
+After the successful Steam UI test, the maintainer reports: “Eden funktioniert
+auch weiterhin”. Record this as continued functional operation with the current
+profile. It does not supply new axis-by-axis values, button assignment results,
+calibration or long-duration/lifecycle evidence. No extra agent-driven hardware
+test was started and no further gyro calibration is required by this feedback.
+
+The proposed local-only persistence change updates the existing
+`/etc/modprobe.d/90-gamesir-native-gyro.conf` to the following staged content:
+
+```conf
+# GameSir G7 Pro: explicitly enabled experimental SDL motion profile.
+# Gyro 0.07 dps/raw; experimental accel axes 1,2,3 and 8192 LSB/g.
+options gs_native experimental_gyro=1 experimental_accel=1 accel_axis_map=1,2,3 accel_counts_per_g_num=8192 accel_counts_per_g_den=1
+```
+
+The exact candidate SHA256 is
+`9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2`.
+The existing file still hashes to
+`5960ba3dff0e568341f88040162b81ebfa522f50e42662b11667925878767d51`.
+The old content is retained privately for a concrete rollback.
+A device-free `modprobe -C <candidate> --show-depends gs_native bootstrap_mode=1
+enable_output=1 persistent_mode=1` shows all profile and service options
+combined correctly. The effective system configuration still contains only
+the original gyro option; no module install/softdep override or service drop-in
+was found. Readable module-load/dracut configuration and the kernel command
+line contain no explicit gs_native early-load entry.
+
+**Prepared only:** no system file was changed. After a separate exact approval,
+verify the existing regular root-owned 0644 file and expected hash, then install
+only the candidate at that path and verify bytes/owner/mode/effective options.
+No reload, Release/Resume, service restart, initramfs rebuild or reboot belongs
+to that file-only step. The active module already has these values. Actual
+next-boot and fallback-image behavior remain acceptance work, not a guarantee
+from the configuration listing. Package defaults remain off.

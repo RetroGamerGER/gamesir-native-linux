@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-10-19",
-  "stage": "native six-axis profile activated; Steam gyro UI and normal/paddle inputs accepted by user",
+  "stage": "native six-axis profile active; Steam gyro UI/paddles accepted and Eden reported to continue working",
   "package": "gamesir-native-dkms 0.1.0.alpha3-9",
   "module_srcversion": "DF7D42B1E7909084ED9BEB1",
   "prior_release": {
@@ -91,5 +91,24 @@
     "licensing_tests": 3,
     "packaging_tests": 25,
     "diff_check_passed": true
+  },
+  "Eden_followup": {
+    "date": "2026-10-19",
+    "method": "Human report",
+    "statement": "Eden funktioniert auch weiterhin",
+    "continued_function_reported": true,
+    "per_axis_or_button_details_repeated": false,
+    "new_agent_hardware_test": false,
+    "limits": "Functional follow-up, not an instrumented full six-axis, calibration, motor or lifecycle acceptance."
+  },
+  "persistence_preparation": {
+    "prepared_only": true,
+    "target": "/etc/modprobe.d/90-gamesir-native-gyro.conf",
+    "candidate_options": "options gs_native experimental_gyro=1 experimental_accel=1 accel_axis_map=1,2,3 accel_counts_per_g_num=8192 accel_counts_per_g_den=1",
+    "old_sha256": "5960ba3dff0e568341f88040162b81ebfa522f50e42662b11667925878767d51",
+    "candidate_sha256": "9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2",
+    "device_free_modprobe_listing_passed": true,
+    "system_file_written": false,
+    "reboot_performed": false
   }
 }
