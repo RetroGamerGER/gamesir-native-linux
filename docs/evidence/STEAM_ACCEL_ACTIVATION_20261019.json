@@ -408,5 +408,67 @@
       "scope": "One unprivileged main-process FD/maps/log snapshot; not proof that no other process ever reads the sensor.",
       "next_step": "User-led normal reboot proposed after user suggestion; no SSH reboot or Steam restart performed."
     }
+  },
+  "CachyOS_reboot_readonly": {
+    "date": "2026-10-19",
+    "stage": "post-reboot autostart/native startup verified; Steam gyro UI failure persists",
+    "method": "Unprivileged read-only SSH after user-led reboot and reported controller connection; second FD snapshot while user confirms gyro UI open and rates zero.",
+    "new_boot_id_verified": true,
+    "kernel": "7.2.9-2-cachyos-deckify",
+    "package": "gamesir-native-dkms 0.1.0.alpha3-9",
+    "service": {
+      "active": true,
+      "enabled": true,
+      "result": "success",
+      "automatic_restarts": 0,
+      "started_at_boot_seconds": 15.659,
+      "systemd_boot_start_and_bootstrap_journal_present": true
+    },
+    "native_start": {
+      "USB_PID": "109c",
+      "IF0_driver": "gs_native",
+      "module_srcversion": "DF7D42B1E7909084ED9BEB1",
+      "bootstrap_returncode": 0,
+      "kernel_state": 7,
+      "kernel_error": 0,
+      "failed_stage": 0,
+      "gamepad_and_IMU_start_seen": true,
+      "live_protected_lease_not_read": true
+    },
+    "motion": {
+      "paired_nonempty_identity": true,
+      "six_axis_ABS_mask": "0x3f",
+      "user_read_access": true,
+      "udev_ID_INPUT_ACCELEROMETER": "1",
+      "persisted_profile_sha256": "9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2",
+      "runtime_parameters_directly_read": false,
+      "parameter_read_limit": "0400 parameter files deny ordinary-user reads; no privilege escalation attempted."
+    },
+    "Steam": {
+      "gyro_UI_open_confirmed": true,
+      "human_reports_all_three_rates_zero": true,
+      "main_process_has_gamepad_open": true,
+      "main_process_has_paired_motion_node_open": false,
+      "main_process_FD_inspection_errors": 0,
+      "snapshot_count": 2,
+      "reason_for_missing_sensor_open_proven": false,
+      "scope": "main Steam process; not a claim about every possible helper or all times"
+    },
+    "agent_actions": {
+      "read_only": true,
+      "service_start_or_restart": false,
+      "resume_or_release": false,
+      "module_load_or_reload": false,
+      "Steam_restart_or_setting_change": false,
+      "device_open_or_capture": false,
+      "process_memory_read": false,
+      "reboot_issued": false,
+      "push": false
+    },
+    "acceptance_limits": "One observed boot/native startup case; no universal boot/reconnect/PM, gyro UI or physical calibration acceptance.",
+    "private_evidence_sha256": {
+      "boot-read.json": "0ebbc5c1c54fa4cbb4a9c48513cb650e7e7e702bc25a840f1b555440968eb245",
+      "gyro-ui-open-read.json": "19c366f1f1db550ffcf1422ce476986fed56b20f03504a58be9edffc3cbc14a8"
+    }
   }
 }

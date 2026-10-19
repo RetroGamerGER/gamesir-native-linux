@@ -229,6 +229,14 @@ of the exact cause or all processes' behavior. A normal user-led reboot was
 suggested after the user's question, not performed by the agent. Do not claim
 CachyOS Steam gyro, reboot or calibration acceptance. Preserve the working
 native session; no extra release/reload, Steam change, motor test or push.
+The later user-led reboot was checked read-only: changed boot ID, enabled
+service started around 16 seconds into boot, successful native startup and
+paired readable six-axis node. This supports one boot case, not general
+lifecycle acceptance. Steam's main process still has only the gamepad open,
+not motion, in two snapshots including a human-confirmed open gyro UI; the
+user reports all three rates zero. Reboot did not resolve this case. Runtime
+parameters/protected lease were not read; no sudo, device/process-memory open,
+start/reload/Resume/Release or Steam change. Keep Steam gyro failure open.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

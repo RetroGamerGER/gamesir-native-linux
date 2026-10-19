@@ -5,6 +5,17 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Nach nutzergeführtem CachyOS-Neustart lesend bestätigt:** Dienst automatisch
+beim Boot gestartet (etwa 16 Sekunden), aktiv/aktiviert, keine automatischen
+Neustarts; neuer erfolgreicher Bootstrap und `109c/gs_native` beobachtet.
+Persistiertes Sensorprofil unverändert, gepaarter Sechsachsen-Sensor vorhanden
+und für den Nutzer lesbar. Steam öffnet im Hauptprozess weiterhin nur das
+Gamepad, den Sensor nicht – auch im zweiten Schnappschuss bei bestätigter
+geöffneter Gyro-Anzeige. Nutzer meldet weiterhin drei Nullwerte. Damit ist ein
+Boot-/Startfall bestätigt, Steam-Gyro aber weiterhin nicht funktionsfähig.
+Keine Systemänderung, Geräteöffnung, Speicherbeobachtung oder Reparatur.
+[Nachweis und Grenzen](STEAM_ACCEL_EXTENSION.md#read-only-check-after-user-led-cachyos-reboot).
+
 **CachyOS nativ mit sechs Sensorachsen aktiviert:** Ein separat freigegebener
 Dienststart und ein Resume bestanden; kein Fehler-Release und keine Wiederholung.
 Neue `109c/gs_native`-Instanz, Elternzuordnung, Besitznachweise/Kernel-Tokens und

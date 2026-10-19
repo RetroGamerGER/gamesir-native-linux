@@ -440,3 +440,29 @@ reboot, Steam restart, setting change, extra release/reload or hardware retry
 was executed. Native play remains active. UI/gameplay, Eden on this host,
 reboot, suspend and physical-calibration acceptance remain open.
 [Activation and evidence limits](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
+## Read-only check after user-led CachyOS reboot
+
+The user subsequently restarted the PC, enabled/connected the controller and
+requested a read-only check. A changed boot ID, enabled active/running service
+with zero automatic restarts, systemd start at about 15.659 seconds after boot,
+and this boot's successful bootstrap/ready journal corroborate automatic native
+startup. Fresh USB metadata shows 109c/gs_native, and the loaded source version
+matches revision 9. This is one observed boot case, not general boot/PM reliability.
+
+The persisted motion configuration retains its reviewed hash and root:root/0644
+metadata. Both paired input nodes are present and readable by the session user;
+the motion node has all six axes and ID_INPUT_ACCELEROMETER=1. Runtime parameter
+files remain root-only and were not read by this unprivileged inspection.
+No protected manager lease, input stream or process memory was opened.
+
+The main Steam process again has the current gamepad node open and no FD for
+the paired motion node. A second snapshot after the user explicitly confirmed
+the gyro UI is open gives the same result, with zero FD-inspection errors.
+The user reports all three UI rates still remain zero. **Reboot did not resolve
+the observed Steam gyro failure.** This does not prove the exact sensor-discovery
+failure or exclude other helper processes at other times. Ordinary inputs and
+paddles retain their earlier acceptance; no new post-boot physical button test
+was recorded here. No service/module/Steam changes, Resume, Release, capture,
+extra reboot or privilege escalation was performed by this check.
+[Sanitized post-boot evidence](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).

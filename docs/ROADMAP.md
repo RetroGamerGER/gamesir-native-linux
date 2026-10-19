@@ -51,6 +51,11 @@ Steams Gyro-Anzeige bleibt null. Die lesende FD-Prüfung sieht nur das Gamepad
 im Steam-Hauptprozess geöffnet. Nächster vorgeschlagener Test: regulärer
 nutzergeführter Neustart und frische Sensor-/Steam-Prüfung. Ursache und
 Boot-/Lebenszyklusabnahme bleiben offen; keine erneute Kalibrierung beginnen.
+Der anschließende nutzergeführte Neustart bestätigt einen automatischen
+Dienst-/Bootstrap-Fall samt lesbarem Sensor. Steams Hauptprozess öffnet den
+Sensor auch mit geöffneter Gyro-Anzeige weiterhin nicht; Werte bleiben null.
+Neustart allein löste diesen Steam-Fall nicht. Ursache gezielt weiter
+eingrenzen; keine allgemeine Boot- oder Steam-Gyro-Abnahme daraus ableiten.
 Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
 
 ## Neu angefragte Steam-Gyro-Machbarkeit: offline geprüft
