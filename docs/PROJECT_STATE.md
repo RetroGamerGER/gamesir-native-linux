@@ -5,6 +5,18 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Steam-Gyroanzeige mit realem Beschleunigungspfad erfolgreich:** Nach getrennten
+Freigaben sind Release/Rückkehr, temporärer Profilwechsel und genau ein neuer
+nativer Bootstrap bestätigt. `100a` → `109c/gs_native`, attestierte neue Instanz
+und aktive Kernel-/Manager-Zuständigkeit; beide Sensorarten sind am gepaarten,
+für den Nutzer lesbaren evdev-Knoten registriert. Nutzer bestätigt in Steam:
+alle drei Gyro-Werte reagieren; normale Eingaben und vier unabhängige Paddles
+funktionieren. Damit ist die Nullanzeige in diesem Lauf behoben.
+Das Profil ist noch temporär: Accel 8192 LSB/g, Achsen 1,2,3; Gyro unverändert
+0,07 °/s/raw. Kein permanenter Accel-Eintrag, kein Proton-Spiel-/Motortest und
+keine erneute Eden-Abnahme mit sechs Achsen. Frühere Fehlprüfungen bleiben
+historisch erhalten. [Aktivierung und Grenzen](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
 **Nutzer hat Dienststart und Resume ausgeführt:** Lesend bestätigt sind der
 aktive/aktivierte Dienst und das geladene Revision-9-Modul. Die Verwaltung
 ist dadurch bereits freigegeben (`paused=false`), aber es gibt keine

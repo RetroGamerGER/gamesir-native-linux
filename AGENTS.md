@@ -173,6 +173,17 @@ neither start nor resume. Preserve the failed guard and user context, not a
 new driver-defect diagnosis. Pause/profile reload/cold-source return and any
 bootstrap require fresh concrete approval. Do not adopt unowned 109c or claim
 that the installed accel extension is active merely because service runs.
+Subsequent explicit approvals authorized one Release, four profile-load
+operations and one Resume with one error-Release only if needed. All passed;
+no error-Release/retry occurred. Current accepted run: module accel/gyro Y,
+map 1,2,3, 8192/1 counts/g, same gyro 0.07; native 109c active with attested
+lease/tokens and paired six-axis node readable by the session user. The user
+confirms Steam's three gyro rates now respond and ordinary inputs/all four
+paddles work. Read docs/evidence/STEAM_ACCEL_ACTIVATION_20261019.json.
+Do not continue claiming the UI fix is untested, or expand it into a Proton
+game/six-axis Eden/lifecycle/calibration acceptance. No persistent accel file
+was written. Preserve temporary profile and working features; persistence,
+extra app/hardware tests and public push need their own approval.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

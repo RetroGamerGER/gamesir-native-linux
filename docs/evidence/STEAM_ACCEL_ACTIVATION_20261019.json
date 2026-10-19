@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "stage": "native six-axis profile activated; Steam gyro UI and normal/paddle inputs accepted by user",
+  "package": "gamesir-native-dkms 0.1.0.alpha3-9",
+  "module_srcversion": "DF7D42B1E7909084ED9BEB1",
+  "prior_release": {
+    "calls": 1,
+    "passed": true,
+    "paused": true,
+    "ownership_cleared": true,
+    "return_pid": "100a",
+    "return_driver": "xpad"
+  },
+  "profile_load": {
+    "approved_actions": [
+      "stop gamesir-native.service",
+      "rmmod gs_native after zero-reference/unbound checks",
+      "modprobe gs_native with explicit six-axis profile",
+      "start gamesir-native.service while paused"
+    ],
+    "all_returncodes": 0,
+    "parameters": {
+      "bootstrap_mode": "Y",
+      "enable_output": "Y",
+      "persistent_mode": "Y",
+      "experimental_gyro": "Y",
+      "experimental_accel": "Y",
+      "accel_axis_map": "1,2,3",
+      "accel_counts_per_g_num": "8192",
+      "accel_counts_per_g_den": "1"
+    },
+    "existing_gyro_config_unchanged": true,
+    "persistent_accel_option_written": false
+  },
+  "bootstrap": {
+    "resume_calls": 1,
+    "error_release_calls": 0,
+    "passed": true,
+    "start_pid": "100a",
+    "end_pid": "109c",
+    "end_driver": "gs_native",
+    "source_parent_and_new_instance_attested": true,
+    "kernel_lease_tokens_verified": true,
+    "kernel_state": 7,
+    "kernel_error": 0,
+    "failed_stage": 0,
+    "gamepad_stream_seen": true,
+    "imu_stream_seen": true,
+    "observer_policy": "existing StartupWindow/wait_for_native",
+    "policy_regression_tests": 31,
+    "fault_pattern_check_passed": true,
+    "expected_teardown_notice": "xpad usb_submit_urb -2 observed during detach; existing documented nonfatal ENOENT context",
+    "automatic_retry": false
+  },
+  "sensor_node_metadata": {
+    "paired_nonempty_uniq": true,
+    "accel_gyro_abs_mask": "0x3f",
+    "active_user_read_access": true,
+    "node_opened_by_metadata_checker": false,
+    "actual_resolution_ioctl_read": false
+  },
+  "steam_acceptance": {
+    "method": "Human report after normal Steam launch and gyro display check; no Steam memory observation or binary modification in this test.",
+    "all_three_gyro_rates_respond": true,
+    "normal_buttons_sticks_triggers_work": true,
+    "four_paddles_independent": true,
+    "calibration_button_requested": false,
+    "Steam_binary_identity_rechecked": false,
+    "particular_Proton_game_tested": false
+  },
+  "boundaries": {
+    "accel_scale": "8192 LSB/g replaceable experiment",
+    "accel_axes": "1,2,3 evidence-backed qualitative candidate",
+    "gyro_dps_per_raw": 0.07,
+    "gyro_calibration_resumed": false,
+    "full_physical_calibration_claimed": false,
+    "motor_pulses_tested": false,
+    "Eden_six_axis_regression_tested": false,
+    "reboot_tested": false,
+    "persistent_accel_config_written": false,
+    "push": false
+  },
+  "private_evidence_sha256": {
+    "profile_load_report": "b70b2cc822088a8e633a31021225fcbbddeb1e6e850505c2046039a936b8df5e",
+    "bootstrap_observations": "38bca0a0823ad71d87c5dce751fd6d0d6eaf6a8fc7d0945afe9d54b8d2f895d5",
+    "node_metadata": "c387386c750273fce08fadaaa36cec8ad94f595277ade28858a877a4885c80f4"
+  },
+  "documentation_checks": {
+    "public_readme_tests": 7,
+    "licensing_tests": 3,
+    "packaging_tests": 25,
+    "diff_check_passed": true
+  }
+}

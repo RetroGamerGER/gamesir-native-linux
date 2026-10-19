@@ -87,6 +87,10 @@ separates hardware results, offline tests and outstanding validation.
   optional SDL gyro path in Eden's controller settings confirmed responsive
   motion, matching direction/sensitivity and four independently assignable
   paddles with ordinary input preserved. In-game acceptance remains separate.
+  A later controlled test with optional real evdev acceleration confirmed all
+  three gyro rates respond in Steam's UI, with ordinary input and independent
+  paddles retained. This remains an experimental temporary profile, not Proton
+  game acceptance. See [the activation record](docs/STEAM_ACCEL_EXTENSION.md).
 - **Forza Horizon 6 through Xodus Nexus:** one controlled run of the optional
   trigger bridge `0.1.0.alpha1-2` produced felt effects on both impulse
   triggers, pauses between effects and renewed vibration on later effects.
@@ -106,8 +110,11 @@ computer.
   controller settings. It is not enabled by default. A separately approved
   local persistent opt-in is now configured and checked; its actual reboot
   acceptance remains pending. Precise angle/bias calibration remains
-  paused. The accelerometer stays raw IIO with experimental `8192 LSB/g`; its physical
-  axes have not been established. See [SDL/Eden scope and test plan](docs/SDL_EDEN_GYRO.md).
+  paused. Raw IIO remains unchanged. Separate opt-in evdev acceleration uses
+  experimental `8192 LSB/g` and an evidence-backed qualitative axis map;
+  full physical calibration, six-axis Eden regression and persistent-accel
+  reboot acceptance remain open. See [SDL/Eden scope](docs/SDL_EDEN_GYRO.md)
+  and [Steam result/limits](docs/STEAM_ACCEL_EXTENSION.md).
 - **Trigger vibration has no confirmed universal games path.** Standard
   Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,
   with game-specified effect duration. Four-channel hardware support and the

@@ -36,6 +36,16 @@ fake Sony identity, forced capability bit or new USB reader is justified by
 these results. The accepted SDL/Eden milestone remains closed; known-angle
 calibration is not reopened.
 
+## Later approved real-acceleration run
+
+The later [revision-9 activation](STEAM_ACCEL_EXTENSION.md) has now passed
+native startup and user-observed Steam UI acceptance: all three gyro rates
+respond, with ordinary input and all four independent paddles retained.
+This result follows the original offline stages above; their then-unverified
+fix statements are historical. The acceleration profile is temporary and
+experimental, with no Proton-game, six-axis Eden or reboot acceptance yet.
+[Sanitized live result](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
 ## Reproducible local evidence
 
 See [the portable evidence manifest](steam-gyro-offline-evidence.json) for

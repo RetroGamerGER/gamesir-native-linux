@@ -25,10 +25,12 @@ proprietary binaries, JavaScript excerpts and disassemblies stay outside Git.
 
 ## Offline correction preparation
 
-The [real-acceleration extension](STEAM_ACCEL_EXTENSION.md) implements the
-missing optional evdev data path without fabricating gravity or changing
-Steam. Activation remains gated on explicit accelerometer-axis evidence
-and separate permission; no live fix is claimed.
+The [real-acceleration extension](STEAM_ACCEL_EXTENSION.md) was subsequently
+installed/loaded under explicit approval. One native activation and the user's
+Steam gyro UI/ordinary input/paddle acceptance passed with real acceleration.
+This follows the static investigation; it does not retrospectively measure
+all historical failing gates or establish universal Steam/Proton behavior.
+The profile remains experimental and temporary.
 
 ## Event routing and internal packet conversion
 

@@ -1,13 +1,21 @@
-# Steam gyro: real acceleration extension (offline preparation)
+# Steam gyro: optional real acceleration extension
 
-19 October 2026. **Revision 9 installed under separate approval; not activated.**
-The implementation/test sections below record the preceding offline preparation.
-This prepares a correction for the [statically identified acceleration
-notification gate](STEAM_GYRO_DOWNSTREAM.md#notification-gate-follow-up).
-It does not establish Steam Input/gameplay acceptance or prove every gate in
-Steam's historical live run. No Steam library or configuration is modified. The later approved package installation and subsequent user-driven service
-start/Resume are recorded below; the acceleration extension remains disabled. Gyro
-calibration remains paused.
+19 October 2026. **Revision 9 activated under separate approval; Steam gyro
+UI accepted in the controlled run.** The user reports all three gyro values
+respond and normal inputs plus all four independent paddles still work.
+This is UI acceptance, not a particular Proton game's gyro acceptance or
+complete physical calibration. No Steam library/configuration was modified.
+
+The running experimental profile is gyro 0.07 dps/raw, acceleration 8192
+counts/g and explicit accel map 1,2,3. Acceleration is not enabled by package
+default and no persistent accel option was written. Earlier gyro-only Eden
+acceptance remains recorded separately; Eden with this six-axis profile and
+reboot/persistence still need review. Gyro calibration remains paused.
+
+Implementation, preparation, installation and intermediate stopped checks
+below retain their original stages and limits. The later approved activation
+and [sanitized result](evidence/STEAM_ACCEL_ACTIVATION_20261019.json) supersede
+the earlier not-yet-activated status, not those evidence limits.
 
 ## Contract
 
@@ -209,3 +217,45 @@ activity alone proves neither native takeover nor the new acceleration profile.
 Pause and the actual experimental profile reload/fresh 100a bootstrap still
 need concrete approval. No extra agent Start/Resume/Release, USB command or
 Steam test followed this read-only check.
+
+## Approved profile activation and Steam UI acceptance
+
+A fresh read saw native ownership again after the user's prior Resume and
+reconnection. The separately approved Release validated current idle managed
+ownership, ran once and confirmed pause, empty leases, no native bindings and
+100a/xpad. No old device address or prior unowned-109c assumption was reused
+as ownership proof.
+
+The next explicit approval covered four successful, one-time operations:
+service stop, removal of only unbound/zero-reference gs_native, reload with
+experimental_gyro=1, experimental_accel=1, accel_axis_map=1,2,3 and 8192/1
+counts/g, then paused service start. The old persistent gyro file was unchanged.
+That stage left 100a/xpad unchanged and did not issue Resume.
+
+A further approval authorized one Resume with read-only startup monitoring
+and one Release only on error. The existing StartupWindow/wait_for_native
+policy (31 offline regressions passed) observed 100a to 109c and attested the
+new same-parent instance, active manager lease and kernel ownership tokens.
+The kernel bootstrap finished with error 0/failed stage 0 and positive pad/IMU
+stream evidence. No error Release or retry was used. The journal retains the
+known xpad detach -ENOENT message, not a new kernel fault or failed bootstrap.
+
+Sysfs-only checks confirmed paired nonempty identities, standard 109c,
+ABS_X/Y/Z/RX/RY/RZ capability mask 0x3f and active-user read access. This
+metadata checker opened no input/IIO/USB device and did not read EVIOCGABS
+resolution or capture sensor values. Expected units remain grounded in the
+loaded profile/code and earlier offline SDL tests.
+
+Only after attestation did the user start Steam normally. The user confirms:
+all three gyro rates respond to the corresponding rotations, ordinary
+buttons/sticks/triggers work, and all four paddles remain independent. This
+resolves the formerly all-zero UI in this run with real acceleration present.
+No calibration button, motor pulse, Proton-game gyro test, Steam memory
+observation or Steam binary-identity recheck was part of the acceptance.
+
+This strengthens the contract-mismatch explanation without claiming that
+every historical failed gate or every Steam build has been measured. The
+qualitative acceleration map and scale remain experimental. Six-axis Eden,
+reboot/persistent opt-in, lifecycle and shared output acceptance remain
+separate; earlier gyro-only Eden/FF/bridge evidence must not be relabelled
+as new combined hardware acceptance. [Activation record](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).

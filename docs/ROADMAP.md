@@ -2,7 +2,7 @@
 
 # GameSir Native Linux: Roadmap
 
-Stand: 18. Oktober 2026. Prioritäten ergänzen den
+Stand: 19. Oktober 2026. Prioritäten ergänzen den
 [aktuellen Projektstand](PROJECT_STATE.md); historische Tests behalten ihren
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
@@ -29,11 +29,13 @@ keine universelle Spielefreigabe oder erfundene Beschleunigungsachsen.
 
 ## Steam-Gyro-Korrektur: optionaler Beschleunigungspfad
 
-Nach statisch nachgewiesener Accel-Sperre der UI wurde ein separat aktivierbarer
-realer Beschleunigungspfad offline umgesetzt. Nächste Grenze ist die belegte
-Beschleunigungsachsen-Zuordnung; kein geratenes Mapping produktiv aktivieren.
-Danach Installation und gemeinsame SDL/Eden-/Steam-/Paddle-Abnahme nur unter
-separater Freigabe. Details: [Korrekturvorbereitung](STEAM_ACCEL_EXTENSION.md).
+Die separat freigegebene Revision 9 ist installiert und mit temporärem
+realem Beschleunigungsprofil nativ gestartet. Steam zeigt jetzt alle drei
+Gyro-Achsen an; normale Eingaben und unabhängige Paddles wurden bestätigt.
+Das löst die Nullanzeige dieses Laufs. Nächste Schritte unter eigener Freigabe:
+Eden mit sechs Achsen gegenprüfen, dauerhafte lokale Accel-Konfiguration und
+Boot-/Lebenszyklusabnahme. Keine neue Winkel-/Gyrofaktorsuche und kein
+universelles Proton-Spieleversprechen. [Resultat und Grenzen](STEAM_ACCEL_EXTENSION.md).
 Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
 
 ## Neu angefragte Steam-Gyro-Machbarkeit: offline geprüft
