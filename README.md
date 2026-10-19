@@ -89,7 +89,8 @@ separates hardware results, offline tests and outstanding validation.
   paddles with ordinary input preserved. In-game acceptance remains separate.
   A later controlled test with optional real evdev acceleration confirmed all
   three gyro rates respond in Steam's UI, with ordinary input and independent
-  paddles retained. This remains an experimental temporary profile, not Proton
+  paddles retained. This experimental profile is also saved and verified in a
+  local opt-in; actual reboot acceptance remains pending. This is not Proton
   game acceptance. The user subsequently reports Eden continues working with
   this profile; no new per-axis measurements were recorded. See
   [the activation record](docs/STEAM_ACCEL_EXTENSION.md).

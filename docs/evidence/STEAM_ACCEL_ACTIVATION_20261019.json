@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-10-19",
-  "stage": "native six-axis profile active; Steam gyro UI/paddles accepted and Eden reported to continue working",
+  "stage": "native six-axis profile active and locally persisted; Steam gyro UI/paddles accepted and Eden reported to continue working; reboot acceptance pending",
   "package": "gamesir-native-dkms 0.1.0.alpha3-9",
   "module_srcversion": "DF7D42B1E7909084ED9BEB1",
   "prior_release": {
@@ -78,7 +78,7 @@
     "motor_pulses_tested": false,
     "Eden_six_axis_regression_tested": false,
     "reboot_tested": false,
-    "persistent_accel_config_written": false,
+    "persistent_accel_config_written": true,
     "push": false
   },
   "private_evidence_sha256": {
@@ -109,6 +109,37 @@
     "candidate_sha256": "9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2",
     "device_free_modprobe_listing_passed": true,
     "system_file_written": false,
-    "reboot_performed": false
+    "reboot_performed": false,
+    "scope": "Historical preparation checkpoint before the separately approved file-only installation below."
+  },
+  "persistence_installation": {
+    "date": "2026-10-19",
+    "authorization": "Explicit maintainer approval for this file update and password prompt; read-only checks afterwards, no module reload or reboot.",
+    "passed": true,
+    "target": "/etc/modprobe.d/90-gamesir-native-gyro.conf",
+    "writes_attempted": 1,
+    "previous_sha256": "5960ba3dff0e568341f88040162b81ebfa522f50e42662b11667925878767d51",
+    "installed_sha256": "9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2",
+    "owner": "root:root",
+    "mode": "0644",
+    "effective_native_options": [
+      "options gs_native experimental_gyro=1 experimental_accel=1 accel_axis_map=1,2,3 accel_counts_per_g_num=8192 accel_counts_per_g_den=1"
+    ],
+    "modprobe_configuration_and_dependency_listings_passed": true,
+    "service_pid_and_state_unchanged": true,
+    "module_instance_srcversion_and_all_parameters_unchanged": true,
+    "previous_gyro_only_config_preserved_privately": true,
+    "private_evidence_checksums_verified": true,
+    "private_report_sha256": "c1eb7eb74b5421be858318b5284bba9510e476981697436d010367104ba71b96",
+    "module_reload": false,
+    "service_restart": false,
+    "resume": false,
+    "initramfs_rebuild": false,
+    "reboot": false,
+    "new_hardware_or_application_test": false,
+    "package_defaults_changed": false,
+    "actual_next_boot_and_fallback_image_acceptance": false,
+    "gyro_calibration_resumed": false,
+    "push": false
   }
 }

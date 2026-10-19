@@ -1,5 +1,17 @@
 # Public pre-alpha release audit
 
+## Local six-axis persistence follow-up — 19 October 2026
+
+Revision 9's real acceleration extension passed one approved Steam gyro-UI
+test with normal input and independent paddles; Eden continued working by
+user report. A later file-only approval persisted that same experimental
+profile in the existing local modprobe opt-in. Bytes/hash, root:root/0644,
+effective options and unchanged running service/module were checked. No
+reload, restart, initramfs rebuild or reboot accompanied that file update.
+Actual six-axis boot/lifecycle, physical calibration and Proton-game acceptance
+remain open. Package defaults remain off. This adds no release or push approval.
+[Evidence and scope](STEAM_ACCEL_EXTENSION.md).
+
 ## Unreleased SDL/Eden addition — 18 October 2026
 
 The opt-in 109c gyro input path passed offline validation and a separately

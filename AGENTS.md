@@ -192,6 +192,15 @@ with modprobe --show-depends (no load): update the existing local gyro file to
 include accel=1, map 1,2,3, 8192/1. It has not been written to /etc. Separate
 explicit approval is still required; do not restart/reload/reboot as part of
 that file-only action or change package defaults.
+The subsequent explicit file-only approval was executed once: the existing
+local modprobe file now includes gyro/accel=1, map 1,2,3 and 8192/1. Exact
+bytes/SHA256, root:root/0644 and effective options passed, as did unchanged
+service PID/state, module instance/srcversion and all runtime parameters.
+Private evidence and the saved gyro-only file are checksum-verified. This
+supersedes the prepared-only state above. No reload, service restart, Resume,
+initramfs rebuild or reboot occurred. Package defaults remain off; actual
+next-boot/lifecycle acceptance still needs its own approval. Do not start
+extra hardware/app tests or resume calibration from this file-only approval.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

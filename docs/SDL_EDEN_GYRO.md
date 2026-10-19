@@ -18,10 +18,11 @@ limits below remain explicit; milestone closure does not claim those passed.
 Follow-up (19 October): the separately approved
 [real-acceleration extension](STEAM_ACCEL_EXTENSION.md) is now loaded and
 accepted in Steam's gyro UI with ordinary inputs and independent paddles.
-This is a temporary six-axis profile. The user subsequently reports Eden
+This six-axis profile is now also saved in the local modprobe opt-in, verified
+without a reload or restart. The user subsequently reports Eden
 continues working; no new per-axis details were supplied. The detailed
 historical Eden acceptance below still refers to gyro-only operation;
-persistent accel/reboot acceptance remains separate. No gyro calibration is reopened.
+actual six-axis reboot acceptance remains separate. No gyro calibration is reopened.
 
 ## Decision and scope
 
@@ -275,6 +276,16 @@ visible in the inspected Eden process; its bundled SDL version was not independe
 identified. The earlier source/time-domain limitations and gyro-only scope remain.
 
 ## Persistent opt-in installed after acceptance
+
+This section records the earlier gyro-only creation under revision 8. On
+19 October a separate file-only approval updated the same file to the accepted
+six-axis profile under revision 9. Exact bytes/rights/effective options and
+unchanged running module/service were verified. The current content, hashes,
+saved gyro-only rollback and remaining reboot limits are in
+[the persistence update](STEAM_ACCEL_EXTENSION.md#eden-follow-up-and-approved-persistence-update).
+The earlier initramfs inspection below predates the revision-9 package hooks;
+it is not a fresh inspection of those rebuilt images. No image rebuild was
+part of the later file-only update.
 
 The maintainer separately approved the read-only checks and creation of
 exactly one persistent configuration file. **The local opt-in is installed

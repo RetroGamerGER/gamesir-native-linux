@@ -8,9 +8,12 @@ complete physical calibration. No Steam library/configuration was modified.
 
 The running experimental profile is gyro 0.07 dps/raw, acceleration 8192
 counts/g and explicit accel map 1,2,3. Acceleration is not enabled by package
-default and no persistent accel option was written. Earlier gyro-only Eden acceptance remains recorded separately. The user
+default. The separately approved local persistent profile is now installed
+and verified without reloading the module or restarting the service.
+Earlier gyro-only Eden acceptance remains recorded separately. The user
 subsequently reports that Eden continues working with this profile; no new
-per-axis measurements were reported. Persistence/reboot still need approval. Gyro calibration remains paused.
+per-axis measurements were reported. Actual reboot/lifecycle acceptance
+remains pending. Gyro calibration remains paused.
 
 Implementation, preparation, installation and intermediate stopped checks
 below retain their original stages and limits. The later approved activation
@@ -260,7 +263,7 @@ reboot/persistent opt-in, lifecycle and shared output acceptance remain
 separate; earlier gyro-only Eden/FF/bridge evidence must not be relabelled
 as new combined hardware acceptance. [Activation record](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
 
-## Eden follow-up and persistence proposal
+## Eden follow-up and approved persistence update
 
 After the successful Steam UI test, the maintainer reports: “Eden funktioniert
 auch weiterhin”. Record this as continued functional operation with the current
@@ -268,8 +271,8 @@ profile. It does not supply new axis-by-axis values, button assignment results,
 calibration or long-duration/lifecycle evidence. No extra agent-driven hardware
 test was started and no further gyro calibration is required by this feedback.
 
-The proposed local-only persistence change updates the existing
-`/etc/modprobe.d/90-gamesir-native-gyro.conf` to the following staged content:
+The separately approved local-only persistence change updated the existing
+`/etc/modprobe.d/90-gamesir-native-gyro.conf` to the following exact content:
 
 ```conf
 # GameSir G7 Pro: explicitly enabled experimental SDL motion profile.
@@ -277,22 +280,31 @@ The proposed local-only persistence change updates the existing
 options gs_native experimental_gyro=1 experimental_accel=1 accel_axis_map=1,2,3 accel_counts_per_g_num=8192 accel_counts_per_g_den=1
 ```
 
-The exact candidate SHA256 is
+The installed file SHA256 is
 `9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2`.
-The existing file still hashes to
+The previous file SHA256 was
 `5960ba3dff0e568341f88040162b81ebfa522f50e42662b11667925878767d51`.
 The old content is retained privately for a concrete rollback.
 A device-free `modprobe -C <candidate> --show-depends gs_native bootstrap_mode=1
 enable_output=1 persistent_mode=1` shows all profile and service options
-combined correctly. The effective system configuration still contains only
-the original gyro option; no module install/softdep override or service drop-in
-was found. Readable module-load/dracut configuration and the kernel command
-line contain no explicit gs_native early-load entry.
+combined correctly. After installation the ordinary system listing also
+combines all these values, and `modprobe -c` has exactly one native options
+line with the six-axis profile. These commands print configuration only.
+No module install/softdep override or service drop-in was found. Readable
+module-load/dracut configuration and the kernel command line contain no
+explicit gs_native early-load entry.
 
-**Prepared only:** no system file was changed. After a separate exact approval,
-verify the existing regular root-owned 0644 file and expected hash, then install
-only the candidate at that path and verify bytes/owner/mode/effective options.
-No reload, Release/Resume, service restart, initramfs rebuild or reboot belongs
-to that file-only step. The active module already has these values. Actual
-next-boot and fallback-image behavior remain acceptance work, not a guarantee
-from the configuration listing. Package defaults remain off.
+**Installed and read-only verified:** the password-approved helper validated
+the original regular root-owned file/hash and active profile before exactly
+one file installation. Exact bytes/hash, root:root ownership, mode 0644 and
+effective options passed. Before/after service PID/state, module instance,
+source version and all module parameters match. The current running profile
+already had these values; this file update did not change it. Private evidence
+and the saved old file passed SHA256 verification.
+
+No reload, Release/Resume, service restart, initramfs rebuild or reboot was
+performed. Actual next-boot and fallback-image behavior remain acceptance
+work, not a guarantee from the configuration listing. Package defaults remain
+off. Reverting only this acceleration opt-in would restore the saved previous
+gyro-only content after fresh checks and separate approval; it would not
+change the running module until a separately approved reload/reboot.

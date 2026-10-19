@@ -5,7 +5,17 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
-**Eden funktioniert weiterhin (Nutzerrückmeldung):** Der Nutzer bestätigt nach
+**Dauerhaftes lokales Sensorprofil gespeichert und lesend geprüft:** Die exakt
+freigegebene Datei `/etc/modprobe.d/90-gamesir-native-gyro.conf` wurde einmal
+aktualisiert: Gyro und Accel aktiviert, Accel-Achsen 1,2,3 und 8192/1 LSB/g.
+Inhalt/Prüfsumme, root:root/0644 und effektive Moduloptionen stimmen. Dienst-PID
+und -Zustand, Modulinstanz/-Quellversion und sämtliche laufenden Parameter
+blieben gleich. Alte Datei und private Nachweise sind prüfsummenverifiziert.
+Kein Neuladen, Dienstneustart, Resume, initramfs-Neubau oder PC-Neustart.
+Paketstandard bleibt aus; reale Boot-/Lebenszyklusabnahme weiterhin offen.
+[Ergebnis und Grenzen](STEAM_ACCEL_EXTENSION.md#eden-follow-up-and-approved-persistence-update).
+
+**Vorheriger Vorbereitungsstand – Eden funktioniert weiterhin (Nutzerrückmeldung):** Der Nutzer bestätigt nach
 dem Steam-Test die weitere Funktion von Eden mit dem laufenden Profil.
 Keine zusätzlichen Einzelachsen-, Tasten-, Kalibrierungs- oder Langzeitwerte
 wurden dazu erhoben. Die vorbereitete dauerhafte Option ergänzt nur die
@@ -22,8 +32,9 @@ und aktive Kernel-/Manager-Zuständigkeit; beide Sensorarten sind am gepaarten,
 für den Nutzer lesbaren evdev-Knoten registriert. Nutzer bestätigt in Steam:
 alle drei Gyro-Werte reagieren; normale Eingaben und vier unabhängige Paddles
 funktionieren. Damit ist die Nullanzeige in diesem Lauf behoben.
-Das Profil ist noch temporär: Accel 8192 LSB/g, Achsen 1,2,3; Gyro unverändert
-0,07 °/s/raw. Kein permanenter Accel-Eintrag, kein Proton-Spiel-/Motortest und
+Bei dieser Aktivierung war das Profil noch temporär: Accel 8192 LSB/g,
+Achsen 1,2,3; Gyro unverändert 0,07 °/s/raw. Damals kein permanenter Accel-Eintrag,
+kein Proton-Spiel-/Motortest und
 keine erneute Eden-Abnahme mit sechs Achsen. Frühere Fehlprüfungen bleiben
 historisch erhalten. [Aktivierung und Grenzen](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
 
