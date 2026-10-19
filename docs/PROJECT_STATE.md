@@ -5,6 +5,17 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**CachyOS-/Gamescope-Übernahme lesend geprüft:** Kernpaket noch Revision 6;
+laufender Kernel `7.2.9-2-cachyos-deckify`, passende Header und DKMS/GCC-Werkzeuge
+vorhanden. Dasselbe Revision-9-Quellpaket und experimentelle Sensorprofil sind
+geeignete Kandidaten, ohne erkannten Sonderpatch. Manager/Dienst sowie die
+installierte Steam-/Gamescope-Einbindung stimmen mit den aktuellen Quellen
+überein; Steam-SDL-Prüfsummen entsprechen unseren geprüften Referenzen.
+Zielbau und echte Sensor-/Zugriffsabnahme bleiben offen. Kein GameSir-Dongle
+sichtbar; geschützter Besitzstand nicht abgefragt. Nur unprivilegiert gelesen,
+keine Installation, Konfigurationsänderung, Aktivierung oder Hardwareprüfung.
+[Übertragbarkeit und Grenzen](STEAM_ACCEL_EXTENSION.md#read-only-cachyosgamescope-transfer-assessment).
+
 **Dauerhaftes lokales Sensorprofil gespeichert und lesend geprüft:** Die exakt
 freigegebene Datei `/etc/modprobe.d/90-gamesir-native-gyro.conf` wurde einmal
 aktualisiert: Gyro und Accel aktiviert, Accel-Achsen 1,2,3 und 8192/1 LSB/g.

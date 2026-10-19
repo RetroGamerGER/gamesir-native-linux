@@ -141,5 +141,87 @@
     "actual_next_boot_and_fallback_image_acceptance": false,
     "gyro_calibration_resumed": false,
     "push": false
+  },
+  "CachyOS_readonly_transfer_assessment": {
+    "date": "2026-10-19",
+    "scope": "Unprivileged read-only SSH compatibility assessment of the CachyOS/Gamescope test host; not installation or hardware acceptance.",
+    "kernel": "7.2.9-2-cachyos-deckify",
+    "kernel_package": "linux-cachyos-deckify 7.2.9-2",
+    "headers_package": "linux-cachyos-deckify-headers 7.2.9-2",
+    "headers_match_running_kernel": true,
+    "architecture": "x86_64",
+    "installed_core_package": "gamesir-native-dkms 0.1.0.alpha3-6",
+    "candidate_core_package": "gamesir-native-dkms 0.1.0.alpha3-9",
+    "candidate_package_sha256": "74994d3e19ae0d7a8c5f9b9758885c6656153b3a0c14c6cf9b404289c262f503",
+    "DKMS_current_revision_installed": true,
+    "DKMS_version": "3.4.4-2",
+    "build_prerequisites": "GCC 16.2.1 and required GNU tools present; matching prepared headers; unchanged planner selects gcc in dry-run only.",
+    "revision9_target_kernel_build_performed": false,
+    "Garuda_compiled_module_must_not_be_copied": true,
+    "native_package_integrity": {
+      "entries": 127,
+      "alterations": 0
+    },
+    "steam_integration": {
+      "base_package": "0.1.0.alpha2-1",
+      "gamescope_package": "0.1.0.alpha1-1",
+      "package_integrity_entries": [
+        17,
+        15
+      ],
+      "alterations": 0,
+      "steam_launcher_service_active": true,
+      "expected_gamescope_dropin_active": true,
+      "seat0_session_active": true,
+      "reinstallation_or_downgrade_needed_by_this_assessment": false
+    },
+    "installed_component_hashes_match_current_sources": {
+      "tools/service/gamesir_native.py": "311b41bbab5310220a869d8b1dd98898c844b26eaed00b8d4f0e6d267fcdfbcc",
+      "packaging/prepare_remove.py": "e0409e421cea644f1db05947cd16afbdd30bf4e51c2d141c6bc2d3d92f02547f",
+      "packaging/systemd/gamesir-native.service": "5070c0ab4ea19ccfe4bdcb172943ad686c8f0836a40d78d5b569f9c64e188626",
+      "scripts/kernel_toolchain.py": "211cee0eb5eac6ffb3f8776cbb9679361e7f6806a91be8a19f76b777d376a507",
+      "packaging/steam-gamescope/gamescope-launcher": "df93dd3fade7754b6cea740923b6cec980f5dc303cf793f8a97a60a4549323db",
+      "packaging/steam-gamescope/50-gamesir-native.conf": "1db9d1b8cf31f3dbd208befd122b4ea11ac7ed880b64ecff53877dcfea981e26",
+      "packaging/steam/gamesir-native-steam": "b6d6da348e6de172e650560bbfba101e8364905b1b83f0464035033c5e047dea"
+    },
+    "steam_SDL3_hashes_match_prior_offline_reference": {
+      "ubuntu12_32": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+      "ubuntu12_64": "be244af0c3384036888ce1ee79866c326576e742b13f42bae293b596b06edf35",
+      "steamrt64": "08eb7ba02ec862b062d9876f00ffd6deb58f5b1fc9f2325bcf90e6245586b2de"
+    },
+    "client_libc_requirements_available": {
+      "GLIBC_2.2.5": true,
+      "GLIBC_2.4": true,
+      "GLIBC_2.17": true,
+      "GLIBC_2.33": true,
+      "GLIBC_2.34": true
+    },
+    "target_profile_file_exists": false,
+    "target_sensor_udev_rule_exists": false,
+    "old_module_has_new_gyro_accel_options": false,
+    "same_profile_candidate": {
+      "options": "experimental_gyro=1 experimental_accel=1 accel_axis_map=1,2,3 accel_counts_per_g_num=8192 accel_counts_per_g_den=1",
+      "scope": "standard 109c only; experimental, not new calibration evidence",
+      "target_action_after_separate_approval": "Create the absent local opt-in file after updating and verifying revision 9, rather than overwrite a present gyro-only file."
+    },
+    "current_service": "active/running/enabled; same PID and zero restarts in before/after observations",
+    "current_module_srcversion": "71D6C2E25BA80E69BB4818D",
+    "limits": {
+      "no_GameSir_USB_device_visible": true,
+      "protected_module_parameters_unreadable_as_regular_user": true,
+      "protected_manager_ownership_not_queried": true,
+      "sensor_node_ACL_and_stream_not_tested": true,
+      "Steam_UI_Eden_paddles_or_motor_hardware_not_tested": true,
+      "actual_revision9_target_build_pending": true,
+      "no_installation_activation_or_reboot_authorized_by_this_check": true
+    },
+    "verdict": "Same reviewed DKMS source package and experimental profile are compatible candidates; no host-specific code change identified. A successful revision-9 target build, safe-release/installation checks and separately approved application/hardware acceptance remain required.",
+    "system_changes": false,
+    "sudo": false,
+    "module_load_or_reload": false,
+    "service_restart": false,
+    "release_or_resume": false,
+    "hardware_device_open": false,
+    "push": false
   }
 }

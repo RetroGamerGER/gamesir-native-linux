@@ -308,3 +308,44 @@ work, not a guarantee from the configuration listing. Package defaults remain
 off. Reverting only this acceleration opt-in would restore the saved previous
 gyro-only content after fresh checks and separate approval; it would not
 change the running module until a separately approved reload/reboot.
+
+## Read-only CachyOS/Gamescope transfer assessment
+
+On 19 October an unprivileged SSH inspection found the CachyOS/Gamescope test
+host on `7.2.9-2-cachyos-deckify`, matching kernel/header packages `7.2.9-2`,
+DKMS 3.4.4-2 and core revision 6. The installed core passes its package check
+(127 entries, zero alterations). It has neither the new gyro/acceleration
+parameters nor the new sensor udev rule or local motion opt-in. Copying only
+the modprobe profile onto revision 6 would therefore be incorrect.
+
+The same reviewed **revision-9 DKMS source package** and explicit experimental
+profile above are transfer candidates; no CachyOS-specific source patch was
+identified. Prepared headers and required GCC tools exist. The unchanged build
+planner selects GCC and the matching kernel in dry-run mode. Required input
+APIs are present (the resolution setter is macro-generated); the packaged
+userspace client's five GLIBC version requirements are available. This was
+**not a revision-9 kernel build**. Do not copy the Garuda-built `.ko`.
+
+The installed manager, removal guard, system service, compiler planner,
+Steam entrypoint and Gamescope wrapper/drop-in match current source hashes.
+Steam integration `0.1.0.alpha2-1` and Gamescope `0.1.0.alpha1-1` pass package
+checks (17/15 entries, zero alterations). The expected drop-in is active in
+`steam-launcher.service`, with an active seat0 session. All three stored Steam
+SDL3 libraries have the hashes already examined in our offline reference.
+No Steam integration replacement or downgrade is indicated by these checks.
+Library identity alone does not prove live sensor access or UI acceptance.
+
+Next, under separate authorization: build revision 9 for the target kernel,
+verify fresh ownership and the safe release/update path, then install only the
+reviewed core update. The target's absent opt-in file would be **created** with
+the same content after fresh checks, rather than updating an existing gyro-only
+file. Approval must cover later activation and actual sensor-node/session ACL,
+Steam/Eden/paddle regression and lifecycle checks as appropriate.
+
+No GameSir USB device was visible during this inspection. Protected module
+parameters and manager ownership were not available to the ordinary SSH user;
+no privilege escalation or claim of a safe update-ready ownership state was
+made. The active/enabled service retained its PID and zero restarts, and the
+loaded source version stayed unchanged. No build, installation, file write on
+the target, module/service action, device open or hardware test occurred.
+[Sanitized assessment](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).

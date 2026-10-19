@@ -201,6 +201,13 @@ supersedes the prepared-only state above. No reload, service restart, Resume,
 initramfs rebuild or reboot occurred. Package defaults remain off; actual
 next-boot/lifecycle acceptance still needs its own approval. Do not start
 extra hardware/app tests or resume calibration from this file-only approval.
+A later read-only SSH comparison found matching CachyOS 7.2.9 headers/tools,
+unchanged manager/service/Steam integration and known Steam SDL hashes. The
+same revision-9 source package/profile are candidates, not target build or
+sensor acceptance. Read STEAM_ACCEL_EXTENSION.md's transfer assessment. The
+target remains revision 6; no GameSir device was visible and protected ownership
+was not read. No install, target file write, activation or hardware approval
+follows. Do not copy a Garuda-built module or apply new options to revision 6.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;
