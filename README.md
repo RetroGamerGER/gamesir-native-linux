@@ -137,6 +137,14 @@ computer.
 - **Steam paddles do not extend XInput.** Steam Input can map four independent
   sources, but a game's input API determines whether it can bind additional
   controller buttons directly. Universal in-game binding is not promised.
+- **Eden in Steam Gaming Mode:** inherited SDL device filters can hide the
+  physical GameSir, leaving Eden with a virtual Xbox controller without motion
+  sensors. A manually configured, Eden-only workaround passed one CachyOS
+  Gamescope application test with gyro and independent paddles. Follow the
+  [tested steps and rollback](docs/SDL_EDEN_GYRO.md#manual-steps-for-the-tested-launcher-shape)
+  for the matching shortcut type. This is a compatibility note, not an
+  automatic installer or driver change; other controllers and duplicate input
+  still require attention within the application.
 - **Suspend/resume, repeated hotplug, many reconnect cycles, multiple active
   dongles and long-term operation are not comprehensively hardware-tested.**
   A pre-existing unowned `109c` session is intentionally not seized. There

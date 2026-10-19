@@ -37,7 +37,17 @@ only its saved launch options for rollback. This is not Steam gyro UI/hotplug
 acceptance, a kernel fix or authorization to modify other applications. No
 global Steam/driver change, calibration, package update or push occurred.
 
-Latest follow-up supersedes the earlier human state below: after a full reboot
+The maintainer subsequently chose documentation only for this workaround:
+keep the tested manual steps/rollback in the compatibility guides, with no
+Eden-specific driver, installer or Control Center feature and no automatic
+Steam option edits. The uncommitted launcher prototype is withdrawn from the
+publication tree. Explain that removing both filters can expose other devices
+within Eden; do not promise selective filtering or universal duplicate-input
+prevention. The current request defers the previously discussed whole-project
+push until the next explicit publication approval. Commit these docs locally;
+do not install, repeat the already accepted test or push from this checkpoint.
+
+Earlier Steam-specific follow-up: after a full reboot
 the maintainer reports automatic native binding without Resume, but gyro only
 while Guide is held. A separately approved metadata attempt passed SSH/sudo
 and recorded service active/running/enabled, then stopped at the Gamescope

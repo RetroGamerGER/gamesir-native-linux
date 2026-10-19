@@ -358,6 +358,13 @@ observations locate the exclusion in the Steam-launched process environment;
 they do not identify the exact internal setter or prove Gear Lever added it.
 The precise Steam Input override state was not independently established.
 
+**Documentation-only compatibility workaround.** The maintainer confirmed the
+local application test and chose to keep this out of the kernel, installer and
+Control Center. No application-specific launcher is shipped and no Steam
+options are edited automatically. For this confirmed case, the exclusion of
+the physical sensor device explains Eden's missing gyro; it is not a failure
+of the GameSir gyro driver. This does not diagnose every possible gyro problem.
+
 ### Scoped correction and rollback
 
 The original Steam shortcut database and Eden desktop entry were backed up
@@ -379,6 +386,60 @@ first. Only Eden's child environment is affected. Preserve
 `SDL_GAMECONTROLLERCONFIG`, which supplies the existing paddle mapping;
 do not clear all SDL variables or modify the session-wide Steam environment.
 
+### Manual steps for the tested launcher shape
+
+The affected setup was native Linux Eden Nightly as an AppImage, launched as
+a non-Steam shortcut in CachyOS Handheld Edition's Steam Gaming Mode
+(Gamescope), with `gs_native` and its opt-in motion interface already working.
+This is not a Windows/Proton Eden or Flatpak procedure.
+
+1. Close Eden. In Steam, open **Eden → Properties → Shortcut** and save a copy
+   of the existing **Target**, **Start In** and **Launch Options** fields before
+   editing. Retain all existing application arguments. No Steam restart is
+   required for the tested change.
+2. Check the existing target. The tested shortcut has **Target** `"env"` and
+   launch options of the following shape. `/path/to/Eden.AppImage` is a
+   placeholder for the **existing** AppImage path, not a path to copy literally:
+
+   ```text
+   "DESKTOPINTEGRATION=1" "/path/to/Eden.AppImage"
+   ```
+
+3. Leave Target and Start In unchanged. Prepend the two `-u` options to the
+   existing launch options, so they precede the environment assignment:
+
+   ```text
+   -u SDL_GAMECONTROLLER_IGNORE_DEVICES -u SDL_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT "DESKTOPINTEGRATION=1" "/path/to/Eden.AppImage"
+   ```
+
+   Enter this in **Steam's Launch Options**, not a terminal. If the target is
+   different, do not paste this recipe unchanged: `-u` is an `env` option,
+   not an Eden option. A different launcher needs its own checked command.
+4. Save the properties and start Eden through Steam. Select the **physical
+   GameSir G7 Pro** in Eden's controller settings, then enable/configure SDL
+   motion. Steam's virtual Xbox controller may still appear; do not select it
+   for this motion test or assign both devices to the same player.
+5. Check motion without holding Guide, all four independently assignable
+   paddles, and ordinary buttons/sticks/triggers. The tested result was
+   responsive motion and normal input without duplicates. Other controllers
+   may also become visible because both inherited filters are removed for
+   this application; this is **not** a selective GameSir-only filter or a
+   universal multi-controller fix. If selection or duplicate input is unclear,
+   restore the saved options rather than changing global Steam settings.
+6. To undo, close Eden, restore only its saved Launch Options in Steam, and
+   launch Eden again. The workaround creates no persistent environment file,
+   driver setting or service to remove. Keep any unrelated later shortcut
+   changes; do not overwrite Steam's whole shortcut database while it runs.
+
+Steam Input settings, the global SDL environment and `SDL_GAMECONTROLLERCONFIG`
+remain unchanged. The filter removal applies to Eden and its child processes
+for that launch. It does not add gyro to the virtual Xbox device or repair
+Steam's own motion display. See the official descriptions of
+[the SDL exclusion list](https://wiki.libsdl.org/SDL3/SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES)
+and [the exceptions-only list](https://wiki.libsdl.org/SDL3/SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT).
+
+### Backup verification
+
 Comparison of all parsed shortcut entries confirmed the intended launch-option
 change and only an additional last-played timestamp. The desktop entry and
 other shortcut settings were unchanged. Rollback is to restore **only Eden's
@@ -399,7 +460,8 @@ Do not replace the whole database over unrelated later edits.
   selected the **physical GameSir** in Eden and confirmed matching motion
   without holding Guide, independent assignment of all four paddles,
   simultaneous press/release behavior and normal buttons/sticks/triggers
-  without duplicate inputs.
+  without duplicate inputs. The maintainer subsequently explicitly confirmed
+  that the application test passed and gyro could be enabled.
 
 This is an accepted Eden controller-settings test through Steam in Gamescope,
 not a new gyro-scale calibration, extended gameplay or reconnect test. It

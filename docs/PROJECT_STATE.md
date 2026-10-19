@@ -2,6 +2,25 @@
 
 # Projektstand
 
+**19. Oktober 2026 — Eden im Gaming Mode bestätigt; Workaround nur als
+Dokumentation:** Der geerbte SDL-Ausschlussfilter versteckte den echten
+GameSir vor Eden. Nach gesicherten, manuell geänderten Startoptionen öffnet
+Eden das physische Gamepad und den gepaarten Sensor; Gyro ist ohne Guide
+aktivierbar, alle vier Paddles und normale Eingaben funktionieren unabhängig.
+Der Nutzer bestätigt den Anwendungstest ausdrücklich. Die genaue
+[manuelle Lösung und der Rückbau](SDL_EDEN_GYRO.md#manual-steps-for-the-tested-launcher-shape)
+ersetzen keine allgemeine Mehrcontroller- oder Hotplug-Abnahme.
+Auf ausdrücklichen Wunsch keine Übernahme in Kernel, Installer oder Control
+Center und keine automatische Steam-Verknüpfungsänderung. Ein begonnener,
+uncommitteter Starthelfer wurde aus dem Veröffentlichungsbaum genommen;
+keine Installation oder Änderung des laufenden Treibers. Die Veröffentlichung
+des gesamten lokalen Stands ist bis zur nächsten Freigabe zurückgestellt;
+dieser Nachtrag wird ausschließlich lokal committed. Kalibrierung bleibt pausiert.
+
+Die folgenden Abschnitte beschreiben frühere beziehungsweise getrennte
+Steam-Gyro-Untersuchungen; der Eden-Erfolg löst die Guide-Abhängigkeit in
+Steams eigener Anzeige nicht.
+
 **Gamescope-Prüfhelfer offline korrigiert:** Nach vollständigem Neustart meldet
 der Nutzer automatische native Bindung ohne Resume, weiterhin Gyro nur bei
 gehaltener Guide-Taste. Der danach freigegebene reine Metadatencheck bestätigt

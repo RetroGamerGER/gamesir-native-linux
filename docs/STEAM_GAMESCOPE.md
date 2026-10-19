@@ -2,6 +2,29 @@
 
 # Optionale Steam-Einbindung für CachyOS Gamescope
 
+## Eden: manueller SDL-Kompatibilitätshinweis
+
+Am 19. Oktober 2026 ist ein Eden-Anwendungstest im Gaming Mode bestanden:
+echter GameSir auswählbar, Gyro ohne gehaltene Guide-Taste aktivierbar,
+vier unabhängige Paddles und normale Eingaben ohne beobachtete Dopplung.
+Zuvor schloss die geerbte Variable `SDL_GAMECONTROLLER_IGNORE_DEVICES`
+`3537:109c` aus. Eden öffnete nur Steams virtuellen Xbox-Controller ohne
+Bewegungssensoren. Nach Entfernen der beiden Filter ausschließlich beim
+Eden-Start öffnet es auch das physische Gamepad und dessen Sensorknoten;
+das Protokoll bestätigt `accel=true gyro=true`.
+
+Die [genaue manuelle Anleitung mit Sicherung und Rückbau](SDL_EDEN_GYRO.md#manual-steps-for-the-tested-launcher-shape)
+gilt für die geprüfte AppImage-Verknüpfung mit `env` als Ziel. Andere
+Startformen nicht ungeprüft übernehmen. Die Filterentfernung kann innerhalb
+Edens weitere Controller sichtbar machen; physischen GameSir auswählen und
+Doppelbelegung vermeiden. Es gibt keinen automatischen Starter, keine
+Installer-/Control-Center-Funktion und keine Eden-Sonderlogik im Treiber.
+Steam Input und globale SDL-Einstellungen werden nicht verändert.
+Der offene Guide-/Wiederverbindungsfehler in Steams eigener Gyroanzeige ist
+ein getrennter Fall und durch diesen Anwendungstest nicht behoben.
+
+## Historischer Paket- und Boot-Teststand
+
 Stand: 15. Oktober 2026. **Ein kontrollierter PC-Neustart mit anschließendem
 Funkcontroller-Einschalten ist bestanden:** automatischer Dienststart,
 eigenständiger nativer Bootstrap und dauerhaftes Steam-/Gamescope-Mapping.
