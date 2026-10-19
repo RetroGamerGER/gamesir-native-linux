@@ -48,6 +48,15 @@ Steams offene Knoten und Versionen prüfen; daraus erst den nächsten gezielten
 Beobachtungsschritt ableiten. Noch kein neuer SSH-/Hardwarezugriff.
 [Transportkorrektur](STEAM_GUIDE_GYRO.md#metadata-precheck-stopped-before-authentication).
 
+Nach vollständigem Nutzer-Neustart automatische Bindung ohne Resume gemeldet,
+Guide-Abhängigkeit erneut vorhanden. Der separat genehmigte zweite Leseschritt
+bestätigt Dienst aktiv/laufend/aktiviert, scheitert dann an der Gamescope-Suche.
+Die Prozesszuordnung ist offline auf ausführbare Datei, tatsächliche UIDs und
+stabile Instanz korrigiert; 160 Integrationstests bestanden. Nächster Schritt
+bleibt der separat freizugebende reine Metadatencheck, keine neue Bewegungs-
+oder Speicherbeobachtung. Genauere Diagnose erst mit dessen Ergebnis.
+[Prüfhelferkorrektur und Grenzen](STEAM_GUIDE_GYRO.md#gamescope-process-identity-corrected-offline).
+
 ## Bazzite als mögliche Zielplattform
 
 Quellenvergleich abgeschlossen, noch kein Bazzite-Zielbau oder installierbares

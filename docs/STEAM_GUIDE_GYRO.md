@@ -192,12 +192,92 @@ stop it. A later process-memory observation would require its own reviewed
 scope, explicit permission and local GO. No such new live action occurred in
 this correction; the underlying Steam gyro cause is still unresolved.
 
+## Gamescope process identity corrected offline
+
+**Latest human report:** after a full PC reboot, native binding was automatic,
+without Resume; the gyro display still responds only with Guide held. This
+supersedes the earlier report of no response/manual Resume for the current
+session, without erasing that history. It is not an agent-run motion trace.
+
+A second separately approved metadata-only attempt passed SSH/authentication
+and started the read program. Its saved result records kernel
+`7.2.11-1-cachyos-deckify` and service active/running/enabled, then exit 2:
+`No user-owned Gamescope process; stop`. No retry occurred. The guard ran
+before module parameters, paired-node checks, Steam FDs and binary identity;
+none of those were attested by this attempt. The error does **not** prove
+Gamescope was absent or that gyro options were missing.
+
+The old selector required both the proc directory owner's UID and exact
+`comm == "gamescope"`. Linux's locally installed `proc_pid_comm(5)` manual
+(man-pages 6.19) describes comm as a mutable, per-thread name, not an executable
+identity. Static inspection of the local Gamescope ELF found its `main`
+obtaining `pthread_self` at `0x5f3c0`, retaining that thread handle, and passing
+`gamescope-wl` (string at `0x21341d`) to `pthread_setname_np` at `0x5fc31`.
+These are file virtual addresses, not live memory. The local file was never
+executed; its hash and evidence limits are in
+[the sanitized record](gamescope-identity-offline.json). The remote process
+name/version was not captured, so the precise remote failure is still unproved.
+
+A test-owned Python child reproduces a renamed `gamescope-wl` task with
+unchanged executable/credentials; synthetic proc fixtures reproduce rejection
+by the legacy exact-name check. A separate local dumpability probe did **not**
+reproduce a proc-directory-owner mismatch: its directory stayed user-owned,
+although individual metadata files became root-owned. Do not claim that
+dumpability explained the actual failure. The new UID quartet check uses
+explicit process credentials and does not rely on directory ownership.
+
+The diagnostic-only `tools/sdl/gamescope_identity.py` now:
+
+- Resolves the expected `/usr/bin/gamescope`, compares the process exe path
+  and backing-file device/inode/mode/size/timestamps, and rejects a deleted,
+  replaced or unrelated executable. A matching name alone is insufficient.
+- Requires real/effective/saved/filesystem UIDs to equal the expected non-root
+  sudo caller, with no tracing or stopped/exiting state. No hardcoded user/UID.
+- Pins PID/start time and reads identity again, requires one matching process,
+  then rescans at precheck completion without adopting a replacement.
+- Reports selection counts or specific metadata denials instead of folding
+  all failures into an unsupported conclusion about the session. `Name` is
+  bounded diagnostic context only and may legitimately change.
+
+This establishes a compositor process for the expected user, **not** display
+focus, exact seat/session membership or a parent-child relationship to Steam.
+Stored launcher definitions allow Steam in a separate systemd user service;
+requiring Steam to descend from Gamescope would be another unjustified guard.
+No broader ownership or permission fallback has been introduced.
+
+27 new regression tests cover identity, credential, ambiguity, permission,
+disappearance and replacement cases. `make test-steam` passes 160 tests;
+19 private preparation tests also pass, including the exact new payload's Fish
+syntax/argv round trip, source hashes, one-attempt receipt and early failure.
+Only fixture processes/files and stored regular reference files are involved.
+There was no target connection, real sudo, vendor/Steam execution, device open,
+installation, driver/configuration change or push during this correction.
+
+### Next metadata-only step, not executed
+
+The two consumed attempt folders remain unchanged. A new private folder holds
+the corrected selector, unchanged common observer, reviewed read program and
+Fish-safe transport, with source hashes and an unconsumed one-attempt gate.
+The local launcher command is supplied to the maintainer for **fresh approval**;
+the prepared files do not grant execution. One password dialog may authenticate
+the remote read, with no password written to logs. Existing deadlines remain:
+8-second connection, 180-second password dialog, 240-second local supervisor,
+30-second remote read. No automatic retry or remote script copy is performed.
+
+The read checks service state, Gamescope/Steam identities, native paired nodes,
+effective module options, Steam's open-node links and pinned SDL/client/UI
+files. It opens no input/IIO/USB device or process-memory file and requests no
+motion, calibration or Guide action. A changed version/instance or denied
+metadata stops it. The underlying Guide-dependent gyro cause is unresolved;
+any later bounded memory/motion observation needs its own scope and approval.
+
 ## Reproduce the nonhardware checks
 
 ```sh
 DEBUGINFOD_URLS= LLVM_SYMBOLIZER_OPTS=--no-debuginfod make test-sensor test-sdl
 python -B tests/run_sdl_sensor_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so.0 --check-steam-layout
 python -B tests/test_steam_gyro_ssh.py
+python -B tests/test_gamescope_identity.py
 ```
 
 The layout option rejects any library hash except the previously reviewed

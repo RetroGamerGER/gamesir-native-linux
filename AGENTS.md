@@ -26,6 +26,25 @@ exclusive maintenance path; normal play must not depend on it.
 
 ## Offline Gamescope gyro hotplug integration (19 October 2026)
 
+Latest follow-up supersedes the earlier human state below: after a full reboot
+the maintainer reports automatic native binding without Resume, but gyro only
+while Guide is held. A separately approved metadata attempt passed SSH/sudo
+and recorded service active/running/enabled, then stopped at the Gamescope
+guard. It did not reach module parameters, Steam FDs or library identities.
+Do not call that guard failure proof that Gaming Mode was absent. The offline
+correction is tools/sdl/gamescope_identity.py: executable path/backing file,
+four actual UIDs and stable PID/start, not directory owner or mutable comm.
+The local binary names its main thread gamescope-wl; no remote name was saved,
+so this is a reproduced guard defect and plausible cause, not target proof.
+Do not infer the Steam/Guide root cause from it. Reject ambiguous identities,
+inaccessible metadata and replacements; rescan at completion. No Steam-parent
+requirement: the recorded launcher can run in a separate user service.
+160 make test-steam tests and 19 private preparation tests pass. Consumed
+attempts stay unchanged; a third metadata-only folder is prepared, unstarted.
+Fresh approval remains required. No SSH, real sudo, live target or device
+access in this correction; no Steam/driver change, package bump or push.
+Read the latest section in docs/STEAM_GUIDE_GYRO.md before another read.
+
 The later metadata-only SSH precheck stopped in the remote Fish parser, before
 sudo authentication or the read program. Preserve that failed attempt; never
 reuse its receipt or infer module options, open sensors or motion from it.

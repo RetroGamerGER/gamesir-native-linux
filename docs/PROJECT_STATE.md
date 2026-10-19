@@ -2,6 +2,23 @@
 
 # Projektstand
 
+**Gamescope-Prüfhelfer offline korrigiert:** Nach vollständigem Neustart meldet
+der Nutzer automatische native Bindung ohne Resume, weiterhin Gyro nur bei
+gehaltener Guide-Taste. Der danach freigegebene reine Metadatencheck bestätigt
+Dienst aktiv/laufend/aktiviert, stoppt aber an der bisherigen Gamescope-Suche.
+Moduloptionen und Steam-Sensorknoten wurden dabei noch nicht geprüft.
+Der Helfer erkennt jetzt die ausführbare Datei, alle vier Benutzerkennungen
+und die stabile Prozessinstanz statt eines exakten, veränderlichen Threadnamens.
+Die lokale Gamescope-Datei verwendet `gamescope-wl`; ein entsprechender
+Fehlalarm ist offline reproduziert. Der tatsächliche entfernte Name wurde
+nicht gespeichert, die genaue Abbruchursache bleibt daher noch unbestätigt.
+160 Steam-Integrationstests und 19 private Vorbereitungstests bestanden.
+Neuer einmaliger Leseschritt vorbereitet, noch nicht gestartet oder freigegeben.
+Keine Zugriffe auf den Ziel-PC, keine Änderungen an Steam oder Treiber.
+[Befunde und nächster Schritt](STEAM_GUIDE_GYRO.md#gamescope-process-identity-corrected-offline).
+
+Historischer Zwischenstand vor diesem Neustart und zweiten Metadatenversuch:
+
 **Lesender SSH-Vorabcheck vor der Prüfung abgebrochen; Übergabe offline
 korrigiert:** Die entfernte Fish-Shell verwarf den verschachtelten Python-Text
 vor sudo/Passwortfenster und Prüfprogramm. Keine neue Laufzeitdiagnose; der

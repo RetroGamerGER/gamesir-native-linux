@@ -37,6 +37,7 @@ DOCUMENT_FILES = (
     'docs/STEAM_GYRO_HOTPLUG.md', 'docs/steam-gyro-hotplug-offline.json',
     'docs/STEAM_GUIDE_GYRO.md', 'docs/steam-guide-gyro-offline.json',
     'docs/steam-gyro-ssh-offline.json',
+    'docs/gamescope-identity-offline.json',
     'docs/input-publication-offline.json',
     'docs/evidence/INPUT_PUBLICATION_INSTALL_20261019.json',
     'docs/EXPERIMENTAL_GYRO_TEST.md', 'docs/experimental-gyro-validation.json',

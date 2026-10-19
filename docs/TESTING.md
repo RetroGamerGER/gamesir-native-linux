@@ -20,6 +20,22 @@ Der neue Builder ist kein Remote-Runner oder Read-only-Sandbox. Sein Einsatz
 behält Quellprüfung, Einmal-Sperre und getrennte Live-Freigabe bei.
 [Befund und Beweisgrenzen](STEAM_GUIDE_GYRO.md#metadata-precheck-stopped-before-authentication).
 
+## Gamescope-Prozesszuordnung ohne Zielzugriff
+
+`python -B tests/test_gamescope_identity.py` führt 27 Regressionen aus und ist
+Teil von `make test-steam` (insgesamt 160 Tests). Synthetische proc-Bäume prüfen
+`gamescope-wl` statt `gamescope`, abweichenden Verzeichniseigentümer gegenüber
+vier Prozess-UIDs, falsche Programme, fremde/gemischte UIDs, mehrere Instanzen,
+Tracer/Stopp/Zombie, fehlende/gesperrte Metadaten und PID-/Dateiaustausch.
+Ein eigener kurzlebiger Python-Kindprozess setzt ausschließlich seinen eigenen
+Threadnamen; der Test liest nur dessen Metadaten, scannt kein echtes `/proc`
+und startet kein Gamescope. Der Abschlusscheck darf keine Ersatzinstanz wählen.
+Private Tests prüfen zusätzlich Quellhash-/Einmalsperre, frühe Abbruchgrenze,
+Abschlussprüfung und exakte nächste Fish-Befehlsübergabe mit argv-Fixture.
+Dabei wird kein entferntes Prüfprogramm ausgeführt. Das belegt den korrigierten
+Helfer, nicht die entfernte Sitzung, SDL-Daten oder die Ursache der Guide-Anzeige.
+[Prüfnachweis](gamescope-identity-offline.json).
+
 ## Optional real acceleration extension
 
 See [the offline correction contract](STEAM_ACCEL_EXTENSION.md). `make test-sensor`

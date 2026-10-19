@@ -1,5 +1,23 @@
 # Public pre-alpha release audit
 
+## Gamescope metadata identity corrected offline — 19 October 2026
+
+The second separately approved metadata attempt reached the remote program,
+recorded service active/running/enabled, then stopped at its name/owner-based
+Gamescope guard. No module-option, Steam-FD or library attestation followed.
+The latest human report is automatic binding after full reboot without Resume
+and gyro display only with held Guide. [The follow-up](STEAM_GUIDE_GYRO.md#gamescope-process-identity-corrected-offline)
+and [sanitized evidence](gamescope-identity-offline.json) preserve both limits.
+The helper now verifies exact executable backing, the four process UIDs and
+stable PID/start, rejecting replacements, ambiguity and denied metadata.
+`make test-steam`: 160 passed, including 27 new identity tests; 19 private
+preparation tests passed, including exact-payload Fish transport checks.
+No Steam/vendor application execution, remote access, real sudo, device access,
+installation or runtime change in this correction. Only synthetic metadata
+and a test-owned Python child are used. No kernel rebuild/package bump is
+needed for this diagnostic-only change. The third read is prepared but needs
+new approval; the Guide/gyro cause and Gamescope reconnect remain unresolved.
+
 ## SSH metadata transport corrected offline — 19 October 2026
 
 The approved metadata attempt stopped in the remote Fish parser before sudo

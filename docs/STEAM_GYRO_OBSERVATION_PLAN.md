@@ -9,10 +9,13 @@ This is a one-run diagnostic proposal requiring separate approval. It does
 not install anything or change the working driver, Steam configuration,
 gyro profile, paddles, rumble or raw IIO path.
 
-The later Gamescope metadata-only attempt stopped in the remote Fish parser
-before authentication or the check. Its transport has been corrected offline
-and a new metadata run is only prepared, not started. See
-[the separate failure/correction record](STEAM_GUIDE_GYRO.md#metadata-precheck-stopped-before-authentication).
+The first later Gamescope metadata-only attempt stopped in the remote Fish
+parser. After its offline correction, a second separately approved attempt
+reached the read program, attested the running/enabled service and stopped at
+the Gamescope name/owner guard. It did not reach module parameters or Steam
+FD/version checks. The process selector is now corrected offline; a third
+metadata-only run is prepared, not started. See
+[the latest failure/correction record](STEAM_GUIDE_GYRO.md#gamescope-process-identity-corrected-offline).
 The old desktop cache success below does not validate that new target state
 or authorize process-memory access in the prepared metadata-only step.
 

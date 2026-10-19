@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-19",
+  "scope": "Offline diagnostic process selector only; no runtime fix or target access",
+  "latest_human_report": {
+    "full_pc_reboot": true,
+    "automatic_native_binding": true,
+    "manual_resume_needed": false,
+    "gyro_display_only_while_guide_held": true,
+    "agent_motion_trace": false
+  },
+  "prior_approved_metadata_attempt": {
+    "exit_code": 2,
+    "service": {
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "kernel": "7.2.11-1-cachyos-deckify",
+    "stop_reason": "No user-owned Gamescope process; stop",
+    "module_parameters_reached": false,
+    "steam_fd_check_reached": false,
+    "reference_versions_checked": false,
+    "remote_gamescope_name_saved": false,
+    "automatic_retry": false,
+    "process_memory_opened": false
+  },
+  "local_static_reference": {
+    "file": "gamescope ELF, read only and never executed",
+    "sha256": "e777e769eb6cedae297e70dd94f529813fbead82c2e4b445818d9cee8509c280",
+    "address_kind": "ELF virtual address",
+    "main": "0x5e750",
+    "pthread_self_call": "0x5f3c0",
+    "thread_handle_store": "0x5f3cd",
+    "name_string": "0x21341d",
+    "name": "gamescope-wl",
+    "pthread_setname_np_call": "0x5fc31",
+    "same_as_remote_version_proven": false,
+    "binary_or_disassembly_copied_into_git": false
+  },
+  "local_manual": "proc_pid_comm(5), Linux man-pages 6.19: mutable per-thread comm",
+  "offline_reproduction": {
+    "renamed_own_child_rejected_by_exact_name": true,
+    "synthetic_identity_passes_corrected_selector": true,
+    "dumpability_probe_reproduced_proc_directory_owner_failure": false,
+    "precise_remote_failure_proven": false
+  },
+  "correction": {
+    "executable_backing_verified": true,
+    "four_process_uids_verified": true,
+    "pid_start_pinned": true,
+    "mutable_name_authorizes_selection": false,
+    "directory_owner_authorizes_selection": false,
+    "ambiguity_denials_replacements_stop": true,
+    "final_identity_rescan": true,
+    "steam_ancestry_required": false,
+    "display_focus_or_exact_session_proven": false,
+    "kernel_manager_steam_runtime_modified": false
+  },
+  "tests": {
+    "identity_regressions": 27,
+    "make_test_steam_passed": 160,
+    "private_preparation_passed": 19,
+    "skipped": 0,
+    "actual_fish_exact_payload_syntax_and_argv_checked": true,
+    "remote_program_executed": false,
+    "real_proc_scope": "one test-owned Python child only; no process enumeration",
+    "supplemental": {
+      "licensing": 3,
+      "public_readme": 7,
+      "alpha_packaging": 25
+    }
+  },
+  "source_sha256": {
+    "tools/sdl/gamescope_identity.py": "7c3846447d08d3df6018e7c25a84056d4c63a12f48aa7386c6fb20ebf0280f6f",
+    "tests/test_gamescope_identity.py": "178c08ba6e32c0c85c9928272747500c1f3cd7a9f148ad1cf7b862f50a00eaf8",
+    "tools/sdl/steam_gyro_observe.py": "64e92215716f665731f624b05690387610f78970b5dd3376fe06d1516a0471ac",
+    "tools/sdl/ssh_python_payload.py": "625cea232041d315622173e3b3e68cecb86fc309024217b8fa0511cc839dc997"
+  },
+  "next_step": {
+    "metadata_only": true,
+    "prepared": true,
+    "started": false,
+    "new_explicit_approval_required": true,
+    "one_attempt": true,
+    "opens_process_memory_or_devices": false,
+    "requests_movement_or_guide": false,
+    "automatic_retry": false,
+    "requires_installation": false
+  },
+  "during_correction": {
+    "ssh": false,
+    "network": false,
+    "real_sudo_or_password_dialog": false,
+    "live_target_access": false,
+    "steam_or_driver_changes": false,
+    "calibration": false,
+    "push": false
+  },
+  "limits": [
+    "The previous failed read confirms the service only, not running sensor options or Steam sensor reads.",
+    "Local executable/name evidence does not prove the remote comm or executable version.",
+    "Corrected metadata selection does not diagnose the Guide-dependent gyro failure.",
+    "Open FDs do not prove sensor reads; later process-memory observation needs separate approval."
+  ]
+}
