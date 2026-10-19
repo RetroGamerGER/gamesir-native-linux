@@ -5,6 +5,17 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Korrektur offline vorbereitet:** Ein separater, standardmäßig deaktivierter
+Beschleunigungspfad ergänzt den bestehenden evdev-Gyropfad aus demselben
+IMU-Bericht und Zeitstempel. Keine erfundene Gravitation und keine zweite
+USB-Zuständigkeit. Ungültige oder fehlende explizite Beschleunigungsachsen
+verhindern das Aktivieren bereits vor USB-Registrierung. Die tatsächliche
+Beschleunigungsachsen-Zuordnung ist noch nicht bestätigt; synthetische
+Zuordnungen sind keine Hardwareempfehlung. Der installierte Treiber, Steam
+und das angenommene Eden-Verhalten bleiben unverändert. Offline-Tests sind
+keine Steam-Live-Abnahme. [Implementierung und nächste Grenze](STEAM_ACCEL_EXTENSION.md).
+Gyrokalibrierung weiterhin pausiert; kein Push.
+
 **Konkrete Steam-UI-Sperre offline identifiziert:** Die bisher unbekannte
 Dreierprüfung vor den Gyro-Benachrichtigungen prüft tatsächlich Beschleunigung.
 Schreibpfad, Cachebasis `0x180`, IMU-Abstand `0x34` und ein unabhängiger
@@ -18,7 +29,8 @@ des damaligen Live-Laufs und eine Spieleinschränkung sind damit nicht bewiesen.
 Bereitschaftsmarker, Geräte-/Seitenzuordnung und Abonnementpfad sind ebenfalls
 weiter verfolgt. 64 eigene Modellfälle und zwei Gegenseitenfälle bestehen;
 keine Steam-Ausführung. [Fundstellen und Beweisgrenzen](STEAM_GYRO_DOWNSTREAM.md#notification-gate-follow-up).
-Keine Steam-/Treiberänderung, kein Live-Test oder Push; Gyrokalibrierung pausiert.
+Bei dieser vorherigen Analyse keine Steam-/Treiberänderung, kein Live-Test oder Push;
+Gyrokalibrierung pausiert.
 
 **Vorheriger Zwischenstand – Steam-Folgepfad eingegrenzt:** Der ELF32-Client routet Gyroereignisse
 über die SDL-Instanz und führt separate Gyro-Paketfelder weiter, auch ohne

@@ -15,6 +15,12 @@ Existing Steam paddle support stays intact. No further calibration, tests or
 runtime changes follow automatically. Pending reboot and other validation
 limits below remain explicit; milestone closure does not claim those passed.
 
+Offline follow-up (19 October): a separately opt-in
+[real-acceleration extension](STEAM_ACCEL_EXTENSION.md) is now prepared for
+Steam's identified notification gate. It does not change the installed
+accepted gyro-only path or supply an unproved accelerometer frame. The
+historical acceptance and limits below still refer to gyro-only operation.
+
 ## Decision and scope
 
 The maintainer accepted the observed gyro directions and **0.07 degrees/s

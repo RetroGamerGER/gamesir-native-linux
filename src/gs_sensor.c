@@ -86,6 +86,48 @@ int gs_accel_convert_experimental(const struct gs_accel_experimental_scale *s,
 	return GS_SENSOR_EXPERIMENTAL;
 }
 
+int gs_accel_evdev_resolution(const struct gs_accel_experimental_scale *s,
+                            const gs_s32 map[3], gs_u32 *resolution)
+{
+	unsigned int i, used = 0;
+	if (!s || !map || !resolution || !s->counts_per_g_num ||
+	    s->counts_per_g_num > 1000000 || !s->counts_per_g_den ||
+	    s->counts_per_g_den > 1000000 ||
+	    s->counts_per_g_num % s->counts_per_g_den)
+		return GS_SENSOR_BAD_CONFIG;
+	for (i = 0; i < 3; i++) {
+		gs_s32 axis = map[i];
+		/* Check before negation: INT_MIN must be rejected safely. */
+		if (!axis || axis < -3 || axis > 3)
+			return GS_SENSOR_BAD_CONFIG;
+		axis = axis < 0 ? -axis : axis;
+		if (used & (1u << axis))
+			return GS_SENSOR_BAD_CONFIG;
+		used |= 1u << axis;
+	}
+	*resolution = s->counts_per_g_num / s->counts_per_g_den;
+	return GS_SENSOR_EXPERIMENTAL;
+}
+
+int gs_accel_evdev_convert(const struct gs_accel_experimental_scale *s,
+                          const gs_s32 map[3], const gs_s16 raw[3], gs_s32 out[3])
+{
+	gs_s32 values[3];
+	gs_u32 resolution;
+	unsigned int i;
+	if (!raw || !out ||
+	    gs_accel_evdev_resolution(s, map, &resolution) != GS_SENSOR_EXPERIMENTAL)
+		return GS_SENSOR_BAD_CONFIG;
+	for (i = 0; i < 3; i++) {
+		gs_s32 axis = map[i];
+		values[i] = (gs_s32)raw[(axis < 0 ? -axis : axis) - 1] *
+			(axis < 0 ? -1 : 1);
+	}
+	for (i = 0; i < 3; i++)
+		out[i] = values[i];
+	return GS_SENSOR_EXPERIMENTAL;
+}
+
 int gs_sensor_ready(const struct gs_sensor_calibration *c)
 {
 	unsigned int i, used = 0;

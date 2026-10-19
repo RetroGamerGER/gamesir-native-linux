@@ -28,6 +28,7 @@ DOCUMENT_FILES = (
     'docs/evidence/CACHYOS_BOOTSTRAP_20261015.json',
     'docs/DUALSENSE_SENSOR_COMPARISON.md',
     'docs/SDL_EDEN_GYRO.md', 'docs/sdl-eden-gyro-validation.json',
+    'docs/STEAM_ACCEL_EXTENSION.md', 'docs/steam-accel-extension-validation.json',
     'docs/EXPERIMENTAL_GYRO_TEST.md', 'docs/experimental-gyro-validation.json',
     'docs/COHERENT_IMU_CALIBRATION.md', 'docs/coherent-imu-validation.json',
     'docs/COHERENT_IMU_UPDATE.md', 'docs/evidence/COHERENT_IMU_INSTALL_20261016.json',

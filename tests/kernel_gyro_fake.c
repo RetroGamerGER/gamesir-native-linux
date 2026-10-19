@@ -29,9 +29,13 @@ struct gsn_device {
     struct { unsigned pid; } rt;
     struct { unsigned long long instance; } identity;
     struct gs_gyro_clock gyro_clock;
+    struct gs_accel_experimental_scale accel_scale;
     char phys[96], gyro_phys[96], sensor_uniq[112];
     bool input_registered, gyro_registered;
 };
+static bool experimental_accel;
+static int accel_axis_map[3], accel_axis_map_count;
+static unsigned accel_counts_per_g_num=8192, accel_counts_per_g_den=1;
 static bool experimental_gyro, persistent_mode, fail_alloc, fail_register;
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(*(a)))
 #define le16_to_cpu(a) (a)
@@ -59,7 +63,7 @@ static void input_sync(struct input_dev *d) { assert(d->registered); d->syncs++;
 int main(void) {
     struct usb_device u={.descriptor.bcdDevice=1};
     struct usb_interface intf={.dev.name="2-3.4:1.0"};
-    struct gsn_device a={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=1};
+    struct gsn_device a={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=1,.accel_scale={8192,1}};
     for(unsigned k=0;k<3;k++) {
         struct gsn_device g=a;
         experimental_gyro=k!=0; g.rt.pid=k==1?0x105e:k==2?0x100a:0x109c;
@@ -81,21 +85,57 @@ int main(void) {
     struct gsn_device b={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=2};
     assert(!gsn_input_register(&b));
     assert(strcmp(a.input->uniq,b.input->uniq));
-    intf.dev.name="9-1:1.0"; struct gsn_device c={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=1};
+    intf.dev.name="9-1:1.0"; struct gsn_device c={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=1,.accel_scale={8192,1}};
     assert(!gsn_input_register(&c)); assert(!strcmp(c.input->uniq,"gsn-9-1:1.0-1"));
     free(c.gyro_input); c.gyro_input=NULL; c.gyro_registered=false;
     assert(strcmp(a.input->uniq,c.input->uniq));
     fail_alloc=true; assert(gsn_gyro_register(&c)==-ENOMEM); fail_alloc=false;
     fail_register=true; assert(gsn_gyro_register(&c)==-EIO && !c.gyro_registered); fail_register=false;
     gs_s16 raw[3]={-32768,32767,-1};
-    gsn_gyro_report(&a,raw,1000000); gsn_gyro_report(&a,raw,17000000);
+    gsn_gyro_report(&a,raw,NULL,1000000); gsn_gyro_report(&a,raw,NULL,17000000);
     assert(a.gyro_input->syncs==2 && a.gyro_input->timestamp==16001);
     assert(a.gyro_input->host_ns==17000000 && a.gyro_input->abs[ABS_RZ]==-7);
-    gs_s16 zero[3]={0}; gsn_gyro_report(&a,zero,18000000); gs_gyro_pause(&a.gyro_clock);
+    gs_s16 zero[3]={0}; gsn_gyro_report(&a,zero,NULL,18000000); gs_gyro_pause(&a.gyro_clock);
     assert(!a.gyro_input->abs[ABS_RX] && !a.gyro_input->abs[ABS_RY]);
-    gsn_gyro_report(&a,raw,60000000000ULL); assert(a.gyro_input->timestamp==17002);
-    gsn_gyro_report(&c,raw,100); assert(!c.gyro_input->syncs);
-    experimental_gyro=false; gsn_gyro_report(&a,raw,70000000000ULL); assert(a.gyro_input->syncs==4);
+    gsn_gyro_report(&a,raw,NULL,60000000000ULL); assert(a.gyro_input->timestamp==17002);
+    gsn_gyro_report(&c,raw,NULL,100); assert(!c.gyro_input->syncs);
+    experimental_gyro=false; gsn_gyro_report(&a,raw,NULL,70000000000ULL); assert(a.gyro_input->syncs==4);
+    /* Real acceleration is separately opt-in; no default/partial axis map. */
+    experimental_accel=true;
+    assert(gsn_sensor_options()==-EINVAL);
+    experimental_gyro=true;
+    assert(gsn_sensor_options()==-EINVAL);
+    accel_axis_map_count=2; accel_axis_map[0]=1; accel_axis_map[1]=2; accel_axis_map[2]=3;
+    assert(gsn_sensor_options()==-EINVAL);
+    accel_axis_map_count=3; accel_axis_map[2]=-2;
+    assert(gsn_sensor_options()==-EINVAL);
+    accel_axis_map[0]=-3; accel_axis_map[1]=1; accel_axis_map[2]=-2;
+    accel_counts_per_g_den=3; assert(gsn_sensor_options()==-EINVAL);
+    accel_counts_per_g_den=1; assert(!gsn_sensor_options());
+    experimental_gyro=false; assert(gsn_sensor_options()==-EINVAL); experimental_gyro=true;
+    struct gsn_device d={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=3,.accel_scale={8192,1}};
+    assert(!gsn_input_register(&d));
+    for(unsigned i=ABS_X;i<=ABS_Z;i++) {
+        assert(d.gyro_input->res[i]==8192 && d.gyro_input->lo[i]==-32768 && d.gyro_input->hi[i]==32768);
+    }
+    gs_s16 acceleration[3]={8192,0,-32768};
+    gsn_gyro_report(&d,raw,acceleration,1000000);
+    assert(d.gyro_input->syncs==1 && d.gyro_input->reports==6);
+    assert(d.gyro_input->abs[ABS_X]==32768 && d.gyro_input->abs[ABS_Y]==8192 && d.gyro_input->abs[ABS_Z]==0);
+    assert(d.gyro_input->abs[ABS_RX]==-229376 && d.gyro_input->timestamp==1);
+    gsn_gyro_report(&d,zero,NULL,2000000);
+    assert(d.gyro_input->syncs==2 && d.gyro_input->reports==9);
+    assert(d.gyro_input->abs[ABS_X]==32768 && !d.gyro_input->abs[ABS_RX]);
+    /* Disabled experiment never adds fake acceleration; other capabilities survive. */
+    for(unsigned i=704;i<=707;i++) assert(d.input->keys[i]);
+    assert(d.input->has_ff && !d.gyro_input->has_ff);
+    for(unsigned i=0;i<2;i++) {
+        struct gsn_device other={.udev=&u,.intf=&intf,.rt.pid=i?0x105e:0x100a,.accel_scale={8192,1}};
+        assert(!gsn_input_register(&other));
+        assert(!other.gyro_input && !other.gyro_registered);
+        free(other.input);
+    }
+    free(d.gyro_input); free(d.input);
     free(a.gyro_input); free(a.input); free(b.gyro_input); free(b.input); free(c.gyro_input); free(c.input);
-    puts("PASS: actual gyro registration/emission; opt-in/model guards, seat metadata, unique pairing, arbitrary ports, failed allocations/registration, full-range units, unchanged samples, neutral/pause clock, independent FF and paddle capabilities");
+    puts("PASS: actual gyro/accel registration/emission; explicit map/scale gates, coherent six-axis report, neutral retains real accel, opt-in/model guards, seat metadata, unique pairing, arbitrary ports, failed allocations/registration, full-range units, unchanged samples, neutral/pause clock, independent FF and paddle capabilities");
 }

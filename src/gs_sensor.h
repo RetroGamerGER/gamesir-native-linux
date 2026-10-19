@@ -42,6 +42,15 @@ struct gs_accel_experimental_scale {
  */
 int gs_accel_convert_experimental(const struct gs_accel_experimental_scale *scale,
 				  const gs_s16 raw[3], gs_s32 out[3]);
+/* Separate opt-in evdev experiment: map SDL X/Y/Z to signed 1-based wire
+ * axes (+/-1..3). No default map, bias or verified calibration is supplied.
+ * evdev requires integral counts/g; reject non-integral rational scales.
+ * Both functions leave outputs unchanged on error; success is EXPERIMENTAL.
+ */
+int gs_accel_evdev_resolution(const struct gs_accel_experimental_scale *scale,
+                            const gs_s32 map[3], gs_u32 *resolution);
+int gs_accel_evdev_convert(const struct gs_accel_experimental_scale *scale,
+                          const gs_s32 map[3], const gs_s16 raw[3], gs_s32 out[3]);
 int gs_sensor_ready(const struct gs_sensor_calibration *cal);
 int gs_sensor_convert(const struct gs_sensor_calibration *cal,
 		      const gs_s16 raw[3], gs_s32 out[3]);

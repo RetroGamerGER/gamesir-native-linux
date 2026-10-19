@@ -31,9 +31,17 @@ struct miscdevice { bool registered; };
 struct input_dev { int keys[KEY_CNT]; unsigned syncs; bool registered; };
 struct gsn_boot { struct kref ref; };
 struct gsn_device;
-/* Gyro registration/emission has its own extracted-code harness. */
-static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3], u64 ns)
-{ (void)g; (void)raw; (void)ns; }
+static gs_s16 motion_gyro[3], motion_accel[3];
+static u64 motion_ns;
+/* Observe the actual producer link; registration/emission has its own harness. */
+static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3], const gs_s16 accel[3], u64 ns)
+{
+	(void)g;
+	assert(raw && accel);
+	memcpy(motion_gyro, raw, sizeof(motion_gyro));
+	memcpy(motion_accel, accel, sizeof(motion_accel));
+	motion_ns = ns;
+}
 struct iio_buffer { unsigned refs; bool owner_released; };
 struct device { void *owner; };
 struct device_attribute { unsigned unused; };
@@ -421,6 +429,8 @@ static void buffer_cases(void)
 	now_ns += 1234567;
 	receive(g, &f);
 	assert(pushes == before + 1 && last_scan_length == 32 && last_timestamp == (s64)now_ns);
+	assert(motion_ns == now_ns && !memcmp(motion_gyro, f.gyro, sizeof(f.gyro)) &&
+	       !memcmp(motion_accel, f.accel, sizeof(f.accel)));
 	assert(le64_at(16) == 2 && g->sample.sample_number == 2); tests++;
 	for (unsigned n = 0; n < 3; n++) {
 		assert(le16_at(n * 2) == (uint16_t)f.accel[n]);

@@ -4,6 +4,17 @@ Alle Make-Ziele sind offline. Keine Installation, erhöhten
 Rechte, USB-Kommandos, Modulaktivierung oder Treiberwechsel sind Bestandteil.
 Voraussetzung: vorhandenes Python ≥ 3.11, Make und clang mit ASan/UBSan.
 
+## Optional real acceleration extension
+
+See [the offline correction contract](STEAM_ACCEL_EXTENSION.md). `make test-sensor`
+now checks all 48 signed acceleration maps and the extracted real six-axis
+adapter. `make test-sdl` adds `experimental-six-axis` to SDL2 and SDL3 (16 sensor
+cases total), including physical-unit conversion, coherent SDL3 sensor events
+and all 32 A/paddle combinations. The pinned Steam SDL32 library has eight
+cases; its existing gyro-only cache-layout/enable-sequence tests stay intact.
+No automatic map selection or hardware calibration is implied. Kernel build
+and static analysis remain offline; no tests may load this experimental path.
+
 ## Steam-SDL-Gyro ohne Steam-Start
 
 Die [Offline-Folgeanalyse](STEAM_GYRO_DOWNSTREAM.md) ergänzt die SDL-Prüfungen

@@ -140,6 +140,15 @@ calibration completion. UI RawSpeed is not raw USB counts. No fake gravity,
 forced flags, installed changes or new live observation follows automatically.
 Preserve accepted SDL/Eden, gyro-only opt-in and all other features; any real
 accel extension needs its own axes/units evidence and implementation request.
+The subsequent implementation request authorizes the offline real-accel
+extension in docs/STEAM_ACCEL_EXTENSION.md. Keep experimental_accel default off
+and separate from the accepted gyro opt-in. Require an explicit signed map;
+no accelerometer frame is confirmed by the gyro movement recordings. Synthetic
+map -3,1,-2 is a test only, never a recommended device configuration. Reject
+invalid activation before USB registration. Preserve same-report/time/sync,
+raw IIO, gyro-only defaults, Eden, paddles and output ownership. No installed
+change or live/Steam acceptance follows from offline success. Obtain actual
+accelerometer-frame evidence and separate activation approval first.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

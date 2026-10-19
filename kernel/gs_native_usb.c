@@ -54,6 +54,30 @@ module_param(accel_counts_per_g_num, uint, 0400);
 MODULE_PARM_DESC(accel_counts_per_g_num, "EXPERIMENTAL replaceable acceleration counts/g numerator");
 static uint accel_counts_per_g_den = 1;
 module_param(accel_counts_per_g_den, uint, 0400);
+/* No guessed accelerometer frame: a separate explicit experiment only. */
+static bool experimental_accel;
+module_param(experimental_accel, bool, 0400);
+MODULE_PARM_DESC(experimental_accel, "Opt-in real 109c evdev acceleration; requires experimental_gyro and explicit accel_axis_map");
+static int accel_axis_map[3];
+static int accel_axis_map_count;
+module_param_array(accel_axis_map, int, &accel_axis_map_count, 0400);
+MODULE_PARM_DESC(accel_axis_map, "Experimental SDL X,Y,Z signed wire axes +/-1..3; no default or proven hardware mapping");
+
+static int gsn_sensor_options(void)
+{
+	struct gs_accel_experimental_scale scale = {
+		accel_counts_per_g_num, accel_counts_per_g_den };
+	gs_u32 resolution;
+
+	if (!experimental_accel)
+		return 0;
+	if (!experimental_gyro || accel_axis_map_count != 3 ||
+	    gs_accel_evdev_resolution(&scale, accel_axis_map, &resolution) !=
+	    GS_SENSOR_EXPERIMENTAL)
+		return -EINVAL;
+	return 0;
+}
+
 static uint session_ms = 30000;
 module_param(session_ms, uint, 0400);
 MODULE_PARM_DESC(session_ms, "Legacy finite session only: default 30000 ms, hard limit 1..315000 ms");
@@ -293,7 +317,8 @@ static int gsn_flush_motors(struct gsn_device *g)
 
 static void gsn_neutral(struct gsn_device *g);
 static void gsn_neutral_locked(struct gsn_device *g);
-static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3], u64 host_ns);
+static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3],
+			    const gs_s16 accel[3], u64 host_ns);
 
 /* io_lock held. report_lock is always outside rt.lock; input reporting never
  * holds rt.lock because FF callbacks arrive holding input's own event lock.
@@ -410,7 +435,7 @@ static void gsn_neutral_locked(struct gsn_device *g)
 	struct gs_frame zero = { .kind = GS_PAD_XINPUT };
 	unsigned int key;
 
-	gsn_gyro_report(g, zero.gyro, ktime_get_ns());
+	gsn_gyro_report(g, zero.gyro, NULL, ktime_get_ns());
 	gs_gyro_pause(&g->gyro_clock);
 	if (!g->input_registered)
 		return;
@@ -428,16 +453,26 @@ static void gsn_neutral_locked(struct gsn_device *g)
  * is explicitly host-derived, with paused intervals excluded, NOT a claim
  * of a firmware timestamp. input_event timestamps retain actual host time.
  */
-static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3], u64 host_ns)
+static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3],
+			    const gs_s16 accel[3], u64 host_ns)
 {
-	gs_s32 values[3];
+	gs_s32 values[3], acceleration[3];
+	const bool report_accel = experimental_accel && accel;
 	unsigned int i;
 
 	if (!g->gyro_registered ||
 	    gs_gyro_convert_observed(g->rt.pid, experimental_gyro, raw, values) !=
 	    GS_SENSOR_EXPERIMENTAL)
 		return;
+	/* NULL means lifecycle neutralization: never invent a gravity sample. */
+	if (report_accel &&
+	    gs_accel_evdev_convert(&g->accel_scale, accel_axis_map, accel,
+				   acceleration) != GS_SENSOR_EXPERIMENTAL)
+		return;
 	input_set_timestamp(g->gyro_input, ns_to_ktime(host_ns));
+	if (report_accel)
+		for (i = 0; i < 3; i++)
+			input_report_abs(g->gyro_input, ABS_X + i, acceleration[i]);
 	for (i = 0; i < 3; i++)
 		input_report_abs(g->gyro_input, ABS_RX + i, values[i]);
 	input_event(g->gyro_input, EV_MSC, MSC_TIMESTAMP,
@@ -477,7 +512,7 @@ static void gsn_imu(struct gsn_device *g, const struct gs_frame *f)
 	sample.sample_number = ++g->imu_packets;
 	g->sample = sample;
 	spin_unlock_irqrestore(&g->lock, flags);
-	gsn_gyro_report(g, f->gyro, sample.host_monotonic_ns);
+	gsn_gyro_report(g, f->gyro, f->accel, sample.host_monotonic_ns);
 	/* No buffer activation, allocation, owner claim, USB command or sleeping
 	 * lock here. The single RX URB orders pushes; disconnect kills it before
 	 * unregistering IIO. Queue overflow must not fault normal gamepad input:
@@ -1987,7 +2022,10 @@ static int gsn_gyro_register(struct gsn_device *g)
 {
 	unsigned int i;
 	int ret;
+	gs_u32 resolution;
 
+	if (gsn_sensor_options())
+		return -EINVAL;
 	if (!experimental_gyro || g->rt.pid != 0x109c)
 		return 0;
 	g->gyro_input = input_allocate_device();
@@ -2006,6 +2044,16 @@ static int gsn_gyro_register(struct gsn_device *g)
 		input_set_abs_params(g->gyro_input, i, GS_GYRO_OBSERVED_MIN,
 				     GS_GYRO_OBSERVED_MAX, 0, 0);
 		input_abs_set_res(g->gyro_input, i, GS_GYRO_OBSERVED_RESOLUTION);
+	}
+	if (experimental_accel) {
+		ret = gs_accel_evdev_resolution(&g->accel_scale, accel_axis_map, &resolution);
+		if (ret != GS_SENSOR_EXPERIMENTAL)
+			return -EINVAL;
+		for (i = ABS_X; i <= ABS_Z; i++) {
+			/* Negating s16 minimum requires +32768 in s32. */
+			input_set_abs_params(g->gyro_input, i, -32768, 32768, 0, 0);
+			input_abs_set_res(g->gyro_input, i, resolution);
+		}
 	}
 	ret = input_register_device(g->gyro_input);
 	if (!ret)
@@ -2294,6 +2342,8 @@ static struct usb_driver gsn_driver = {
 
 static int __init gsn_init(void)
 {
+	if (gsn_sensor_options())
+		return -EINVAL;
 	if (persistent_mode && (!bootstrap_mode || !enable_output))
 		return -EINVAL;
 	if (bootstrap_mode) {

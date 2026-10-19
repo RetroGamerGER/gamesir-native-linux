@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "stage": "offline preparation; not installed or activated",
+  "profile": {
+    "separate_opt_in": "experimental_accel",
+    "default_enabled": false,
+    "requires_experimental_gyro": true,
+    "pid": "109c",
+    "axis_map_default": [
+      0,
+      0,
+      0
+    ],
+    "hardware_accel_axis_map_verified": false,
+    "synthetic_axis_map_only": [
+      -3,
+      1,
+      -2
+    ],
+    "scale_counts_per_g": 8192,
+    "scale_status": "replaceable experimental assumption",
+    "gyro_dps_per_raw": 0.07,
+    "gyro_conversion_unchanged": true
+  },
+  "checks": {
+    "make_test_exit_code": 0,
+    "python_unittest_cases": 1087,
+    "pure_axis_permutations": 48,
+    "adapter": {
+      "passed": true,
+      "hardware_access": false,
+      "functions": [
+        "gsn_sensor_options",
+        "gsn_input_register",
+        "gsn_gyro_register",
+        "gsn_gyro_report"
+      ],
+      "coverage": "PASS: actual gyro/accel registration/emission; explicit map/scale gates, coherent six-axis report, neutral retains real accel, opt-in/model guards, seat metadata, unique pairing, arbitrary ports, failed allocations/registration, full-range units, unchanged samples, neutral/pause clock, independent FF and paddle capabilities",
+      "sanitizers": [
+        "address",
+        "undefined"
+      ],
+      "limits": "Fake input boundaries; does not execute Linux input core, USB, udev or PM."
+    },
+    "SDL2_and_SDL3_sensor_cases": 16,
+    "Steam_ELF32_SDL_sensor_cases": 8,
+    "SDL_paddle_combinations_per_new_six_axis_case": 32,
+    "Steam_SDL_SHA256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+    "SDL_coherent_gyro_accel_events": true,
+    "checkpatch_passed": true,
+    "static_analyzer_translation_units": [
+      {
+        "translation_unit": "gs_native_usb",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_protocol",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_sensor",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_runtime",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_startup",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      }
+    ],
+    "kernel": {
+      "kernel_release": "7.2.11-1-garuda",
+      "module_sha256": "7e135b7224368d0ffe7196351556dac4583557a7237f06b9541e7708f05b3257",
+      "vermagic": "7.2.11-1-garuda SMP preempt mod_unload",
+      "build_status": "passed_with_environment_warning",
+      "code_warnings": 0,
+      "environment_warnings": [
+        {
+          "kind": "kernel_compiler_mismatch",
+          "message": "warning: the compiler differs from the one used to build the kernel",
+          "kernel_compiler": "clang version 23.1.1",
+          "module_compiler": "clang version 23.1.3"
+        }
+      ],
+      "autoload_aliases": []
+    }
+  },
+  "boundaries": {
+    "hardware_access": false,
+    "installed_changes": false,
+    "Steam_configuration_changes": false,
+    "Steam_process_execution": false,
+    "network": false,
+    "live_Steam_fix_verified": false,
+    "gyro_calibration_resumed": false,
+    "push": false
+  },
+  "remaining": [
+    "Establish real accelerometer SDL axis mapping; no gyro-map inference.",
+    "Separate permission for installation/activation and shared Steam/Eden/paddle/output/lifecycle acceptance.",
+    "No universal Steam/Proton gameplay support claim."
+  ],
+  "source_sha256": {
+    "kernel/gs_native_usb.c": "a09114be761a98e7879999cbf57b14a3cf3509cda3b13303340122a911a9bc19",
+    "src/gs_sensor.c": "bfb4541dc3bfb521c2c8ff53d13570799c10439d717877f3bc833ac8b61820d0",
+    "src/gs_sensor.h": "53e19250084c85deef6c8c2f1ff84138eacec4fe0edb0fe51c69bda5149b3f30",
+    "tests/test_sensor_contract.c": "e85b37e5981ac2045d0828b91129e2dae46591386a322645da2b9e94ad84e8dd",
+    "tests/kernel_gyro_fake.c": "fc23c7d2ed081a2f46aa82d8222dcadd3a03999279a2338d9b54015cbbcfb667",
+    "tests/kernel_iio_buffer_fake.c": "d01af44fe82555eed24b1cf7782864349225a4e4161f31f7abddfeddccadabb6",
+    "tests/sdl_sensor_probe.c": "3aaf7584ef369bfb6a0f5e1c4244a536850a0e09a181620ad4dc5cf89e510261",
+    "tests/run_sdl_sensor_test.py": "db4dc1753b1eb16c6db956315034e94a4bb8940d1459e8cb5b6477bcdb92450b"
+  }
+}

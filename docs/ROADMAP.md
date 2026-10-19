@@ -27,6 +27,15 @@ Eden-Hotplug und Wechsel der Zeitbasis bleiben separat zu lösen;
 keine universelle Spielefreigabe oder erfundene Beschleunigungsachsen.
 [Test, korrigierter Prüfhelfer und Grenzen](SDL_EDEN_GYRO.md).
 
+## Steam-Gyro-Korrektur: optionaler Beschleunigungspfad
+
+Nach statisch nachgewiesener Accel-Sperre der UI wurde ein separat aktivierbarer
+realer Beschleunigungspfad offline umgesetzt. Nächste Grenze ist die belegte
+Beschleunigungsachsen-Zuordnung; kein geratenes Mapping produktiv aktivieren.
+Danach Installation und gemeinsame SDL/Eden-/Steam-/Paddle-Abnahme nur unter
+separater Freigabe. Details: [Korrekturvorbereitung](STEAM_ACCEL_EXTENSION.md).
+Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
+
 ## Neu angefragte Steam-Gyro-Machbarkeit: offline geprüft
 
 Beide vorhandenen Steam-SDL3-Varianten akzeptieren den bestehenden

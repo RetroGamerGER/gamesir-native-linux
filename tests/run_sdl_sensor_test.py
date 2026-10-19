@@ -112,6 +112,15 @@ def main():
     assert lib.gs_gyro_convert_observed(0x109c, 1, (c.c_int16 * 3)(*axes[:3]), gyro) == 1
     assert list(gyro) == [value * 7 for value in axes[:3]]
     observed = [0, 0, 0, *gyro]
+    class AccelScale(c.Structure):
+        _fields_ = [("num", c.c_uint32), ("den", c.c_uint32)]
+    lib.gs_accel_evdev_convert.argtypes = [c.POINTER(AccelScale), c.c_void_p, c.c_void_p, c.c_void_p]
+    acceleration = (c.c_int32 * 3)()
+    # Artificial signed permutation tests plumbing, NOT a proven GameSir frame.
+    assert lib.gs_accel_evdev_convert(c.byref(AccelScale(8192, 1)),
+        (c.c_int32 * 3)(-3, 1, -2), (c.c_int16 * 3)(*axes[3:]), acceleration) == 1
+    assert list(acceleration) == [-axes[5], axes[3], -axes[4]]
+    six_axis = [*acceleration, *gyro]
     converted = []
     # Artificial 1 g and 90 degree/s references; NOT a real device calibration.
     for sample, resolution, numerator, denominator in [
@@ -123,12 +132,15 @@ def main():
     assert converted == [10000, 0, -10000, 9000, -9000, 0]
     results = []
     for version in ([3] if library is not None else [3, 2]):
-        for scenario in ["iio-only", "matching-uniq", "wrong-uniq", "missing-rz", "zero-resolution", "synthetic-converted", "observed-gyro"]:
+        for scenario in ["iio-only", "matching-uniq", "wrong-uniq", "missing-rz", "zero-resolution", "synthetic-converted", "observed-gyro", "experimental-six-axis"]:
             sample_raw = converted if scenario == "synthetic-converted" else raw
             accel_resolution, gyro_resolution = (10000, 100) if scenario == "synthetic-converted" else (8192, 16)
             if scenario == "observed-gyro":
                 sample_raw = observed
                 accel_resolution, gyro_resolution = 0, 100
+            if scenario == "experimental-six-axis":
+                sample_raw = six_axis
+                accel_resolution, gyro_resolution = 8192, 100
             if scenario == "zero-resolution":
                 accel_resolution = gyro_resolution = 0
             args = ["bwrap", "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL",

@@ -57,6 +57,64 @@ static void experimental_accel(void)
 	assert(gs_accel_convert_experimental(&s, raw, NULL) == GS_SENSOR_BAD_CONFIG);
 }
 
+static void evdev_accel(void)
+{
+	struct gs_accel_experimental_scale scale = {8192, 1};
+	gs_s16 raw[3] = {-32768, 32767, -7};
+	gs_s32 out[3] = {10, 20, 30}, map[3];
+	gs_u32 resolution = 123;
+	unsigned cases = 0;
+	/* All 48 signed permutations, including s16 minimum sign inversion. */
+	for (int a = 1; a <= 3; a++)
+	for (int b = 1; b <= 3; b++)
+	for (int c = 1; c <= 3; c++) {
+		if (a == b || b == c || a == c) continue;
+		for (unsigned signs = 0; signs < 8; signs++) {
+			int sources[3] = {a,b,c};
+			for (unsigned i = 0; i < 3; i++)
+				map[i] = sources[i] * ((signs & (1u << i)) ? -1 : 1);
+			assert(gs_accel_evdev_resolution(&scale, map, &resolution) == GS_SENSOR_EXPERIMENTAL);
+			assert(resolution == 8192);
+			assert(gs_accel_evdev_convert(&scale, map, raw, out) == GS_SENSOR_EXPERIMENTAL);
+			for (unsigned i = 0; i < 3; i++)
+				assert(out[i] == (gs_s32)raw[sources[i]-1] * (map[i] < 0 ? -1 : 1));
+			cases++;
+		}
+	}
+	assert(cases == 48);
+	for (unsigned kind = 0; kind < 12; kind++) {
+		scale = (struct gs_accel_experimental_scale){8192,1};
+		map[0]=1; map[1]=2; map[2]=3;
+		switch(kind) {
+		case 0: map[0]=0; break;
+		case 1: map[0]=4; break;
+		case 2: map[0]=-4; break;
+		case 3: map[0]=-2147483647-1; break;
+		case 4: map[0]=-2; break;
+		case 5: scale.counts_per_g_num=0; break;
+		case 6: scale.counts_per_g_den=0; break;
+		case 7: scale.counts_per_g_num=1000001; break;
+		case 8: scale.counts_per_g_den=1000001; break;
+		case 9: scale.counts_per_g_den=3; break;
+		case 10: scale.counts_per_g_num=1; scale.counts_per_g_den=2; break;
+		case 11: map[2]=1; break;
+		}
+		gs_s32 saved[3]; memcpy(saved,out,sizeof(out)); resolution=123;
+		assert(gs_accel_evdev_resolution(&scale,map,&resolution)==GS_SENSOR_BAD_CONFIG);
+		assert(resolution==123);
+		assert(gs_accel_evdev_convert(&scale,map,raw,out)==GS_SENSOR_BAD_CONFIG);
+		assert(!memcmp(out,saved,sizeof(out)));
+	}
+	scale=(struct gs_accel_experimental_scale){81920,10};
+	map[0]=1; map[1]=2; map[2]=3;
+	assert(gs_accel_evdev_resolution(&scale,map,&resolution)==GS_SENSOR_EXPERIMENTAL && resolution==8192);
+	assert(gs_accel_evdev_resolution(NULL,map,&resolution)==GS_SENSOR_BAD_CONFIG);
+	assert(gs_accel_evdev_resolution(&scale,NULL,&resolution)==GS_SENSOR_BAD_CONFIG);
+	assert(gs_accel_evdev_resolution(&scale,map,NULL)==GS_SENSOR_BAD_CONFIG);
+	assert(gs_accel_evdev_convert(&scale,map,NULL,out)==GS_SENSOR_BAD_CONFIG);
+	assert(gs_accel_evdev_convert(&scale,map,raw,NULL)==GS_SENSOR_BAD_CONFIG);
+}
+
 int main(void)
 {
 	/* Exact selected profile, including signed endpoints and model/opt-in gates. */
@@ -89,6 +147,7 @@ int main(void)
 	assert(gs_gyro_timestamp(&clock, 600000003000ULL) == 1);
 	assert(gs_gyro_timestamp(&clock, 100) == 2);
 	experimental_accel();
+	evdev_accel();
 	gs_s16 raw[3] = {8192, 0, -8192};
 	gs_s32 out[3] = {101, 102, 103};
 	struct gs_sensor_calibration c = {0};

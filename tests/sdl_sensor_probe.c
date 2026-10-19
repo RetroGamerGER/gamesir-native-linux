@@ -198,7 +198,7 @@ int main(void)
     if (accel && !SDL_GetGamepadSensorData(pad, SDL_SENSOR_ACCEL, a, 3)) ok = 0;
 #endif
     int finite = 1;
-    if (!strcmp(s, "observed-gyro")) {
+    if (!strcmp(s, "observed-gyro") || !strcmp(s, "experimental-six-axis")) {
         void (*push)(const unsigned *, const int *, unsigned) = dlsym(RTLD_DEFAULT, "gs_fixture_push_keys");
         const unsigned codes[] = {304,704,705,706,707};
         if (!push) return 2;
@@ -230,9 +230,9 @@ int main(void)
         printf("gyro_with_paddles_32_combinations=%s\n", ok ? "PASS" : "FAIL");
     }
 #ifndef TEST_SDL2
-    if (!strcmp(s, "observed-gyro")) {
+    if (!strcmp(s, "observed-gyro") || !strcmp(s, "experimental-six-axis")) {
         SDL_Event event;
-        int gyro_event_matches = 0;
+        int gyro_event_matches = 0, accel_event_matches = 0;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_GAMEPAD_SENSOR_UPDATE) {
                 printf("sensor-event type=%d host=%llu sensor=%llu data=%.9g,%.9g,%.9g\n",
@@ -245,9 +245,19 @@ int main(void)
                     fabsf(event.gsensor.data[1] - g[1]) < .000001f &&
                     fabsf(event.gsensor.data[2] - g[2]) < .000001f)
                     gyro_event_matches = 1;
+                if (event.gsensor.sensor == SDL_SENSOR_ACCEL &&
+                    event.gsensor.sensor_timestamp == 16000000 &&
+                    fabsf(event.gsensor.data[0] - a[0]) < .000001f &&
+                    fabsf(event.gsensor.data[1] - a[1]) < .000001f &&
+                    fabsf(event.gsensor.data[2] - a[2]) < .000001f)
+                    accel_event_matches = 1;
             }
         }
         ok &= gyro_event_matches;
+        if (!strcmp(s, "experimental-six-axis")) {
+            ok &= accel_event_matches;
+            printf("coherent_accel_event_value_and_timestamp=%s\n", accel_event_matches ? "PASS" : "FAIL");
+        }
         printf("gyro_event_value_and_timestamp=%s\n", gyro_event_matches ? "PASS" : "FAIL");
     }
 #endif

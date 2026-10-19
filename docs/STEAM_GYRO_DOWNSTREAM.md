@@ -23,6 +23,13 @@ runtime addresses. JavaScript offsets count decoded characters in the hashed
 Only independently described facts and aggregate results are distributed;
 proprietary binaries, JavaScript excerpts and disassemblies stay outside Git.
 
+## Offline correction preparation
+
+The [real-acceleration extension](STEAM_ACCEL_EXTENSION.md) implements the
+missing optional evdev data path without fabricating gravity or changing
+Steam. Activation remains gated on explicit accelerometer-axis evidence
+and separate permission; no live fix is claimed.
+
 ## Event routing and internal packet conversion
 
 The statically reconstructed path is:
