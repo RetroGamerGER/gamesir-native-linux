@@ -12,8 +12,12 @@ aktiv/aktiviert. Steam öffnet jetzt in Gamescope Gamepad und Sensor, weiterhin
 mit den üblichen Steam-Deck-Optionen. Nutzer bestätigt funktionierenden Gyro
 und nennt den vor Steam eingeschalteten Controller. Kernel/Boot und Timing
 änderten sich gemeinsam; die alleinige Ursache ist damit nicht bewiesen.
-Spätes Einschalten/Wiederverbindung bleiben offen. Nur lesend nachgeprüft,
-keine Systemänderung oder zusätzliche Testbewegung durch den Agenten.
+Neuere Nutzerrückmeldung zum Wiederverbindungscheck: Für Gyro muss der Controller
+bereits beim Laden von SteamOS eingeschaltet sein. Uneingeschränkte Gyro-
+Wiederverbindung ist damit nicht abgenommen; zuverlässige spätere Erkennung
+bleibt zu lösen. Genauer Ablauf und interne Ursache nicht aufgezeichnet.
+Nur der vorangehende Lauf wurde lesend nachgeprüft; zum neuen Bericht kein
+Systemzugriff, keine Änderung oder zusätzliche Testbewegung durch den Agenten.
 [Erfolgreicher Lauf und Grenzen](STEAM_ACCEL_EXTENSION.md#gamescope-success-after-user-led-kernel-update-and-reboot).
 
 **Sitzungsunterschied auf demselben CachyOS-PC bestätigt:** Der Nutzer meldet

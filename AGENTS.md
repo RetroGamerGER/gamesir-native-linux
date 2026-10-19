@@ -258,6 +258,11 @@ a kernel fix nor startup order alone is proved causal. Read the new success
 section of STEAM_ACCEL_EXTENSION.md; preserve earlier failures. Late controller
 arrival/reconnect/PM remain open; no automatic restart, installation, driver or
 Steam patch, new hardware test or calibration follows from this report.
+The next human reconnect-check report requires the controller already on when
+SteamOS loads for gyro. Record a reported startup precondition, not unrestricted
+gyro reconnect acceptance or proof of normal-input failure. Sequence/count and
+sensor FDs were not captured; no new agent access/test occurred. Reliable late
+sensor discovery remains open; do not silently add Steam restarts or boot waits.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

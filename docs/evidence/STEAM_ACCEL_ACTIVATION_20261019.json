@@ -624,5 +624,19 @@
       "system-and-Steam-read.json": "72bb96972bc9c34ed91b743546034e82a99d0ad3192c02526958b7ea9b657522",
       "targeted-session-read.json": "3b923836fff0717bdf32861545a147eb32fbcc1c89b65efb17211db5193aeeb1"
     }
+  },
+  "CachyOS_reconnect_human_followup": {
+    "date": "2026-10-19",
+    "method": "Maintainer report in chat; no new agent-side system access or instrumented test.",
+    "reported_gyro_precondition": "Controller must already be on when SteamOS loads.",
+    "unrestricted_gyro_reconnect_accepted": false,
+    "late_sensor_discovery_remains_open": true,
+    "exact_test_sequence_attempt_count_or_sensor_FDs_recorded": false,
+    "normal_input_failure_claimed": false,
+    "specific_internal_cause_proven": false,
+    "agent_system_or_Steam_change": false,
+    "new_agent_hardware_test": false,
+    "calibration_resumed": false,
+    "push": false
   }
 }

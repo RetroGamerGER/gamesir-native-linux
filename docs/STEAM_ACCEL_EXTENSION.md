@@ -556,3 +556,12 @@ Next development priority is reliable sensor discovery when the controller
 arrives after Steam is running; no implementation or new live test follows
 automatically from this report. Gyro calibration stays closed/paused.
 [Sanitized result](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
+The maintainer's subsequent reconnect-check report states that the controller
+must already be on when SteamOS loads. Record this as a **reported gyro startup
+precondition**, not unrestricted reconnect acceptance. The exact sequence,
+number of attempts and sensor-FD state during that check were not captured;
+do not infer that ordinary controls failed or assign a specific internal cause.
+Reliable gyro discovery on late power-on/reconnection remains an unresolved
+integration requirement. No new agent-side system access or test accompanied
+this follow-up, and no automatic Steam restart or startup delay was installed.

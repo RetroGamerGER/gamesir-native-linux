@@ -69,6 +69,10 @@ Revision-9-Profil und weiterhin vorhandenen Vendor-Optionen. Der Nutzer nennt
 den vor Steam eingeschalteten Controller. Das ist kein isolierter Ursachenbeweis
 für Kernel oder Startreihenfolge. Nächste offene Zuverlässigkeitsfrage: spätes
 Einschalten bei laufendem Steam und Wiederverbindung, getrennt freizugeben.
+Die folgende Nutzerrückmeldung zum Wiederverbindungscheck nennt als Gyro-
+Voraussetzung einen beim Laden von SteamOS bereits eingeschalteten Controller.
+Diese Einschränkung gezielt lösen; keine uneingeschränkte Wiederverbindungs-
+Abnahme oder bloße Verzögerung des Steamstarts als fertige Lösung behaupten.
 [Aktueller Erfolg](STEAM_ACCEL_EXTENSION.md#gamescope-success-after-user-led-kernel-update-and-reboot).
 Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
 
