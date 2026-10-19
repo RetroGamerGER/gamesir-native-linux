@@ -1,5 +1,18 @@
 # Public pre-alpha release audit
 
+## Targeted Guide investigation remains offline — 19 October 2026
+
+[Report and evidence](STEAM_GUIDE_GYRO.md): actual extracted emitter adapters
+and both tested SDL3 libraries pass eight fresh frames across Guide holds and
+releases; 24 total SDL scenario runs pass including SDL2. The pinned Steam
+reference requests background events, while its notification path requires an
+existing selected motion source and does not create one through that lookup.
+Internal Guide handling is mapped, but its causal connection to the failed
+target run remains unproved. No live/controller/target access or installed
+driver/Steam change, no package-version bump or publication. Real Guide-free
+motion and reconnect acceptance remain blocked. Only own tests, independent
+analysis and sanitized hashes enter Git; proprietary excerpts remain excluded.
+
 ## Guide-held response qualifies the zero display — 19 October 2026
 
 The maintainer subsequently clarifies that the gyro display works while Guide

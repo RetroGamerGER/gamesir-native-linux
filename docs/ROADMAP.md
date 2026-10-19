@@ -32,6 +32,14 @@ Benachrichtigung oder Anzeige offline abgrenzen; reinen Darstellungsfehler nicht
 als bewiesen ausgeben. Kein Guide-Keepalive oder neuer Liveversuch daraus.
 [Guide-Nachtrag](STEAM_GYRO_HOTPLUG.md#human-follow-up-display-works-while-guide-is-held).
 
+Die [gezielte Offline-Untersuchung](STEAM_GUIDE_GYRO.md) grenzt nun den
+Sensor-Ausgabeadapter und SDL mit Guide-Halte-/Loslasssequenzen ab. Nächste
+Beweisgrenze ist Steams ausgewählter Bewegungskontext, Quellgültigkeit und
+Benachrichtigung gegenüber frischen unteren Sensordaten. Die statisch
+nachgewiesene Guide-Verarbeitung allein beweist diese Verbindung nicht.
+Ohne eine separat freigegebene, instanzgleiche Beobachtung keine sichere
+Ursachenzuweisung oder weitere Laufzeitkorrektur. Kein Guide-Keepalive.
+
 ## Bazzite als mögliche Zielplattform
 
 Quellenvergleich abgeschlossen, noch kein Bazzite-Zielbau oder installierbares

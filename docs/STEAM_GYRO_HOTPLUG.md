@@ -258,6 +258,12 @@ new sensor selection or calibration is installed as a workaround. Existing
 normal-input/paddle success and the running system are preserved. Any new live
 comparison needs its own concrete approval.
 
+The subsequent [targeted offline Guide investigation](STEAM_GUIDE_GYRO.md)
+adds actual-emitter and SDL Guide-hold/release checks, the pinned Steam
+background-hint call and the selected-motion-source notification boundary.
+These narrow the cause without proving the target's failing runtime branch;
+they do not change the negative acceptance or authorize a new live run.
+
 ## Reproduce without devices
 
 ```sh

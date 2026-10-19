@@ -17,6 +17,65 @@
 #endif
 
 #ifndef TEST_SDL2
+/* Guide is an independent button, not a sensor enable. Check fresh events
+ * and cached values before, during and after two synthetic holds. This does
+ * not run Steam's layout/source selection or model a Gamescope window. */
+static int guide_sensor_sequence(SDL_Gamepad *pad, int resolution)
+{
+    void (*sensor)(const int *, int32_t) = dlsym(RTLD_DEFAULT, "gs_fixture_push_sensor");
+    void (*key)(unsigned, int) = dlsym(RTLD_DEFAULT, "gs_fixture_push_key");
+    const int held[] = {0, 1, 1, 0, 0, 1, 1, 0};
+    SDL_Event event;
+    int ok = sensor && key && resolution > 0;
+    if (!ok) return 0;
+    float acceleration[3] = {0};
+    if (!SDL_GetGamepadSensorData(pad, SDL_SENSOR_ACCEL, acceleration, 3)) return 0;
+    while (SDL_PollEvent(&event)) { }
+    for (unsigned n = 0; n < sizeof(held) / sizeof(*held); n++) {
+        /* SDL intentionally delays very short Guide releases. Let its
+         * minimum hold elapse; do not misdiagnose that as a sensor gate. */
+        if (n && held[n - 1] && !held[n]) SDL_Delay(300);
+        key(316, held[n]); /* Linux BTN_MODE, only inside the fake device. */
+        const int values[] = {1200 + (int)n * 100, -2400 - (int)n * 200,
+            3600 + (int)n * 300};
+        const int32_t tick = 20000 + (int32_t)n * 1000;
+        sensor(values, tick);
+        SDL_PumpEvents();
+        int gyro_events = 0, accel_events = 0;
+        while (SDL_PollEvent(&event)) {
+            if (event.type != SDL_EVENT_GAMEPAD_SENSOR_UPDATE) continue;
+            ok &= event.gsensor.which == SDL_GetGamepadID(pad);
+            ok &= event.gsensor.sensor_timestamp == (uint64_t)tick * 1000;
+            if (event.gsensor.sensor == SDL_SENSOR_GYRO) {
+                gyro_events++;
+                for (unsigned i = 0; i < 3; i++)
+                    ok &= isfinite(event.gsensor.data[i]) &&
+                        fabsf(event.gsensor.data[i] - values[i] * .01745329252f / resolution) < .00001f;
+            } else if (event.gsensor.sensor == SDL_SENSOR_ACCEL) {
+                accel_events++;
+                for (unsigned i = 0; i < 3; i++)
+                    ok &= isfinite(event.gsensor.data[i]) &&
+                        fabsf(event.gsensor.data[i] - acceleration[i]) < .00001f;
+            } else {
+                ok = 0;
+            }
+        }
+        float cached[3] = {0};
+        ok &= SDL_GetGamepadSensorData(pad, SDL_SENSOR_GYRO, cached, 3);
+        for (unsigned i = 0; i < 3; i++)
+            ok &= isfinite(cached[i]) &&
+                fabsf(cached[i] - values[i] * .01745329252f / resolution) < .00001f;
+        ok &= gyro_events == 1 && accel_events == 1;
+        ok &= SDL_GetGamepadButton(pad, SDL_GAMEPAD_BUTTON_GUIDE) == held[n];
+        ok &= SDL_GamepadSensorEnabled(pad, SDL_SENSOR_GYRO) &&
+            SDL_GamepadSensorEnabled(pad, SDL_SENSOR_ACCEL);
+        printf("guide-sensor frame=%u guide=%d gyro_events=%d accel_events=%d result=%s\n",
+            n, held[n], gyro_events, accel_events, ok ? "PASS" : "FAIL");
+    }
+    printf("guide_independent_sensor_events_and_cache=%s\n", ok ? "PASS" : "FAIL");
+    return ok;
+}
+
 static uint32_t cache_word(const void *address)
 {
     uint32_t value;
@@ -164,7 +223,7 @@ int main(void)
 #endif
     /* Explicit mapping isolates sensor discovery from the controller DB. */
     char mapping[512];
-    snprintf(mapping, sizeof(mapping), "%s,GameSir Offline Fixture,a:b0,b:b1,x:b2,y:b3,leftx:a0,lefty:a1,rightx:a3,righty:a4,lefttrigger:a2,righttrigger:a5,paddle1:b12,paddle2:b11,paddle3:b14,paddle4:b13,platform:Linux,", guid);
+    snprintf(mapping, sizeof(mapping), "%s,GameSir Offline Fixture,a:b0,b:b1,x:b2,y:b3,guide:b8,leftx:a0,lefty:a1,rightx:a3,righty:a4,lefttrigger:a2,righttrigger:a5,paddle1:b12,paddle2:b11,paddle3:b14,paddle4:b13,platform:Linux,", guid);
 #ifdef TEST_SDL2
     if (SDL_GameControllerAddMapping(mapping) < 0) return 2;
     SDL_GameController *pad = SDL_GameControllerOpen(0);
@@ -273,6 +332,7 @@ int main(void)
         ok &= finite;
     }
 #ifndef TEST_SDL2
+    if (!strcmp(s, "experimental-six-axis")) ok &= guide_sensor_sequence(pad, gyro_resolution);
     if (!strcmp(s, "observed-gyro")) ok &= steam_sensor_sequence(pad, gyro_resolution);
     if (!strcmp(s, "observed-gyro") && getenv("GS_CHECK_STEAM_LAYOUT"))
         ok &= steam_cache_layout(pad, loaded.dli_fbase);

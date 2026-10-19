@@ -75,6 +75,20 @@ event/cache/notification/refresh handling remains unresolved; continuous gyro
 without held Guide and reconnect remain unaccepted. Do not add fake Guide
 keepalives, change runtime or start a live comparison from this report alone.
 
+The targeted offline follow-up is docs/STEAM_GUIDE_GYRO.md. Actual sensor-emitter
+adapters and both system/Steam ELF32 SDL pass fresh frames across Guide holds
+and releases. This is not a real USB/RF or Steam/Gamescope trace. Pinned Steam
+explicitly requests background SDL events; its motion notification needs an
+existing selected context/source and does not create a missing source through
+that lookup. Internal Guide processing is mapped separately; do not call its
+accumulator flag a proved gyro gate or infer the target's live source state.
+Guide-selected source/processing remains a hypothesis, pure display bug and
+exclusive cause unproved. Reference binaries are not freshly verified on the
+Gamescope target. No installed code/settings, sensor profile, source publication
+or hardware changes; no push or new observation approval. Preserve calibration
+pause and the failing late-arrival acceptance. Capabilities/pressed state were
+separated only in the fake kernel test, not the production adapter.
+
 ## Bazzite assessment (19 October 2026)
 
 Read STEAM_GAMESCOPE.md's Bazzite feasibility section before a distribution port.

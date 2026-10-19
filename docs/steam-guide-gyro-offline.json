@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "scope": "Offline static regular files and own synthetic tests only; no Steam/client execution, live process, device, network, privilege or installed-system change. SDL libraries run solely in audited device-free namespaces.",
+  "client": {
+    "relative_reference": "linux32/steamclient.so",
+    "sha256": "6d8e7e938ff44527a78e2550525c16a9f4605a88d5b20f4466aff311cc00a103",
+    "bytes": 50207500,
+    "target_live_binary_equivalence_verified": false
+  },
+  "ui": {
+    "relative_reference": "steamui/sp.js",
+    "sha256": "5a28c25041d07e69cf591a414519e0cf970b6884c1a0106659dcd9f1fb9586f9",
+    "bytes": 16297789,
+    "anchors": [
+      {
+        "start_character": 9589600,
+        "end_character_exclusive": 9590250,
+        "utf8_slice_sha256": "74a0adff8b8eb655f21037d24daab2437590dafcfdf9d49fcab3aa616ff1731f",
+        "fact": "Numeric renderer reads GyroRawSpeed directly"
+      },
+      {
+        "start_character": 11426580,
+        "end_character_exclusive": 11427250,
+        "utf8_slice_sha256": "1a25e9a93260b0079617ac0674f0d18b0c6772f887863ce66e681c0c4aa83072",
+        "fact": "Speed callback copies by controller index and IMU side without Guide gate"
+      },
+      {
+        "start_character": 11434150,
+        "end_character_exclusive": 11435050,
+        "utf8_slice_sha256": "0897e36d3e72e1c202981abbdab607eaaf18cbd90ee8e74f95edbe7d60810bee",
+        "fact": "Mounted hook starts controller-index/flow-mode subscription; cleanup ends it"
+      }
+    ]
+  },
+  "address_kind": "ELF32 virtual addresses mapped through file-backed sections; no runtime addresses",
+  "native_anchors": [
+    {
+      "start": "0x11e7970",
+      "end_exclusive": "0x11e79b8",
+      "sha256": "cd069d08a6ffe562508afc5e9a253071618e10822c1cc4bed51c450d4d9e024a",
+      "fact": "SDL initializer sets SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS to string 1"
+    },
+    {
+      "start": "0x19c2500",
+      "end_exclusive": "0x19c25a4",
+      "sha256": "a548a23a869af2b7ac2fd7f54e5c1a8c5de6f2fdf51cbd6765a1b79ad10ece77",
+      "fact": "Separate button handler can suppress SDL Guide button 5 via backend flag +0x6e; updates button bitset, not gyro fields"
+    },
+    {
+      "start": "0x12438a2",
+      "end_exclusive": "0x1243929",
+      "sha256": "3dda112d96083d069452da19bb9608a514d73b0fd4997f6f4ce1f25e4b471f97",
+      "fact": "Generic converter selects one of two 26-entry uint64 button translation tables"
+    },
+    {
+      "start": "0x1288538",
+      "end_exclusive": "0x12885ab",
+      "sha256": "db96cee392dee6b54974ff5ebeb1c8af6a4438c5bf1f33fe5be95dc066e9d60f",
+      "fact": "Configured context tests internal Guide mask 0x2000 if context flag +0xcc; stores context +0x4d1 and passes Guide boolean to accumulator virtual +0x58"
+    },
+    {
+      "start": "0x12808e0",
+      "end_exclusive": "0x12808ef",
+      "sha256": "2d19fda3331276d91a87584d8bc4f97f10425aa4d5454bb3d558558d0268183d",
+      "fact": "CInputAccumulator virtual +0x58 writes byte +0x5ec; not itself a gyro enable"
+    },
+    {
+      "start": "0x1235e23",
+      "end_exclusive": "0x1235ef8",
+      "sha256": "0f2c9fcdc4f6b598b8f8c4f237867ba09230c683d3f301c6ec8549b9fff0b682",
+      "fact": "Notification uses selected context at slot +0x238; lookup feature16/10 with create=false"
+    },
+    {
+      "start": "0x1293130",
+      "end_exclusive": "0x12931b4",
+      "sha256": "5be1f7864b1af109ccab4135f7e41e92fa0d6c5dcc36c47afbe169c857d0e522",
+      "fact": "Missing feature with create=false returns NULL"
+    },
+    {
+      "start": "0x123619b",
+      "end_exclusive": "0x1236200",
+      "sha256": "a662fc0b6d480354c5dec54a6faefdbc499f51e729dbf8bb2ad9714351d25f5d",
+      "fact": "Source validity, selected acceleration and speed subscription gates precede notification construction"
+    },
+    {
+      "start": "0x1236e91",
+      "end_exclusive": "0x1236ebd",
+      "sha256": "9d50f1db25f6554c6f64a2c48eeeddca73bcb1acab130704ee64ffa195eaa220",
+      "fact": "Periodic notification pass over all sixteen slots is not conditional on a Guide button edge"
+    }
+  ],
+  "button_translation_tables": [
+    {
+      "start": "0x2fb7220",
+      "bytes": 208,
+      "sha256": "b67cddf65d1f6714c5338d289d53c12e8387e6de6cd27e8c044da6baa371ceb8",
+      "sdl_guide_index": 5,
+      "guide_internal_mask": "0x2000"
+    },
+    {
+      "start": "0x2fb7140",
+      "bytes": 208,
+      "sha256": "e52b6f3c887abf9bb693f6375c69ed940524b827ec85f17104d08be0ee0f16a5",
+      "sdl_guide_index": 5,
+      "guide_internal_mask": "0x2000"
+    }
+  ],
+  "accumulator": {
+    "rtti": "CInputAccumulator",
+    "vtable": "0x2f1772c",
+    "guide_slot": "0x58",
+    "setter": "0x12808e0",
+    "field": "0x5ec",
+    "motion_enable_proven": false
+  },
+  "kernel_scope": {
+    "file": "kernel/gs_native_usb.c",
+    "guide_checked_in_sensor_emitter": false,
+    "imu_emitter_precedes_extras": true,
+    "full_usb_rf_path_ruled_out": false
+  },
+  "synthetic_results": [
+    {
+      "library": "system-sdl",
+      "version": [
+        "SDL3 3004018, revision SDL-release-3.4.18-0-g829a65d76"
+      ],
+      "sha256": null,
+      "cases": 16,
+      "all_passed": true,
+      "guide_frames": 8,
+      "guide_pattern": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "both_sensors_enabled": true,
+      "fresh_events_cache_id_time_values_checked": true,
+      "all_six_namespaces_separate": true,
+      "real_devices_absent": true,
+      "iio_opens": 0,
+      "guide_log_sha256": "8b516861eb3be8d8734807635bfe474bfd0d3479bcc31a469b944aa62dce5e3b",
+      "private_aggregate_sha256": "d16ca4789931095548ba2690f638dbed6ae79dba723f57d21fd8fcbc6357258e"
+    },
+    {
+      "library": "steam-elf32-sdl",
+      "version": [
+        "SDL3 3005000, revision SDL-release-3.4.0-1576-gab5541ec5"
+      ],
+      "sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+      "cases": 8,
+      "all_passed": true,
+      "guide_frames": 8,
+      "guide_pattern": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "both_sensors_enabled": true,
+      "fresh_events_cache_id_time_values_checked": true,
+      "all_six_namespaces_separate": true,
+      "real_devices_absent": true,
+      "iio_opens": 0,
+      "guide_log_sha256": "20625f036110111b46070b107b1505dfa4fa7e90ce3661967f8e881dc787cc89",
+      "private_aggregate_sha256": "973c7b4665a795a55b27c57e05c0bad0ebd0340e03ab29a3da4da1f33920c28a"
+    }
+  ],
+  "conclusion": {
+    "guide_needed_by_tested_sensor_adapter_or_sdl": false,
+    "simple_background_events_disabled_hypothesis_supported": false,
+    "selected_steam_motion_source_and_notification_gates_are_next_boundary": true,
+    "guide_selects_the_missing_source_in_target_run_proven": false,
+    "exclusive_live_root_cause_proven": false,
+    "pure_display_bug_proven": false,
+    "fix_implemented": false,
+    "hardware_acceptance": false
+  },
+  "limitations": [
+    "No synchronized Guide-up/down trace exists for the target run.",
+    "Static client/UI references are local pinned files, not a verified binary identity on the Gamescope target.",
+    "Synthetic SDL probes have no actual window/focus, Steam mappings, Gamescope or physical device.",
+    "Missing cached motion source is a sufficient notification blocker, not a recorded failure of this target.",
+    "No fake Guide keepalive, gyro rescaling, Steam settings change, restart or live attempt follows."
+  ],
+  "adapter_test": {
+    "passed": true,
+    "guide_frames": 8,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "private_report_sha256": "2eba2210657a2e8db4eabd3fa93bb5ca91bda6f28466437e81cfdfe65b3c9655",
+    "limits": "Actual extracted emitter/extras on fake input objects; not input core, USB/RF or full driver execution."
+  },
+  "other_validation": {
+    "licensing": 3,
+    "public_readme": 7,
+    "alpha_packaging": 25,
+    "sensor_contract": "passed"
+  },
+  "own_source_sha256": {
+    "kernel/gs_native_usb.c": "61a0f6c77b7dc4091afceb92c37be44ce5eb05cbccfeec916e25734ad3751835",
+    "src/gs_sensor.c": "bfb4541dc3bfb521c2c8ff53d13570799c10439d717877f3bc833ac8b61820d0",
+    "tests/kernel_gyro_fake.c": "a8ca95aea9f6e9c9cfd42cf8d1fcaa72eb4d0e0aa75e3fba1c69fb90bcc7ccf0",
+    "tests/sdl_sensor_probe.c": "ca5df60534e6d899f93eaf1b167e6c0b84f04ebbab427787b5e21c2086fc513b",
+    "tests/run_sdl_sensor_test.py": "5944d091076883a1684b4a25eff6a8289347183c5073be81f2e0b2d2d1cee37e",
+    "tests/sdl_evdev_fixture.c": "c6cca9fdee62d5cebbebbf52c53be26f8d5739312cbe47af62164624153ea4ed",
+    "tests/sdl_buttons_fixture.c": "5f2434f2827fdcdba4a0981a00379a21a0e6684c55b30bc94604f1b94e725485",
+    "tests/audit_sdl_sandbox.py": "e58491ead14cae7b3385cbbdbd6347733a07ae98b7798fcf354fbd5ade58c24f"
+  },
+  "reference_files_unchanged_at_final_check": true
+}

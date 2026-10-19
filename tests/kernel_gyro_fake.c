@@ -39,6 +39,7 @@ struct input_dev {
     struct device dev;
     unsigned long propbit[1];
     int keys[KEY_CNT], abs[ABS_CNT], res[ABS_CNT], lo[ABS_CNT], hi[ABS_CNT];
+    bool key_capabilities[KEY_CNT];
     unsigned reports, syncs, timestamp;
     u64 host_ns;
     bool registered, has_timestamp, has_ff;
@@ -78,7 +79,7 @@ static void input_set_abs_params(struct input_dev *d, int a, int lo, int hi, int
 static int input_abs_get_res(struct input_dev *d,int a) { return d->res[a]; }
 static void input_abs_set_res(struct input_dev *d, int a, int r) { d->res[a]=r; }
 static void input_set_capability(struct input_dev *d, int t, int c) {
-    if(t==EV_KEY)d->keys[c]=1;
+    if(t==EV_KEY)d->key_capabilities[c]=true;
     if(t==EV_MSC && c==MSC_TIMESTAMP)d->has_timestamp=true;
 }
 static void input_set_timestamp(struct input_dev *d, u64 t) { d->host_ns=t; }
@@ -104,7 +105,7 @@ int main(void) {
     assert(a.gyro_registered && a.input->has_ff && !a.gyro_input->has_ff);
     assert(!strcmp(a.input->name,"GameSir G7 Pro"));
     assert(a.input->uniq[0] && a.input->uniq==a.gyro_input->uniq);
-    for(unsigned c=704;c<=707;c++)assert(a.input->keys[c]);
+    for(unsigned c=704;c<=707;c++)assert(a.input->key_capabilities[c]);
     assert(a.gyro_input->propbit[0] & (1UL<<INPUT_PROP_ACCELEROMETER));
     assert(a.gyro_input->has_timestamp && !a.gyro_input->res[ABS_X]);
     for(int i=ABS_RX;i<=ABS_RZ;i++) {
@@ -154,8 +155,28 @@ int main(void) {
     gsn_gyro_report(&d,zero,NULL,2000000);
     assert(d.gyro_input->syncs==2 && d.gyro_input->reports==9);
     assert(d.gyro_input->abs[ABS_X]==32768 && !d.gyro_input->abs[ABS_RX]);
+    /* Execute the actual adapter with Guide released/held/released. This
+     * covers emission from supplied IMU frames, not USB/RF packet arrival. */
+    const bool guide_holds[]={false,true,true,false,false,true,true,false};
+    for(unsigned n=0;n<ARRAY_SIZE(guide_holds);n++) {
+        const u8 extras[]={8 | (guide_holds[n] ? 1 : 0),0};
+        gsn_extras(&d,extras);
+        assert(d.last_guide==guide_holds[n] && d.input->keys[BTN_MODE]==guide_holds[n]);
+        assert(d.input->keys[BTN_TRIGGER_HAPPY1]);
+        gs_s16 moving[3]={100+(int)n,200+(int)n,-300-(int)n};
+        unsigned syncs=d.gyro_input->syncs, reports=d.gyro_input->reports;
+        gsn_gyro_report(&d,moving,acceleration,3000000ULL+n*1000000ULL);
+        assert(d.gyro_input->syncs==syncs+1 && d.gyro_input->reports==reports+6);
+        assert(d.gyro_input->abs[ABS_RX]==moving[0]*7 && d.gyro_input->abs[ABS_RY]==moving[1]*7);
+        assert(d.gyro_input->abs[ABS_RZ]==moving[2]*7);
+        assert(d.gyro_input->abs[ABS_X]==32768 && d.gyro_input->abs[ABS_Y]==8192);
+        assert(d.gyro_input->host_ns==3000000ULL+n*1000000ULL);
+    }
+    const u8 released_extras[]={0,0}; gsn_extras(&d,released_extras);
+    assert(!d.last_guide && !d.input->keys[BTN_MODE] && !d.input->keys[BTN_TRIGGER_HAPPY1]);
+    puts("PASS: actual sensor adapter emits eight fresh six-axis frames independently of Guide holds/releases; paddle state preserved");
     /* Disabled experiment never adds fake acceleration; other capabilities survive. */
-    for(unsigned i=704;i<=707;i++) assert(d.input->keys[i]);
+    for(unsigned i=704;i<=707;i++) assert(d.input->key_capabilities[i]);
     assert(d.input->has_ff && !d.gyro_input->has_ff);
     for(unsigned i=0;i<2;i++) {
         struct gsn_device other={.udev=&u,.intf=&intf,.rt.pid=i?0x105e:0x100a,.accel_scale={8192,1}};

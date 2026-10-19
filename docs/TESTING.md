@@ -684,3 +684,16 @@ This starts the synthetic probe only, never Steam. There are no host input,
 USB or IIO nodes, network, service commands or installation. EACCES and later
 attribute notifications are synthetic, not actual logind/udev processing.
 See [sequence, results and integration boundary](STEAM_GYRO_HOTPLUG.md).
+
+## Guide-independent sensor emission and SDL delivery
+
+`make test-sensor` executes the actual extracted emitter with eight fresh
+six-axis frames across Guide holds/releases against fake input objects.
+`tests/run_sdl_sensor_test.py` now checks the same button/sensor independence
+through SDL3 events and cache, with exact instance, value and timestamp checks.
+Its six-axis case includes two Guide holds; SDL's minimum hold delay is respected.
+The ordinary runner and a separately selected pinned Steam ELF32 library yield
+24 scenario runs, including the SDL2 baseline. SDL runs only in the existing
+audited device-free namespace. There is no actual Steam, window/focus policy,
+Gamescope, RF or USB lifecycle in this test. See [the investigation](STEAM_GUIDE_GYRO.md)
+for precise static findings and remaining real-run uncertainty.

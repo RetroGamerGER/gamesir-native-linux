@@ -2,6 +2,19 @@
 
 # Projektstand
 
+**Guide-Abhängigkeit gezielt offline eingegrenzt:** Der tatsächliche
+Sensor-Ausgabeadapter und System-/Steam-32-Bit-SDL liefern frische Werte vor,
+während und nach Guide-Haltephasen. Steam fordert Hintergrundereignisse
+ausdrücklich an. Seine Gyro-Benachrichtigung benötigt jedoch einen vorhandenen,
+gültigen Bewegungskontext/-quellzustand; der untersuchte Abruf erzeugt keine
+fehlende Quelle. Separate Guide-Verarbeitung ist nachgewiesen, ihre Verbindung
+zum blockierenden Gyrozustand dieses Realtests noch nicht. Eine durch Guide
+veränderte Quellenauswahl/-verarbeitung bleibt die führende Hypothese, kein
+bewiesener reiner Anzeigefehler. 24 SDL-Szenarien und erweiterter Adaptertest
+bestanden; keine Zugriffe auf Zielsystem oder Hardware, keine Laufzeitänderung.
+Kontinuierlicher Gyro ohne Guide und Reconnect weiter offen.
+[Befunde, Nachweise und genaue Beweisgrenzen](STEAM_GUIDE_GYRO.md).
+
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 

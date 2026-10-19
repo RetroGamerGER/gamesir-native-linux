@@ -164,7 +164,10 @@ def main():
             filename = f"sdl{version}-{scenario}.log"
             (report / filename).write_text(output)
             results.append({"api": f"SDL{version}", "scenario": scenario,
-                "passed": "result=PASS" in output and "iio opens=0;" in output and '"all_six_separate": true' in output,
+                "passed": "result=PASS" in output and "iio opens=0;" in output and '"all_six_separate": true' in output
+                    and (version != 3 or scenario != "experimental-six-axis"
+                         or "guide_independent_sensor_events_and_cache=PASS" in output),
+                "guide_independence_checked": version == 3 and scenario == "experimental-six-axis",
                 "sample_raw": sample_raw, "synthetic_accel_resolution": accel_resolution, "synthetic_gyro_resolution": gyro_resolution,
                 "log": filename, "command": args})
     if library is not None and hashlib.sha256(library.read_bytes()).hexdigest() != library_hash:
