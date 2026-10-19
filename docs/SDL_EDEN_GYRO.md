@@ -342,3 +342,69 @@ Eden after native initialization. Retain the documented late-start/time-domain
 limitation; persistent configuration alone does not resolve it or prove boot
 behavior. No calibration, application configuration or additional hardware
 test was part of this persistent-configuration change.
+
+## Eden through Steam in Gamescope: per-shortcut filter fix
+
+On 19 October 2026, a separately authorized test on the CachyOS Gaming Mode
+system confirmed a launch-environment problem distinct from the outstanding
+Steam gyro display/hotplug investigation.
+
+Before the correction, the actual Eden process inherited
+`SDL_GAMECONTROLLER_IGNORE_DEVICES` with the physical GameSir VID/PID in its
+exclusion list. It opened only Steam's virtual Xbox input node, and its log
+reported `accel=false gyro=false`. Neither the stored desktop launcher nor
+the Steam shortcut's original launch options contained that filter. These
+observations locate the exclusion in the Steam-launched process environment;
+they do not identify the exact internal setter or prove Gear Lever added it.
+The precise Steam Input override state was not independently established.
+
+### Scoped correction and rollback
+
+The original Steam shortcut database and Eden desktop entry were backed up
+privately, with hashes verified before changing the shortcut. Steam remained
+running, so the maintainer edited Eden's launch options through Steam's UI
+instead of externally overwriting its binary shortcut database.
+
+For this particular non-Steam shortcut, **the executable was already `env`**.
+Its launch options were prefixed with:
+
+```text
+-u SDL_GAMECONTROLLER_IGNORE_DEVICES -u SDL_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT
+```
+
+The original environment assignment and quoted AppImage path remained after
+those options. This prefix is not a complete launch command or a universal
+`%command%` recipe: inspect the shortcut's actual executable and arguments
+first. Only Eden's child environment is affected. Preserve
+`SDL_GAMECONTROLLERCONFIG`, which supplies the existing paddle mapping;
+do not clear all SDL variables or modify the session-wide Steam environment.
+
+Comparison of all parsed shortcut entries confirmed the intended launch-option
+change and only an additional last-played timestamp. The desktop entry and
+other shortcut settings were unchanged. Rollback is to restore **only Eden's
+original launch options** through Steam properties and restart Eden normally.
+Do not replace the whole database over unrelated later edits.
+
+### Observed result and limits
+
+- Two local synthetic child-process checks confirmed that `env -u` removes
+  both filters whether present or absent, while preserving the paddle mapping
+  and other selected environment values. No vendor application or device was
+  used for these checks.
+- After the approved Eden launch, its process environment contained neither
+  exclusion filter; the existing paddle mapping was unchanged.
+- Eden opened the paired physical `GameSir G7 Pro` and `GameSir G7 Pro Motion
+  Sensors` input nodes. Its new log reported `accel=true gyro=true`.
+- Steam's virtual Xbox input remained available as well. The maintainer
+  selected the **physical GameSir** in Eden and confirmed matching motion
+  without holding Guide, independent assignment of all four paddles,
+  simultaneous press/release behavior and normal buttons/sticks/triggers
+  without duplicate inputs.
+
+This is an accepted Eden controller-settings test through Steam in Gamescope,
+not a new gyro-scale calibration, extended gameplay or reconnect test. It
+does not resolve or explain Steam's own Guide-dependent gyro display and late
+device-arrival behavior. No driver/module/service, global Steam configuration,
+firmware or system package was changed for this correction. Private backups,
+host/user paths and raw process metadata remain outside Git. Calibration stays
+paused; no push or additional release is authorized by this test.

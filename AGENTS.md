@@ -26,6 +26,17 @@ exclusive maintenance path; normal play must not depend on it.
 
 ## Offline Gamescope gyro hotplug integration (19 October 2026)
 
+The later Eden-only launch test is documented in docs/SDL_EDEN_GYRO.md under
+"Eden through Steam in Gamescope". With verified private backups, the user
+edited only Eden's Steam launch options to unset the two SDL controller
+exclusion filters via its existing env executable. Fresh process metadata
+confirms the unchanged paddle mapping and opened physical pad/sensor nodes;
+the user accepts gyro without Guide, four independent paddles and normal input
+without duplicates. Keep the original shortcut identity/arguments and restore
+only its saved launch options for rollback. This is not Steam gyro UI/hotplug
+acceptance, a kernel fix or authorization to modify other applications. No
+global Steam/driver change, calibration, package update or push occurred.
+
 Latest follow-up supersedes the earlier human state below: after a full reboot
 the maintainer reports automatic native binding without Resume, but gyro only
 while Guide is held. A separately approved metadata attempt passed SSH/sudo
