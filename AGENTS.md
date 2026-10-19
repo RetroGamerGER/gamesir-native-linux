@@ -26,6 +26,21 @@ exclusive maintenance path; normal play must not depend on it.
 
 ## Offline Gamescope gyro hotplug integration (19 October 2026)
 
+The later metadata-only SSH precheck stopped in the remote Fish parser, before
+sudo authentication or the read program. Preserve that failed attempt; never
+reuse its receipt or infer module options, open sensors or motion from it.
+The user also reports manually running Resume and now no Guide-held gyro
+response. This is not current autostart acceptance or a reproduced Guide gate.
+The offline correction is tools/sdl/ssh_python_payload.py: encode reviewed
+UTF-8 Python as Base64 inside a fixed ASCII shell bootstrap, without shlex.quote
+on raw nested source, a heredoc or piped GO. Real local Fish/Bash/sh tests use
+only own children and a synthetic sudo stub; no actual SSH/sudo/GUI/target.
+Keep source hashes, exact device/library guards, one-attempt receipt and all
+existing deadlines. Encoding is not encryption or a read-only sandbox.
+A separate untouched next-run directory is prepared, not executed or approved.
+Fresh live permission remains necessary; inspect effective module parameters
+and sensor FDs before any new motion/process-memory observation.
+
 Read docs/STEAM_GYRO_HOTPLUG.md. Revision 10 now integrates the shared policy,
 processed-libudev backend, checked client and optional two-phase kernel input
 publication. This supersedes the unintegrated prototype at 468ddc6. Preserve

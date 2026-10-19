@@ -40,6 +40,14 @@ nachgewiesene Guide-Verarbeitung allein beweist diese Verbindung nicht.
 Ohne eine separat freigegebene, instanzgleiche Beobachtung keine sichere
 Ursachenzuweisung oder weitere Laufzeitkorrektur. Kein Guide-Keepalive.
 
+Der nächste reine Metadatencheck scheiterte bereits an Fish vor sudo/Prüfung;
+keine Wiederholung. Nutzer meldet jetzt auch mit Guide null und manuellen
+Resume. Die SSH-Übergabe ist offline mit echten lokalen Shells korrigiert und
+getestet. Zuerst separat freigegeben effektive Moduloptionen, Dienst/Instanz,
+Steams offene Knoten und Versionen prüfen; daraus erst den nächsten gezielten
+Beobachtungsschritt ableiten. Noch kein neuer SSH-/Hardwarezugriff.
+[Transportkorrektur](STEAM_GUIDE_GYRO.md#metadata-precheck-stopped-before-authentication).
+
 ## Bazzite als mögliche Zielplattform
 
 Quellenvergleich abgeschlossen, noch kein Bazzite-Zielbau oder installierbares

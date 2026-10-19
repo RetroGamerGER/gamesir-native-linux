@@ -53,6 +53,7 @@ test-steam:
 	$(PYTHON) -B tests/test_input_pair_readiness.py
 	$(PYTHON) -B tests/test_steam_gyro_observe.py
 	$(PYTHON) -B tests/test_steam_gyro_terminal.py
+	$(PYTHON) -B tests/test_steam_gyro_ssh.py
 	$(PYTHON) -B tests/test_steam_session_env.py
 	$(PYTHON) -B tests/test_packaging_steam.py
 	$(PYTHON) -B tests/test_packaging_gamescope.py

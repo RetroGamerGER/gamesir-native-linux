@@ -2,6 +2,18 @@
 
 # Projektstand
 
+**Lesender SSH-Vorabcheck vor der Prüfung abgebrochen; Übergabe offline
+korrigiert:** Die entfernte Fish-Shell verwarf den verschachtelten Python-Text
+vor sudo/Passwortfenster und Prüfprogramm. Keine neue Laufzeitdiagnose; der
+Nutzer meldet inzwischen auch mit Guide keine Reaktion und einen vorherigen
+manuellen Resume. Das beweist weder einen automatischen Start noch fehlende
+Gyro-Moduloptionen. Die korrigierte Übergabe besteht echte lokale Fish-/Bash-/
+sh-Prüfungen einschließlich eigener Passwort-/stdin-Fixture. 133 Prüfungen in
+`make test-steam` bestanden, dazu 15 private Vorabcheck-/Einmal-Regressionen.
+Nächster reiner Metadatenlauf ist separat vorbereitet und noch nicht gestartet.
+Kein neuer SSH-/Hardwarezugriff, keine Steam-/Treiberänderung oder Installation.
+[Fehler, Korrektur und Nachweisgrenzen](STEAM_GUIDE_GYRO.md#metadata-precheck-stopped-before-authentication).
+
 **Guide-Abhängigkeit gezielt offline eingegrenzt:** Der tatsächliche
 Sensor-Ausgabeadapter und System-/Steam-32-Bit-SDL liefern frische Werte vor,
 während und nach Guide-Haltephasen. Steam fordert Hintergrundereignisse

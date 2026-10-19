@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-19",
+  "scope": "Offline SSH source-transport correction; no target or hardware access",
+  "failed_live_attempt": {
+    "exit_code": 127,
+    "error": "fish: Unexpected closing brace; expected closing parenthesis",
+    "stdout_empty": true,
+    "sudo_prompt_seen": false,
+    "metadata_program_started": false,
+    "automatic_retry": false
+  },
+  "latest_human_report": {
+    "guide_held_response_now_reproduced": false,
+    "manual_resume_reported": true,
+    "autostart_accepted": false,
+    "effective_module_options_measured": false
+  },
+  "correction": {
+    "encoding": "UTF-8 Python source -> ASCII Base64 in a fixed shell-quoted bootstrap",
+    "source_size_limit_bytes": 65536,
+    "preserves_stdin": true,
+    "builder_executes_source": false,
+    "read_only_sandbox": false,
+    "encrypted_by_encoding": false,
+    "runtime_package_version_changed": false
+  },
+  "offline_tests": {
+    "make_test_steam": {
+      "passed": 133,
+      "skipped": 0
+    },
+    "new_committed_transport_regressions": 14,
+    "private_precheck_guard_regressions": 15,
+    "shells": [
+      "Fish 4.9.3 --no-config",
+      "Bash --noprofile --norc",
+      "system sh"
+    ],
+    "sudo": "test-owned ordinary-user substitute only",
+    "authentication": "synthetic bytes only; no GUI",
+    "actual_failed_command_parse_reproduced": true,
+    "exact_prepared_command_fish_parse_passed": true,
+    "exact_prepared_command_argv_only_round_trip_passed": true,
+    "prepared_metadata_source_executed": false
+  },
+  "source_sha256": {
+    "tools/sdl/ssh_python_payload.py": "625cea232041d315622173e3b3e68cecb86fc309024217b8fa0511cc839dc997",
+    "tests/test_steam_gyro_ssh.py": "0d09967b1d6c18851c1d60cf50cad263bd74feb5c2303507e404022107701a76",
+    "tools/sdl/steam_gyro_observe.py": "64e92215716f665731f624b05690387610f78970b5dd3376fe06d1516a0471ac",
+    "tests/test_steam_gyro_observe.py": "766a748e10a3f67d16fab450f3fcdf167c0e2f11336ea555e0f08f95e8b70698",
+    "tests/test_steam_gyro_terminal.py": "5e0da41ed24b069a280bae4ad6f9bd52a9a822fa1f0611b878a01d8c1d3f8fb3"
+  },
+  "preserved_metadata_program_sha256": "881641d9a7e652fac2849b1b5349af608aa9617ff7130c427eaaef10ee2f2aee",
+  "next_step": {
+    "prepared": true,
+    "started": false,
+    "requires_fresh_explicit_approval": true,
+    "metadata_only": true,
+    "process_memory_open": false,
+    "input_device_open": false,
+    "motion_phase": false,
+    "automatic_retry": false
+  },
+  "during_correction": {
+    "ssh": false,
+    "actual_sudo": false,
+    "password_window": false,
+    "steam_process_access": false,
+    "vendor_application_execution": false,
+    "real_device_access": false,
+    "installation_or_driver_changes": false,
+    "steam_settings_changes": false,
+    "gyro_calibration": false,
+    "push": false
+  },
+  "limits": [
+    "Local Fish 4.9.3 does not establish the current remote Fish version or live acceptance.",
+    "Synthetic sudo is no proof of actual authentication policy or target permissions.",
+    "The corrected transport does not diagnose the unresolved Steam gyro failure.",
+    "Open FDs do not prove successful sensor reads.",
+    "Fresh separate permission and local GO remain mandatory for any later bounded process-memory observation."
+  ]
+}

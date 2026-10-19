@@ -132,11 +132,72 @@ open-node snapshots do not supply it; the older desktop SDL-cache capture
 is not a Guide-synchronized Gamescope trace. No such observation starts here.
 Continuous motion without Guide and real reconnect acceptance remain open.
 
+## Metadata precheck stopped before authentication
+
+The user subsequently reports that the display no longer reacts even while
+Guide is held, and that Resume was run manually. The previous conditional
+response is historical, not currently reproduced. A manual Resume does not
+prove failed boot loading or missing gyro options. Module options take effect
+at module load; an already loaded module does not re-read modprobe settings on
+Resume. The service source loads the module in ExecStartPre; effective running
+parameters and the current device instance must be checked rather than assumed.
+
+One separately approved metadata-only SSH attempt returned 127 with
+`fish: Unexpected '}' found, expecting ')'`. The remote shell rejected the
+command before sudo authentication and before the read program. Stdout was
+empty, no password marker was emitted, no precheck result exists. There was
+no retry or Steam/driver change. This supplies no current motion diagnosis,
+module-option evidence or current sensor-FD result.
+
+The cause is raw nested Python source passed through POSIX `shlex.quote` to
+Fish. A small own-source fixture now reproduces a Fish quote error while the
+same command works in Bash. Other backslash patterns can be changed silently;
+a mere zero exit status is therefore insufficient transport validation.
+
+The pure builder `tools/sdl/ssh_python_payload.py` validates the size and Python
+syntax locally, encodes the UTF-8 source in Base64 and places only its ASCII
+token inside a fixed shell-quoted bootstrap. `/usr/bin/env LC_ALL=C` avoids an
+implicit shell-specific assignment prefix. No source single quotes, backslashes
+or newlines reach the shell parser. The fixed sudo/Python prefix remains;
+stdin is not used for source delivery and remains available for authentication.
+The helper constructs text only; it performs no SSH, sudo, process/device access
+or authentication. Encoding is not encryption and does not make arbitrary code
+read-only: the caller still reviews the exact metadata source and pins its hash.
+
+The 14 new committed regressions use real local Fish 4.9.3, Bash and system sh,
+with isolated temporary HOME/XDG directories and no user shell configuration.
+They check nested quotes, Unicode, backslashes, literal shell substitutions,
+unchanged source/argv/stdin, locale, size/syntax rejection and exit status with
+one execution. A test-owned ordinary-user sudo substitute consumes exactly one
+synthetic password line; no actual sudo or password dialog runs. Importing the
+existing observer's definitions does not invoke its main routine. Large source
+near the 64-KiB source limit also passes. There are 133 passing regressions in
+`make test-steam`, including the existing identity and terminal guards.
+
+Private tests additionally verify the exact next command through local Fish's
+syntax parser and an argv-only fixture, without executing its metadata program.
+The actual failed command's parsing failure is reproduced too. Fifteen private
+tests retain backing-file guards, source-hash refusal and the one-attempt gate.
+The original failed folder is unchanged; a new folder contains the same read
+program, corrected transport and fresh, unconsumed one-attempt receipt location.
+[Sanitized offline evidence](steam-gyro-ssh-offline.json) records these limits.
+
+The next proposed action remains only metadata: service/module state, exact
+native paired input identity, Steam's open pad/sensor FDs and pinned SDL/client/
+UI versions. It opens no evdev/IIO/USB device or process-memory file, makes no
+setting change and retries nothing. It needs fresh explicit approval, including
+the password dialog where required. No movement or Guide comparison is part of
+that precheck. Different versions, missing/changed instances or denied metadata
+stop it. A later process-memory observation would require its own reviewed
+scope, explicit permission and local GO. No such new live action occurred in
+this correction; the underlying Steam gyro cause is still unresolved.
+
 ## Reproduce the nonhardware checks
 
 ```sh
 DEBUGINFOD_URLS= LLVM_SYMBOLIZER_OPTS=--no-debuginfod make test-sensor test-sdl
 python -B tests/run_sdl_sensor_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so.0 --check-steam-layout
+python -B tests/test_steam_gyro_ssh.py
 ```
 
 The layout option rejects any library hash except the previously reviewed

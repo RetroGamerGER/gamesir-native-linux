@@ -1,5 +1,19 @@
 # Public pre-alpha release audit
 
+## SSH metadata transport corrected offline — 19 October 2026
+
+The approved metadata attempt stopped in the remote Fish parser before sudo
+authentication/read-program execution; it supplies no current gyro diagnosis.
+The user now reports no Guide-held response and manual Resume, not autostart
+acceptance. [Follow-up and sanitized evidence](STEAM_GUIDE_GYRO.md#metadata-precheck-stopped-before-authentication)
+record a pure source-encoding helper and 14 real local Fish/Bash/sh regressions,
+with a synthetic sudo/password fixture only. `make test-steam`: 133 passed;
+private exact-command/identity/one-attempt checks: 15 passed. No actual SSH,
+sudo, GUI authentication, Steam/vendor execution, device access or installed
+change occurred in the correction. A new metadata-only run is prepared but
+not executed; it needs fresh permission. Original failure retained, no retry,
+package/version change or publication. Real gyro hotplug acceptance stays open.
+
 ## Targeted Guide investigation remains offline — 19 October 2026
 
 [Report and evidence](STEAM_GUIDE_GYRO.md): actual extracted emitter adapters

@@ -4,6 +4,22 @@ Alle Make-Ziele sind offline. Keine Installation, erhöhten
 Rechte, USB-Kommandos, Modulaktivierung oder Treiberwechsel sind Bestandteil.
 Voraussetzung: vorhandenes Python ≥ 3.11, Make und clang mit ASan/UBSan.
 
+## SSH-Übergabe an Fish ohne Live-Zugriff
+
+`tests/test_steam_gyro_ssh.py` ergänzt `make test-steam` um 14 Regressionen.
+Fish muss lokal vorhanden sein; es wird nichts installiert. Echte lokale
+Fish-/Bash-/sh-Prozesse laufen ohne Benutzerkonfiguration mit eigenem temporärem
+HOME/XDG. Der alte POSIX-Quote-Fehler wird reproduziert; die neue Base64-Übergabe
+prüft identische Quellbytes, Argumente und stdin auch bei verschachtelten Quotes,
+Backslashes, Unicode und Shell-Metazeichen. Eine eigene unprivilegierte
+sudo-Fixture prüft genau eine synthetische Passwortzeile und Fehlerweitergabe.
+Keine SSH-Verbindung, echtes sudo, Passwortfenster, Geräte oder Steam-Prozesse.
+Die Tests führen ausschließlich eigene Fixtureprogramme aus; unveränderte
+Beobachterdefinitionen werden importiert, deren main wird nicht gestartet.
+Der neue Builder ist kein Remote-Runner oder Read-only-Sandbox. Sein Einsatz
+behält Quellprüfung, Einmal-Sperre und getrennte Live-Freigabe bei.
+[Befund und Beweisgrenzen](STEAM_GUIDE_GYRO.md#metadata-precheck-stopped-before-authentication).
+
 ## Optional real acceleration extension
 
 See [the offline correction contract](STEAM_ACCEL_EXTENSION.md). `make test-sensor`

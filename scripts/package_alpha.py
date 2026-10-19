@@ -36,6 +36,7 @@ DOCUMENT_FILES = (
     'docs/steam-gyro-observation-live-001.json', 'docs/STEAM_GYRO_FEASIBILITY.md',
     'docs/STEAM_GYRO_HOTPLUG.md', 'docs/steam-gyro-hotplug-offline.json',
     'docs/STEAM_GUIDE_GYRO.md', 'docs/steam-guide-gyro-offline.json',
+    'docs/steam-gyro-ssh-offline.json',
     'docs/input-publication-offline.json',
     'docs/evidence/INPUT_PUBLICATION_INSTALL_20261019.json',
     'docs/EXPERIMENTAL_GYRO_TEST.md', 'docs/experimental-gyro-validation.json',
