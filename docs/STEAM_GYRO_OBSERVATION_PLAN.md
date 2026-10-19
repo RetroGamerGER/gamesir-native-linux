@@ -1,7 +1,8 @@
 # Prepared read-only Steam gyro observation
 
-19 October 2026. **One approved metadata precheck stopped; no cache observation
-executed. Identity correction tested offline; a new attempt needs approval.**
+19 October 2026. **Corrected identity precheck passed. The following GO wait
+stopped without reading memory. Terminal correction tested offline; a new
+attempt needs approval. No cache observation executed.**
 This is a one-run diagnostic proposal requiring separate approval. It does
 not install anything or change the working driver, Steam configuration,
 gyro profile, paddles, rumble or raw IIO path.
@@ -117,14 +118,58 @@ replacements, denied/missing aliases, stale segments, changed ABI/hash and
 the local-GO/no-memory-open barriers. One test maps synthetic bytes in its
 own process; its `map_files` aliases remain fake. The unprivileged direct
 `stat` of an own-process kernel alias returned EPERM in the offline probe.
-Therefore real elevated traversal is **pending the next approved precheck**;
-it is not claimed as already validated against Steam. No sudo was used for
-this correction, no Steam files were changed, and no library was executed.
+At this correction checkpoint, real elevated traversal was pending. The
+subsequent separately approved precheck passed, as recorded below. No sudo
+was used for the offline correction, no Steam files were changed, and no
+library was executed.
 
 Reference consulted offline: installed Linux man-pages 6.19,
 `proc_pid_map_files(5)` and `proc_pid_maps(5)`. They document the aliases,
 map fields and access requirements; no text/code was imported into this
 GPL-2.0-only tool. No network access was used.
+
+## Terminal forwarding correction — 19 October 2026
+
+The separately approved corrected precheck exited 0, including actual elevated
+`map_files` traversal. The observer's repeated precheck also passed and found
+one gamepad FD and one sensor FD in Steam. No SDL version or identity guard
+failed. The next stage nevertheless exited 2 at `No local GO; no memory open`
+after 120 seconds. The user's screenshot shows both `GO` and `go` entered
+in the terminal. Preserve this failed attempt and its original launcher/logs;
+it is not a motion test or evidence of a driver defect. The ksshaskpass warning
+did not prevent authentication or these successful metadata checks.
+
+A device-free reproduction used an own pseudo-terminal, a synthetic Python
+child and the same noninteractive Bash → timeout → Python | tee pipeline.
+Default GNU timeout moves the child to a different process group: terminal
+echo shows GO, but the child is in the background and does not complete the
+read. Adding **`--foreground`** keeps terminal access and the same GO is
+accepted. No sudo, password window, Steam, SDL execution, controller access or
+network were used in that reproduction. This reproduces the broken terminal path;
+it does not claim an exact trace of sudo's additional PTY handling.
+
+Both proposed timeout commands below now include `--foreground`. Its external
+deadline and TERM/KILL limits remain. GNU timeout in this mode limits its
+direct command rather than timing out descendants; our observer starts no
+children and does not launch Steam. Only the diagnostic is its direct target.
+Reference consulted locally: `/usr/bin/timeout --help`, GNU coreutils.
+
+The helper additionally verifies terminal stdin and foreground process group
+before showing the GO prompt, and again before reading a ready input. A wrong
+invocation or redirected/piped GO stops immediately, without a memory open or
+a fallback to another terminal. `ready_for_local_go` explicitly confirms a
+usable input path; `local_go_accepted` and a visible acknowledgement confirm
+the input before fresh identity checks. Neither event means process memory
+has already been opened. No raw input text is logged.
+
+45 observer regressions and nine real-PTY/command regressions pass offline,
+including the legacy failure, corrected case-insensitive GO with whitespace,
+cancel, EOF, missing Enter, no response, a redirected fake GO, wrong timeout
+flags, loss of foreground and the external deadline for a wedged synthetic
+child. One regression first failed on the old command examples, then passed
+after adding the missing flag. The PTY children call only the GO routine;
+they never call the live observer main. Sudo/desktop acceptance remains pending
+one freshly approved run. No automatic retry is authorized.
 
 ## Prerequisites and one-run sequence
 
@@ -137,8 +182,11 @@ GPL-2.0-only tool. No network access was used.
    reads sysfs/proc metadata, node `stat` and the SDL `map_files` alias metadata,
    but **does not open process memory**. Missing alias permissions stop it.
 3. Only after that succeeds, run the separately approved observer once. It
-   repeats the checks, then waits at most 120 seconds for local `GO` (case
-   insensitive). Nothing is attached to or changed in Steam while waiting.
+   repeats the checks, verifies terminal foreground and announces readiness,
+   then waits at most 120 seconds for local `GO` **followed by Enter** (case
+   insensitive). Wait for the visible **GO erkannt** acknowledgement. Nothing
+   is attached to or changed in Steam while waiting. Missing terminal access
+   is a stop, not a reason to paste GO into a pipe or choose another input.
 4. After GO, revalidate the same process/controller/library, then observe for
    70 seconds: **30 s preparation**, **10 s rest**, **20 s slow movement**,
    **10 s setting down**. Open Steam's existing gyro page during preparation;
@@ -173,7 +221,7 @@ observer="$PWD/tools/sdl/steam_gyro_observe.py"
 
 # Approved step 1: metadata only; no /proc/PID/mem open.
 SUDO_ASKPASS=/usr/bin/ksshaskpass /usr/bin/sudo -A \
-  /usr/bin/timeout --signal=TERM --kill-after=2s 30s \
+  /usr/bin/timeout --foreground --signal=TERM --kill-after=2s 30s \
   /usr/bin/python3 -I -B "$observer" --precheck \
   | tee "$run_dir/precheck.jsonl"
 ```
@@ -184,7 +232,7 @@ Only after a successful precheck and explicit observation approval:
 ```sh
 # Approved step 2: one read-only cache observation after local GO.
 SUDO_ASKPASS=/usr/bin/ksshaskpass /usr/bin/sudo -A \
-  /usr/bin/timeout --signal=TERM --kill-after=2s 210s \
+  /usr/bin/timeout --foreground --signal=TERM --kill-after=2s 210s \
   /usr/bin/python3 -I -B "$observer" --observe \
   | tee "$run_dir/observation.jsonl"
 

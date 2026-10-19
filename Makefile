@@ -50,6 +50,7 @@ alpha-source: tools
 # Optional userspace integration only: never start Steam or touch a device.
 test-steam:
 	$(PYTHON) -B tests/test_steam_gyro_observe.py
+	$(PYTHON) -B tests/test_steam_gyro_terminal.py
 	$(PYTHON) -B tests/test_steam_session_env.py
 	$(PYTHON) -B tests/test_packaging_steam.py
 	$(PYTHON) -B tests/test_packaging_gamescope.py

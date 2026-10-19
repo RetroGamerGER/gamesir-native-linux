@@ -5,6 +5,20 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Steam-Beobachter: Go-Weitergabe offline korrigiert:** Die danach freigegebene
+Identitäts-Vorprüfung einschließlich echter `map_files`-Metadaten bestand.
+Der anschließende Helfer erkannte trotz sichtbarer GO-Eingabe im Terminal
+keine Freigabe und stoppte vor dem Prozessspeicherzugriff. Eine eigene
+PTY-/Bash-/timeout-/tee-Reproduktion zeigt: Der Standardaufruf von timeout
+versetzt das Kind in eine andere Prozessgruppe und verhindert die Eingabe.
+Die vorbereiteten Befehle nutzen jetzt `--foreground`; der Helfer prüft den
+Terminal-Vordergrund und meldet Bereitschaft/angenommenes GO ausdrücklich.
+45 Beobachter-, neun Terminal-, 40 Steam-/Gamescope- und zehn Lizenz-/README-
+Prüfungen bestehen offline. Kein neuer Live-Versuch, kein sudo, keine
+Installation, keine Steam-/Treiberänderung und kein Push bei dieser Korrektur.
+Sudo-/Desktop-Abnahme bleibt für den nächsten separat freizugebenden Lauf offen.
+[Ablauf, Befehle und Grenzen](STEAM_GYRO_OBSERVATION_PLAN.md).
+
 **Steam-Beobachter: Identitätsprüfung offline korrigiert:** Die freigegebene
 Metadaten-Vorprüfung stoppte bei `Mapped/file identity differs`, nach gültigem
 SDL-Hash, vor jedem Prozessspeicherzugriff. Kein Beobachtungslauf wurde gestartet.
@@ -15,8 +29,8 @@ Der Helfer prüft jetzt die tatsächlichen Dateien aller SDL-Speicherbereiche
 über reine `map_files`-Metadaten und vergleicht stat mit stat; kein Ausweichen
 auf Hash/Pfad allein. Dateiaustausch, fehlende Rechte und veränderte Bereiche
 stoppen weiterhin. 41 Beobachtertests sowie 40 Steam-/Gamescope- und zehn
-Lizenz-/README-Prüfungen bestehen. Der erhöhte Metadatenzugriff auf echte
-Steam-Mappings bleibt im nächsten gesondert freizugebenden Vorabcheck zu prüfen.
+Lizenz-/README-Prüfungen bestanden an diesem Prüfpunkt. Der erhöhte
+Metadatenzugriff bestand danach separat freigegeben; der GO-Abbruch steht oben.
 Keine Installation, Steam-/Treiberänderung, Hardwareprüfung oder Push.
 
 **Gezielte Steam-Beobachtung weiterhin vorbereitet:** Ein auf die

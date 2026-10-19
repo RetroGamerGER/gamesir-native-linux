@@ -265,6 +265,29 @@ def cue(phase):
     emit('phase', phase=phase)
 
 
+def require_foreground_terminal():
+    require(sys.stdin.isatty(), 'Local GO requires terminal stdin; no memory open')
+    try:
+        foreground = os.tcgetpgrp(sys.stdin.fileno())
+    except OSError:
+        raise Halt('Cannot verify terminal foreground; no memory open') from None
+    require(foreground == os.getpgrp(),
+            'Observer is not in terminal foreground; use timeout --foreground; no memory open')
+
+
+def wait_local_go(timeout_s=120):
+    require_foreground_terminal()
+    print('Nur nach konkreter Freigabe: GO eingeben und Enter drücken (120 Sekunden Zeit). '
+          'Danach 30 Sekunden Vorbereitung.', file=sys.stderr, flush=True)
+    emit('ready_for_local_go', terminal_foreground=True, process_memory_opened=False)
+    ready,_,_ = select.select([sys.stdin],[],[],timeout_s)
+    require(bool(ready), 'No local GO; no memory open')
+    require_foreground_terminal()
+    require(sys.stdin.readline().strip().lower() == 'go', 'No local GO; no memory open')
+    emit('local_go_accepted', process_memory_opened=False)
+    print('GO erkannt. Frische Prüfung vor dem Beginn der Vorbereitung.', file=sys.stderr, flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
@@ -283,10 +306,7 @@ def main():
          process_memory_opened=False)
     if args.precheck:
         return 0
-    print('Nur nach konkreter Freigabe: GO eingeben (120 Sekunden Zeit). Danach 30 Sekunden Vorbereitung.',
-          file=sys.stderr, flush=True)
-    ready,_,_ = select.select([sys.stdin],[],[],120)
-    require(bool(ready) and sys.stdin.readline().strip().lower() == 'go', 'No local GO; no memory open')
+    wait_local_go()
     require(process_identity(pid,uid) == process and target_identity() == target, 'Instance changed before GO')
     require(library_identity(maps_parse((proc/'maps').read_text()), proc) == library, 'Library changed before GO')
     # Only metadata was read above. This is the sole process-memory open.

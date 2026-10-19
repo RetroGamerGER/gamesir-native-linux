@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-10-19",
-  "stage": "identity correction tested offline; new live attempt requires approval",
+  "stage": "terminal forwarding corrected offline; new live attempt requires approval",
   "method": "Read-only /proc/PID/mem sampling of pinned SDL cache; no debugger, target function or device open",
   "library_sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
   "library_bytes": 3911164,
@@ -28,22 +28,26 @@
   "validation": {
     "offline_sdl_cases": 7,
     "public_sdl_getter_comparison_passed": true,
-    "observer_mock_tests": 41,
+    "observer_mock_tests": 45,
     "system_sdl_cases": 14,
     "steam_gamescope_regressions": 40,
     "license_tests": 3,
     "readme_tests": 7,
     "all_passed": true,
     "layout_checks": "Previous pinned SDL layout/getter results retained from d699c85; offsets unchanged",
-    "identity_correction_tests": "41 observer + 40 Steam/Gamescope + 3 licensing + 7 README tests passed"
+    "identity_correction_tests": "41 observer + 40 Steam/Gamescope + 3 licensing + 7 README tests passed",
+    "terminal_pty_tests": 9,
+    "terminal_correction_tests": "45 observer + 9 terminal + 40 Steam/Gamescope + 3 licensing + 7 README tests passed"
   },
   "private_report_relative": "build/results/sdl-validation/sequence-v2/sdl3-770801484962a757/cache-layout",
   "private_log_sha256": "f1b7226e47260b84bdea230f90397560478baba958bccde0afd539b47c360bf4",
   "source_hashes": {
-    "tools/sdl/steam_gyro_observe.py": "b8ab64387d6eeb011e97eb0e2f3e8bd031b541aef7bb95017ba9c04a98c4002c",
-    "tests/test_steam_gyro_observe.py": "a71cb2da19851344fd1c60d22f7328a2860559a656a043f3f9ac4f8eedef6f85",
+    "tools/sdl/steam_gyro_observe.py": "97e2b92432748399bc82c6038afde993b159caa091405c054194db57dedacc3e",
+    "tests/test_steam_gyro_observe.py": "83338f3ac0ea0c899d5ec460c7e19753a912b5561609da90e6a59f30c8dc47bf",
     "tests/run_sdl_sensor_test.py": "2007f4dd12f88a7133f02aae49fd2a965bd10d2cdb6f6ec53dca490a3b0f0e06",
-    "tests/sdl_sensor_probe.c": "787bdfa4c52e200ff6f98c2d45f8f84e0da7bce02eeef65e04d69a9a122861fe"
+    "tests/sdl_sensor_probe.c": "787bdfa4c52e200ff6f98c2d45f8f84e0da7bce02eeef65e04d69a9a122861fe",
+    "tests/test_steam_gyro_terminal.py": "fe4c35efaeba016ec6be6fa2a3e9eeb24f4079b51fe2fffa0dbd56d66fc4adc7",
+    "Makefile": "007cf09a6aec0f0f623d056ad22493e3860c0e7c5a56403f234572f091ca9f8b"
   },
   "live": {
     "authorized": false,
@@ -57,7 +61,9 @@
     "prior_precheck_authorized": true,
     "precheck_executed": true,
     "observation_executed": false,
-    "authorization_note": "Previous attempt consumed by stopped precheck; corrected helper requires fresh approval"
+    "authorization_note": "Previous attempt ended at local GO wait before memory; corrected terminal invocation requires fresh approval",
+    "latest_precheck_exit": 0,
+    "latest_observer_exit": 2
   },
   "limits": [
     "Cache sampling is not syscall/event tracing or proof of a downstream discard decision",
@@ -84,7 +90,7 @@
       "unprivileged_own_map_files_stat_errno": 1
     },
     "fix": "Compare stat of hashed file/FD and every kernel map_files alias; retain maps identity separately, pin every segment, reject changed file and denied metadata without fallback",
-    "kernel_aliases_in_unit_tests": "synthetic filesystem aliases; real elevated traversal remains untested",
+    "kernel_aliases_in_unit_tests": "Synthetic aliases in tests; subsequent separately approved live precheck passed actual elevated traversal",
     "test_log_sha256": "137f1e7cd3b38901e6fd0a1046677104818a0d1dc98b1694f8ab012fcf2bf6b6",
     "fresh_approval_required": true,
     "steam_access_during_fix": false,
@@ -95,5 +101,47 @@
       "Linux man-pages 6.19: proc_pid_map_files(5)",
       "Linux man-pages 6.19: proc_pid_maps(5)"
     ]
+  },
+  "terminal_correction": {
+    "previous_attempt": {
+      "precheck_exit": 0,
+      "observer_exit": 2,
+      "identity_guard_passed": true,
+      "gamepad_fds": 1,
+      "sensor_fds": 1,
+      "reason": "No local GO; no memory open",
+      "go_visible_in_user_screenshot": true,
+      "process_memory_opened": false,
+      "automatic_retry": false,
+      "log_sha256": "045eb599f0fe4488d6470f11e52fdf2640f01a8f656bc25fa6b13392693f21fd",
+      "original_launcher_sha256": "b0cdad3d2dcf9e154de628ad0db13ec5e87b67f14eb3f81987f654926eb7abd1"
+    },
+    "offline_reproduction": {
+      "method": "Own PTY and synthetic child in noninteractive Bash timeout/Python/tee pipeline; no sudo or Steam",
+      "legacy_child_foreground": false,
+      "legacy_go_echoed": true,
+      "legacy_go_accepted": false,
+      "with_foreground_go_accepted": true,
+      "exact_sudo_pty_trace_claimed": false
+    },
+    "fix": "timeout --foreground; require terminal stdin and foreground process group before prompt and read; explicit readiness/GO acknowledgement; preserve identity guards and deadlines",
+    "tests": {
+      "observer": 45,
+      "terminal": 9,
+      "steam_gamescope": 40,
+      "licensing": 3,
+      "readme": 7,
+      "all_passed": true
+    },
+    "regression_first_failed_on_old_command_examples": true,
+    "test_log_sha256": "5baa2aa292e6333217d55b1dbf5dc0a198aecc73227a7e0c5676e350518caaf6",
+    "offline_reference": "Installed GNU coreutils: /usr/bin/timeout --help",
+    "sudo_desktop_acceptance_pending": true,
+    "new_live_attempt": false,
+    "hardware_access": false,
+    "sudo_used": false,
+    "steam_or_driver_changes": false,
+    "network_used": false,
+    "fresh_approval_required": true
   }
 }

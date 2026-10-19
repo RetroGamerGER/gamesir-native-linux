@@ -330,7 +330,11 @@ class ObserverTests(unittest.TestCase):
         stack=contextlib.ExitStack()
         self.addCleanup(stack.close)
         stack.enter_context(patch.object(m.sys,'argv',['observer',mode]))
-        stack.enter_context(patch.object(m.sys,'stdin',io.StringIO(answer)))
+        input_stream=io.StringIO(answer)
+        input_stream.isatty=lambda: True
+        input_stream.fileno=lambda: 19
+        stack.enter_context(patch.object(m.sys,'stdin',input_stream))
+        stack.enter_context(patch.object(m.os,'tcgetpgrp',return_value=m.os.getpgrp()))
         stack.enter_context(patch.dict(m.os.environ,{'SUDO_UID':'1000'}))
         stack.enter_context(patch.object(m,'find_steam',return_value=123))
         stack.enter_context(patch.object(m,'process_identity',return_value=(123,'77','steam',1000)))
@@ -357,6 +361,31 @@ class ObserverTests(unittest.TestCase):
         opening=self.fake_main('--observe')
         with patch.object(m.select,'select',return_value=([],[],[])):
             with self.assertRaisesRegex(m.Halt,'No local GO'): m.main()
+        opening.assert_not_called()
+
+    def test_redirected_stdin_never_opens_process_memory(self):
+        opening=self.fake_main('--observe')
+        with patch.object(m.sys.stdin,'isatty',return_value=False):
+            with self.assertRaisesRegex(m.Halt,'terminal stdin'): m.main()
+        opening.assert_not_called()
+
+    def test_background_terminal_never_opens_process_memory(self):
+        opening=self.fake_main('--observe')
+        with patch.object(m.os,'tcgetpgrp',return_value=m.os.getpgrp()+1):
+            with self.assertRaisesRegex(m.Halt,'timeout --foreground'): m.main()
+        opening.assert_not_called()
+
+    def test_unverifiable_terminal_never_opens_process_memory(self):
+        opening=self.fake_main('--observe')
+        with patch.object(m.os,'tcgetpgrp',side_effect=OSError(errno.ENOTTY,'synthetic')):
+            with self.assertRaisesRegex(m.Halt,'Cannot verify terminal'): m.main()
+        opening.assert_not_called()
+
+    def test_foreground_lost_while_waiting_never_opens_memory(self):
+        opening=self.fake_main('--observe')
+        group=m.os.getpgrp()
+        with patch.object(m.os,'tcgetpgrp',side_effect=[group,group+1]):
+            with self.assertRaisesRegex(m.Halt,'timeout --foreground'): m.main()
         opening.assert_not_called()
 
     def test_changed_process_before_go_never_opens_memory(self):

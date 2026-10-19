@@ -89,9 +89,18 @@ maps' device and stat.st_dev can differ legitimately; the failed log did not
 record the exact differing component. The corrected guard compares stat
 metadata of the hashed file/FD with every kernel map_files alias, and pins all
 SDL segments. Never weaken this to hash/path/inode-only acceptance or bypass
-denied alias access. It follows aliases with stat only, never opens them;
-elevated traversal is pending a fresh approved precheck. 41 observer regressions
-pass offline; no Steam process/device was accessed during the correction.
+denied alias access. It follows aliases with stat only, never opens them.
+Subsequent separately approved prechecks passed actual elevated alias traversal;
+the observation then stopped before memory at `No local GO`, despite the user
+typing GO as shown in their screenshot. Own-PTY reproduction identifies default
+timeout's background process group as a broken terminal input path. Use the
+reviewed `timeout --foreground` commands, retaining external deadlines. The
+observer checks terminal stdin/foreground before waiting and before reading,
+and logs explicit readiness/GO acceptance without input text. Never pipe GO,
+substitute another terminal, remove the gate or retry automatically. 45 observer
+and nine terminal tests pass offline; only synthetic child processes are used.
+No sudo, Steam process or controller access occurred during this correction. Actual
+sudo/desktop acceptance is pending a newly authorized run; preserve failed logs.
 A new attempt requires separate permission and local GO before process memory;
 no debugger attach, target calls or device opens. Unknown hashes, multiple
 targets and instance changes stop it. Cache updates

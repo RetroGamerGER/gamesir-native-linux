@@ -42,7 +42,7 @@ Das ist keine Korrektur des produktiven Treibers und kein Steam-Livetest.
 Die Bibliotheken werden nicht ins Repository übernommen. SDL-Erfolg beweist
 noch keine Freischaltung in Steam Input; [Befunde und Grenzen](STEAM_GYRO_FEASIBILITY.md).
 
-Der vorbereitete lesende Steam-Gyro-Beobachter hat 41 Offline-Regressionen
+Der vorbereitete lesende Steam-Gyro-Beobachter hat 45 Offline-Regressionen
 in `tests/test_steam_gyro_observe.py`, Teil von `make test-steam`. Sie verwenden
 künstlichen Speicher und eigene Dateien/Proc-Aliase. Ein eigener Read-only-mmap
 liest nur `/proc/self/maps`; kein Steam-/Gerätezugriff und keine erhöhten Rechte.
@@ -58,6 +58,17 @@ mit `run_sdl_sensor_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so
 geprüft. Das führt **keinen** Steam-Beobachtungslauf aus. Die gesondert
 freizugebenden Befehle und Aussagegrenzen stehen im
 [Beobachtungsplan](STEAM_GYRO_OBSERVATION_PLAN.md).
+
+`tests/test_steam_gyro_terminal.py` ergänzt neun Tests mit eigenen
+Pseudo-Terminals und dem echten timeout-/tee-Eingabeweg, ebenfalls in
+`make test-steam`. Eine künstliche Kindfunktion importiert nur die Go-Abfrage;
+Zielsuche, Speicher- und Gerätezugriff sind gesperrt. Keine erhöhten Rechte,
+kein sudo, keine Passwortabfrage und kein sichtbares Fenster. Der Altaufruf
+reproduziert sichtbares Go ohne erfolgreiche Eingabe im Hintergrund;
+`--foreground` besteht. Abbruch, EOF, fehlendes Enter, Zeitablauf, Pipe-Eingabe,
+falsche Prozessgruppe und der äußere Timeout bleiben negativ geprüft.
+Getestete Prozesssignale betreffen ausschließlich die eigenen künstlichen
+Kinder. Das ersetzt keine spätere Abnahme des grafischen sudo-/Konsole-Aufrufs.
 
 ## Manager-Reconnect und veraltete Getter
 
