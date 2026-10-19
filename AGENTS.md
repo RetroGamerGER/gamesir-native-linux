@@ -24,6 +24,23 @@ authorization. Never flash firmware or guess undocumented device commands.
 Document and verify the safe return to xpad. Deadband must retain a supported
 exclusive maintenance path; normal play must not depend on it.
 
+## Offline Gamescope gyro hotplug preparation (19 October 2026)
+
+Read docs/STEAM_GYRO_HOTPLUG.md before implementing the next correction.
+Five synthetic cases pass with system SDL and three stored Steam SDLs (20
+runs): late/unreadable sensor leaves an already-open gamepad without gyro;
+sensor-first hotplug/reconnect works in the same process. This reproduces a
+sufficient mechanism, not the exclusive historical Gamescope cause. The
+pure tools/sdl/input_pair_readiness.py prototype and its 15 tests do not run
+in the manager or publish real devices. Do not claim it is an installable fix.
+Prepare optional two-phase kernel/client/manager input publication only with
+exact owned-session and processed-sensor/access proof, bounded waiting and
+existing cleanup/lease/error preservation. A node/database entry alone is
+not completion; old input numbers/UIDs do not authorize replacement sessions.
+No active-pad re-registration, Steam restart/library replacement, permission
+widening or fixed boot sleep. Keep raw IIO, accepted axes/scale, paddles,
+FF and trigger STOP/ownership intact. No new live action or push authorized.
+
 ## Bazzite assessment (19 October 2026)
 
 Read STEAM_GAMESCOPE.md's Bazzite feasibility section before a distribution port.

@@ -49,6 +49,7 @@ alpha-source: tools
 
 # Optional userspace integration only: never start Steam or touch a device.
 test-steam:
+	$(PYTHON) -B tests/test_input_pair_readiness.py
 	$(PYTHON) -B tests/test_steam_gyro_observe.py
 	$(PYTHON) -B tests/test_steam_gyro_terminal.py
 	$(PYTHON) -B tests/test_steam_session_env.py
@@ -131,8 +132,12 @@ test-capture:
 	$(PYTHON) -B tests/check_kernel_mapping.py --capture
 
 # Device-free synthetic SDL tests; requires installed Bubblewrap/SDL/clang.
-test-sdl: test-sdl-buttons
+test-sdl: test-sdl-buttons test-sdl-hotplug
 	$(PYTHON) -B tests/run_sdl_sensor_test.py
+
+.PHONY: test-sdl-hotplug
+test-sdl-hotplug:
+	$(PYTHON) -B tests/run_sdl_hotplug_test.py
 
 test-sdl-buttons:
 	$(PYTHON) -B tests/run_sdl_buttons_test.py

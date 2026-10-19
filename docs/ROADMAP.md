@@ -7,6 +7,18 @@ Stand: 19. Oktober 2026. Prioritäten ergänzen den
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 
+## Priorität: Gyro bei spätem Einschalten / Wiederverbinden in Gamescope
+
+Offline-Test reproduziert die fehlende nachträgliche SDL-Sensorzuordnung;
+Sensor-zuerst besteht in System-SDL und drei gespeicherten Steam-SDL-Versionen.
+Getesteten Bereitschaftsprototyp in eine optionale zweistufige Input-Veröffentlichung
+zwischen Kernel/Client/Manager überführen. Verarbeitete Sensorbenachrichtigung,
+aktive Sitzungsrechte und exakte Geräteinstanz vor Gamepad-Veröffentlichung
+prüfen; begrenzte Wartezeit und bestehenden Fehler-/Rückweg erhalten. Noch kein
+installierbares Update oder echte Gamescope-Reconnect-Abnahme. Keine Steam-
+Neustarts, globale Wartezeit oder Bibliotheksersetzung als Reparatur ausgeben.
+[Prototyp, Tests und ausstehende Implementierung](STEAM_GYRO_HOTPLUG.md).
+
 ## Bazzite als mögliche Zielplattform
 
 Quellenvergleich abgeschlossen, noch kein Bazzite-Zielbau oder installierbares

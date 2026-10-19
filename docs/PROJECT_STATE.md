@@ -5,6 +5,21 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Später Gamescope-Gyrostart offline eingegrenzt, Korrekturprototyp vorbereitet:**
+System-SDL und drei gespeicherte Steam-SDL-Bibliotheken reproduzieren fehlende
+Sensorzuordnung, wenn das Gamepad vor der Sensorerkennung geöffnet wird. Auch
+„Sensor vorhanden, zunächst nicht lesbar“ reproduziert dies; spätere Freigabe
+repariert den offenen Handle nicht. Sensor-zuerst funktioniert hingegen bei
+laufendem SDL und Wiederverbindung. Ein isolierter, sitzungsgebundener
+Bereitschaftsprototyp verhindert die ungünstige Reihenfolge in der Simulation.
+20 SDL-Fälle und 15 reine Policytests bestanden. Kein Beweis der ausschließlichen
+Live-Ursache, kein fertiger Kernel-/Manager-Handschlag und kein installierbares
+Update. Dafür sind zweistufige Input-Veröffentlichung und echte Nachweise der
+verarbeiteten Sensorbenachrichtigung/Sitzungsrechte noch anzubinden.
+Kernel-/Manager-Laufzeitquellen, laufendes System/Steam und Paketversionen
+unverändert; nur Dokumente zur Paket-Dateiliste ergänzt, kein Live-Zugriff.
+[Befunde, Prototyp und konkrete Integrationsgrenze](STEAM_GYRO_HOTPLUG.md).
+
 **Bazzite als mögliche Ablösung geprüft:** Quellen-/Dokumentationsvergleich
 ergibt einen plausiblen Port mit gemeinsamem Treiberkern. Erforderlich sind
 Fedora-akmod/kmod-/RPM-Paketierung und eine eigene Steam-/Gamescope-Einbindung;

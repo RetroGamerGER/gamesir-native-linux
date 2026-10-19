@@ -671,3 +671,15 @@ regressions; `make kernel-analyze` builds and inspects without loading.
 The optional `tests/check_eden_motion.py --source <private-sdl_driver.cpp>`
 accepts only the documented pinned hash and performs no download or emulator
 execution. See [SDL/Eden procedure](SDL_EDEN_GYRO.md) before any live action.
+
+## Offline late-sensor / hotplug investigation
+
+`python -B tests/test_input_pair_readiness.py` tests the unintegrated publication
+gate using metadata only. `make test-sdl-hotplug` runs five scenarios against
+system SDL in the existing audited device-free sandbox. An explicitly selected
+stored Steam SDL3 library can be tested with
+`python -B tests/run_sdl_hotplug_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so.0`.
+This starts the synthetic probe only, never Steam. There are no host input,
+USB or IIO nodes, network, service commands or installation. EACCES and later
+attribute notifications are synthetic, not actual logind/udev processing.
+See [sequence, results and integration boundary](STEAM_GYRO_HOTPLUG.md).

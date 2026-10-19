@@ -109,9 +109,12 @@ computer.
 ## Known Limitations
 
 - **Gyro integration remains experimental.** The selected 0.07 °/s/raw profile
-  has an opt-in SDL evdev path and one limited hardware acceptance in Eden's
-  controller settings. It is not enabled by default. A separately approved
-  local persistent opt-in is now configured and checked; its actual reboot
+  has an unresolved late-power-on/reconnection limitation in Gamescope. An
+  [offline discovery study and readiness prototype](docs/STEAM_GYRO_HOTPLUG.md)
+  reproduces a relevant SDL ordering failure; it is not an installable fix.
+  The existing profile has an opt-in SDL evdev path and one limited hardware
+  acceptance in Eden's controller settings. It is not enabled by default. A
+  separately approved local persistent opt-in is now configured and checked; its actual reboot
   acceptance remains pending. Precise angle/bias calibration remains
   paused. Raw IIO remains unchanged. Separate opt-in evdev acceleration uses
   experimental `8192 LSB/g` and an evidence-backed qualitative axis map;

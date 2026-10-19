@@ -1,5 +1,21 @@
 # Public pre-alpha release audit
 
+## Offline gyro hotplug preparation — 19 October 2026
+
+The [new discovery study](STEAM_GYRO_HOTPLUG.md) adds 20 device-free SDL runs
+and 15 pure policy regressions. A late/unreadable sensor is not assigned to an
+already-open gamepad in the four tested libraries; sensor-first hotplug works.
+The readiness gate is an unintegrated offline prototype, not a release feature,
+new package revision or installable fix. No kernel/production manager, Steam,
+system configuration, hardware or remote system was changed or accessed.
+Source hashes and sanitized results are in `steam-gyro-hotplug-offline.json`.
+Existing feature defaults, licenses and future release/push approval gates remain.
+Final `make test` and `make test-sdl` pass with external debug-symbol lookup
+disabled for the test processes. The initial ASan negative-control timeout and
+corrected packaged-document omission remain recorded in the study and private
+logs. No sanitizer check was relaxed. Only the two report documents enter the
+package allowlist; the prototype and device-free probes remain development-only.
+
 ## Local six-axis persistence follow-up — 19 October 2026
 
 Revision 9's real acceleration extension passed one approved Steam gyro-UI

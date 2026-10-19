@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "method": "Device-free inotify + synthetic evdev and access denial; separate metadata-only publication policy",
+  "hardware_access": false,
+  "network_access": false,
+  "steam_execution": false,
+  "running_driver_changed": false,
+  "installed_steam_changed": false,
+  "production_integration": false,
+  "installable_fix": false,
+  "exclusive_live_root_cause_proved": false,
+  "policy_tests": 15,
+  "sdl_scenarios": 20,
+  "source_reference": {
+    "repo": "libsdl-org/SDL",
+    "commit": "829a65d769d935c4852f8159e964312c0957260a",
+    "path": "src/joystick/linux/SDL_sysjoystick.c",
+    "sha256": "4c787e35305b959a680c19aedc661e90000259d0f6d2a520a169dc6821067178"
+  },
+  "sources": [
+    {
+      "path": "tools/sdl/input_pair_readiness.py",
+      "sha256": "39e92da8d8ed5cf32c4c46955fff6fe18d86c5d531af59a41bf30a71de5627c7"
+    },
+    {
+      "path": "tests/test_input_pair_readiness.py",
+      "sha256": "67120d1d049f61125c318fbd10b878673568f267faa4d99c2ae9cabcc66e178f"
+    },
+    {
+      "path": "tests/run_sdl_hotplug_test.py",
+      "sha256": "1498904d7788934ac2ffa3e1f4ea817b571b7893f5223106a20efddc0c6dc6eb"
+    },
+    {
+      "path": "tests/sdl_hotplug_fixture.c",
+      "sha256": "c58d709b2234cfcd5fa3fbb44d093e3669304e6e3946b08c5c8a7aa7f817faba"
+    },
+    {
+      "path": "tests/sdl_hotplug_probe.c",
+      "sha256": "6878d6d5fc2b25c3fb14b44f87076546d85a0bc955f32ef74371bea141ce82b8"
+    },
+    {
+      "path": "tests/sdl_evdev_fixture.c",
+      "sha256": "c6cca9fdee62d5cebbebbf52c53be26f8d5739312cbe47af62164624153ea4ed"
+    },
+    {
+      "path": "tests/audit_sdl_sandbox.py",
+      "sha256": "e58491ead14cae7b3385cbbdbd6347733a07ae98b7798fcf354fbd5ade58c24f"
+    }
+  ],
+  "libraries": [
+    {
+      "library": "Steam steamrt64 SDL3",
+      "sha256": "08eb7ba02ec862b062d9876f00ffd6deb58f5b1fc9f2325bcf90e6245586b2de",
+      "elf_bits": 64,
+      "revision": "SDL-release-3.4.0-1576-gab5541ec5",
+      "cases": [
+        {
+          "name": "present-at-init",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "2b146a26ec04613d09f358e844453f65caee997d5a45a031d44d832aa8cbeb28"
+        },
+        {
+          "name": "sensor-first-hotplug",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "6eb719354e1d7da7a1e7d8fa7b4355da6d0bfe51d3042f808d8bd192b9a21a19"
+        },
+        {
+          "name": "sensor-after-open",
+          "passed": true,
+          "gyro_at_first_open": false,
+          "gyro_after_later_discovery": false,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "ef11f19e9f6ce67a4876965bfcb17e9cbba920038ecf3ed5e193cf54a1437b41"
+        },
+        {
+          "name": "readability-race",
+          "passed": true,
+          "gyro_at_first_open": false,
+          "gyro_after_later_discovery": false,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "3a4db10e263d13a0c05998bfcb796c081d0702b6f4a8d7de53d1ec2e34a9294b"
+        },
+        {
+          "name": "readiness-gated",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "9239147477d29d76c38c17e6ffa0423c525d124a7ba8434b859257c1344ccece"
+        }
+      ]
+    },
+    {
+      "library": "Steam ubuntu12_32 SDL3",
+      "sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+      "elf_bits": 32,
+      "revision": "SDL-release-3.4.0-1576-gab5541ec5",
+      "cases": [
+        {
+          "name": "present-at-init",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "d9befb1a150df34b7517eb586a4e0d31db862f82c990eb65cdea52aa65551cca"
+        },
+        {
+          "name": "sensor-first-hotplug",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "9860ad7b7a80419cf768e8606d9acdd83fdb55f00b17549617eed97dbbc9075c"
+        },
+        {
+          "name": "sensor-after-open",
+          "passed": true,
+          "gyro_at_first_open": false,
+          "gyro_after_later_discovery": false,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "69a82edc48af8dcb58cc974d54593bb32cda59a3aae18f2cf37c76bf068c30c5"
+        },
+        {
+          "name": "readability-race",
+          "passed": true,
+          "gyro_at_first_open": false,
+          "gyro_after_later_discovery": false,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "f49a5aad00e84564f7ecda2abdc15705064fbe1ad7e3802012199d077e72711f"
+        },
+        {
+          "name": "readiness-gated",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "e93f8c693fb636358eb9bb4d8742a7858047c66a106574b7909fc1860a4e1281"
+        }
+      ]
+    },
+    {
+      "library": "Steam ubuntu12_64 SDL3",
+      "sha256": "be244af0c3384036888ce1ee79866c326576e742b13f42bae293b596b06edf35",
+      "elf_bits": 64,
+      "revision": "SDL-release-3.4.0-1576-gab5541ec5",
+      "cases": [
+        {
+          "name": "present-at-init",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "4cb9f5ec4a18d389ec4661dc710994cf4cb767ffe79d3f13a668ed6e84858660"
+        },
+        {
+          "name": "sensor-first-hotplug",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "cfa6d065c149003219486b1f0a4dfb876df186745b30d211b5bd8457cc3ebb76"
+        },
+        {
+          "name": "sensor-after-open",
+          "passed": true,
+          "gyro_at_first_open": false,
+          "gyro_after_later_discovery": false,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "7e426bc5e46145713d82bab5f1d67e9ddf102c4fb4d57145cc7d2d0755116e49"
+        },
+        {
+          "name": "readability-race",
+          "passed": true,
+          "gyro_at_first_open": false,
+          "gyro_after_later_discovery": false,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "84eda0a92f3d47c7226768ed68a41aea1499dcfaa7ed871946a69c53d7b749d2"
+        },
+        {
+          "name": "readiness-gated",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "f02d5a22447768bb03efec9b42cea312185cf89700d6c8e6abd6e39803b88480"
+        }
+      ]
+    },
+    {
+      "library": "System SDL 3.4.18",
+      "sha256": null,
+      "elf_bits": 64,
+      "revision": "SDL-release-3.4.18-0-g829a65d76",
+      "cases": [
+        {
+          "name": "present-at-init",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "d0e6c08aae5b3f210af50cec114246ffca21625ac80e4df67daa3d43ca45420c"
+        },
+        {
+          "name": "sensor-first-hotplug",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "27da05402451db9d2b9700c1801a71421184b92e40fa300c2825f72b2e5d31f5"
+        },
+        {
+          "name": "sensor-after-open",
+          "passed": true,
+          "gyro_at_first_open": false,
+          "gyro_after_later_discovery": false,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "27b55f349b4370e30ab17922f86a8ce232fdc88b5f826d0b717ed9f1a077bf20"
+        },
+        {
+          "name": "readability-race",
+          "passed": true,
+          "gyro_at_first_open": false,
+          "gyro_after_later_discovery": false,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "d4cc61fbaee3bd30e0a73f87731ce464ba7e12a4d4b02cf5dc8c7fb3444c2f8a"
+        },
+        {
+          "name": "readiness-gated",
+          "passed": true,
+          "gyro_at_first_open": true,
+          "gyro_after_later_discovery": true,
+          "same_process_sensor_first_reconnect": true,
+          "private_log_sha256": "8a8004e37d2237fd0c8c84bbbf56bf0a1451371df3fdd44167a66655e9e99e1b"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "No real udev/logind ACL processing or Gamescope/Steam-client execution",
+    "Prototype supplies ordering only; kernel/client/manager handshake is unimplemented",
+    "No new gyro scale, physical calibration, output or paddle hardware acceptance",
+    "No installation, system action, remote target access or push"
+  ],
+  "regressions": {
+    "make_test_passed": true,
+    "make_test_sdl_passed": true,
+    "full_suite_private_log_sha256": "c4dbdc431ef213ea6d872ece36fef75f1e88e7c35de0978a286420f647901f7e",
+    "sdl_suite_private_log_sha256": "6b9abb33766eeee1db00c874a9e64376c0fd966b23798d545c7749bc5b8b396b",
+    "accepted_runs_external_symbol_lookup_disabled": true,
+    "initial_attempts_retained": "Existing ASan negative control timeout; subsequent missing packaged README-linked report corrected with an explicit documentation allowlist entry.",
+    "sanitizers_or_timeouts_relaxed": false
+  }
+}
