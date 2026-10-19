@@ -92,15 +92,24 @@ SDL segments. Never weaken this to hash/path/inode-only acceptance or bypass
 denied alias access. It follows aliases with stat only, never opens them.
 Subsequent separately approved prechecks passed actual elevated alias traversal;
 the observation then stopped before memory at `No local GO`, despite the user
-typing GO as shown in their screenshot. Own-PTY reproduction identifies default
-timeout's background process group as a broken terminal input path. Use the
-reviewed `timeout --foreground` commands, retaining external deadlines. The
-observer checks terminal stdin/foreground before waiting and before reading,
-and logs explicit readiness/GO acceptance without input text. Never pipe GO,
-substitute another terminal, remove the gate or retry automatically. 45 observer
-and nine terminal tests pass offline; only synthetic child processes are used.
-No sudo, Steam process or controller access occurred during this correction. Actual
-sudo/desktop acceptance is pending a newly authorized run; preserve failed logs.
+typing GO as shown in their screenshot. A following direct-PTY correction still
+failed actual sudo/monitor foreground checks before GO. Preserve both failures.
+The newer nested-PTY model follows locally documented sudo behavior: an initial
+background command needs a real read to request monitor foreground handover.
+Do not reject that transient state before reading or poll with select instead.
+Use the current reviewed sudo → Python command directly, with any external
+timeout OUTSIDE sudo, never between its monitor and Python. The helper's own
+SIGALRM bounds precheck/observation/GO to 30/210/120 seconds; nested waits must
+retain the original enclosing deadline/error and restore timers/handlers.
+Terminal stdin, a bounded GO+Enter read and confirmed foreground ownership
+AFTER the read remain mandatory before fresh identity checks and memory open.
+Readiness may report foreground false pending handover; acceptance must be true.
+Never pipe GO, substitute a terminal, remove the gate or retry automatically.
+49 observer and 15 terminal/monitor tests pass offline; all signals/processes
+in the model are test-owned. The live helper signals no other process and
+changes no terminal groups. No sudo, Steam process or controller access occurred
+during the correction. Actual sudo/desktop acceptance still needs a new approved
+run; no observed policy setting or universal monitor reliability is claimed.
 A new attempt requires separate permission and local GO before process memory;
 no debugger attach, target calls or device opens. Unknown hashes, multiple
 targets and instance changes stop it. Cache updates

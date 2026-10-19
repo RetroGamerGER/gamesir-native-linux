@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-10-19",
-  "stage": "terminal forwarding corrected offline; new live attempt requires approval",
+  "stage": "sudo monitor handover corrected offline; new live attempt requires approval",
   "method": "Read-only /proc/PID/mem sampling of pinned SDL cache; no debugger, target function or device open",
   "library_sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
   "library_bytes": 3911164,
@@ -28,7 +28,7 @@
   "validation": {
     "offline_sdl_cases": 7,
     "public_sdl_getter_comparison_passed": true,
-    "observer_mock_tests": 45,
+    "observer_mock_tests": 49,
     "system_sdl_cases": 14,
     "steam_gamescope_regressions": 40,
     "license_tests": 3,
@@ -36,17 +36,18 @@
     "all_passed": true,
     "layout_checks": "Previous pinned SDL layout/getter results retained from d699c85; offsets unchanged",
     "identity_correction_tests": "41 observer + 40 Steam/Gamescope + 3 licensing + 7 README tests passed",
-    "terminal_pty_tests": 9,
-    "terminal_correction_tests": "45 observer + 9 terminal + 40 Steam/Gamescope + 3 licensing + 7 README tests passed"
+    "terminal_pty_tests": 15,
+    "terminal_correction_tests": "45 observer + 9 terminal + 40 Steam/Gamescope + 3 licensing + 7 README tests passed",
+    "sudo_terminal_correction_tests": "49 observer + 15 terminal/monitor + 40 Steam/Gamescope + 3 licensing + 7 README tests passed"
   },
   "private_report_relative": "build/results/sdl-validation/sequence-v2/sdl3-770801484962a757/cache-layout",
   "private_log_sha256": "f1b7226e47260b84bdea230f90397560478baba958bccde0afd539b47c360bf4",
   "source_hashes": {
-    "tools/sdl/steam_gyro_observe.py": "97e2b92432748399bc82c6038afde993b159caa091405c054194db57dedacc3e",
-    "tests/test_steam_gyro_observe.py": "83338f3ac0ea0c899d5ec460c7e19753a912b5561609da90e6a59f30c8dc47bf",
+    "tools/sdl/steam_gyro_observe.py": "64e92215716f665731f624b05690387610f78970b5dd3376fe06d1516a0471ac",
+    "tests/test_steam_gyro_observe.py": "766a748e10a3f67d16fab450f3fcdf167c0e2f11336ea555e0f08f95e8b70698",
     "tests/run_sdl_sensor_test.py": "2007f4dd12f88a7133f02aae49fd2a965bd10d2cdb6f6ec53dca490a3b0f0e06",
     "tests/sdl_sensor_probe.c": "787bdfa4c52e200ff6f98c2d45f8f84e0da7bce02eeef65e04d69a9a122861fe",
-    "tests/test_steam_gyro_terminal.py": "fe4c35efaeba016ec6be6fa2a3e9eeb24f4079b51fe2fffa0dbd56d66fc4adc7",
+    "tests/test_steam_gyro_terminal.py": "5e0da41ed24b069a280bae4ad6f9bd52a9a822fa1f0611b878a01d8c1d3f8fb3",
     "Makefile": "007cf09a6aec0f0f623d056ad22493e3860c0e7c5a56403f234572f091ca9f8b"
   },
   "live": {
@@ -61,7 +62,7 @@
     "prior_precheck_authorized": true,
     "precheck_executed": true,
     "observation_executed": false,
-    "authorization_note": "Previous attempt ended at local GO wait before memory; corrected terminal invocation requires fresh approval",
+    "authorization_note": "Third attempt stopped at upfront foreground guard before GO/memory; corrected monitor handover requires fresh approval",
     "latest_precheck_exit": 0,
     "latest_observer_exit": 2
   },
@@ -142,6 +143,53 @@
     "sudo_used": false,
     "steam_or_driver_changes": false,
     "network_used": false,
+    "fresh_approval_required": true
+  },
+  "sudo_terminal_correction": {
+    "previous_attempt": {
+      "precheck_exit": 0,
+      "observer_exit": 2,
+      "identity_guard_passed": true,
+      "reason": "Observer is not in terminal foreground; use timeout --foreground; no memory open",
+      "go_prompt_reached": false,
+      "process_memory_opened": false,
+      "automatic_retry": false,
+      "log_sha256": "871f20b814fe22dd2f1786374b2ab9fbe62c0e6a8c97cd01a62749f0845fb1d1",
+      "original_launcher_sha256": "22298d4562d991d468b6821f2a2b4468f017a1e415d68dd0cb1f531b16e18edc"
+    },
+    "model": "Outer controlling PTY plus inner monitor session and background worker group; SIGTTIN triggers one test-owned tcsetpgrp/CONT handover",
+    "red_regression": "Prior upfront foreground guard exits 2 in nested model before prompting",
+    "interposer_regression": "Inner timeout prevents read-triggered handover in the model; direct Python receives foreground and accepts GO",
+    "fix": "Bounded blocking terminal read, confirmed foreground and GO+Enter after read; fresh identity gates unchanged; sudo launches Python directly; watchdog outside sudo; internal deadlines",
+    "deadlines_s": {
+      "precheck_internal": 30,
+      "observe_internal": 210,
+      "go_nested": 120,
+      "outer_observe_watchdog_including_auth": 240
+    },
+    "signal_scope": "Production helper uses only its own SIGALRM, never signals another process or changes a terminal group; model signals only test-owned children",
+    "tests": {
+      "observer": 49,
+      "terminal_monitor": 15,
+      "steam_gamescope": 40,
+      "licensing": 3,
+      "readme": 7,
+      "total": 114,
+      "all_passed": true
+    },
+    "test_log_sha256": "bbec3ba716edef30005d5d5a2eab4e366056664467c329cd067335ebd73511c4",
+    "references": [
+      "Installed sudo(8): process model",
+      "Installed sudoers(5): exec_background and use_pty",
+      "Installed GNU timeout --help"
+    ],
+    "actual_sudo_policy_inspected": false,
+    "actual_desktop_acceptance_pending": true,
+    "real_sudo_used": false,
+    "hardware_access": false,
+    "steam_or_driver_changes": false,
+    "network_used": false,
+    "new_live_attempt": false,
     "fresh_approval_required": true
   }
 }

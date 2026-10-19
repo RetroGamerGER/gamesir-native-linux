@@ -342,7 +342,6 @@ class ObserverTests(unittest.TestCase):
         stack.enter_context(patch.object(m,'library_identity',return_value=(0x10000000,'/fake/SDL',1,4)))
         stack.enter_context(patch.object(m,'descriptors',return_value={'gamepad_fds':1,'sensor_fds':0}))
         stack.enter_context(patch.object(Path,'read_text',return_value='1000-2000 r--p 0 00:00 0'))
-        stack.enter_context(patch.object(m.select,'select',return_value=([m.sys.stdin],[],[])))
         stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
         stack.enter_context(contextlib.redirect_stderr(io.StringIO()))
         return stack.enter_context(patch.object(m.os,'open',side_effect=AssertionError('No memory open allowed')))
@@ -359,7 +358,7 @@ class ObserverTests(unittest.TestCase):
 
     def test_no_response_never_opens_process_memory(self):
         opening=self.fake_main('--observe')
-        with patch.object(m.select,'select',return_value=([],[],[])):
+        with patch.object(m.sys.stdin,'readline',side_effect=m.Halt('No local GO before deadline; no memory open')):
             with self.assertRaisesRegex(m.Halt,'No local GO'): m.main()
         opening.assert_not_called()
 
@@ -372,7 +371,7 @@ class ObserverTests(unittest.TestCase):
     def test_background_terminal_never_opens_process_memory(self):
         opening=self.fake_main('--observe')
         with patch.object(m.os,'tcgetpgrp',return_value=m.os.getpgrp()+1):
-            with self.assertRaisesRegex(m.Halt,'timeout --foreground'): m.main()
+            with self.assertRaisesRegex(m.Halt,'handover not confirmed'): m.main()
         opening.assert_not_called()
 
     def test_unverifiable_terminal_never_opens_process_memory(self):
@@ -385,7 +384,43 @@ class ObserverTests(unittest.TestCase):
         opening=self.fake_main('--observe')
         group=m.os.getpgrp()
         with patch.object(m.os,'tcgetpgrp',side_effect=[group,group+1]):
-            with self.assertRaisesRegex(m.Halt,'timeout --foreground'): m.main()
+            with self.assertRaisesRegex(m.Halt,'handover not confirmed'): m.main()
+        opening.assert_not_called()
+
+    def test_handover_is_allowed_but_must_complete_before_go_acceptance(self):
+        opening=self.fake_main('--observe')
+        group=m.os.getpgrp()
+        with patch.object(m.os,'tcgetpgrp',side_effect=[group+1,group]):
+            m.wait_local_go()
+        opening.assert_not_called()
+
+    def test_go_without_enter_and_oversized_line_never_open_memory(self):
+        for answer in ('go','go'+' '*80+'\n'):
+            with self.subTest(answer=answer):
+                opening=self.fake_main('--observe',answer=answer)
+                with self.assertRaisesRegex(m.Halt,'No local GO'): m.main()
+                opening.assert_not_called()
+
+    def test_alarm_handler_and_timer_restored_on_go_cancel_and_io_error(self):
+        opening=self.fake_main('--observe')
+        original=m.signal.getsignal(m.signal.SIGALRM)
+        m.wait_local_go()
+        self.assertEqual(m.signal.getitimer(m.signal.ITIMER_REAL),(0.0,0.0))
+        self.assertIs(m.signal.getsignal(m.signal.SIGALRM),original)
+        for error in (m.Halt('No local GO'),OSError(errno.EIO,'synthetic')):
+            with patch.object(m.sys.stdin,'readline',side_effect=error):
+                with self.assertRaises(type(error)): m.wait_local_go()
+            self.assertEqual(m.signal.getitimer(m.signal.ITIMER_REAL),(0.0,0.0))
+            self.assertIs(m.signal.getsignal(m.signal.SIGALRM),original)
+        opening.assert_not_called()
+
+    def test_unrelated_process_alarm_not_overwritten(self):
+        opening=self.fake_main('--observe')
+        with patch.object(m.signal,'getitimer',return_value=(1.0,0.0)), \
+             patch.object(m.signal,'getsignal',return_value=m.signal.SIG_DFL), \
+             patch.object(m.signal,'setitimer') as timer:
+            with self.assertRaisesRegex(m.Halt,'Existing process alarm'): m.main()
+            timer.assert_not_called()
         opening.assert_not_called()
 
     def test_changed_process_before_go_never_opens_memory(self):

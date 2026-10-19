@@ -5,6 +5,22 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**sudo-/Konsole-Eingabeweg offline korrigiert:** Auch der folgende freigegebene
+Lauf bestand die Metadatenprüfung, stoppte aber an der vorgezogenen
+Vordergrundprüfung. Eine neue Nachbildung mit zwei eigenen PTYs bildet den
+dokumentierten sudo-Monitor ab: Erst ein echter Lesezugriff erlaubt dessen
+Terminalübergabe; der bisherige Prüfer brach vorher ab. Ein zwischen Monitor
+und Python laufender timeout-Prozess kann die Übergabe ebenfalls verhindern.
+Der vorbereitete Aufruf startet Python nun direkt unter sudo und legt den
+äußeren Watchdog davor. Eigene Prozessalarme begrenzen Vorprüfung, Gesamtlauf
+und Go-Abfrage auf 30/210/120 Sekunden. Go+Enter und bestätigter Vordergrund
+nach dem Lesen bleiben zwingend; erst danach werden alle Identitäten erneut
+geprüft. 49 Beobachter-, 15 Terminal-/Monitor-, 40 Steam-/Gamescope- und zehn
+Lizenz-/README-Prüfungen bestehen offline. Alle drei früheren Abbrüche bleiben
+erhalten. Kein sudo, Live-Versuch, Steam-/Treiberzugriff oder Push bei dieser
+Korrektur. Die echte Desktop-Abnahme braucht weiterhin eine neue Freigabe.
+[Befehle, Belege und Grenzen](STEAM_GYRO_OBSERVATION_PLAN.md).
+
 **Steam-Beobachter: Go-Weitergabe offline korrigiert:** Die danach freigegebene
 Identitäts-Vorprüfung einschließlich echter `map_files`-Metadaten bestand.
 Der anschließende Helfer erkannte trotz sichtbarer GO-Eingabe im Terminal
@@ -16,7 +32,7 @@ Terminal-Vordergrund und meldet Bereitschaft/angenommenes GO ausdrücklich.
 45 Beobachter-, neun Terminal-, 40 Steam-/Gamescope- und zehn Lizenz-/README-
 Prüfungen bestehen offline. Kein neuer Live-Versuch, kein sudo, keine
 Installation, keine Steam-/Treiberänderung und kein Push bei dieser Korrektur.
-Sudo-/Desktop-Abnahme bleibt für den nächsten separat freizugebenden Lauf offen.
+Die anschließende sudo-/Desktop-Prüfung scheiterte; siehe die Korrektur darüber.
 [Ablauf, Befehle und Grenzen](STEAM_GYRO_OBSERVATION_PLAN.md).
 
 **Steam-Beobachter: Identitätsprüfung offline korrigiert:** Die freigegebene

@@ -42,7 +42,7 @@ Das ist keine Korrektur des produktiven Treibers und kein Steam-Livetest.
 Die Bibliotheken werden nicht ins Repository übernommen. SDL-Erfolg beweist
 noch keine Freischaltung in Steam Input; [Befunde und Grenzen](STEAM_GYRO_FEASIBILITY.md).
 
-Der vorbereitete lesende Steam-Gyro-Beobachter hat 45 Offline-Regressionen
+Der vorbereitete lesende Steam-Gyro-Beobachter hat 49 Offline-Regressionen
 in `tests/test_steam_gyro_observe.py`, Teil von `make test-steam`. Sie verwenden
 künstlichen Speicher und eigene Dateien/Proc-Aliase. Ein eigener Read-only-mmap
 liest nur `/proc/self/maps`; kein Steam-/Gerätezugriff und keine erhöhten Rechte.
@@ -59,14 +59,23 @@ geprüft. Das führt **keinen** Steam-Beobachtungslauf aus. Die gesondert
 freizugebenden Befehle und Aussagegrenzen stehen im
 [Beobachtungsplan](STEAM_GYRO_OBSERVATION_PLAN.md).
 
-`tests/test_steam_gyro_terminal.py` ergänzt neun Tests mit eigenen
+`tests/test_steam_gyro_terminal.py` ergänzt 15 Tests mit eigenen
 Pseudo-Terminals und dem echten timeout-/tee-Eingabeweg, ebenfalls in
 `make test-steam`. Eine künstliche Kindfunktion importiert nur die Go-Abfrage;
 Zielsuche, Speicher- und Gerätezugriff sind gesperrt. Keine erhöhten Rechte,
 kein sudo, keine Passwortabfrage und kein sichtbares Fenster. Der Altaufruf
 reproduziert sichtbares Go ohne erfolgreiche Eingabe im Hintergrund;
-`--foreground` besteht. Abbruch, EOF, fehlendes Enter, Zeitablauf, Pipe-Eingabe,
-falsche Prozessgruppe und der äußere Timeout bleiben negativ geprüft.
+`--foreground` besteht für den einfachen direkten PTY-Pfad. Zusätzlich wird
+ein sudo-Monitor ohne echte sudo-Ausführung nachgebildet: innere Sitzung und
+anfängliche Hintergrundgruppe, SIGTTIN beim Lesen, einmalige Vordergrundübergabe
+und Fortsetzung. Das reproduziert den vorgezogenen Guard-Abbruch und den
+blockierenden inneren timeout-Prozess; direkter Python-Aufruf und begrenztes
+Lesen bestehen. Abbruch, EOF, fehlendes Enter, Zeitablauf, Pipe-Eingabe,
+unbestätigte Übergabe und der äußere Timeout bleiben negativ geprüft.
+Die Helfertests prüfen Größenlimit/Enter, Alarmrückstellung, Ablehnung fremder
+Prozessalarme und den unveränderten ursprünglichen Fehler einer kürzeren
+umgebenden Deadline. Der vorbereitete Befehl wird auf die richtige Reihenfolge
+(äußerer timeout → sudo → Python direkt) geprüft.
 Getestete Prozesssignale betreffen ausschließlich die eigenen künstlichen
 Kinder. Das ersetzt keine spätere Abnahme des grafischen sudo-/Konsole-Aufrufs.
 

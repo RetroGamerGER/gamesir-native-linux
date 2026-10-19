@@ -1,8 +1,8 @@
 # Prepared read-only Steam gyro observation
 
-19 October 2026. **Corrected identity precheck passed. The following GO wait
-stopped without reading memory. Terminal correction tested offline; a new
-attempt needs approval. No cache observation executed.**
+19 October 2026. **Identity prechecks passed; two terminal attempts stopped
+before memory. The sudo-monitor correction is tested offline and awaits a
+new approval. No cache observation executed.**
 This is a one-run diagnostic proposal requiring separate approval. It does
 not install anything or change the working driver, Steam configuration,
 gyro profile, paddles, rumble or raw IIO path.
@@ -148,28 +148,61 @@ accepted. No sudo, password window, Steam, SDL execution, controller access or
 network were used in that reproduction. This reproduces the broken terminal path;
 it does not claim an exact trace of sudo's additional PTY handling.
 
-Both proposed timeout commands below now include `--foreground`. Its external
-deadline and TERM/KILL limits remain. GNU timeout in this mode limits its
-direct command rather than timing out descendants; our observer starts no
-children and does not launch Steam. Only the diagnostic is its direct target.
-Reference consulted locally: `/usr/bin/timeout --help`, GNU coreutils.
+That checkpoint used `timeout --foreground` **inside** sudo and rejected a
+background process before reading. It passed 45 observer and nine direct-PTY
+tests but did not model sudo's terminal monitor. The subsequent separately
+approved attempt passed metadata checks, then exited 2 at `Observer is not in
+terminal foreground; use timeout --foreground; no memory open`. No prompt,
+cache read or motion test followed. Those earlier instructions are superseded
+by the correction below; do not retry their old launcher.
 
-The helper additionally verifies terminal stdin and foreground process group
-before showing the GO prompt, and again before reading a ready input. A wrong
-invocation or redirected/piped GO stops immediately, without a memory open or
-a fallback to another terminal. `ready_for_local_go` explicitly confirms a
-usable input path; `local_go_accepted` and a visible acknowledgement confirm
-the input before fresh identity checks. Neither event means process memory
-has already been opened. No raw input text is logged.
+## sudo monitor handover correction — offline
 
-45 observer regressions and nine real-PTY/command regressions pass offline,
-including the legacy failure, corrected case-insensitive GO with whitespace,
-cancel, EOF, missing Enter, no response, a redirected fake GO, wrong timeout
-flags, loss of foreground and the external deadline for a wedged synthetic
-child. One regression first failed on the old command examples, then passed
-after adding the missing flag. The PTY children call only the GO routine;
-they never call the live observer main. Sudo/desktop acceptance remains pending
-one freshly approved run. No automatic retry is authorized.
+Installed `sudo(8)` and `sudoers(5)` document a monitor with its own terminal
+session. A command can start in the background; its first read triggers
+SIGTTIN, after which the monitor may grant it the terminal and resume it.
+Polling with select does not request that handover, and our upfront
+foreground check rejected it prematurely. This is a model of documented
+behavior, not proof of a particular enabled sudo policy on the test machine;
+no sudo configuration or privileged live process was inspected for this fix.
+
+The offline model creates an outer Konsole-like PTY and an inner monitor PTY,
+starts the synthetic command in its own background process group, and grants
+foreground on its first SIGTTIN. It reproduces the prior guard's immediate
+exit. It also demonstrates that an intermediate timeout command inside the
+monitor can prevent handover to its Python child. With Python as the monitor's
+direct command and a real blocking read, the same synthetic GO is accepted
+after confirmed foreground handover. All processes/signals belong to the
+test; the sudo executable, password tools, Steam and controllers are not used.
+
+The proposed observation now invokes **sudo → Python directly**. Its secondary
+GNU timeout wrapper is **outside sudo**. Root-side main-thread SIGALRM deadlines
+bound precheck to 30 seconds, observation to 210 seconds and its nested GO read
+to 120 seconds. The inner deadline cannot extend the outer one or replace its
+failure reason. Timers/handlers are restored after success or failure; an
+unrelated existing process alarm is rejected. The production helper creates no
+children, signals no other process and changes no terminal process groups.
+SIGALRM belongs only to the diagnostic; SIGTTIN/CONT handover is normal monitor
+job control. No sudoers or terminal-permission changes are proposed.
+
+Terminal stdin is still required. After prompting, the helper reads at most
+64 characters with the nested deadline. It then requires actual foreground
+ownership and an exact case-insensitive GO line terminated by Enter. Redirected
+GO, EOF, cancel, unconfirmed handover or deadline stop before process memory.
+There is no --yes option, approval file, alternative terminal or pipe bypass.
+`ready_for_local_go` may report foreground false **while awaiting normal
+handover**; only `local_go_accepted` confirms foreground true and accepted input.
+Fresh process/controller/library checks still follow before any memory open.
+
+49 observer and 15 terminal/monitor regressions pass offline, together with
+40 Steam/Gamescope and ten license/README tests. They cover both historical
+failures, the nested monitor handover, cancel/no-input, strict Enter/line size,
+pipe rejection, alarm restoration and the enclosing deadline's original error.
+The actual sudo/desktop path remains pending one new separately approved run;
+the simulation is not live acceptance. Preserve all three failed-attempt logs.
+No automatic repeat is authorized. References were read locally from installed
+Linux man-pages, `sudo(8)`, `sudoers(5)` and GNU `timeout --help`; no reference
+text/code was copied and no network access was used.
 
 ## Prerequisites and one-run sequence
 
@@ -182,10 +215,11 @@ one freshly approved run. No automatic retry is authorized.
    reads sysfs/proc metadata, node `stat` and the SDL `map_files` alias metadata,
    but **does not open process memory**. Missing alias permissions stop it.
 3. Only after that succeeds, run the separately approved observer once. It
-   repeats the checks, verifies terminal foreground and announces readiness,
+   repeats the checks, verifies terminal stdin and announces readiness,
    then waits at most 120 seconds for local `GO` **followed by Enter** (case
    insensitive). Wait for the visible **GO erkannt** acknowledgement. Nothing
-   is attached to or changed in Steam while waiting. Missing terminal access
+   is attached to or changed in Steam while waiting. Foreground ownership is
+   checked after the bounded read permits sudo's normal handover. Missing access
    is a stop, not a reason to paste GO into a pipe or choose another input.
 4. After GO, revalidate the same process/controller/library, then observe for
    70 seconds: **30 s preparation**, **10 s rest**, **20 s slow movement**,
@@ -231,8 +265,9 @@ Only after a successful precheck and explicit observation approval:
 
 ```sh
 # Approved step 2: one read-only cache observation after local GO.
-SUDO_ASKPASS=/usr/bin/ksshaskpass /usr/bin/sudo -A \
-  /usr/bin/timeout --foreground --signal=TERM --kill-after=2s 210s \
+SUDO_ASKPASS=/usr/bin/ksshaskpass \
+  /usr/bin/timeout --foreground --signal=TERM --kill-after=2s 240s \
+  /usr/bin/sudo -A \
   /usr/bin/python3 -I -B "$observer" --observe \
   | tee "$run_dir/observation.jsonl"
 
@@ -242,8 +277,13 @@ sha256sum "$run_dir/precheck.jsonl" "$run_dir/observation.jsonl" \
 sha256sum -c "$run_dir/SHA256SUMS"
 ```
 
-The external deadlines terminate **only the diagnostic**, including a stuck
-GO wait; Steam is not its child and receives no signal from this helper.
+The diagnostic's own deadlines stop its root-side work. The outer 240-second
+watchdog includes authentication and targets sudo; its normal TERM forwarding
+must reach the diagnostic. The later KILL targets sudo itself, not arbitrary
+descendants; it is not a guarantee against a wedged privileged monitor or an
+uninterruptible/stopped kernel task. Keep the internal deadlines as well and
+never claim confirmed termination without an exit/final record. Steam is not
+their child and receives no signal from this helper.
 Ctrl+C or closing the diagnostic window aborts; no application is restarted
 or repaired. Password entry stays in ksshaskpass; no password is logged.
 There is no module, manager, service, USB, IIO-buffer or Steam-setting command.

@@ -4,16 +4,17 @@
 
 Default/--help opens nothing. --precheck reads process/sysfs metadata only.
 --observe additionally requires explicit approval and local GO before opening
-one /proc/PID/mem O_RDONLY. No device opens, ptrace, signals or target calls.
+one /proc/PID/mem O_RDONLY. No device opens, ptrace, target signals or calls.
 This private diagnostic supports ONE pinned ELF32 SDL build, not a stable ABI.
 """
 import argparse
+from contextlib import contextmanager
 import hashlib
 import json
 import math
 import os
 from pathlib import Path
-import select
+import signal
 import stat
 import struct
 import sys
@@ -26,6 +27,8 @@ FUNCTION_SLOT = 0x3aadec
 FUNCTION_OFFSET = 0x221030
 PHASES = ((30, 'prepare'), (10, 'rest'), (20, 'move'), (10, 'settle'))
 MAX_SECONDS = sum(t for t, _ in PHASES)
+PRECHECK_DEADLINE = 30
+OBSERVE_DEADLINE = 210
 
 
 class Halt(RuntimeError):
@@ -265,26 +268,64 @@ def cue(phase):
     emit('phase', phase=phase)
 
 
-def require_foreground_terminal():
+def terminal_is_foreground():
     require(sys.stdin.isatty(), 'Local GO requires terminal stdin; no memory open')
     try:
         foreground = os.tcgetpgrp(sys.stdin.fileno())
     except OSError:
         raise Halt('Cannot verify terminal foreground; no memory open') from None
-    require(foreground == os.getpgrp(),
-            'Observer is not in terminal foreground; use timeout --foreground; no memory open')
+    return foreground == os.getpgrp()
+
+
+def require_foreground_terminal():
+    require(terminal_is_foreground(), 'Terminal handover not confirmed; no memory open')
+
+
+@contextmanager
+def alarm_scope(seconds, reason):
+    """Bound our own main-thread work, including a blocking terminal read."""
+    require(0 < seconds <= OBSERVE_DEADLINE, 'Invalid process deadline')
+    previous_handler = signal.getsignal(signal.SIGALRM)
+    previous_timer = signal.getitimer(signal.ITIMER_REAL)
+    require(previous_timer == (0.0,0.0) or
+            (previous_timer[1] == 0 and getattr(previous_handler,'observer_deadline',False)),
+            'Existing process alarm; no memory open')
+    started = time.monotonic()
+    def expired(signum, frame):
+        raise Halt(reason)
+    expired.observer_deadline = True
+    effective = seconds
+    handler = expired
+    if previous_timer[0] > 0 and previous_timer[0] <= seconds:
+        effective, handler = previous_timer[0], previous_handler
+    try:
+        signal.signal(signal.SIGALRM, handler)
+        signal.setitimer(signal.ITIMER_REAL, effective)
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous_handler)
+        remaining = previous_timer[0] - (time.monotonic()-started)
+        if previous_timer[0] > 0 and remaining > 0:
+            signal.setitimer(signal.ITIMER_REAL, remaining)
 
 
 def wait_local_go(timeout_s=120):
-    require_foreground_terminal()
+    foreground = terminal_is_foreground()
+    require(0 < timeout_s <= 120, 'Invalid local GO deadline')
     print('Nur nach konkreter Freigabe: GO eingeben und Enter drücken (120 Sekunden Zeit). '
           'Danach 30 Sekunden Vorbereitung.', file=sys.stderr, flush=True)
-    emit('ready_for_local_go', terminal_foreground=True, process_memory_opened=False)
-    ready,_,_ = select.select([sys.stdin],[],[],timeout_s)
-    require(bool(ready), 'No local GO; no memory open')
+    emit('ready_for_local_go', terminal_foreground=foreground, process_memory_opened=False)
+    # sudo's PTY monitor may intentionally start its child in the background.
+    # A real read triggers SIGTTIN and the monitor's normal foreground handover;
+    # select() or an upfront foreground rejection cannot trigger that handover.
+    # Private nested alarms retain the total run deadline and never signal
+    # another process. No timeout child sits between sudo's monitor and Python.
+    with alarm_scope(timeout_s, 'No local GO before deadline; no memory open'):
+        line = sys.stdin.readline(64)
     require_foreground_terminal()
-    require(sys.stdin.readline().strip().lower() == 'go', 'No local GO; no memory open')
-    emit('local_go_accepted', process_memory_opened=False)
+    require(line.endswith('\n') and line.strip().lower() == 'go', 'No local GO; no memory open')
+    emit('local_go_accepted', terminal_foreground=True, process_memory_opened=False)
     print('GO erkannt. Frische Prüfung vor dem Beginn der Vorbereitung.', file=sys.stderr, flush=True)
 
 
@@ -294,6 +335,12 @@ def main():
     mode.add_argument('--precheck', action='store_true')
     mode.add_argument('--observe', action='store_true')
     args = parser.parse_args()
+    seconds = PRECHECK_DEADLINE if args.precheck else OBSERVE_DEADLINE
+    with alarm_scope(seconds, 'Diagnostic process deadline; no automatic retry'):
+        return execute(args)
+
+
+def execute(args):
     uid = int(os.environ.get('SUDO_UID', os.getuid()))
     require(uid != 0, 'Run from the desktop user; sudo preserves SUDO_UID')
     pid = find_steam(uid)
