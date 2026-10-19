@@ -5,6 +5,17 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Steam-Gyro jetzt auch in Gamescope positiv gemeldet:** Nach nutzergeführtem
+Kernelupdate und Neustart läuft `7.2.11-1-cachyos-deckify` mit passenden Headern
+und Modulkennung. Kernpaket Revision 9 und Sensorprofil unverändert; Dienst
+aktiv/aktiviert. Steam öffnet jetzt in Gamescope Gamepad und Sensor, weiterhin
+mit den üblichen Steam-Deck-Optionen. Nutzer bestätigt funktionierenden Gyro
+und nennt den vor Steam eingeschalteten Controller. Kernel/Boot und Timing
+änderten sich gemeinsam; die alleinige Ursache ist damit nicht bewiesen.
+Spätes Einschalten/Wiederverbindung bleiben offen. Nur lesend nachgeprüft,
+keine Systemänderung oder zusätzliche Testbewegung durch den Agenten.
+[Erfolgreicher Lauf und Grenzen](STEAM_ACCEL_EXTENSION.md#gamescope-success-after-user-led-kernel-update-and-reboot).
+
 **Sitzungsunterschied auf demselben CachyOS-PC bestätigt:** Der Nutzer meldet
 funktionierenden Steam-Gyro im KDE-Desktopmodus. Lesend geprüft: gleicher Boot,
 Kernel, Paketstand, Modulquellstand, Manager-PID, Profil und gepaarte Geräte;

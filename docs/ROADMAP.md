@@ -63,6 +63,13 @@ Vendor-Launcher Steam-Deck-Optionen. Zuerst Startreihenfolge gegen Startmodus
 abgrenzen: normaler Steam-Neustart in Gamescope bei bereits vorhandenem Sensor
 nur nach eigener Freigabe. Kein neuer Treiberpatch oder künstlicher Boot-Delay
 auf Verdacht. [Sitzungsvergleich](STEAM_ACCEL_EXTENSION.md#same-host-kde-and-gamescope-comparison).
+Nach nutzergeführtem Update/Neustart mit CachyOS-Kernel 7.2.11 ist nun auch
+Gamescope-Steam-Gyro positiv gemeldet; Steam öffnet den Sensor bei unverändertem
+Revision-9-Profil und weiterhin vorhandenen Vendor-Optionen. Der Nutzer nennt
+den vor Steam eingeschalteten Controller. Das ist kein isolierter Ursachenbeweis
+für Kernel oder Startreihenfolge. Nächste offene Zuverlässigkeitsfrage: spätes
+Einschalten bei laufendem Steam und Wiederverbindung, getrennt freizugeben.
+[Aktueller Erfolg](STEAM_ACCEL_EXTENSION.md#gamescope-success-after-user-led-kernel-update-and-reboot).
 Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
 
 ## Neu angefragte Steam-Gyro-Machbarkeit: offline geprüft

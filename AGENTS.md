@@ -248,6 +248,16 @@ kernel already publishes motion first. Do not claim a compositor defect, change
 the driver, strip flags or add an arbitrary boot delay. A normal Steam restart
 in Gamescope with nodes already present is a proposed separately approved test,
 not executed here. Preserve KDE success and the Gamescope failures separately.
+The later maintainer report is positive for Gamescope too, after a user-led
+kernel update/reboot: fresh read-only SSH sees matching 7.2.11 CachyOS headers
+and module vermagic, unchanged revision-9 source/profile, service active/enabled,
+paired readable nodes and Steam opening both. Targeted metadata confirms
+Gamescope and the vendor Steam Deck flags still present. The user reports the
+controller was on before Steam; kernel/boot/timing changed together, so neither
+a kernel fix nor startup order alone is proved causal. Read the new success
+section of STEAM_ACCEL_EXTENSION.md; preserve earlier failures. Late controller
+arrival/reconnect/PM remain open; no automatic restart, installation, driver or
+Steam patch, new hardware test or calibration follows from this report.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

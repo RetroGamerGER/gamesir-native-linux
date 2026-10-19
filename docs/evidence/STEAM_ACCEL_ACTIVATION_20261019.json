@@ -558,5 +558,71 @@
       "launcher-lifecycle.json": "9650e025fcb1d1cd6124f022aa4c71c0b192c889360f1f1226da626dcc6cc3eb",
       "vendor-launcher-read.txt": "f89a8e815b12fae564fb51ec0191ba80200acb36819ba86fc32d59d353a2f5b7"
     }
+  },
+  "CachyOS_Gamescope_success_after_kernel_update": {
+    "date": "2026-10-19",
+    "method": "Human functional report after user-led kernel update/reboot plus fresh unprivileged read-only SSH system, input-FD and selected session metadata.",
+    "human_report": {
+      "gyro_works_in_Gamescope": true,
+      "controller_on_before_Steam": true,
+      "kernel_update_and_reboot_performed_by_user": true
+    },
+    "new_boot_verified": true,
+    "previous_kernel": "7.2.9-2-cachyos-deckify",
+    "current_kernel": "7.2.11-1-cachyos-deckify",
+    "headers_release_matches": true,
+    "installed_module_vermagic_matches_running_kernel": true,
+    "loaded_and_installed_module_srcversion": "DF7D42B1E7909084ED9BEB1",
+    "core_package": "gamesir-native-dkms 0.1.0.alpha3-9",
+    "persisted_profile_sha256": "9d95386466a13e641a7b1ee579cbf11d01715732668a50efa95d2157b17229c2",
+    "core_source_and_profile_unchanged": true,
+    "service": {
+      "active": true,
+      "enabled": true,
+      "automatic_restarts": 0,
+      "PID_and_state_stable_during_check": true
+    },
+    "sensor_metadata": {
+      "nonempty_paired_uniq": true,
+      "six_axis_abs_mask": "0x3f",
+      "session_user_can_read_both_nodes": true
+    },
+    "Steam": {
+      "Gamescope_session_confirmed_in_process_environment": true,
+      "main_process_has_gamepad_open": true,
+      "main_process_has_motion_node_open": true,
+      "FD_inspection_errors": 0,
+      "vendor_flags_still_present": [
+        "-gamepadui",
+        "-steamdeck",
+        "-steamos3",
+        "-steampal"
+      ]
+    },
+    "evidence_limits": {
+      "not_a_controlled_same_kernel_startup_order_AB_test": true,
+      "exact_kernel_change_proven_causal": false,
+      "late_sensor_discovery_issue_proven_fixed": false,
+      "particular_Proton_game_or_reconnect_suspend_acceptance": false,
+      "new_instrumented_motion_stream_or_cache_test": false,
+      "supplementary_process_scan_output_incomplete_and_not_used_as_complete_scan": true,
+      "targeted_Steam_metadata_followup_passed": true
+    },
+    "agent_actions": {
+      "read_only_on_target": true,
+      "sudo": false,
+      "service_module_or_Steam_change": false,
+      "restart_or_reboot_issued": false,
+      "device_open_or_capture": false,
+      "process_memory_read": false,
+      "calibration_resumed": false,
+      "push": false
+    },
+    "private_evidence_sha256": {
+      "scope.txt": "814c2413ed3ce6a85093166e92bff72d69d565ca85056d9effc8e872b1bdabad",
+      "supplementary-incomplete-scan.txt": "a37c33152735d23bc759db76ec72318a23319dd11d9eff0b6e0a1b4a47830f43",
+      "system-and-Steam-read.json": "72bb96972bc9c34ed91b743546034e82a99d0ad3192c02526958b7ea9b657522",
+      "targeted-session-read.json": "3b923836fff0717bdf32861545a147eb32fbcc1c89b65efb17211db5193aeeb1"
+    }
   }
 }

@@ -525,3 +525,34 @@ opens, process-memory reads, capture, privilege escalation or push. The earlier
 Gamescope failures remain recorded. KDE success does not validate Gamescope,
 Proton gameplay, reconnect/suspend or full physical calibration.
 [Sanitized comparison and private-evidence hashes](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
+## Gamescope success after user-led kernel update and reboot
+
+The maintainer reports that gyro also works in SteamOS/Gamescope when the
+controller is already on before Steam starts, then clarifies that the machine
+was rebooted following a kernel update and gyro now works. Treat this as a
+positive functional report with changed boot/kernel conditions, not a controlled
+same-kernel startup-order A/B test or proof of a particular kernel fix.
+
+A fresh read-only SSH check finds `7.2.11-1-cachyos-deckify` with matching
+headers and installed module vermagic. The core package remains revision 9,
+loaded/installed module source version remains `DF7D42B1E7909084ED9BEB1`, and
+the persisted six-axis profile hash is unchanged. The service is active and
+enabled, with zero restarts; its PID/state remain stable across this check.
+Both paired input nodes are readable. Steam's main process now has **both
+the gamepad and motion node open**, with no FD-inspection errors.
+
+Targeted process metadata confirms the Gamescope session and all four vendor
+launch options (`-steamos3 -steampal -steamdeck -gamepadui`) are present in this
+successful run. They therefore do not categorically prevent this sensor path.
+The exact reason for the earlier failure remains open: kernel/boot and device
+arrival timing changed together. The default remains experimental; this is not
+universal hotplug, reconnect, suspend or Proton-game acceptance.
+
+No new restart, test movement, privilege escalation, device/process-memory read,
+driver/Steam change or push was performed by the agent. The earlier failures
+and the previous proposed restart test remain historical, not repeated here.
+Next development priority is reliable sensor discovery when the controller
+arrives after Steam is running; no implementation or new live test follows
+automatically from this report. Gyro calibration stays closed/paused.
+[Sanitized result](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
