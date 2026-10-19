@@ -9,10 +9,81 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #ifdef TEST_SDL2
 #include <SDL2/SDL.h>
 #else
 #include <SDL3/SDL.h>
+#endif
+
+#ifndef TEST_SDL2
+/* Independently written API-level regression for the observed Steam call
+ * sequence. Executes SDL only, not Steam or copied proprietary code. */
+static int steam_sensor_sequence(SDL_Gamepad *pad, int resolution)
+{
+    const SDL_SensorType types[] = {SDL_SENSOR_GYRO, SDL_SENSOR_ACCEL,
+        SDL_SENSOR_GYRO_L, SDL_SENSOR_ACCEL_L};
+    void (*push)(const int *, int32_t) = dlsym(RTLD_DEFAULT, "gs_fixture_push_sensor");
+    if (!push || resolution <= 0) return 0;
+    int ok = 1;
+    for (unsigned i = 0; i < 4; i++) {
+        bool enabled = SDL_SetGamepadSensorEnabled(pad, types[i], true);
+        printf("steam-sequence enable sensor=%d result=%d\n", types[i], enabled);
+        ok &= enabled == (i == 0);
+    }
+    ok &= SDL_GamepadSensorEnabled(pad, SDL_SENSOR_GYRO);
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) { }
+    /* 1 ms progression, unchanged tick, long stream, then Linux 31-bit wrap.
+     * These are deliberately synthetic boundaries, not a live rate claim. */
+    const int32_t ticks[] = {17000, 17000, INT32_MAX - 500, 100};
+    const uint64_t expected_ns[] = {17000000, 17000000,
+        ((uint64_t)INT32_MAX - 500) * 1000, ((uint64_t)INT32_MAX + 101) * 1000};
+    for (unsigned n = 0; n < 4; n++) {
+        const int values[] = {9000 + (int)n * 100, -4500, 2250};
+        push(values, ticks[n]);
+        SDL_PumpEvents();
+        int found = 0, events = 0, unexpected = 0;
+        while (SDL_PollEvent(&event)) {
+            if (event.type != SDL_EVENT_GAMEPAD_SENSOR_UPDATE) continue;
+            events++;
+            if (event.gsensor.sensor != SDL_SENSOR_GYRO) { unexpected++; continue; }
+            int match = event.gsensor.which == SDL_GetGamepadID(pad) &&
+                event.gsensor.sensor_timestamp == expected_ns[n];
+            for (unsigned i = 0; i < 3; i++)
+                match &= isfinite(event.gsensor.data[i]) &&
+                    fabsf(event.gsensor.data[i] - values[i] * .01745329252f / resolution) < .00001f;
+            found += match;
+        }
+        ok &= found == 1 && events == 1 && unexpected == 0;
+        printf("steam-sequence frame=%u tick=%d expected_ns=%llu matches=%d events=%d other_sensors=%d\n",
+            n, ticks[n], (unsigned long long)expected_ns[n], found, events, unexpected);
+    }
+    for (unsigned i = 0; i < 4; i++)
+        ok &= SDL_SetGamepadSensorEnabled(pad, types[i], false) == (i == 0);
+    ok &= !SDL_GamepadSensorEnabled(pad, SDL_SENSOR_GYRO);
+    const int stopped_values[] = {2000, 3000, 4000};
+    push(stopped_values, 200);
+    SDL_PumpEvents();
+    while (SDL_PollEvent(&event))
+        if (event.type == SDL_EVENT_GAMEPAD_SENSOR_UPDATE) ok = 0;
+    ok &= SDL_SetGamepadSensorEnabled(pad, SDL_SENSOR_GYRO, true);
+    const int resumed_values[] = {5000, 6000, 7000};
+    push(resumed_values, 1200);
+    SDL_PumpEvents();
+    int resumed = 0;
+    while (SDL_PollEvent(&event)) {
+        if (event.type != SDL_EVENT_GAMEPAD_SENSOR_UPDATE ||
+            event.gsensor.sensor != SDL_SENSOR_GYRO) continue;
+        int match = event.gsensor.which == SDL_GetGamepadID(pad);
+        for (unsigned i = 0; i < 3; i++)
+            match &= fabsf(event.gsensor.data[i] - resumed_values[i] * .01745329252f / resolution) < .00001f;
+        resumed += match;
+    }
+    ok &= resumed > 0;
+    printf("steam_enable_missing_channels_timestamps_disable_reenable=%s\n", ok ? "PASS" : "FAIL");
+    return ok;
+}
 #endif
 
 int main(void)
@@ -156,6 +227,9 @@ int main(void)
         }
         ok &= finite;
     }
+#ifndef TEST_SDL2
+    if (!strcmp(s, "observed-gyro")) ok &= steam_sensor_sequence(pad, gyro_resolution);
+#endif
     printf("scenario=%s gamepads=%d gyro=%d accel=%d finite=%d\ngyro(rad/s)=%.9g,%.9g,%.9g accel(m/s2)=%.9g,%.9g,%.9g\nresult=%s\n",
         s, count, gyro, accel, finite, g[0], g[1], g[2], a[0], a[1], a[2], ok ? "PASS" : "FAIL");
     printf("synthetic input resolutions: accel=%d counts/g gyro=%d counts/(degree/s)\n", accel_resolution, gyro_resolution);

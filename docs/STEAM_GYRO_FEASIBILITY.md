@@ -117,7 +117,8 @@ Read-only inspection, without opening input/USB/IIO devices, established:
   `clang -m32`, with a private auditor-path adjustment, in the same audited
   device-free sandbox. No package was installed. The checked library hash
   and API revision are in the evidence manifest. This manually adapted run
-  does not add automatic 32-bit support to the committed test runner.
+  did not add automatic 32-bit support at that checkpoint; the 19 October
+  follow-up below now provides a reproducible committed runner.
 
 Static inspection of the local `steamui/sp.js` explains the visible wait:
 after the countdown reaches zero, `StartGyroSoftwareCalibration` is sent
@@ -214,6 +215,75 @@ and separately supported physical axis/sign metadata. Keep raw IIO, the
 accepted gyro profile, Eden, all paddles and output ownership intact. Do not
 add fake gravity, a Sony identity or a competing HID/USB reader. No further
 live work follows from this comparison; the user requested stopping for today.
+
+## Sensor activation and timestamp follow-up — 19 October 2026
+
+The user requested continuing the investigation. All work in this follow-up
+is offline: static local client inspection and synthetic SDL probes. No
+Steam execution, process attachment, real sensor reads, settings changes,
+sudo, network or installation occurred. The existing driver/Eden path and
+gyro factor are unchanged.
+
+**Static activation sequence:** both locally hashed client ABIs call
+`SDL_SetGamepadSensorEnabled` in this order: gyro (2), acceleration (1),
+left gyro (4), left acceleration (3). The four return values are not checked
+at these call sites; internal flags are set afterwards. The corresponding
+disable branch uses the same order with `false`.
+
+| Client | First enable call, virtual address | First disable call | Imported function-pointer location |
+| --- | --- | --- | --- |
+| `linux32/steamclient.so` | `0x19c1e7d` | `0x19c1f6a` | GOT base `0x2fb22f4` + `0x42600` |
+| `linux64/steamclient.so` | `0x17e8dac` | `0x17e8c23` | `0x2d99ee8` |
+
+The 32-bit import-name registration is at `0x19c51f7`; the referenced string
+is at `0xdc241b`. These locations refer only to the hashes in the evidence
+manifest. They prove an available compiled path, not that the live GameSir
+case reaches it. No proprietary implementation or disassembly is included.
+
+**Independent regression:** the existing device-free probe now invokes that
+public SDL API sequence on the gyro-only fixture. Gyro enabling succeeds;
+the other three calls fail as expected, and gyro remains enabled and emits
+matching values. Four injected frames check progress from 16,000 to 17,000
+microseconds, a repeated tick with changed values, a tick near the signed
+31-bit limit and its rollover. Output timestamps match SDL's accumulated
+nanoseconds. Disabling suppresses events and reenabling restores them.
+These are synthetic boundaries, not measured rate, drift or reconnect data.
+
+The stricter assertion of exactly one event per frame exposed an **existing
+fixture defect**: omitted axes left zeroed entries, interpreted as additional
+`EV_SYN/SYN_REPORT` events. Earlier tests found the correct complete event
+but did not reject these extra empty frames. The fixture now compacts the
+actual axes before its timestamp and sole `SYN_REPORT`. The new assertion
+failed before this correction and passes afterwards; no production driver
+change was needed. Historical logs remain historical, not corrected captures.
+
+Final results: seven scenarios pass with each of the three local Steam SDL3
+libraries (including the previously observed 32-bit runtime); system SDL3/
+SDL2-compat passes 14, and the button suite passes 18. The observed-gyro
+scenario retains all 32 A/paddle combinations. The runner detects ELF32 and
+builds the probe/fixture for that ABI using existing multilib support.
+[Commands and report locations](TESTING.md#steam-sdl-gyro-ohne-steam-start).
+
+**What this excludes:** an SDL-level failure in which the missing acceleration
+or left sensors disable an already enabled gyro, for these libraries and this
+sequence. The tested timestamp boundaries also preserve SDL event delivery.
+**What it does not exclude:** Steam failing to reach this sequence on the
+current instance, later disabling it, discarding incoming events, or requiring
+acceleration/timing conditions in its downstream filter/calibration. Steam's
+backend was not executed by these tests. The zero-motion problem is not fixed.
+
+**Next separately approved diagnostic:** use one bounded read-only Steam
+observation while the user opens its gyro page and moves the controller.
+Distinguish (1) matching instance/sensor selection, (2) sensor activation and
+continued event reads, and (3) incoming angular velocities versus the displayed
+zeros. A process-FD snapshot alone cannot answer (2) or (3). Any process tracing
+needs its own concrete command, duration and approval because attachment may
+briefly pause Steam; collect only the target sensor/calls, no keyboard input
+or unrelated process data. Do not start calibration, change settings, restart
+Steam, or emit sensor/USB commands as part of that observation. Prepare the
+exact tracing method before asking for this approval. Only if evidence locates
+the failure in six-axis processing should a real acceleration extension be
+considered, with separately supported physical axis/sign mapping.
 
 ## Routes to Proton games
 

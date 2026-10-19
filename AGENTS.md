@@ -75,6 +75,13 @@ dependency, not a proved root cause. Do not equate UI presence, an open FD or
 SDL probe success with Steam motion acceptance. Do not fabricate acceleration
 or change the functioning driver/Eden path. See the follow-up in
 docs/STEAM_GYRO_FEASIBILITY.md; next live tracing/settings changes need approval.
+The 19 October offline follow-up reproduces the statically observed Steam
+sensor-enable sequence in SDL: absent accel/left sensors do not disable gyro.
+Repeated ticks, 31-bit wrap and sensor disable/re-enable pass with three Steam
+SDL libraries. The stricter test caught and fixed extra empty SYN_REPORTs
+in the synthetic fixture; this is not a runtime driver defect. ELF32 testing
+now uses the committed runner. Steam's downstream filter remains unproved;
+do not infer a fix or rule out an acceleration requirement from SDL success.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

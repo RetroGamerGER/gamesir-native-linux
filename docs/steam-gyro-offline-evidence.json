@@ -281,5 +281,146 @@
     "dualsense_runtime_backend_verified": false,
     "dualsense_hardware_test": false,
     "driver_or_steam_changes": false
+  },
+  "last_updated": "2026-10-19",
+  "sensor_sequence_followup": {
+    "date": "2026-10-19",
+    "scope": "Static local Steam client files; independently written SDL API tests in device-free/network-isolated sandbox",
+    "client_hashes_unchanged_from_previous_inspection": true,
+    "static_sensor_types_in_order": [
+      2,
+      1,
+      4,
+      3
+    ],
+    "static_type_names_in_order": [
+      "GYRO",
+      "ACCEL",
+      "GYRO_L",
+      "ACCEL_L"
+    ],
+    "return_values_checked_at_call_sites": false,
+    "linux32": {
+      "import_name_virtual_address": "0xdc241b",
+      "registration_virtual_address": "0x19c51f7",
+      "got_base": "0x2fb22f4",
+      "import_function_offset": "0x42600",
+      "enable_call_virtual_addresses": [
+        "0x19c1e7d",
+        "0x19c1e90",
+        "0x19c1ea3",
+        "0x19c1eb6"
+      ],
+      "disable_call_virtual_addresses": [
+        "0x19c1f6a",
+        "0x19c1f7d",
+        "0x19c1f90",
+        "0x19c1fa3"
+      ]
+    },
+    "linux64": {
+      "import_function_virtual_address": "0x2d99ee8",
+      "enable_call_virtual_addresses": [
+        "0x17e8dac",
+        "0x17e8dc1",
+        "0x17e8dd6",
+        "0x17e8deb"
+      ],
+      "disable_call_virtual_addresses": [
+        "0x17e8c23",
+        "0x17e8c35",
+        "0x17e8c47",
+        "0x17e8c59"
+      ]
+    },
+    "static_path_executed_in_steam_during_investigation": false,
+    "expected_enable_results": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "synthetic_tick_microseconds": [
+      17000,
+      17000,
+      2147483147,
+      100
+    ],
+    "expected_sensor_timestamps_ns": [
+      17000000,
+      17000000,
+      2147483147000,
+      2147483748000
+    ],
+    "exactly_one_matching_gyro_event_per_injected_frame": true,
+    "disable_suppresses_and_reenable_restores_events": true,
+    "fixture_correction": {
+      "old_behavior": "Omitted axes left zero input_event entries interpreted as extra SYN_REPORT frames",
+      "reproduced_before_fix": true,
+      "new_behavior": "Only actual axes, timestamp and one SYN_REPORT are packed",
+      "production_driver_changed": false,
+      "earlier_test_limit": "Found expected complete event but did not reject extra frames"
+    },
+    "runner_elf32_support": "Committed runner detects ELF32 and uses existing x86 multilib; no private auditor edit",
+    "runs": [
+      {
+        "library_sha256": null,
+        "target_bits": 64,
+        "scenarios_passed": 14,
+        "report": "build/results/sdl-validation/sequence-v2/results.json",
+        "report_sha256": "f47e427e5674b568d2f397dd3df576dfca1b9ded20c926e80769154cf922bba2",
+        "sequence_log_sha256": "675581781ca1de37ef9f45836f03ad0842523f77cd46c6f5779889364be22484",
+        "sequence_passed": true
+      },
+      {
+        "library_sha256": "08eb7ba02ec862b062d9876f00ffd6deb58f5b1fc9f2325bcf90e6245586b2de",
+        "target_bits": 64,
+        "scenarios_passed": 7,
+        "report": "build/results/sdl-validation/sequence-v2/sdl3-08eb7ba02ec862b0/results.json",
+        "report_sha256": "8155bfa5de815833bedc98a1cf49d58118a74e49a35d0c204c6ade0c98c38b07",
+        "sequence_log_sha256": "9203b06cfb7d7a0ed5ba12e2bab7124281630463857a139af23c9a7c48c82d00",
+        "sequence_passed": true
+      },
+      {
+        "library_sha256": "770801484962a75780b8eebed5e16b4f4735c1dbf422445af48764cff415ea97",
+        "target_bits": 32,
+        "scenarios_passed": 7,
+        "report": "build/results/sdl-validation/sequence-v2/sdl3-770801484962a757/results.json",
+        "report_sha256": "835818d89016ead2dc2d14d461be391bf8b615e254f89257ae1761f1d9191a8e",
+        "sequence_log_sha256": "353a1fb400c75714dd5c6dde7e0494e160bc0501c6183cfe1e64f267ebfbfaca",
+        "sequence_passed": true
+      },
+      {
+        "library_sha256": "be244af0c3384036888ce1ee79866c326576e742b13f42bae293b596b06edf35",
+        "target_bits": 64,
+        "scenarios_passed": 7,
+        "report": "build/results/sdl-validation/sequence-v2/sdl3-be244af0c3384036/results.json",
+        "report_sha256": "6bce0a856728f7255ba1c53234bf0e9fed75be31f7dca92a2e72b2539b458e3d",
+        "sequence_log_sha256": "cf6c17362d5d732336ceba77a1d6e6ba8894453455d66263491259ddcc98e7af",
+        "sequence_passed": true
+      }
+    ],
+    "source_hashes": {
+      "tests/run_sdl_sensor_test.py": "d7ecc24514cb1b5f7c26c39b53463b7f991eeb56e4551b388fcd44a3cd97fff9",
+      "tests/sdl_sensor_probe.c": "e2481aa643986a72e482d7275c54db18fb1c613b4306eee24811790ce64bb095",
+      "tests/sdl_evdev_fixture.c": "c6cca9fdee62d5cebbebbf52c53be26f8d5739312cbe47af62164624153ea4ed"
+    },
+    "additional_regressions": {
+      "button_cases": 18,
+      "license_cases": 3,
+      "public_readme_cases": 7,
+      "passed": true
+    },
+    "limits": [
+      "SDL delivery is not Steam downstream filter acceptance",
+      "Synthetic rollover is not measured timing or a reconnect test",
+      "Missing acceleration remains a possible downstream requirement, not a proven cause"
+    ],
+    "root_cause_confirmed": false,
+    "live_capture": false,
+    "hardware_device_opens": false,
+    "privileged_actions": false,
+    "installed_files_or_settings_changed": false,
+    "push": false
   }
 }

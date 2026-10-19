@@ -2,8 +2,22 @@
 
 # Projektstand
 
-Stand: 18. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
+Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
+
+**Steam-Gyro offline weiter eingegrenzt (19. Oktober):** Die statisch
+nachgewiesene Sensor-Einschaltfolge beider Steam-Client-ABIs aktiviert Gyro,
+Accel, Gyro-L und Accel-L; Rückgabefehler werden dort nicht ausgewertet.
+Der erweiterte gerätefreie Test zeigt: Fehler der drei fehlenden Kanäle
+deaktivieren unseren Gyro in SDL nicht. Wiederholte Zeitstempel, 31-Bit-
+Überlauf und Aus-/Einschalten bestehen ebenfalls. Dabei wurde ein Fehler
+im künstlichen Ereignisrahmen korrigiert; der produktive Treiber bleibt
+unverändert. Je sieben Fälle mit drei Steam-SDL-Bibliotheken sowie 14
+System-Sensor- und 18 Buttontests bestehen. Der 32-Bit-Lauf ist nun ohne
+private Anpassung reproduzierbar. Die Verarbeitung hinter SDL in Steam
+und die Ursache seiner Nullanzeige bleiben offen. Keine neue Hardware-
+oder Steam-Abnahme, keine Installation, kein Push.
+[Befunde und nächster Freigabeschritt](STEAM_GYRO_FEASIBILITY.md#sensor-activation-and-timestamp-follow-up--19-october-2026).
 
 **Aktueller Gyro-Meilenstein vom Nutzer abgeschlossen:** SDL-/Eden-Livetest
 angenommen und dauerhafte lokale Konfiguration eingerichtet. Eine eigene
@@ -41,8 +55,9 @@ Der abschließende DualSense-Vergleich trennt Sony-HID- und Linux-evdev-Pfad:
 DualSense bietet sechs Achsen und Gerätezeit, wir bisher Gyro mit Hostzeit.
 Steams vorhandene Behandlung unerwarteter SDL-Sensorzeitabstände ist eine
 zweite Prüfspur neben fehlender Beschleunigung; keine Ursache ist bewiesen.
-Keine Sony-Identität oder Kalibrierwerte übernehmen. Die Untersuchung ist
-für heute beendet; keine automatische Fortsetzung oder weiteren Tests.
+Keine Sony-Identität oder Kalibrierwerte übernehmen. Diese Untersuchung
+endete am 18. Oktober auf Nutzerwunsch; die neu beauftragte Offline-
+Fortsetzung vom 19. Oktober steht oben.
 
 **SDL-/Eden-Erstabnahme erfolgreich:** Paket `0.1.0.alpha3-8` ist lokal
 installiert und der neue Build unter gesonderter Freigabe mit

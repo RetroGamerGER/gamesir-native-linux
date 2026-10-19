@@ -38,16 +38,25 @@ def main():
     options = parser.parse_args()
     library = options.sdl3_library
     library_hash = None
-    report = REPORT
+    target_bits = c.sizeof(c.c_void_p) * 8
+    report = REPORT / "sequence-v2"
     if library is not None:
         library = library.expanduser().resolve(strict=True)
         if not stat.S_ISREG(library.stat().st_mode):
             parser.error("The SDL library must be a stored regular file")
-        library_hash = hashlib.sha256(library.read_bytes()).hexdigest()
-        report = REPORT / ("sdl3-" + library_hash[:16])
-    BUILD.mkdir(parents=True, exist_ok=True)
+        data = library.read_bytes()
+        if len(data) < 16 or data[:4] != b"\x7fELF" or data[4] not in (1, 2):
+            parser.error("The local SDL library must be an ELF32/ELF64 shared object")
+        target_bits = 32 if data[4] == 1 else 64
+        if target_bits not in (32, c.sizeof(c.c_void_p) * 8):
+            parser.error("Unsupported SDL ABI for this host")
+        library_hash = hashlib.sha256(data).hexdigest()
+        report = report / ("sdl3-" + library_hash[:16])
+    build = BUILD / f"elf{target_bits}"
+    abi_flags = ["-m32"] if target_bits == 32 else []
+    build.mkdir(parents=True, exist_ok=True)
     report.mkdir(parents=True, exist_ok=True)
-    fixture = BUILD / "fixture"
+    fixture = build / "fixture"
     (fixture / "evdev").mkdir(parents=True, exist_ok=True)
     for f in ["evdev/event0", "evdev/event1", "iio-device", "sandbox-marker"]:
         (fixture / f).write_bytes(b"")
@@ -69,25 +78,28 @@ def main():
         for axis, value in zip("xyz", values):
             (iio / f"in_{sensor}_{axis}_raw").write_text(str(value) + "\n")
     compile_log = []
-    for name, args in [
+    builds = [
         ("sensor-contract", ["clang", "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC",
-            str(PROJECT / "src/gs_sensor.c"), "-o", str(BUILD / "sensor.so")]),
-        ("fixture", ["clang", "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC",
-            str(PROJECT / "tests/sdl_buttons_fixture.c"), "-ldl", "-o", str(BUILD / "fixture.so")]),
-        ("sdl3", ["clang", "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2",
-            str(PROJECT / "tests/sdl_sensor_probe.c"), "-lSDL3", "-ldl", "-lm", "-o", str(BUILD / "probe3")]),
+            str(PROJECT / "src/gs_sensor.c"), "-o", str(build / "sensor.so")]),
+        ("fixture", ["clang", *abi_flags, "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC",
+            str(PROJECT / "tests/sdl_buttons_fixture.c"), "-ldl", "-o", str(build / "fixture.so")]),
+        ("sdl3", ["clang", *abi_flags, "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2",
+            str(PROJECT / "tests/sdl_sensor_probe.c"), str(library) if library else "-lSDL3", "-ldl", "-lm", "-o", str(build / "probe3")]),
         ("sdl2", ["clang", "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-DTEST_SDL2",
-            str(PROJECT / "tests/sdl_sensor_probe.c"), "-lSDL2", "-ldl", "-lm", "-o", str(BUILD / "probe2")]),
-    ]:
+            str(PROJECT / "tests/sdl_sensor_probe.c"), "-lSDL2", "-ldl", "-lm", "-o", str(build / "probe2")]),
+    ]
+    for name, args in builds:
+        if name == "sdl2" and library is not None:
+            continue
         compile_log.append(name + ": " + shlex.join(args) + "\n" + run(args))
     (report / "build.log").write_text("\n".join(compile_log))
-    shutil.copyfile(PROJECT / "tests/audit_sdl_sandbox.py", BUILD / "audit_sdl_sandbox.py")
+    shutil.copyfile(PROJECT / "tests/audit_sdl_sandbox.py", build / "audit_sdl_sandbox.py")
     host_ns = {n: os.readlink("/proc/self/ns/" + n) for n in ["mnt", "user", "pid", "net", "ipc", "uts"]}
     class Axis(c.Structure):
         _fields_ = [("numerator", c.c_uint32), ("denominator", c.c_uint32), ("bias_raw", c.c_int32), ("source", c.c_uint8), ("sign", c.c_int8)]
     class Calibration(c.Structure):
         _fields_ = [("verified", c.c_uint32), ("resolution", c.c_uint32), ("axis", Axis * 3)]
-    lib = c.CDLL(str(BUILD / "sensor.so"))
+    lib = c.CDLL(str(build / "sensor.so"))
     lib.gs_sensor_convert.argtypes = [c.POINTER(Calibration), c.c_void_p, c.c_void_p]
     lib.gs_gyro_convert_observed.argtypes = [c.c_uint16, c.c_int, c.c_void_p, c.c_void_p]
     gyro = (c.c_int32 * 3)()
@@ -122,7 +134,7 @@ def main():
                 "--proc", "/proc", "--dev", "/dev", "--ro-bind", str(fixture / "sys"), "/sys",
                 "--tmpfs", "/run", "--tmpfs", "/tmp", "--ro-bind", str(fixture), "/fixture",
                 "--ro-bind", str(fixture / "iio-device"), "/dev/iio:device0",
-                "--ro-bind", str(BUILD), "/tests", "--chdir", "/tmp"]
+                "--ro-bind", str(build), "/tests", "--chdir", "/tmp"]
             if library is not None:
                 args.extend(["--ro-bind", str(library), "/sdl-override/libSDL3.so.0",
                     "--setenv", "LD_LIBRARY_PATH", "/sdl-override",
@@ -140,6 +152,7 @@ def main():
     result = {"schema_version": 1, "method": "local SDL + synthetic evdev syscall fixture inside device-free Bubblewrap",
         "sdl3_override": None if library is None else {"path": str(library), "sha256": library_hash,
             "loaded_path_verified_by_probe": True},
+        "target_bits": target_bits,
         "hardware_test": False, "privileged_actions": False, "kernel_changes": False,
         "fixture_scales": {"synthetic_not_G7_calibration": True, "accel_units_per_g": 8192, "gyro_units_per_degree_per_second": 16},
         "capture": "target-only excerpt: fixtures/sprint002-target.json", "record_line": index, "record": record,

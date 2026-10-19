@@ -12,6 +12,7 @@ vorhandene SDL3-Bibliothek prüfen:
 ```sh
 python -B tests/run_sdl_sensor_test.py --sdl3-library /path/to/Steam/ubuntu12_64/libSDL3.so.0
 python -B tests/run_sdl_sensor_test.py --sdl3-library /path/to/Steam/steamrt64/libSDL3.so.0
+python -B tests/run_sdl_sensor_test.py --sdl3-library /path/to/Steam/ubuntu12_32/libSDL3.so.0
 ```
 
 Die Platzhalterpfade müssen zur vorhandenen Installation passen; kein Download.
@@ -20,9 +21,24 @@ eingebunden. Keine Steam-Anwendung, kein Runtime-Container und keine echte
 Geräteöffnung. Der Prüfer kontrolliert geladenen Bibliothekspfad und SHA256;
 ein Rückfall auf die Systembibliothek ist kein gültiger Erfolg. Die Fixture
 deckt auch ältere glibc-`__fxstat`-Aufrufe ab. Pro Bibliothek sieben Szenarien,
-darunter Gyro-only mit Zeitstempel und 32 A-/Paddle-Kombinationen. Protokolle
-liegen privat unter `build/results/sdl-validation/sdl3-<hash-prefix>/`.
-Ohne Zusatzoption bleibt der bestehende System-SDL2/3-Test unverändert.
+darunter Gyro-only mit Zeitstempel und 32 A-/Paddle-Kombinationen. ELF32 wird
+auf dem geprüften x86_64-Host erkannt und Fixture/SDL3-Probe mit `-m32`
+gebaut; vorhandene Multilib-Header und Laufzeitbibliotheken sind Voraussetzung.
+Keine Abhängigkeiten werden installiert. Die C-Konversionsprüfung für Python
+bleibt im Host-ABI. Protokolle dieser erweiterten Suite liegen privat unter
+`build/results/sdl-validation/sequence-v2/sdl3-<hash-prefix>/`; die alten
+Protokolle bleiben erhalten. Ohne Zusatzoption werden weiterhin beide
+System-SDL-APIs geprüft (14 Fälle, Bericht direkt unter `sequence-v2/`).
+
+Der SDL3-Fall `observed-gyro` prüft zusätzlich Steams statisch beobachtete
+Einschaltfolge Gyro/Accel/Gyro-L/Accel-L, Fehler für fehlende Sensoren,
+fortgesetzte Gyroereignisse, Abschalten und erneutes Einschalten. Vier
+künstliche Frames prüfen 1-ms-Fortschritt, identische Zeitstempel und einen
+31-Bit-Überlauf. Jeder muss genau ein passendes Gyroereignis liefern. Diese
+Prüfung reproduzierte einen Fixturefehler: ausgelassene Achsen hinterließen
+Nullstrukturen, die als zusätzliche `SYN_REPORT` interpretiert wurden. Der
+korrigierte Helfer packt nur vorhandene Achsen und einen Abschlussrahmen.
+Das ist keine Korrektur des produktiven Treibers und kein Steam-Livetest.
 Die Bibliotheken werden nicht ins Repository übernommen. SDL-Erfolg beweist
 noch keine Freischaltung in Steam Input; [Befunde und Grenzen](STEAM_GYRO_FEASIBILITY.md).
 

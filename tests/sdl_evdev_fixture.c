@@ -22,6 +22,19 @@
 static _Atomic int kinds[FD_LIMIT];
 static _Atomic int sent[FD_LIMIT];
 static _Atomic unsigned opens[4], reads[4], requests[4], writes_blocked;
+/* Test-thread injection only, never a hardware device or event writer. */
+static int sensor_override;
+static int sensor_values[3];
+static int32_t sensor_tick = 16000;
+void gs_fixture_push_sensor(const int values[3], int32_t tick)
+{
+    if (!values || tick < 0) abort();
+    memcpy(sensor_values, values, sizeof(sensor_values));
+    sensor_tick = tick;
+    sensor_override = 1;
+    for (unsigned fd = 0; fd < FD_LIMIT; fd++)
+        if (kinds[fd] == 2) sent[fd] = 0;
+}
 static int fixture_kind(const char *p)
 {
     if (!strcmp(p, "/fixture/evdev/event0")) return 1;
@@ -121,6 +134,8 @@ static void bit(void *buf, size_t size, unsigned n)
 static const char *scenario(void) { return getenv("GS_SCENARIO"); }
 static int raw(unsigned axis)
 {
+    if (sensor_override && axis >= ABS_RX && axis <= ABS_RZ)
+        return sensor_values[axis - ABS_RX];
     const char *s = getenv("GS_RAW");
     int v[6] = {1000, -2000, 3000, 4000, -5000, 6000};
     if (s) (void)sscanf(s, "%d,%d,%d,%d,%d,%d", v, v+1, v+2, v+3, v+4, v+5);
@@ -211,21 +226,24 @@ ssize_t read(int fd, void *buf, size_t size)
     reads[k]++;
     if (k != 2 || sent[fd]) { errno = EAGAIN; return -1; }
     struct input_event e[8] = {0};
-    struct timespec now; clock_gettime(CLOCK_MONOTONIC, &now);
-    for (unsigned i = 0; i < 8; i++) {
-        e[i].input_event_sec = now.tv_sec;
-        e[i].input_event_usec = now.tv_nsec / 1000;
-    }
+    unsigned count = 0;
     for (unsigned i = 0; i < 6; i++) {
         if (i < ABS_RX && !strcmp(scenario(), "observed-gyro")) continue;
         if (i == ABS_RZ && !strcmp(scenario(), "missing-rz")) continue;
-        e[i].type = EV_ABS; e[i].code = i; e[i].value = raw(i);
+        e[count++] = (struct input_event){.type = EV_ABS, .code = i, .value = raw(i)};
     }
-    e[6].type = EV_MSC; e[6].code = MSC_TIMESTAMP; e[6].value = 16000;
-    e[7].type = EV_SYN; e[7].code = SYN_REPORT;
-    if (size < sizeof(e)) { errno = EINVAL; return -1; }
-    memcpy(buf, e, sizeof(e)); sent[fd] = 1;
-    return sizeof(e);
+    /* Omitted axes must not leave zero entries: those are SYN_REPORT events. */
+    e[count++] = (struct input_event){.type = EV_MSC, .code = MSC_TIMESTAMP, .value = sensor_tick};
+    e[count++] = (struct input_event){.type = EV_SYN, .code = SYN_REPORT};
+    struct timespec now; clock_gettime(CLOCK_MONOTONIC, &now);
+    for (unsigned i = 0; i < count; i++) {
+        e[i].input_event_sec = now.tv_sec;
+        e[i].input_event_usec = now.tv_nsec / 1000;
+    }
+    size_t bytes = count * sizeof(*e);
+    if (size < bytes) { errno = EINVAL; return -1; }
+    memcpy(buf, e, bytes); sent[fd] = 1;
+    return bytes;
 }
 
 void gs_fixture_stats(void)
