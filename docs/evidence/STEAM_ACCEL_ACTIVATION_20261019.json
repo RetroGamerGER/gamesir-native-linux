@@ -316,5 +316,97 @@
       "installed_DKMS_make_log": "3f9491b4929ad1cc12498529818c73dba5d896307d10732f61265a51b8d29e96",
       "first_stopped_precheck": "f74c040787a6f18471ac996da73f2454482787b451d2a565c490ba9a7481803b"
     }
+  },
+  "CachyOS_activation": {
+    "date": "2026-10-19",
+    "stage": "native six-axis startup/access verified; normal input and paddles accepted, Steam gyro UI remains zero",
+    "package": "gamesir-native-dkms 0.1.0.alpha3-9",
+    "kernel": "7.2.9-2-cachyos-deckify",
+    "initial_prestart_halt": {
+      "observed": "new unowned 109c/xpad while service inactive and module absent",
+      "start_calls": 0,
+      "resume_calls": 0,
+      "original_snapshot_preserved": true,
+      "manual_cold_replug_separately_approved_and_confirmed": true,
+      "fresh_return_to_100a_xpad_checked": true
+    },
+    "approved_activation": {
+      "service_start_calls": 1,
+      "resume_calls": 1,
+      "all_command_returncodes": 0,
+      "error_release_calls": 0,
+      "automatic_retry": false,
+      "observed_phases": [
+        "waiting_input",
+        "bootstrapping",
+        "active"
+      ],
+      "observer": "unchanged StartupWindow/wait_for_native",
+      "expected_transient_metadata_quarantined_and_cleared": true,
+      "new_instance_parent_and_kernel_lease_verified": true,
+      "kernel_state": 7,
+      "kernel_error": 0,
+      "failed_stage": 0,
+      "gamepad_stream_seen": true,
+      "IMU_stream_seen": true,
+      "new_kernel_fault_pattern_check_passed": true
+    },
+    "profile": {
+      "module_srcversion": "DF7D42B1E7909084ED9BEB1",
+      "experimental_gyro": true,
+      "experimental_accel": true,
+      "accel_axis_map": "1,2,3",
+      "accel_counts_per_g": "8192/1",
+      "gyro_dps_per_raw": 0.07,
+      "physical_calibration_resumed": false
+    },
+    "metadata": {
+      "same_nonempty_gamepad_sensor_identity": true,
+      "six_axis_ABS_mask": "0x3f",
+      "sensor_input_property": "INPUT_PROP_ACCELEROMETER",
+      "udev_ID_INPUT_ACCELEROMETER": "1",
+      "seat0_active": true,
+      "session_user_can_read_gamepad_and_motion_nodes": true,
+      "metadata_checker_opened_device": false,
+      "IIO_buffer_activated_by_helper": false
+    },
+    "final_at_startup_check": {
+      "USB_PID": "109c",
+      "IF0_driver": "gs_native",
+      "service_active": true,
+      "service_enabled": true,
+      "manager_paused": false,
+      "manager_scan_or_port_error": false
+    },
+    "application_acceptance": {
+      "Steam_gyro_UI": "Human reports all three displayed rates remain zero during movement.",
+      "normal_inputs_and_four_paddles": "Human confirms ordinary controls and all four paddles independently, including combinations and release.",
+      "Eden_tested_on_this_host": false,
+      "motor_or_gameplay_tested": false,
+      "reboot_or_suspend_tested": false
+    },
+    "private_evidence_sha256": {
+      "observation-full.jsonl": "088308ecee5c926e00d3d73af5908dc5970432ab4987fab6fa303bf2e75087b3",
+      "observation.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source-instance.json": "8594aaef6520101739d98239f9b12f34ca59d9351cbfb79ccd82f93b8605f0f2",
+      "node-metadata.json": "9688f75577af286e87bc76802a0cbab7ee3f3bb9578f0447f9731936c635e609",
+      "prestart-unowned-109c.json": "0b01152866198f2dd3c6306bfa473dd9b684b2e50f9615d1666ef6c8edb73c48",
+      "steam-zero-readonly.json": "65a4c4472637b23aa1c02c361cf887eb7261f772bbd313a4a5700b08755bceb7"
+    },
+    "push": false,
+    "read_only_Steam_followup": {
+      "main_Steam_process_input_FDs": [
+        "gamepad node"
+      ],
+      "corresponding_motion_node_FD_seen": false,
+      "FD_inspection_errors": 0,
+      "mapped_SDL_path_is_32bit": true,
+      "paddle_mapping_logged": true,
+      "device_opened_by_checker": false,
+      "process_memory_read": false,
+      "source_of_zero_display_proven": false,
+      "scope": "One unprivileged main-process FD/maps/log snapshot; not proof that no other process ever reads the sensor.",
+      "next_step": "User-led normal reboot proposed after user suggestion; no SSH reboot or Steam restart performed."
+    }
   }
 }

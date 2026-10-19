@@ -5,6 +5,22 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**CachyOS nativ mit sechs Sensorachsen aktiviert:** Ein separat freigegebener
+Dienststart und ein Resume bestanden; kein Fehler-Release und keine Wiederholung.
+Neue `109c/gs_native`-Instanz, Elternzuordnung, Besitznachweise/Kernel-Tokens und
+Gamepad-/IMU-Start bestätigt. Leere USB-Metadaten während des Übergangs wurden
+von der bestehenden begrenzten Beobachtung korrekt abgewartet. Gepaarter
+Sechsachsen-Sensor und Gamepad sind für den aktiven Gamescope-Nutzer lesbar.
+Dienst aktiv/aktiviert, Manager unpausiert. Zuvor gefundene unverwaltete
+`109c/xpad` wurde nicht übernommen; nutzerfreigegebenes Neustecken lieferte den
+frisch geprüften `100a/xpad`-Ausgangspunkt. Nutzer bestätigt normale Eingaben und
+vier unabhängige Paddles; Steams drei Gyro-Werte bleiben jedoch null. Eine
+lesende Hauptprozess-FD-Prüfung sieht das Gamepad geöffnet, den zugehörigen
+Sensor nicht. Ursache damit nicht bewiesen. Regulärer nutzergeführter Neustart
+als nächster Test vorgeschlagen, nicht per SSH ausgeführt. Keine erfolgreiche
+Steam-Gyro-, Kalibrierungs-, Boot- oder Spieleabnahme behauptet.
+[Aktivierung und Grenzen](STEAM_ACCEL_EXTENSION.md#cachyos-activation-and-session-access-verified).
+
 **CachyOS auf Revision 9 aktualisiert, noch nicht aktiviert:** Der echte
 GCC-Zielbau und anschließend das separat freigegebene Paketupdate von
 alpha3-6 auf alpha3-9 sind bestanden. DKMS für `7.2.9-2-cachyos-deckify`,

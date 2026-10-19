@@ -392,3 +392,51 @@ No post-update service start, Resume, sensor or game test followed. Actual
 Gamescope sensor ACL/stream/UI acceptance, reboot and lifecycle behavior still
 require their separately approved steps. Gyro calibration remains paused.
 [Sanitized installation record](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).
+
+## CachyOS activation and session access verified
+
+A subsequent explicit approval covered one service start and one Resume,
+with one Release only on activation error. The first fresh inspection found
+a new unowned 109c/xpad instance while the service was inactive and the native
+module absent. No start/Resume was issued against it. The user separately
+approved and performed a cold dongle replug; a fresh 100a/xpad source was then
+verified. Preserve the original snapshot rather than attribute that change
+to a new driver defect.
+
+Exactly one service start loaded the installed six-axis opt-in and verified
+all profile parameters with a paused manager. Exactly one Resume followed.
+After the user was cued to press A/move the sticks, the unchanged bounded
+StartupWindow/wait_for_native observer verified the transition to a new
+109c/gs_native instance under the same parent, active manager lease and
+matching kernel tokens. State 7/error 0/failed stage 0 and both pad/IMU stream
+evidence passed. An expected transient empty USB metadata field was quarantined
+and cleared within the original deadline. No retry, error Release or new
+kernel fault-pattern match occurred.
+
+Sysfs/udev metadata confirmed paired nonempty gamepad/sensor identities,
+all six sensor ABS axes (0x3f), INPUT_PROP_ACCELEROMETER and
+ID_INPUT_ACCELEROMETER=1. Both nodes are readable by the active Gamescope
+session user on seat0. This checker opened no input/IIO/USB device and enabled
+no IIO buffer. Current checked state is native 109c, active/enabled service
+and unpaused manager. Existing autostart enablement was retained, not changed.
+
+The user checked Steam's three gyro rates and ordinary inputs/independent
+paddles without a time limit or calibration action. **Normal controls and all
+four independent paddles pass by human report, but all three Steam gyro rates
+remain zero during movement.** Native startup and readable metadata therefore
+did not establish Steam gyro acceptance on this host.
+
+A subsequent unprivileged snapshot of the main Steam process found its gamepad
+node open, with no FD for the paired motion node and no FD-inspection errors.
+It maps the 32-bit SDL3 path; controller logs contain the expected four-paddle
+mapping. No device or process memory was opened by the checker. This is one
+process/instant, not proof that no other process ever reads motion or a measured
+cause of the zero UI. Do not silently relabel it as the earlier host's proved
+SDL-cache delivery or assume that host's acceleration-gate fix solves this case.
+
+Following the user's restart suggestion, a regular user-led PC restart was
+proposed as a next test of initialization with the persisted profile. No SSH
+reboot, Steam restart, setting change, extra release/reload or hardware retry
+was executed. Native play remains active. UI/gameplay, Eden on this host,
+reboot, suspend and physical-calibration acceptance remain open.
+[Activation and evidence limits](evidence/STEAM_ACCEL_ACTIVATION_20261019.json).

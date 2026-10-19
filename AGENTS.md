@@ -217,6 +217,18 @@ service inactive/enabled and module absent. The earlier stopped report and six
 resolved historical failures remain intact. No start/Resume/test was authorized
 after that update; activation and actual sensor/application acceptance still
 need their own concrete permission. Do not call the installed update active.
+A subsequent activation approval and separately authorized manual cold replug
+led to exactly one start and one Resume. The existing observation policy
+attested native 109c, same parent/lease/kernel tokens, pad+IMU and the paired
+six-axis node readable by the active Gamescope user. Service active/enabled,
+manager unpaused; no error Release or retry. The initial unowned 109c/xpad
+snapshot is retained. User confirms normal inputs/all four independent paddles,
+but Steam's three gyro rates remain zero. A read-only main-Steam-process FD
+snapshot sees the gamepad open, not the paired motion node; this is not proof
+of the exact cause or all processes' behavior. A normal user-led reboot was
+suggested after the user's question, not performed by the agent. Do not claim
+CachyOS Steam gyro, reboot or calibration acceptance. Preserve the working
+native session; no extra release/reload, Steam change, motor test or push.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

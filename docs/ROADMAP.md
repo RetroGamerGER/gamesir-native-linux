@@ -44,6 +44,13 @@ Kernpaket samt lokalem Sensorprofil aktualisiert und geprüft. Es bleibt nach
 bestätigter Rückgabe pausiert, Dienst inaktiv/aktiviert und Modul entladen.
 Nächste dortige Grenze: eigens freigegebene Aktivierung und Sensor-/UI-Abnahme;
 die erfolgreiche Installation ist kein Live-Nachweis.
+Die anschließende separate Aktivierung bestätigte inzwischen nativen Bootstrap
+und gepaarten, für die Gamescope-Sitzung lesbaren Sechsachsen-Sensor. Dienst
+aktiv/aktiviert, Manager unpausiert. Normale Eingaben/Paddles sind bestätigt;
+Steams Gyro-Anzeige bleibt null. Die lesende FD-Prüfung sieht nur das Gamepad
+im Steam-Hauptprozess geöffnet. Nächster vorgeschlagener Test: regulärer
+nutzergeführter Neustart und frische Sensor-/Steam-Prüfung. Ursache und
+Boot-/Lebenszyklusabnahme bleiben offen; keine erneute Kalibrierung beginnen.
 Die folgende Machbarkeitsnotiz beschreibt den früheren Zwischenstand.
 
 ## Neu angefragte Steam-Gyro-Machbarkeit: offline geprüft
