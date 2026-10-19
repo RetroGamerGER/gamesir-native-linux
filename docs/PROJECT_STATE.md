@@ -5,6 +5,18 @@
 Stand: 19. Oktober 2026. Ältere Abschnitte/RST-Berichte belegen ihre jeweiligen
 Prüfläufe, keine neue Freigabe oder aktuelle Systemkontrolle.
 
+**Nutzer hat Dienststart und Resume ausgeführt:** Lesend bestätigt sind der
+aktive/aktivierte Dienst und das geladene Revision-9-Modul. Die Verwaltung
+ist dadurch bereits freigegeben (`paused=false`), aber es gibt keine
+verwaltete/native Bindung; der Dongle bleibt `109c/xpad`. Der Manager übernimmt
+unbesessene `109c`-Instanzen bewusst nicht als neuen Bootstrap-Ausgangspunkt.
+`experimental_gyro=Y`, neue Beschleunigungsausgabe `experimental_accel=N`.
+Die zunächst erwartete Pause-Prüfung blieb als fehlgeschlagen erhalten;
+der Nutzer bestätigte anschließend seinen zusätzlichen Resume-Aufruf.
+Agent hat weder Dienststart noch Resume ausgeführt und keine Reparatur
+angestoßen. Vor dem geplanten Test ist ein separat freigegebener Profilwechsel
+mit sauberem Bootstrap-Ausgangspunkt erforderlich. [Aktueller Nachtrag](evidence/STEAM_ACCEL_INSTALL_20261019.json).
+
 **Revision 9 installiert, noch nicht aktiviert:** Das gesondert freigegebene
 Update von `gamesir-native-dkms` auf `0.1.0.alpha3-9` ist mit Exit 0 abgeschlossen.
 DKMS für `7.2.11-1-garuda`, Modul-srcversion und Paketintegrität passen

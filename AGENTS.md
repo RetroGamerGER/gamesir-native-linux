@@ -165,6 +165,14 @@ proved causal diagnosis. Preserve the failed guard report. Final checked
 service inactive/enabled, persistent pause true, empty leases/no native
 binding, module unloaded, existing gyro config unchanged. Do not auto-retry,
 load, resume or enable acceleration based on the package update approval.
+The user then independently started the service AND ran Resume, confirmed
+in chat after the paused-only read guard failed. Latest read-only follow-up:
+service active/enabled, revision-9 module loaded, paused=false, empty leases/
+managed devices/native bindings, USB 109c/xpad, gyro Y, accel N. The agent ran
+neither start nor resume. Preserve the failed guard and user context, not a
+new driver-defect diagnosis. Pause/profile reload/cold-source return and any
+bootstrap require fresh concrete approval. Do not adopt unowned 109c or claim
+that the installed accel extension is active merely because service runs.
 The first activation was interrupted by a private helper that mistakenly
 aborted on transient metadata errors. Reuse the existing bounded
 tools/native/bootstrap_observation.py policy for future startup observers;

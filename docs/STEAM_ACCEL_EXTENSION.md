@@ -5,8 +5,8 @@ The implementation/test sections below record the preceding offline preparation.
 This prepares a correction for the [statically identified acceleration
 notification gate](STEAM_GYRO_DOWNSTREAM.md#notification-gate-follow-up).
 It does not establish Steam Input/gameplay acceptance or prove every gate in
-Steam's historical live run. No Steam library or configuration is modified. The later approved package
-installation is recorded below; the new module remains unloaded. Gyro
+Steam's historical live run. No Steam library or configuration is modified. The later approved package installation and subsequent user-driven service
+start/Resume are recorded below; the acceleration extension remains disabled. Gyro
 calibration remains paused.
 
 ## Contract
@@ -191,3 +191,21 @@ Eden, paddle, motor or reboot test was performed by this transaction.
 
 Package SHA256: `74994d3e19ae0d7a8c5f9b9758885c6656153b3a0c14c6cf9b404289c262f503`.
 [Sanitized installation/check record](evidence/STEAM_ACCEL_INSTALL_20261019.json).
+
+### User-driven service start and Resume follow-up
+
+The maintainer subsequently reported starting the service, then confirmed that
+both service start **and Resume** had been run. The agent issued neither action.
+Read-only checks show active/enabled service and the expected loaded revision-9
+module, with gyro Y but acceleration N/no explicit acceleration map. The
+manager is unpaused, with no scan/port errors, empty leases and managed devices,
+and no native bindings. The dongle remains 109c/xpad.
+
+The first read guard expected pause and failed; its report remains unchanged.
+The user's subsequent confirmation explains that mismatch; it is not evidence
+of a spontaneous manager unpause. Discovery starts only 100a/experimental105e
+sources and deliberately does not adopt an unowned 109c instance. Hence service
+activity alone proves neither native takeover nor the new acceleration profile.
+Pause and the actual experimental profile reload/fresh 100a bootstrap still
+need concrete approval. No extra agent Start/Resume/Release, USB command or
+Steam test followed this read-only check.

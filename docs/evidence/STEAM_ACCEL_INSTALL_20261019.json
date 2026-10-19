@@ -71,5 +71,39 @@
     "No persistent acceleration opt-in or reboot performed."
   ],
   "private_evidence_preserved": true,
-  "public_push": false
+  "public_push": false,
+  "user_service_start_followup": {
+    "date": "2026-10-19",
+    "user_confirmed_actions": [
+      "systemctl start gamesir-native.service",
+      "gamesir-native resume"
+    ],
+    "agent_service_start_count": 0,
+    "agent_resume_count": 0,
+    "check_read_only": true,
+    "original_paused_expectation_passed": false,
+    "failed_guard_preserved": true,
+    "guard_context": "The user confirmed both start and resume, explaining the now-unpaused state; no additional agent mutation followed.",
+    "service": {
+      "ActiveState": "active",
+      "SubState": "running",
+      "UnitFileState": "enabled",
+      "Result": "success"
+    },
+    "loaded_srcversion": "DF7D42B1E7909084ED9BEB1",
+    "paused": false,
+    "scan_error": "",
+    "port_errors": {},
+    "managed_devices": 0,
+    "unresolved_leases": 0,
+    "native_bindings": [],
+    "usb": {
+      "pid": "109c",
+      "driver": "xpad"
+    },
+    "experimental_gyro": "Y",
+    "experimental_accel": "N",
+    "explicit_accel_map_configured": false,
+    "remaining": "Pause management before an explicitly approved profile reload; unowned 109c is not automatically adopted, normal bootstrap needs a fresh 100a source. No Steam test yet."
+  }
 }
