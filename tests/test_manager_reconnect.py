@@ -60,7 +60,7 @@ class Reconnect(unittest.TestCase):
         entry = self.manager.entries[PORT]
         self.assertEqual(entry.device.token, fresh.token)
         self.assertEqual(entry.device.parent, fresh.parent)
-        self.assertIn(entry.phase, ("waiting_input", "bootstrapping"))
+        self.assertIn(entry.phase, ("checking_start", "bootstrapping"))
         self.assertEqual(entry.error, "")
         self.assertEqual([op for op, _ in self.host.calls].count("claim"), 2)
         self.assertFalse(any(op in ("end", "restore", "resume") for op, _ in self.host.calls))
@@ -309,9 +309,9 @@ class Reconnect(unittest.TestCase):
         self.assertTrue(original_error)
         self.assertTrue(self.manager.recent_failures)
 
-    def test_unowned_native_pid_and_foreign_hub_or_binding_never_receive_commands(self):
+    def test_unowned_native_binding_and_foreign_hub_or_owner_never_receive_commands(self):
         for changes in ({"pid": "109c", "driver": "gs_native"},
-                        {"pid": "109c", "driver": "xpad"},
+                        {"pid": "109c", "driver": "usbfs"},
                         {"driver": "gs_native"}, {"driver": "usbfs"},
                         {"parent": "different-hub-lifetime"}):
             with self.subTest(changes=changes):
@@ -364,7 +364,7 @@ class Reconnect(unittest.TestCase):
         self.host.observe_guard = temporarily_unknown
         self.tick()
         entry = self.manager.entries[PORT]
-        self.assertEqual(entry.phase, "waiting_input")
+        self.assertEqual(entry.phase, "checking_start")
         self.assertEqual(entry.error, "")
         self.assertEqual(entry.device.driver, "gs_native")
         self.assertIn(PORT, self.manager.port_errors)

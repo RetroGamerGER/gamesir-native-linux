@@ -98,7 +98,7 @@ class StartupObservationTests(unittest.TestCase):
             "resolution": "physically_absent",
         }]
         sequence = [
-            (0.5, status("waiting_input"), "waiting_input", False),
+            (0.5, status("checking_start"), "checking_start", False),
             (2.0, status(), "bootstrapping", False),
             (2.25, status(port_errors={PORT: metadata_error()}), "bootstrapping", True),
             (2.75, status(port_errors={PORT: "USB metadata changed during enumeration"}),
@@ -205,7 +205,7 @@ class StartupObservationTests(unittest.TestCase):
                     self.window().check_scan({PORT: text}, 1.0)
 
     def test_initial_input_wait_and_active_runtime_have_no_metadata_exception(self):
-        for phase in ("waiting_input", "active"):
+        for phase in ("waiting_input", "checking_start", "active"):
             with self.subTest(phase=phase):
                 self.rejected(status(phase, port_errors={PORT: metadata_error()}))
 

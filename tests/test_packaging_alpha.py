@@ -166,6 +166,15 @@ class PackageTests(unittest.TestCase):
             rule = staged / 'usr/lib/udev/rules.d/70-gamesir-native-sensors.rules'
             self.assertEqual(rule.read_bytes(), (ROOT / 'packaging/udev/70-gamesir-native-sensors.rules').read_bytes())
             self.assertFalse((staged / 'etc/modprobe.d').exists())
+            vendor_wait = staged / 'usr/lib/modprobe.d/91-gamesir-native-receiver-wait.conf'
+            self.assertEqual(vendor_wait.read_bytes(), (ROOT /
+                'packaging/modprobe.d/91-gamesir-native-receiver-wait.conf').read_bytes())
+            self.assertEqual(stat.S_IMODE(vendor_wait.stat().st_mode), 0o644)
+            # Parse only the staged configuration: -c cannot load a module.
+            parsed = subprocess.run(['/usr/bin/modprobe', '-c', '-C', str(vendor_wait)],
+                                    capture_output=True, text=True, check=True)
+            self.assertIn('options gs_native receiver_wait=1', parsed.stdout)
+            self.assertNotIn('blacklist xpad', parsed.stdout)
             groups = (staged / 'usr/lib/sysusers.d/gamesir-native.conf').read_text()
             self.assertEqual([line for line in groups.splitlines() if line and not line.startswith('#')],
                              ['g gamesir-native-haptics -'])
@@ -207,6 +216,21 @@ class PackageTests(unittest.TestCase):
             self.assertIn('When = PreTransaction', hook)
             unit = (staged / 'usr/lib/systemd/system/gamesir-native.service').read_text()
             self.assertIn('persistent_mode=1', unit)
+            # Waiting is a vendor configuration default; no forced command-line
+            # value may prevent a same-name local override from taking effect.
+            self.assertNotIn('receiver_wait=1', unit)
+            self.assertIn('docs/RECEIVER_WAIT_KERNEL.md', package.DOCUMENT_FILES)
+            self.assertIn('docs/RECEIVER_WAIT_UPDATE.md', package.DOCUMENT_FILES)
+            self.assertIn('docs/evidence/RECEIVER_WAIT_OFFLINE_20261020.json',
+                          package.DOCUMENT_FILES)
+            for name in ('RECEIVER_WAIT_KERNEL.md', 'RECEIVER_WAIT_UPDATE.md',
+                         'RF_PID_TRANSITION_COMPARISON.md',
+                         'RF_LINK_CONNECTION_WITNESS.md'):
+                document = docroot / 'docs' / name
+                for link in re.findall(r'\]\(([^)]+)\)', document.read_text()):
+                    if not link.startswith(('https:', 'http:', '#')):
+                        self.assertTrue((document.parent / link.split('#')[0]).is_file(),
+                                        (name, link))
             self.assertIn('SendSIGKILL=no', unit)
             self.assertNotIn('xpad/unbind', unit)
             self.assertNotIn('Restart=always', unit)

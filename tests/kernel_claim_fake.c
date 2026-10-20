@@ -38,15 +38,15 @@ static void mutex_unlock(struct mutex *lock) { assert(lock->held); lock->held = 
 #define spin_lock_irqsave(lock, flags) do { (flags) = 0; assert(!(lock)->held); (lock)->held = true; } while (0)
 #define spin_unlock_irqrestore(lock, flags) do { (void)(flags); assert((lock)->held); (lock)->held = false; } while (0)
 struct kernfs_node { u64 id; } device_node, parent_node;
-struct device_driver { int unused; };
+struct device_driver { const char *name; };
 struct device {
 	struct device_driver *driver;
 	struct { struct kernfs_node *sd; } kobj;
 	bool registered;
 	const char *name;
 };
-struct usb_driver { struct device_driver driver; } gsn_driver;
-struct device_driver xpad;
+struct usb_driver { struct device_driver driver; } gsn_driver = { .driver = { .name = "gs_native" } };
+struct device_driver xpad = { .name = "xpad" }, foreign_driver = { .name = "usbfs" };
 struct usb_bus { unsigned busnum; } bus;
 struct usb_endpoint_descriptor {
 	unsigned bEndpointAddress, bmAttributes, wMaxPacketSize, bInterval;
@@ -99,14 +99,25 @@ static struct usb_interface *usb_ifnum_to_if(struct usb_device *device, unsigned
 }
 static struct usb_interface *usb_get_intf(struct usb_interface *intf) { intf->refs++; return intf; }
 static void usb_put_intf(struct usb_interface *intf) { assert(intf->refs > 1); intf->refs--; }
-static unsigned enumerations, attaches, requested_pid;
+static unsigned enumerations, attaches, releases, requested_pid;
+static bool acquire;
 static int mutation;
+static void device_release_driver(struct device *device)
+{
+	assert(target_usb.locked && claim_lock.held);
+	assert(device == &target_intf.dev && device->driver == &xpad);
+	assert(target_intf.refs == 2); /* Pinned before optional detach. */
+	releases++;
+	device->driver = NULL;
+}
 static int usb_for_each_dev(void *data, int (*callback)(struct usb_device *, void *))
 {
 	enumerations++;
 	assert(!callback(&root_usb, data));
 	return callback(&target_usb, data);
 }
+static bool boot_pending;
+static bool gsn_boot_pending(struct usb_device *udev) { return boot_pending; }
 static int device_driver_attach(const struct device_driver *, struct device *);
 #include "kernel-claim-functions.h"
 
@@ -126,13 +137,15 @@ static int device_driver_attach(const struct device_driver *driver, struct devic
 	if (mutation == 4) target_intf.dev.driver = &xpad;
 	if (mutation == 5) return -ENOMEM;
 	if (mutation == 6) return 0; /* A core return without our probe is not success. */
-	if (mutation == 7) target_usb.descriptor.idProduct = 0x109c;
+	if (mutation == 7) target_usb.descriptor.idProduct = requested_pid == 0x109c ? 0x100a : 0x109c;
 	if (mutation == 8) target_usb.devnum++;
 	if (mutation == 9) target_intf.dev.name = "4-3.2:1.0";
 	if (device->driver)
 		return -EBUSY;
 	usb_lock_device(&target_usb);
-	bool accepted = gsn_claim_consume(&target_intf);
+	bool direct = false;
+	bool accepted = !gsn_probe_authorize(&target_intf, requested_pid, &direct);
+	if (accepted) assert(direct == (requested_pid == 0x109c));
 	assert(!gsn_claim_consume(&target_intf)); /* One probe, including failure. */
 	usb_unlock_device(&target_usb);
 	if (!accepted)
@@ -147,7 +160,9 @@ static void reset(void)
 	admin = persistent_mode = bootstrap_mode = enable_output = true;
 	lock_interrupted = false;
 	mutation = 0;
-	enumerations = attaches = 0;
+	boot_pending = false;
+	enumerations = attaches = releases = 0;
+	acquire = false;
 	requested_pid = 0x100a;
 	device_node.id = 10001;
 	parent_node.id = 20002;
@@ -168,7 +183,12 @@ static void reset(void)
 static const char valid[] = "1 4-3.1:1.0 4 42 10001 20002\n";
 static ssize_t run(const char *request)
 {
-	ssize_t result = requested_pid == 0x105e ?
+	ssize_t result = acquire && requested_pid == 0x109c ?
+		acquire_109c_store(&gsn_driver.driver, request, strlen(request)) :
+		acquire ? (requested_pid == 0x105e ?
+		acquire_105e_store(&gsn_driver.driver, request, strlen(request)) :
+		acquire_100a_store(&gsn_driver.driver, request, strlen(request))) :
+		requested_pid == 0x105e ?
 		claim_105e_store(&gsn_driver.driver, request, strlen(request)) :
 		claim_100a_store(&gsn_driver.driver, request, strlen(request));
 	assert(!pending_claim && !claim_lock.held && !claim_gate_lock.held);
@@ -237,7 +257,61 @@ int main(void)
 		assert(attaches == (wrong == 1 || wrong == 2 ? 0u : 1u));
 		cases++;
 	}
-	printf("PASS: %u actual-kernel claim scenarios; exact instance/inodes, auto/manual gate, "
+	/* New acquisition requires no xpad at all, and only releases exact IF0
+	 * when xpad happens to have won initial USB probing. No other owner. */
+	for (unsigned pid = 0; pid < 3; pid++) {
+		for (unsigned owner = 0; owner < 4; owner++) {
+			reset(); acquire = true;
+			if (pid) {
+				requested_pid = target_usb.descriptor.idProduct = pid == 1 ? 0x105e : 0x109c;
+				alt.desc.bInterfaceSubClass = 0x47;
+				alt.desc.bInterfaceProtocol = 0xd0;
+				alt.endpoint[0].desc.wMaxPacketSize = alt.endpoint[1].desc.wMaxPacketSize = 64;
+			}
+			target_intf.dev.driver = owner == 0 ? NULL : owner == 1 ? &xpad :
+				owner == 2 ? &foreign_driver : &gsn_driver.driver;
+			assert(owner < 2 ? run(valid) == (ssize_t)strlen(valid) : run(valid) == -ENODEV);
+			assert(releases == (owner == 1 ? 1u : 0u));
+			assert(attaches == (owner < 2 ? 1u : 0u)); cases++;
+		}
+	}
+	for (int n = 1; n <= 9; n++) {
+		reset(); acquire = true; target_intf.dev.driver = &xpad; mutation = n;
+		assert(run(valid) < 0 && releases == 1 && attaches == 1);
+		cases++;
+	}
+	for (int n = 0; n < 10; n++) {
+		reset(); acquire = true; target_intf.dev.driver = &xpad;
+		if (n == 0) device_node.id++;
+		if (n == 1) parent_node.id++;
+		if (n == 2) target_usb.descriptor.idProduct = 0x109c;
+		if (n == 3) target_usb.descriptor.idVendor = 0x045e;
+		if (n == 4) target_intf.dev.name = "4-3.1:1.1";
+		if (n == 5) alt.endpoint[0].desc.wMaxPacketSize = 64;
+		if (n == 6) admin = false;
+		if (n == 7) target_intf.authorized = false;
+		if (n == 8) target_usb.state = 0;
+		if (n == 9) bootstrap_mode = false;
+		assert(run(valid) < 0 && !releases && !attaches); cases++;
+	}
+	reset();
+	bool direct = true;
+	assert(gsn_probe_authorize(&target_intf, 0x109c, &direct) == -ENODEV && !direct);
+	boot_pending = true;
+	assert(!gsn_probe_authorize(&target_intf, 0x109c, &direct) && !direct);
+	boot_pending = false;
+	assert(gsn_probe_authorize(&target_intf, 0x100a, &direct) == -ENODEV);
+	assert(gsn_probe_authorize(&target_intf, 0x105e, &direct) == -ENODEV);
+	cases += 4;
+	/* Repeat all replacement/attach faults on explicit native-mode acquisition. */
+	for (int n = 1; n <= 9; n++) {
+		reset(); acquire = true; requested_pid = target_usb.descriptor.idProduct = 0x109c;
+		alt.desc.bInterfaceSubClass = 0x47; alt.desc.bInterfaceProtocol = 0xd0;
+		alt.endpoint[0].desc.wMaxPacketSize = alt.endpoint[1].desc.wMaxPacketSize = 64;
+		target_intf.dev.driver = &xpad; mutation = n;
+		assert(run(valid) < 0 && releases == 1 && attaches == 1); cases++;
+	}
+	printf("PASS: %u actual-kernel claim/acquire scenarios; optional xpad, exact instance/inodes, auto/manual gate, "
 		"concurrent task, single consume, malformed input, disconnect/replacement/attach failure, "
 		"balanced refs and no surviving permission\n", cases);
 	return 0;

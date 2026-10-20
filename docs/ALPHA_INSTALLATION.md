@@ -2,7 +2,12 @@
 
 # Installierbare Alpha: Paketbau und späterer Betrieb
 
-**Neuester Realnachweis:** Am 15. Oktober bestand der ausdrücklich geplante,
+Aktuelle allgemeine Anleitung: [INSTALLATION.md](INSTALLATION.md).
+Revision 11 bereitet die [Übernahme ohne xpad-Voraussetzung](STANDALONE_STARTUP.md)
+offline vor und ist noch nicht auf Hardware abgenommen. Die folgenden Berichte
+bleiben historische Nachweise ihrer jeweiligen Versionen.
+
+**Historischer Realnachweis:** Am 15. Oktober bestand der ausdrücklich geplante,
 vom Nutzer selbst ausgeführte CachyOS test host-Neustart mit anschließendem
 Funkcontroller-Einschalten. Automatischer Dienststart, nativer Bootstrap,
 GameSir-Inputgerät und fortbestehendes Steam-Paddle-Mapping bestätigt; [tester]

@@ -16,7 +16,7 @@
 enum gs_boot_state {
 	GS_BOOT_IDLE, GS_BOOT_TRANSITION, GS_BOOT_WAIT_REMOVE, GS_BOOT_WAIT_ADD,
 	GS_BOOT_INITIALIZE, GS_BOOT_VERIFY, GS_BOOT_READY, GS_BOOT_HANDED_OFF,
-	GS_BOOT_FAILED
+	GS_BOOT_FAILED, GS_BOOT_WAIT_RECEIVER /* Append: existing status values are ABI. */
 };
 
 /* Adapter-supplied facts, not USB addresses or claims inferred from a PID.
@@ -56,6 +56,7 @@ struct gs_startup {
 	unsigned int step, token, pending_length, sequence;
 	unsigned int transition_completed, native_output_started;
 	unsigned int pad_seen, imu_seen;
+	unsigned int receiver_wait; /* Explicit persistent policy; legacy remains bounded. */
 };
 
 struct gs_boot_handoff {
@@ -73,11 +74,16 @@ int gs_boot_supported(const struct gs_boot_device *device);
 int gs_boot_poll(struct gs_startup *s, gs_u64 now_us);
 /* Preserve a transport/adapter failure; completed handoff is immutable. */
 void gs_boot_abort(struct gs_startup *s, int error);
-/* 100a transitions to correlated 109c; experimental 105e initializes the
- * same owned instance directly, sharing init/verification/handoff unchanged.
+/* 100a transitions to correlated 109c; already-native 109c and experimental
+ * 105e initialize the same owned instance, sharing init/verification/handoff.
  */
 int gs_boot_begin(struct gs_startup *s, const struct gs_boot_device *device,
 		  int authorized, gs_u64 now_us);
+/* Same bounded one-shot setup, then passive indefinite waiting for fresh IMU.
+ * No maintenance TX or replay while waiting; does not prove late-on hardware.
+ */
+int gs_boot_begin_receiver(struct gs_startup *s, const struct gs_boot_device *device,
+			   int authorized, gs_u64 now_us);
 /* 1: one new TX intent; 0: wait/no TX; negative: terminal failure.
  * Fresh device identity/ownership is required whenever the device is present.
  * Call even while waiting so deadlines are enforced; zeroed out on no TX.

@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "scope": "passive-rf-109c-xpad-90",
+  "date": "2026-10-20",
+  "source_commit": "a2522d3",
+  "approved_captures_executed": 1,
+  "automatic_retry": false,
+  "native_management_paused_through_final_audit": true,
+  "native_resume_executed": false,
+  "controller_power_on": "Human action after local GO and the 30-second cue; receiver left plugged",
+  "recorder_audit": {
+    "passed": true,
+    "terminal_exit_status": 0,
+    "duration_ceiling_seconds": 90,
+    "finalization_cue_seconds": 89.00008,
+    "capture_and_parent_checksum_entries_independently_verified": 24,
+    "original_bytes": 346867656,
+    "original_sha256": "dc5f5f2b2b68ed85a2162a591d6a50ddb1b5acb1ea60c7b2324153fd936a35bd",
+    "namespace_and_descriptor_final_audit": true,
+    "topology_pause_and_binding_final_audit": true
+  },
+  "human_confirmation": {
+    "connection_confirmed_at_seconds": 40.078858976,
+    "input_visible_in_open_KDE_test_during_capture": true,
+    "normal_inputs_after_capture": true,
+    "desktop_responsive": true
+  },
+  "separate_epochs": [
+    {
+      "epoch": 0,
+      "vid_pid": "3537:109c",
+      "interface_0": "xpad, EP02/82",
+      "interface_1": "unbound, no endpoints"
+    },
+    {
+      "epoch": 1,
+      "vid_pid": "3537:100a",
+      "interface_0": "xpad, EP02/82",
+      "interface_1": "usbhid, EP04/84"
+    }
+  ],
+  "host_time_chronology_seconds_from_recorder_request": [
+    {"event": "power_on_cue", "seconds": 30.053342006},
+    {"event": "old_epoch_EP82_empty_completion", "seconds": 31.883869, "status": -108, "data_length": 0, "frame": 15369},
+    {"event": "first_new_epoch_addressed_USB_record", "seconds": 33.403244, "frame": 16208},
+    {"event": "new_epoch_EP02_host_OUT_submission", "seconds": 33.556799, "data_length": 3, "frame": 16332},
+    {"event": "new_epoch_first_short_EP84_completion", "seconds": 33.568767, "frame": 16341},
+    {"event": "new_epoch_first_successful_20byte_EP82_completion", "seconds": 33.640775, "frame": 16381},
+    {"event": "human_connection_confirmation", "seconds": 40.078858976},
+    {"event": "input_action_cue", "seconds": 60.092089738},
+    {"event": "final_rest_cue", "seconds": 80.000984231}
+  ],
+  "selected_metadata_only_findings": {
+    "new_epoch_successful_20byte_EP82_completions": 3571,
+    "new_epoch_short_EP84_completions": {"8_bytes": 1, "13_bytes": 1},
+    "successful_64byte_EP82_or_EP84_completions_observed": 0,
+    "old_epoch_successful_IN_payloads_observed": 0,
+    "payload_exported_by_this_analysis": false
+  },
+  "limits": [
+    "A natural same-parent USB re-enumeration occurred after power-on with Native paused; this is not a native startup or recovery test.",
+    "USB timestamps are correlated to phase-cue UTC and elapsed time; they are host-time approximations, not exact RF transition timestamps.",
+    "The old -108 completion belongs to the ending old USB lifetime; it must not be merged into a new lifetime or assumed to reproduce a historical native bootstrap fault.",
+    "KDE had the original IF0 input open before recording, so initialization before capture is outside this reference.",
+    "No payload-level RF-ready bit, Hello/ACK semantics or IMU activation sequence is established by this metadata-only analysis.",
+    "No observed 64-byte transfer is not a universal claim about absent IMU or HID support.",
+    "Only sanitized metadata and hashes are published locally; raw whole-bus capture and host identities remain private."
+  ]
+}

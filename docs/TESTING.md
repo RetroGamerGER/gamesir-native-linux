@@ -4,6 +4,16 @@ Alle Make-Ziele sind offline. Keine Installation, erhöhten
 Rechte, USB-Kommandos, Modulaktivierung oder Treiberwechsel sind Bestandteil.
 Voraussetzung: vorhandenes Python ≥ 3.11, Make und clang mit ASan/UBSan.
 
+## Eigenständige Übernahme ohne xpad-Voraussetzung
+
+`make test-alpha` enthält `tests/test_manager_standalone.py`: synthetische
+100a-/105e-Starts ohne xpad, optionaler Vorbesitzer, Budget/Pause, Wiederverbindung,
+Neustart, Fehlerursache und Rückweg. `make test-startup` prüft zusätzlich die
+tatsächlich extrahierten Kernel-Claim-/Acquire-Funktionen unter ASan/UBSan.
+Diese Tests senden keine USB-Befehle und beweisen weder reale USB-Core-
+Nebenläufigkeit noch kalte Hardwareinitialisierung ohne vorherigen xpad-Start.
+Siehe [Nachweise und getrennte spätere Abnahme](STANDALONE_STARTUP.md).
+
 ## SSH-Übergabe an Fish ohne Live-Zugriff
 
 `tests/test_steam_gyro_ssh.py` ergänzt `make test-steam` um 14 Regressionen.

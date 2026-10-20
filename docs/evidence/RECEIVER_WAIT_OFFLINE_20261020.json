@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "scope": "offline_opt_in_kernel_receiver_wait",
+  "module_option": {
+    "name": "receiver_wait",
+    "default": false,
+    "requires": [
+      "persistent_mode",
+      "bootstrap_mode",
+      "enable_output"
+    ],
+    "packaged_configuration_changed": false
+  },
+  "contract": {
+    "existing_state_values_0_through_8_preserved": true,
+    "waiting_state": 9,
+    "private_ioctl_numbers_and_structure_sizes_unchanged": true,
+    "one_bounded_setup": true,
+    "waiting_generates_out_packets": false,
+    "waiting_requires_open_control_fd": false,
+    "native_ready_requires_fresh_IMU_and_exact_ownership": true,
+    "button_press_required": false,
+    "waiting_consumes_repeated_start_budget": false,
+    "unready_suspend_cancels_without_automatic_reinitialization": true,
+    "END_not_claimed_as_109c_to_100a_return": true
+  },
+  "tests": {
+    "full_make_test_passed": true,
+    "python_test_groups": 46,
+    "python_cases": 1339,
+    "added_manager_cases": 12,
+    "added_shared_core_cases": 28,
+    "added_actual_kernel_adapter_cases": 21,
+    "actual_kernel_adapter_total": 303,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "C_client_wait_output_and_END_vs_INFO_gates_passed": true,
+    "packaging_regressions_passed": true
+  },
+  "module_build": {
+    "built": true,
+    "kernel_release": "7.2.11-1-garuda",
+    "module_sha256": "96174732f6a667763dae009761301c752c754d237e066c27ee95b4f359c29788",
+    "vermagic": "7.2.11-1-garuda SMP preempt mod_unload",
+    "build_status": "passed_with_environment_warning",
+    "validation_errors": [],
+    "code_warnings": 0,
+    "environment_warnings": [
+      {
+        "kind": "kernel_compiler_mismatch",
+        "message": "warning: the compiler differs from the one used to build the kernel",
+        "kernel_compiler": "clang version 23.1.1",
+        "module_compiler": "clang version 23.1.3"
+      }
+    ],
+    "loaded_or_installed": false,
+    "hardware_access": false
+  },
+  "static_analysis": {
+    "passed": true,
+    "checkpatch_returncode": 0,
+    "clang_static_analyzer": [
+      {
+        "translation_unit": "gs_native_usb",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_protocol",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_sensor",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_runtime",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      },
+      {
+        "translation_unit": "gs_startup",
+        "returncode": 0,
+        "diagnostics": 0,
+        "stderr_warning": false,
+        "passed": true
+      }
+    ],
+    "limits": "Static analysis does not model all kernel allocation/refcount/URB/workqueue concurrency semantics"
+  },
+  "source_sha256": {
+    "kernel/gs_native_usb.c": "06ed555f54142367d93b12c00c84a4aa50b03ee5524d4be15a0228281e7b9b25",
+    "src/gs_startup.c": "0eeae9373874a754a50e3dc2641948020e6cf9dcb3d165b4bda41a8d82ddaaf6",
+    "src/gs_startup.h": "ac092bb9b390b9a8c5c72bab1b114276ef47161278e00282e0d49b83bd138919",
+    "include/uapi/gs_native.h": "dc135a12a36463ecd1e6abee2463552d3867ed6ae16aa234cf7010503edc19ce",
+    "tools/service/gamesir_native.py": "680b90f22d4a167660e3ba41cdce384141c761e36321dd5340faa14084c98cfc",
+    "tools/native/gsnative-ctl.c": "7cda85cac216ed7963f0f44bac3f399160b65407f7ab3bca1af9f776f140cae8",
+    "tests/test_receiver_wait.py": "9d390fb871afddcea675f590718e0247d0246ab0d0441cd508b5587a0d99019b",
+    "tests/test_startup.c": "38202a0b6162db4ac5f22468d5a495e1c4d2e7e4dc77122189274a6ad7ca68cb",
+    "tests/kernel_startup_fake.c": "a41a01f401952f46cb198b7b9920eaee80b7b2f9adc564d59e5220e9db15a6a4",
+    "tests/native_client_fake.c": "092a76f3bc4845e509f91a3e8816089a26c435739da2665f04cb73627fdbb13b",
+    "tests/check_kernel_startup.py": "4f75bf6bef36f73130ac00c7b078ca2bedd5d6c68c3e01d74121de980ab618eb",
+    "tests/check_native_client_output.py": "52a900a4462a318a7510e52884de094989fc9b27b7a5485a6ea826b0d7dee49e"
+  },
+  "limits": [
+    "No new live/privileged/device/SSH/network access, installation, service, Steam or loaded module change.",
+    "No real controller-off/late-power-on or standby/suspend/reconnect acceptance.",
+    "Unknown whether firmware retains initialization sent while the controller is off; no replay is added.",
+    "Option defaults off; this does not close the revision14 hardware blocker or approve a push/release."
+  ]
+}

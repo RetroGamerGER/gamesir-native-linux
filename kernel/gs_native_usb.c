@@ -37,6 +37,9 @@ MODULE_PARM_DESC(bootstrap_mode, "Opt-in dynamic ports; explicit per-device BOOT
 static bool persistent_mode;
 module_param(persistent_mode, bool, 0400);
 MODULE_PARM_DESC(persistent_mode, "Opt-in service runtime without session deadline; requires bootstrap_mode and enable_output");
+static bool receiver_wait;
+module_param(receiver_wait, bool, 0400);
+MODULE_PARM_DESC(receiver_wait, "Experimental persistent standby after one setup; passive RX only until fresh native IMU, default false");
 static char *test_interface;
 module_param(test_interface, charp, 0400);
 MODULE_PARM_DESC(test_interface, "Exact sysfs interface (e.g. 8-6:1.0); required, single binding only");
@@ -98,6 +101,7 @@ struct gsn_claim {
 	struct usb_interface *intf;
 	struct task_struct *task;
 	bool consumed;
+	bool allow_xpad;
 };
 
 static DEFINE_MUTEX(claim_lock);
@@ -115,6 +119,9 @@ struct gsn_boot {
 	/* Last completed OUT, for failure diagnosis only; never ownership proof. */
 	unsigned int tx_count, tx_step, tx_expected;
 	int tx_status, tx_actual;
+	/* Fixed 100a control-IN preamble, separate from interrupt-OUT counters. */
+	bool xinput_query_attempted;
+	int xinput_query_result;
 	/* First nonlocal RX observation; terminal result is recorded separately. */
 	int first_rx_status, first_rx_stage;
 	unsigned int first_rx_source, first_rx_step, first_rx_pid;
@@ -147,6 +154,7 @@ struct gsn_device {
 	struct gs_boot_device identity;
 	struct gsn_boot *boot;
 	bool boot_handoff, boot_claimed, pm_quiesced, resume_ready, resuming;
+	bool direct_native; /* Exact acquire_109c grant, never an unrestricted probe. */
 	struct gsn_sample sample;
 	u64 input_packets, imu_packets, rejected_packets, iio_push_errors;
 	struct gs_accel_experimental_scale accel_scale;
@@ -923,11 +931,11 @@ static bool gsn_boot_route(struct gsn_boot *b, struct usb_device *udev)
 }
 
 /* Same-instance direct start is never permission to adopt a re-enumerated node.
- * Pinned origin/parent/root plus the core tokens attest the ZZZ lifetime.
+ * Pinned origin/parent/root plus the core tokens attest a native start lifetime.
  */
 static bool gsn_boot_owned_route(struct gsn_boot *b, struct gsn_device *g)
 {
-	if (g->identity.pid != 0x105e)
+	if (le16_to_cpu(b->origin->descriptor.idProduct) == 0x100a)
 		return gsn_boot_route(b, g->udev);
 	return g->udev == b->origin && g->udev->parent == b->parent &&
 		gsn_root(g->udev) == b->root && g->udev->portnum == b->portnum &&
@@ -1035,10 +1043,19 @@ static int gsn_claim_find(struct usb_device *udev, void *data)
 	usb_lock_device(udev);
 	if (gsn_claim_identity(claim, udev)) {
 		intf = usb_ifnum_to_if(udev, 0);
-		if (intf && device_is_registered(&intf->dev) && !intf->dev.driver &&
+		if (intf && device_is_registered(&intf->dev) &&
+		    (!intf->dev.driver || (claim->allow_xpad &&
+		     !strcmp(intf->dev.driver->name, "xpad"))) &&
 		    intf->authorized && !strcmp(dev_name(&intf->dev), claim->interface) &&
-		    !gsn_describe(intf, &descriptor))
+		    !gsn_describe(intf, &descriptor)) {
 			claim->intf = usb_get_intf(intf);
+			/* Exact USB object pinned and its lock held: no sysfs-name unbind.
+			 * A free interface is claimed directly; xpad is optional, never
+			 * loaded or bound as an initialization prerequisite.
+			 */
+			if (intf->dev.driver)
+				device_release_driver(&intf->dev);
+		}
 	}
 	usb_unlock_device(udev);
 	return claim->intf ? 1 : 0;
@@ -1062,9 +1079,10 @@ static bool gsn_claim_consume(struct usb_interface *intf)
 		!strcmp(dev_name(&intf->dev), claim->interface);
 }
 
-static ssize_t gsn_claim_store(const char *buf, size_t count, unsigned int pid)
+static ssize_t gsn_claim_store(const char *buf, size_t count, unsigned int pid,
+			       bool allow_xpad)
 {
-	struct gsn_claim claim = { .pid = pid };
+	struct gsn_claim claim = { .pid = pid, .allow_xpad = allow_xpad };
 	unsigned long flags;
 	int ret;
 
@@ -1099,19 +1117,41 @@ unlock:
 
 static ssize_t claim_100a_store(struct device_driver *driver, const char *buf, size_t count)
 {
-	return gsn_claim_store(buf, count, 0x100a);
+	return gsn_claim_store(buf, count, 0x100a, false);
 }
 static DRIVER_ATTR_WO(claim_100a);
 
 static ssize_t claim_105e_store(struct device_driver *driver, const char *buf, size_t count)
 {
-	return gsn_claim_store(buf, count, 0x105e);
+	return gsn_claim_store(buf, count, 0x105e, false);
 }
 static DRIVER_ATTR_WO(claim_105e);
+
+/* Separate attributes keep the historical unbound-only claim contract intact. */
+static ssize_t acquire_100a_store(struct device_driver *driver, const char *buf, size_t count)
+{
+	return gsn_claim_store(buf, count, 0x100a, true);
+}
+static DRIVER_ATTR_WO(acquire_100a);
+
+static ssize_t acquire_105e_store(struct device_driver *driver, const char *buf, size_t count)
+{
+	return gsn_claim_store(buf, count, 0x105e, true);
+}
+static DRIVER_ATTR_WO(acquire_105e);
+
+static ssize_t acquire_109c_store(struct device_driver *driver, const char *buf, size_t count)
+{
+	return gsn_claim_store(buf, count, 0x109c, true);
+}
+static DRIVER_ATTR_WO(acquire_109c);
 
 static struct attribute *gsn_driver_attrs[] = {
 	&driver_attr_claim_100a.attr,
 	&driver_attr_claim_105e.attr,
+	&driver_attr_acquire_100a.attr,
+	&driver_attr_acquire_105e.attr,
+	&driver_attr_acquire_109c.attr,
 	NULL
 };
 ATTRIBUTE_GROUPS(gsn_driver);
@@ -1168,6 +1208,24 @@ static bool gsn_boot_pending(struct usb_device *udev)
 	}
 	mutex_unlock(&boot_list_lock);
 	return match;
+}
+
+/* Called before allocation/RX. Direct 109c needs the same one-shot, exact
+ * acquisition gate as start-mode devices. A correlated transition retains
+ * its existing pending-bootstrap path, without granting a second startup.
+ */
+static int gsn_probe_authorize(struct usb_interface *intf, unsigned int pid,
+			       bool *direct_native)
+{
+	*direct_native = false;
+	if (persistent_mode && (pid == 0x100a || pid == 0x105e) && !gsn_claim_consume(intf))
+		return -ENODEV;
+	if (bootstrap_mode && pid == 0x109c) {
+		*direct_native = persistent_mode && gsn_claim_consume(intf);
+		if (!*direct_native && !gsn_boot_pending(interface_to_usbdev(intf)))
+			return -ENODEV;
+	}
+	return 0;
 }
 
 /* Match one outstanding, explicitly requested transition. Caller owns USB lock. */
@@ -1344,7 +1402,55 @@ static int gsn_boot_adopt(struct gsn_device *g)
 	return ret;
 }
 
-/* io_lock held. The shared core is the only source of bootstrap TX bytes. */
+/* io_lock held; gs_boot_next has validated/reserved the first 100a OUT.
+ * Captured xpad setup c1/01/0100/0000/20, before any mode-switch packet.
+ * Use the allocated transfer buffer, never a stack buffer for USB DMA.
+ */
+static int gsn_boot_xinput_query(struct gsn_device *g)
+{
+	struct gsn_boot *b = g->boot;
+	struct gs_boot_device identity = g->identity;
+	struct gs_boot_tx pending;
+	unsigned long flags;
+	int ret, actual;
+
+	spin_lock_irqsave(&b->lock, flags);
+	ret = gs_boot_poll(&b->core, gsn_now_us());
+	if (ret || b->xinput_query_attempted)
+		goto unlock;
+	if (g->identity.pid != 0x100a || b->origin != g->udev ||
+	    b->core.state != GS_BOOT_TRANSITION || b->core.step ||
+	    b->core.pending_length != 8 ||
+	    b->core.device.instance != g->identity.instance ||
+	    b->core.device.port != g->identity.port) {
+		gs_boot_abort(&b->core, -ENODEV);
+		ret = b->core.error;
+		goto unlock;
+	}
+	b->xinput_query_attempted = true;
+	spin_unlock_irqrestore(&b->lock, flags);
+	actual = usb_control_msg(g->udev, usb_rcvctrlpipe(g->udev, 0), 0x01,
+				 USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
+				 0x0100, 0, g->tx_buf, 20, 25);
+	ret = actual == 20 ? gsn_describe(g->intf, &identity) :
+		(actual < 0 ? actual : -EREMOTEIO);
+	spin_lock_irqsave(&b->lock, flags);
+	b->xinput_query_result = actual;
+	/* Unlike xpad's warning-only policy, do not switch modes after an
+	 * incomplete/failed query. Preserve an earlier concurrent RX failure.
+	 */
+	if (ret)
+		gs_boot_abort(&b->core, ret);
+	/* The pending first OUT prevents a second intent. Recheck full identity,
+	 * ownership and deadlines after the sleeping control transfer.
+	 */
+	ret = gs_boot_next(&b->core, &identity, gsn_now_us(), &pending);
+unlock:
+	spin_unlock_irqrestore(&b->lock, flags);
+	return ret;
+}
+
+/* io_lock held. The shared core is the source of bootstrap interrupt OUT. */
 static bool gsn_boot_service(struct gsn_device *g)
 {
 	/* Acquire the initialized core/identity published by probe or BOOTSTRAP. */
@@ -1352,7 +1458,7 @@ static bool gsn_boot_service(struct gsn_device *g)
 	struct gs_boot_tx tx;
 	struct gs_boot_device identity = g->identity;
 	unsigned long flags;
-	int ret = 0, actual = 0, state;
+	int ret = 0, actual = 0, state = 0;
 	bool waiting;
 
 	if (!b || g->boot_handoff)
@@ -1390,6 +1496,11 @@ static bool gsn_boot_service(struct gsn_device *g)
 	ret = gs_boot_next(&b->core, &identity, gsn_now_us(), &tx);
 	spin_unlock_irqrestore(&b->lock, flags);
 	if (ret == 1) {
+		if (identity.pid == 0x100a) {
+			ret = gsn_boot_xinput_query(g);
+			if (ret)
+				goto completed;
+		}
 		memcpy(g->tx_buf, tx.data, tx.length);
 		ret = usb_interrupt_msg(g->udev, usb_sndintpipe(g->udev, tx.endpoint),
 					g->tx_buf, tx.length, &actual, GSN_USB_TIMEOUT_MS);
@@ -1413,6 +1524,16 @@ completed:
 		ret = gsn_boot_adopt(g);
 	if (ret < 0) {
 		gsn_fault(g, ret);
+		/* Persistent standby may outlive the synchronous supervisor. Make
+		 * its failed instance locally END-able without waiting for that client
+		 * to quiesce it. Never drain this work item from within itself.
+		 */
+		if (receiver_wait) {
+			spin_lock_irqsave(&g->lock, flags);
+			g->stopping = true;
+			g->publication_cancelled = true;
+			spin_unlock_irqrestore(&g->lock, flags);
+		}
 		usb_kill_urb(g->rx_urb);
 		gsn_neutral(g);
 		return true;
@@ -1420,7 +1541,8 @@ completed:
 requeue:
 	spin_lock_irqsave(&g->lock, flags);
 	if (!g->stopping)
-		mod_delayed_work(system_percpu_wq, &g->service, msecs_to_jiffies(10));
+		mod_delayed_work(system_percpu_wq, &g->service,
+				 msecs_to_jiffies(state == GS_BOOT_WAIT_RECEIVER ? 250 : 10));
 	spin_unlock_irqrestore(&g->lock, flags);
 	return true;
 }
@@ -1535,15 +1657,18 @@ static int gsn_bootstrap(struct gsn_device *g, const struct gsn_boot_request *re
 	unsigned int first_rx_source, first_rx_step, first_rx_pid;
 	u64 first_rx_us;
 	bool first_rx_deferred, old_rx_quiesced;
+	bool xinput_query_attempted;
+	int xinput_query_result;
 
 	if (!capable(CAP_SYS_ADMIN) || !bootstrap_mode || !enable_output)
 		return -EPERM;
 	if (request->abi_version != GSN_ABI_VERSION || request->reserved[0] ||
 	    request->reserved[1] || (request->flags & ~GSN_BOOT_ALLOW_XPAD_HANDOVER) ||
-	    (g->identity.pid == 0x105e && request->flags))
+	    (gs_pid_native(g->identity.pid) && request->flags))
 		return -EINVAL;
 	mutex_lock(&g->io_lock);
-	if (g->stopping || (g->identity.pid != 0x100a && g->identity.pid != 0x105e) ||
+	if (g->stopping || (g->identity.pid != 0x100a && g->identity.pid != 0x105e &&
+			    !(g->identity.pid == 0x109c && g->direct_native)) ||
 	    !g->rt.owner || g->boot) {
 		ret = -EBUSY;
 		goto unlock;
@@ -1564,7 +1689,8 @@ static int gsn_bootstrap(struct gsn_device *g, const struct gsn_boot_request *re
 	b->root = usb_get_dev(gsn_root(g->udev));
 	b->portnum = g->udev->portnum;
 	b->flags = request->flags;
-	ret = gs_boot_begin(&b->core, &g->identity, 1, gsn_now_us());
+	ret = receiver_wait ? gs_boot_begin_receiver(&b->core, &g->identity, 1, gsn_now_us()) :
+		gs_boot_begin(&b->core, &g->identity, 1, gsn_now_us());
 	mutex_lock(&boot_list_lock);
 	list_for_each_entry(other, &boot_list, node)
 		if (other->parent == b->parent && other->portnum == b->portnum)
@@ -1594,6 +1720,8 @@ static int gsn_bootstrap(struct gsn_device *g, const struct gsn_boot_request *re
 			ret = -EINTR;
 			break;
 		}
+		if (state == GS_BOOT_WAIT_RECEIVER)
+			break;
 		if (state == GS_BOOT_WAIT_ADD) {
 			ret = gsn_boot_handover(b);
 			if (ret)
@@ -1646,14 +1774,17 @@ static int gsn_bootstrap(struct gsn_device *g, const struct gsn_boot_request *re
 	first_rx_us = b->first_rx_us;
 	first_rx_deferred = b->first_rx_deferred;
 	old_rx_quiesced = b->old_rx_quiesced;
+	xinput_query_attempted = b->xinput_query_attempted;
+	xinput_query_result = b->xinput_query_result;
 	spin_unlock_irqrestore(&b->lock, flags);
 	dev_info(&g->udev->dev,
 		 "native bootstrap finished: %d; failed_stage=%d step=%u pending=%u transition=%u tx_count=%u tx_step=%u tx_status=%d tx_actual=%d tx_expected=%u; "
-		 "first_rx_status=%d first_rx_source=%u first_rx_stage=%d first_rx_step=%u first_rx_pid=%04x first_rx_us=%llu first_rx_deferred=%u old_rx_quiesced=%u; no automatic retry\n",
+		 "first_rx_status=%d first_rx_source=%u first_rx_stage=%d first_rx_step=%u first_rx_pid=%04x first_rx_us=%llu first_rx_deferred=%u old_rx_quiesced=%u; "
+		 "xinput_query_attempted=%u xinput_query_result=%d; no automatic retry\n",
 		 ret, failed_stage, step, pending, transitioned, tx_count, tx_step,
 		 tx_status, tx_actual, tx_expected, first_rx_status, first_rx_source,
 		 first_rx_stage, first_rx_step, first_rx_pid, (unsigned long long)first_rx_us,
-		 first_rx_deferred, old_rx_quiesced);
+		 first_rx_deferred, old_rx_quiesced, xinput_query_attempted, xinput_query_result);
 	kref_put(&b->ref, gsn_boot_delete);
 	return ret;
 unlock:
@@ -1669,6 +1800,11 @@ static int gsn_boot_status(struct gsn_device *g, struct gsn_boot_status *status)
 		return -ENODATA;
 	spin_lock_irqsave(&g->boot->lock, flags);
 	status->state = g->boot->core.state;
+	/* The retained old FD may race adoption on the new interface's io_lock.
+	 * Until handoff is committed, report pending rather than a transient READY.
+	 */
+	if (g->boot->core.receiver_wait && status->state == GS_BOOT_READY)
+		status->state = GS_BOOT_WAIT_RECEIVER;
 	status->error = g->boot->core.error;
 	status->failed_stage = g->boot->core.failed_stage;
 	status->pad_seen = g->boot->core.pad_seen;
@@ -1790,20 +1926,22 @@ fail:
 	return ret;
 }
 
-/* io_lock held. Permit local END of a failed, already quiesced handover only.
+/* io_lock held. Permit local END of an attested failed or waiting bootstrap.
  * No successful runtime means no motor output was authorized. In particular,
  * this is not permission to invent a 109c->100a command or adopt another node.
  */
-static bool gsn_failed_boot_owned(struct gsn_device *g)
+static bool gsn_unready_boot_owned(struct gsn_device *g)
 {
 	struct gs_boot_device identity = g->identity;
 	struct gsn_boot *b = g->boot;
 	unsigned long flags;
-	bool owned;
+	bool owned, waiting;
 
+	waiting = receiver_wait && !g->stopping && g->rt.state == GS_RUNNING && !g->rt.error;
 	if (!persistent_mode || !bootstrap_mode || !b || g->boot_handoff ||
-	    !g->stopping || g->output_used || !g->rt.owner ||
-	    (g->rt.state != GS_FAULTED && g->rt.state != GS_QUIESCED) ||
+	    g->output_used || !g->rt.owner ||
+	    (!waiting && (!g->stopping ||
+	     (g->rt.state != GS_FAULTED && g->rt.state != GS_QUIESCED))) ||
 	    !gs_pid_native(g->identity.pid) || g->rt.pid != g->identity.pid ||
 	    READ_ONCE(g->intf->condition) != USB_INTERFACE_BOUND ||
 	    g->intf->dev.driver != &gsn_driver.driver ||
@@ -1811,13 +1949,18 @@ static bool gsn_failed_boot_owned(struct gsn_device *g)
 	    !gsn_boot_owned_route(b, g) || gsn_describe(g->intf, &identity))
 		return false;
 	spin_lock_irqsave(&b->lock, flags);
-	owned = b->core.state == GS_BOOT_FAILED && b->core.error < 0 &&
-		b->core.failed_stage >= GS_BOOT_INITIALIZE &&
-		b->core.failed_stage <= GS_BOOT_READY && identity.exclusive &&
+	owned = ((b->core.state == GS_BOOT_FAILED && b->core.error < 0 &&
+		 b->core.failed_stage >= GS_BOOT_INITIALIZE &&
+		 (b->core.failed_stage <= GS_BOOT_READY ||
+		  (b->core.receiver_wait && b->core.failed_stage == GS_BOOT_WAIT_RECEIVER))) ||
+		(waiting && b->core.receiver_wait && !b->core.error && !b->core.pending_length &&
+		 b->core.step == 6 && (b->core.state == GS_BOOT_WAIT_RECEIVER ||
+				     b->core.state == GS_BOOT_READY))) && identity.exclusive &&
 		b->core.device.pid == identity.pid &&
 		b->core.device.port == identity.port &&
 		b->core.device.instance == identity.instance &&
-		(identity.pid == 0x105e ? identity.instance == b->core.old_instance :
+		(le16_to_cpu(b->origin->descriptor.idProduct) != 0x100a ?
+		 identity.instance == b->core.old_instance :
 		 identity.instance != b->core.old_instance) &&
 		b->core.device.enumerated_us == identity.enumerated_us &&
 		b->core.device.in_interval == identity.in_interval &&
@@ -1839,8 +1982,9 @@ static int gsn_end(struct gsn_device *g)
 		return -ENODEV;
 	if (persistent_mode && !capable(CAP_SYS_ADMIN))
 		return -EPERM;
-	if (bootstrap_mode && !g->boot_handoff && !gsn_failed_boot_owned(g))
+	if (bootstrap_mode && !g->boot_handoff && !gsn_unready_boot_owned(g))
 		return -EBUSY;
+	gsn_boot_cancel_device(g); /* Cancels waiting; never overwrites a prior failure. */
 	/* A failed bootstrap has output_used=false: this only clears local state.
 	 * The successful-runtime path retains its existing bounded zero transfer.
 	 */
@@ -2266,14 +2410,16 @@ static int gsn_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	unsigned int i, maxpacket, pid = le16_to_cpu(udev->descriptor.idProduct);
 	unsigned long flags;
 	struct gs_boot_device identity = {0};
+	bool direct_native;
 	int ret;
 
 	if (!udev->parent || !alt || le16_to_cpu(udev->descriptor.idVendor) != 0x3537 ||
 	    (pid != 0x100a && !gs_pid_native(pid)) || alt->desc.bInterfaceNumber != 0 ||
 	    alt->desc.bAlternateSetting != 0)
 		return -ENODEV;
-	if (persistent_mode && (pid == 0x100a || pid == 0x105e) && !gsn_claim_consume(intf))
-		return -ENODEV;
+	ret = gsn_probe_authorize(intf, pid, &direct_native);
+	if (ret)
+		return ret;
 	if (!bootstrap_mode) {
 		if (!test_interface || strcmp(dev_name(&intf->dev), test_interface) ||
 		    pid != test_pid)
@@ -2285,8 +2431,6 @@ static int gsn_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	identity.port = identity.instance;
 	identity.enumerated_us = gsn_now_us(); /* Conservative first-observed age. */
 	if (!identity.instance || (bootstrap_mode && gsn_describe(intf, &identity)))
-		return -ENODEV;
-	if (bootstrap_mode && pid == 0x109c && !gsn_boot_pending(udev))
 		return -ENODEV;
 	for (i = 0; i < alt->desc.bNumEndpoints; i++) {
 		struct usb_endpoint_descriptor *ep = &alt->endpoint[i].desc;
@@ -2313,6 +2457,7 @@ static int gsn_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	g->udev = usb_get_dev(udev);
 	g->intf = usb_get_intf(intf);
 	g->identity = identity;
+	g->direct_native = direct_native;
 	g->accel_scale.counts_per_g_num = accel_counts_per_g_num;
 	g->accel_scale.counts_per_g_den = accel_counts_per_g_den;
 	ret = gs_runtime_init(&g->rt, pid, enable_output && gs_pid_native(pid));
@@ -2378,7 +2523,7 @@ static int gsn_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	if (ret)
 		goto cleanup;
 	g->misc_registered = true;
-	if (bootstrap_mode && pid == 0x109c) {
+	if (bootstrap_mode && pid == 0x109c && !direct_native) {
 		ret = gsn_boot_connect(g);
 		if (ret)
 			goto cleanup;
@@ -2472,6 +2617,8 @@ static int __init gsn_init(void)
 	if (gsn_sensor_options())
 		return -EINVAL;
 	if (persistent_mode && (!bootstrap_mode || !enable_output))
+		return -EINVAL;
+	if (receiver_wait && !persistent_mode)
 		return -EINVAL;
 	if (bootstrap_mode) {
 		if (test_interface || test_pid || !enable_output)

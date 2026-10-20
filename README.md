@@ -64,6 +64,22 @@ This matrix describes recorded configurations, not a minimum-kernel promise
 or a guarantee for every later update. The [release audit](docs/RELEASE_AUDIT.md)
 separates hardware results, offline tests and outstanding validation.
 
+**Current source release: `v0.1.0-pre-alpha.3`; core recipe
+`gamesir-native-dkms 0.1.0.alpha3-16`.** The package now supplies receiver
+waiting as a vendor modprobe default. Service activation remains an explicit
+installation step; no installation automatically starts or resumes management.
+A same-name local override is preserved. See [installation](docs/INSTALLATION.md)
+and [release notes](docs/RELEASE_PRE_ALPHA_3.md).
+
+[Standalone acquisition](docs/STANDALONE_STARTUP.md) supports free interfaces
+and scoped takeover from xpad without a global blacklist. Revision15's
+receiver-only waiting and subsequent power-on without additional inputs passed
+one CachyOS Gamescope test and were accepted by the maintainer. The receiver
+re-enumerated and the manager acquired the new lifetime automatically. A brief
+initial xpad contact was reported but not resolved by the status samples;
+completely xpad-free first probing is not claimed. Cold-boot and repeated
+lifecycle acceptance remain separate. [Function/commit audit](docs/FUNCTIONAL_INTEGRATION_AUDIT.md).
+
 ## Confirmed Hardware Results
 
 - **Native gamepad input:** buttons, D-pad, both sticks and analog triggers
@@ -76,6 +92,10 @@ separates hardware results, offline tests and outstanding validation.
 - **Standalone startup:** controlled standard-model tests started the native
   mode without Deadband. One tested boot required only turning on the
   controller afterwards; this does not establish universal boot reliability.
+  Revision15 additionally kept an off-controller receiver in WAIT_RECEIVER=9
+  beyond the old deadline, then reached active native input/IMU publication
+  after one power-on without other inputs or manual Resume. This is one
+  accepted late-power-on case, not a cold-boot/reconnect guarantee.
 - **Four physical vibration motors:** the native driver sent separately
   captured commands to the left/right grip and left/right impulse-trigger
   motors. Three one-second pulses per motor were felt and stopped while
@@ -93,8 +113,9 @@ separates hardware results, offline tests and outstanding validation.
   A subsequent CachyOS Gamescope reboot case succeeded with the controller
   already on before Steam started; late arrival and reconnect remain limited.
   Eden also passed the later Gaming Mode application test using the manual
-  launch workaround below. These results are not Proton-game or general
-  lifecycle acceptance; no new physical calibration was performed. See
+  launch workaround below. A later maintainer report confirms gyro-as-right-stick
+  camera control in Arc Raiders despite zero Steam gyro UI values. This remains
+  a specific application report, not general Proton-game or lifecycle acceptance; no new physical calibration was performed. See
   [the activation record](docs/STEAM_ACCEL_EXTENSION.md).
 - **Forza Horizon 6 through Xodus Nexus:** one controlled run of the optional
   trigger bridge `0.1.0.alpha1-2` produced felt effects on both impulse
@@ -110,20 +131,22 @@ computer.
 
 ## Known Limitations
 
-- **Gyro integration remains experimental.** The selected 0.07 °/s/raw profile
-  has an unresolved late-power-on/reconnection limitation in Gamescope. The
-  [kernel/manager readiness change](docs/STEAM_GYRO_HOTPLUG.md) in revision 10
-  passed offline checks and was installed and tested on CachyOS, but **did not
-  resolve the late-power-on Steam gyro case**. A later user report describes
-  gyro display updates only while Guide is held; the cause remains unresolved.
-  Do not treat revision 10 or the separate Eden workaround as a verified Steam
-  gyro hotplug fix. The SDL evdev profile is opt-in and not enabled by default.
-  Precise angle/bias calibration remains paused. Raw IIO remains unchanged.
-  Separate opt-in evdev acceleration uses experimental `8192 LSB/g` and an
-  evidence-backed qualitative axis map; full physical calibration, repeated
-  lifecycle tests and general boot reliability remain open despite the limited
-  successful boot report. See [SDL/Eden scope](docs/SDL_EDEN_GYRO.md)
-  and [Steam result/limits](docs/STEAM_ACCEL_EXTENSION.md).
+- **Gyro integration remains experimental.** The selected 0.07 °/s/raw
+  profile and experimental `8192 LSB/g` acceleration/axis mapping remain opt-in;
+  the new packaged receiver-wait default does not enable them automatically.
+  Steam's calibration display may remain zero although application gyro works,
+  as reported with Arc Raiders. Eden's SDL path and its manual Gaming Mode
+  workaround have separate accepted tests. For the established Gamescope gyro
+  startup case, connect the controller before Steam starts. The successful new
+  late native takeover is not a new Steam gyro/game test. Precise calibration
+  remains paused; raw IIO is retained. See [SDL/Eden scope](docs/SDL_EDEN_GYRO.md),
+  [Steam results](docs/STEAM_ACCEL_EXTENSION.md) and the [release audit](docs/RELEASE_AUDIT.md).
+- **Receiver waiting has limited hardware acceptance.** One setup waits for
+  fresh native IMU without repeatedly initializing the same instance. A new
+  USB lifetime receives its own guarded startup. Waiting suspend/reset cancels
+  the unready state; automatic recovery of that cancelled state is not implemented.
+  Cold boot with the controller off, repeated RF/USB reconnect and long sessions
+  require further acceptance. [Waiting contract](docs/RECEIVER_WAIT_KERNEL.md).
 - **Trigger vibration has no confirmed universal games path.** Standard
   Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,
   with game-specified effect duration. Four-channel hardware support and the
@@ -149,8 +172,10 @@ computer.
   still require attention within the application.
 - **Suspend/resume, repeated hotplug, many reconnect cycles, multiple active
   dongles and long-term operation are not comprehensively hardware-tested.**
-  A pre-existing unowned `109c` session is intentionally not seized. There
-  are documented race limits during initial takeover and fallback binding.
+  Revision 12 permits exact acquisition of free/xpad-owned `109c`; unexplained
+  native or foreign owners remain excluded. General cold-start acceptance is pending. There
+  are documented race limits during attach and fallback binding; revision 11
+  narrows the initial xpad-detach race through exact-object kernel acquisition.
 - A manager race could latch a newly reconnected `100a/xpad` instance as
   released after an obsolete status query. The local revision-6
   [reconnect correction](docs/MANAGER_RECONNECT_FIX.md) is offline-tested and
@@ -179,7 +204,7 @@ state. No installer command is executed by reading this repository.
 
 The optional packages are separate from the kernel driver:
 
-- `gamesir-native-dkms` — kernel sources, session manager and guarded removal.
+- `gamesir-native-dkms` — kernel sources, session manager, packaged receiver-wait default and guarded removal.
 - `gamesir-native-steam` — Steam paddle mapping for supported session starts.
 - `gamesir-native-steam-gamescope` — additional integration for the tested
   CachyOS Gamescope session layout.

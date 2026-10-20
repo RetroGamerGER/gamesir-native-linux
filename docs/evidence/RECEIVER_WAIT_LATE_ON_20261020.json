@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "scope": "one_approved_late_controller_power_on_and_read_only_observation",
+  "package": "0.1.0.alpha3-15",
+  "kernel": "7.2.11-1-cachyos-deckify",
+  "authorization": {
+    "one_controller_power_on_on_cue": true,
+    "buttons_sticks_or_further_reconnect_requested": false,
+    "manual_release_resume_service_module_or_binding_change": false
+  },
+  "preflight": {
+    "same_waiting_USB_lifetime_and_kernel_tokens_attested": true,
+    "kernel_bootstrap_status": 9,
+    "manager_phase": "receiver_wait",
+    "service_options_configuration_unchanged": true
+  },
+  "human_confirmations": {
+    "once_powered_on_after_cue": true,
+    "no_additional_button_or_stick_input": true,
+    "initial_xpad_reported": true
+  },
+  "observation": {
+    "samples": 27,
+    "phase_sequence": [
+      "receiver_wait",
+      "checking_start",
+      "bootstrapping",
+      "active"
+    ],
+    "USB_sequence": [
+      {
+        "pid": "109c",
+        "driver": "gs_native",
+        "context": "original waiting receiver"
+      },
+      {
+        "pid": "100a",
+        "driver": "gs_native",
+        "context": "first sampled new lifetime after power-on"
+      },
+      {
+        "device_present": false,
+        "context": "sample during controlled bootstrap transition"
+      },
+      {
+        "pid": "109c",
+        "driver": "gs_native",
+        "context": "attested active handoff"
+      }
+    ],
+    "kernel_status": {
+      "state": 7,
+      "error": 0,
+      "failed_stage": 0,
+      "pad": 1,
+      "imu": 1,
+      "handover": 1
+    },
+    "bootstrap_child_exit": 0,
+    "bootstrap_child_timed_out": false,
+    "manager_phase": "active",
+    "input_publication": "Exact input publication confirmed",
+    "input_names": [
+      "GameSir G7 Pro Motion Sensors",
+      "GameSir G7 Pro"
+    ],
+    "active_stability_seconds": 10.415,
+    "start_budget_entries": 2,
+    "original_wait_lifetime_preserved_until_new_enumeration": true,
+    "one_setup_for_original_wait_then_one_start_for_new_100a_lifetime": true,
+    "new_failures_or_scan_or_publication_errors": false,
+    "service_restarted": false,
+    "explicit_release_resume_or_new_manual_bootstrap": false,
+    "same_waiting_kernel_object_readiness_observed": false
+  },
+  "xpad_evidence": {
+    "human_report": "Initially connected through xpad",
+    "polls_observed_100a_already_native": true,
+    "exact_first_binding_interval_captured": false,
+    "fully_xpad_free_first_probe_proved": false,
+    "commentary_correction": "Initial reply treated the reported xpad bind as independently measured; later clarified as a human report not resolved by the status samples"
+  },
+  "acceptance": {
+    "automatic_native_start_after_this_late_power_on_without_extra_inputs": true,
+    "read_only_monitoring_completed": true,
+    "new_100a_to_109c_controlled_handoff": true,
+    "cold_boot_with_controller_off": false,
+    "second_RF_reconnect": false,
+    "game_paddles_gyro_direction_or_motors_tested_in_this_run": false,
+    "upstream_or_xpad_independent_startup_claim": false,
+    "push": false
+  },
+  "limits": [
+    "No USB packet capture or exact physical power-on timestamp exists; sampled intervals are not radio latency measurements.",
+    "A new USB lifetime appeared after power-on; this is not same-instance wakeup from WAIT9 to READY7.",
+    "The manager performed the existing automatic bootstrap for the newly attested lifetime; this is not a manual replay on the old waiting object.",
+    "The human-reported initial xpad contact remains an explicit startup observation and unresolved first-probe acceptance item.",
+    "Old failure history was retained unchanged; historical -110 diagnostics in the journal are not new failures in this run."
+  ]
+}

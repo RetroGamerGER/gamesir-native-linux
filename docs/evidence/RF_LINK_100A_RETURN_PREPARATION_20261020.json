@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "scope": "primary KDE machine manual return to 100a preparation only",
+  "last_verified_pause": true,
+  "last_verified_current_pid": "109c",
+  "last_verified_owner": "xpad",
+  "fresh_live_check_in_this_step": false,
+  "physical_action_started": false,
+  "capture_started": false,
+  "resume_executed": false,
+  "installed_manager_sha256": "311b41bbab5310220a869d8b1dd98898c844b26eaed00b8d4f0e6d267fcdfbcc",
+  "reader_sha256": "e8799c2e0cc99604f82ff06338c7e1d7b29fdeb4ad6ceb52269186917a2fa3ad",
+  "offline_checks": {
+    "installed_manager_hash_matches_last_read": true,
+    "lease_not_retired_before_10_seconds": true,
+    "paused_confirmed_absence_retires_lease_and_preserves_original_diagnostic": true,
+    "returned_waits_for_empty_leases_and_stable_normal_observation": true,
+    "unknown_metadata_resets_absence_clock": true,
+    "unpaused_fault_is_not_erased_by_absence": true,
+    "new100a_is_not_acquired_while_paused": true,
+    "no_live_methods_devices_or_processes_used": true
+  },
+  "approval_gates": [
+    "fresh paused/source/boot/current109c ownership proof",
+    "manual dongle removal only after cue",
+    "15 seconds out then verified absence/empty leases/returned=true",
+    "reinsert same port only after absence passes; controller remains off",
+    "verify 100a xpad/usbhid, endpoints and unchanged pause; stop on mismatch"
+  ],
+  "recovery_guaranteed": false,
+  "private_ids_omitted": true
+}

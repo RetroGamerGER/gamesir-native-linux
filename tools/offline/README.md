@@ -2,6 +2,14 @@
 
 **Historischer Sprint-001-Komponentenbericht.** Diese Kopie gehört jetzt zum gemeinsamen Git-Projekt. Die folgenden Grenzen beschreiben den damaligen PoC. Aktuell: [Projektstand](../../docs/PROJECT_STATE.md) und [README](../../README.md).
 
+**Passiver Startablauf-Prototyp (20. Oktober 2026):**
+`python -B -m gamesir_offline startup-replay fixtures/synthetic_startup.jsonl --events --strict`
+prüft die Start-Hypothese anhand gespeicherter Dateien. Hello, beobachteter
+START, Status, Gamepad und IMU bleiben getrennt; es werden keine Befehle erzeugt
+oder gesendet. Das Beispiel ist künstlich; fünf historische Zeitfolgen liegen
+separat als anonymisierte Ereignismetadaten vor. Das ist noch kein installierter
+Startfix. [Ablauf, Zustände, Tests und Grenzen](../../docs/STARTUP_TIMELINE_PROTOTYPE.md).
+
 **Neuer separater Offline-HID-Prototyp (17. Oktober 2026):**
 `python -B -m gamesir_offline hid-replay fixtures/captured_hid_returns.jsonl --strict`
 wertet 14 kleine echte Telemetrieausschnitte und drei LED-Submits aus.

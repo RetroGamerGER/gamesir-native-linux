@@ -29,6 +29,7 @@ PASSIVE_SCOPE = 'passive-hid-100a-300'
 PASSIVE_DURATION, PASSIVE_OUTER_TIMEOUT = 300, 330
 PASSIVE_SHORT_SCOPE = 'passive-hid-100a-90'
 PASSIVE_SHORT_DURATION, PASSIVE_SHORT_OUTER_TIMEOUT = 90, 120
+RF_SCOPE = 'passive-rf-109c-xpad-90'
 PASSIVE_PROFILES = {
     PASSIVE_SCOPE: (PASSIVE_DURATION, PASSIVE_OUTER_TIMEOUT),
     PASSIVE_SHORT_SCOPE: (PASSIVE_SHORT_DURATION, PASSIVE_SHORT_OUTER_TIMEOUT),
@@ -89,6 +90,9 @@ def verify_sources(manifest):
     paths = [Path(__file__).absolute()] + [ASSETS / name for name in ASSET_NAMES]
     if isinstance(manifest.get('scope'), str) and manifest['scope'] in PASSIVE_PROFILES:
         paths.append(ROOT / 'tools/native/hid_sidechannel_capture.py')
+    if manifest.get('scope') == RF_SCOPE:
+        paths.extend([ASSETS / 'rf-identity-check.py', ROOT / 'tools/native/rf_link_capture.py',
+                      ROOT / 'tools/native/rf_link_policy.py', ROOT / 'tools/native/hid_sidechannel_capture.py'])
     for path in paths:
         regular(path)
         relative, value = str(path.relative_to(ROOT)), digest(path)
@@ -157,9 +161,11 @@ class Capture:
     def __init__(self, manifest, output):
         self.manifest, self.parent = manifest, Path(output)
         self.scope = manifest.get('scope')
-        need(self.scope in (SCOPE, *PASSIVE_PROFILES), 'Wrong native capture scope')
-        self.passive = self.scope in PASSIVE_PROFILES
-        self.duration, self.outer_timeout = PASSIVE_PROFILES[self.scope] if self.passive else (DURATION, OUTER_TIMEOUT)
+        need(self.scope in (SCOPE, RF_SCOPE, *PASSIVE_PROFILES), 'Wrong native capture scope')
+        self.rf = self.scope == RF_SCOPE
+        self.passive = self.scope in PASSIVE_PROFILES or self.rf
+        self.duration, self.outer_timeout = ((90, 120) if self.rf else
+            PASSIVE_PROFILES[self.scope] if self.passive else (DURATION, OUTER_TIMEOUT))
         self.tail = 0 if self.passive else TAIL
         conf = manifest.get('usb_capture', {})
         need((conf.get('duration_seconds'), conf.get('outer_timeout_seconds')) == (self.duration, self.outer_timeout),
@@ -171,7 +177,7 @@ class Capture:
              and isinstance(ref.get('sha256'), str) and len(ref['sha256']) == 64,
              'Fresh dumpcap provenance required')
         target = manifest['target']
-        if self.passive:
+        if self.passive and not self.rf:
             validate_passive_target(target)
         need(target['port'] == '8-6' and str(target['busnum']) == '8'
              and str(target['devpath']) == '6' and str(target['devnum']).isdigit()
@@ -182,6 +188,11 @@ class Capture:
              'Expected private native evidence directory')
         self.owner = (self.parent.stat().st_uid, self.parent.stat().st_gid)
         self.source_hashes = verify_sources(manifest)
+        self.rf_tracker = self.rf_log = None
+        self.identity_asset = 'rf-identity-check.py' if self.rf else 'identity-check.py'
+        if self.rf:
+            from rf_link_policy import Tracker
+            self.rf_tracker = Tracker(target)
         self.directory = self.parent / 'usb-capture'
         need(not os.path.lexists(self.directory), 'Capture output exists; never overwrite')
         self.process = self.observer = self.baseline = self.launched = None
@@ -210,7 +221,7 @@ class Capture:
         stream.close()
 
     def _metadata(self, asset, argument=None):
-        argv = ['/usr/bin/python', '-I', '-c', self.sources[asset]]
+        argv = ['/usr/bin/python', '-I', '-B', '-c', self.sources[asset]]
         if argument is not None:
             argv.append(json.dumps(argument, sort_keys=True))
         result = subprocess.run(argv, stdin=subprocess.DEVNULL, capture_output=True,
@@ -254,7 +265,8 @@ class Capture:
         need(callable(getattr(os, 'pidfd_open', None)) and callable(getattr(signal, 'pidfd_send_signal', None)),
              'Existing Python runtime lacks required process-identity protection')
         need(verify_sources(self.manifest) == self.source_hashes, 'Sources changed after attach')
-        self.sources = {name: (ASSETS / name).read_text() for name in ASSET_NAMES}
+        self.sources = {name: (ASSETS / name).read_text() for name in
+                        (*ASSET_NAMES, 'rf-identity-check.py') if name in ASSET_NAMES or self.rf}
         need(all(hashlib.sha256(value.encode()).hexdigest() == self.source_hashes[
                  'tools/native/usb_capture/' + name] for name, value in self.sources.items()),
              'Capture source changed while reading; stop before metadata')
@@ -269,14 +281,18 @@ class Capture:
             identity_argument = {'target': self.manifest['target']}
             if self.passive:
                 identity_argument['capture_profile'] = self.scope
-            ident = self._metadata('identity-check.py', identity_argument)
+            ident = self._metadata(self.identity_asset, identity_argument)
+            if self.rf:
+                self.rf_tracker.observe(ident, time.monotonic(), initial=True)
+                self.rf_log = self._file('rf-observations.jsonl')
+                self._record_rf(ident, 'initial')
             self.baseline = dict(host, identity=ident, target=self.manifest['target'])
             if self.passive:
                 self.baseline['capture_profile'] = self.scope
             self._object('host-before.json', host)
             self._object('identity-before.json', ident)
             self._object('dumpcap-file-metadata.json', self.manifest['usb_capture']['dumpcap_file_metadata'])
-            for name in ASSET_NAMES:
+            for name in self.sources:
                 stream = self._file(name)
                 stream.write(self.sources[name].encode())
                 stream.close()
@@ -287,7 +303,7 @@ class Capture:
                 '/usr/bin/bash', '-euc', self.sources['setup.sh'],
                 self.scope if self.passive else 'native-motor-comparison',
                 json.dumps(self.baseline, sort_keys=True), self.sources['guest-check.py'],
-                self.sources['identity-check.py']]
+                self.sources[self.identity_asset]]
             self._object('command-argv.json', argv)
             self.observer = subprocess.Popen(['/usr/bin/timeout', '--signal=TERM', '--kill-after=2s',
                 str(self.outer_timeout) + 's', '/usr/bin/udevadm', 'monitor', '--kernel', '--udev',
@@ -346,9 +362,13 @@ class Capture:
         poller.register(self.dumpcap_fd, select.POLLIN | select.POLLHUP | select.POLLERR)
         need(not poller.poll(0), 'dumpcap exited before supervisor at ' + stage)
         if self.passive and now >= self.next_identity_check:
-            identity = self._metadata('identity-check.py', {
+            identity = self._metadata(self.identity_asset, {
                 'target': self.manifest['target'], 'capture_profile': self.scope})
-            need(identity == self.baseline['identity'], 'Passive target instance/bindings changed at ' + stage)
+            if self.rf:
+                self._record_rf(identity, stage)
+                self.rf_tracker.observe(identity, time.monotonic())
+            else:
+                need(identity == self.baseline['identity'], 'Passive target instance/bindings changed at ' + stage)
             self.next_identity_check = time.monotonic() + 1
         if now >= self.last_check:
             need(shutil.disk_usage(self.parent).free >= GIB, 'Less than 1 GiB free at ' + stage)
@@ -357,6 +377,12 @@ class Capture:
                 need((self.directory / name).stat().st_size < limit, 'Capture/log size limit: ' + name)
             need((self.directory / 'udev-stderr.log').stat().st_size == 0, 'Epoch observer error')
             self.last_check = now + .25
+
+    def _record_rf(self, snapshot, stage):
+        need(self.rf_log is not None, 'Missing RF observation log')
+        self.rf_log.write((json.dumps({'utc': utc(), 'monotonic_ns': time.monotonic_ns(),
+            'stage': stage, 'snapshot': snapshot}, ensure_ascii=False) + '\n').encode())
+        self.rf_log.flush()
 
     def _stop(self):
         if self.process is None or self.process.poll() is not None:
@@ -442,11 +468,17 @@ class Capture:
                 result['host_mounts_namespaces_node_unchanged'] = after == expected
                 need(after == expected, 'Host mount/node/namespace changed')
                 if self.passive:
-                    identity = self._metadata('identity-check.py', {
+                    identity = self._metadata(self.identity_asset, {
                         'target': self.manifest['target'], 'capture_profile': self.scope})
                     self._object('identity-after.json', identity)
-                    need(identity == self.baseline['identity'], 'Passive target changed before final audit')
-                    result['target_identity_bindings_pause_unchanged'] = True
+                    if self.rf:
+                        self._record_rf(identity, 'final')
+                        self.rf_tracker.observe(identity, time.monotonic(), final=True)
+                        result['rf_epochs'] = self.rf_tracker.epochs
+                        result['rf_topology_pause_bindings_verified'] = True
+                    else:
+                        need(identity == self.baseline['identity'], 'Passive target changed before final audit')
+                        result['target_identity_bindings_pause_unchanged'] = True
             original = self.directory / 'original-usbmon8.pcapng'
             need(original.exists(), 'Missing original capture')
             if original.exists():

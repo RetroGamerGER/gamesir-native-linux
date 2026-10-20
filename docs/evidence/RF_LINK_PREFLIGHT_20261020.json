@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "target_role": "primary_KDE_machine",
+  "scope": "one approved read-only RF preflight; stopped at manager fault",
+  "source_commit": "81a43ff",
+  "helper_sha256": "560d196ab859ed82d32c42d83b9d2c8af8230b1553f0666b159c6a318facbafd",
+  "private_report_sha256": "3b90da08b4e072c74ea2d031e056471cf83e3318673443ef5115ac294958aefb",
+  "kernel": "7.2.11-1-garuda",
+  "receivers_observed": 1,
+  "usb_observation": {
+    "vid": "3537",
+    "pid": "109c",
+    "interface0_driver": "xpad",
+    "interface1_driver": null
+  },
+  "manager": {
+    "paused": false,
+    "scan_error": "",
+    "port_errors_present": false,
+    "phase": "blocked",
+    "busy": false,
+    "returned": false,
+    "error": "Unowned new 109c instance; no END attempted",
+    "stored_bootstrap_kernel_status": {
+      "state": 8,
+      "error": -108,
+      "failed_stage": 1,
+      "pad": 0,
+      "imu": 0,
+      "handover": 0
+    }
+  },
+  "diagnostic_scope": "Stored original bootstrap status, not a fresh native USB query or current RF-state measurement",
+  "executed_privileged_reads": [
+    "gamesir-native status"
+  ],
+  "not_executed": [
+    "service/package/journal queries after blocked status",
+    "monitor check/open",
+    "capture",
+    "release",
+    "resume",
+    "module operation",
+    "driver binding change",
+    "controller power-on cue"
+  ],
+  "capture_ready": false,
+  "recovery_confirmed": false,
+  "private_ids_and_history_omitted": true
+}

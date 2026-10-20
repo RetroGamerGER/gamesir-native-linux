@@ -22,6 +22,7 @@ class RecordTests(unittest.TestCase):
         kinds = {"synthetic_valid.jsonl": ("synthetic", "synthetic"),
                  "synthetic_negative.jsonl": ("synthetic", "synthetic"),
                  "synthetic_hid_companion.jsonl": ("synthetic", "synthetic"),
+                 "synthetic_startup.jsonl": ("synthetic", "synthetic"),
                  "captured_hid_returns.jsonl": ("capture_excerpt", "host_capture")}
         paths = list((ROOT / "fixtures").glob("*.jsonl"))
         self.assertEqual({path.name for path in paths}, set(kinds))

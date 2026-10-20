@@ -24,6 +24,21 @@ DOCUMENT_FILES = (
     'docs/ALPHA_INSTALLATION.md', 'docs/ALPHA_RUNTIME.md', 'docs/ALPHA_INSTALL_AUDIT.md',
     'docs/MANAGER_CONFLICT_FIX.md',
     'docs/MANAGER_RECONNECT_FIX.md',
+    'docs/STANDALONE_STARTUP.md',
+    'docs/ACQUISITION_AUTOPROBE_FIX.md',
+    'docs/REVISION13_FIRST_START.md', 'docs/DUALSENSE_STARTUP_GAMESCOPE.md',
+    'docs/RECEIVER_WAIT_KERNEL.md', 'docs/RECEIVER_WAIT_UPDATE.md',
+    'docs/RELEASE_PRE_ALPHA_3.md', 'docs/FUNCTIONAL_INTEGRATION_AUDIT.md',
+    'docs/evidence/RECEIVER_WAIT_INSTALL_20261020.json',
+    'docs/evidence/RECEIVER_WAIT_CHECK_20261020.json',
+    'docs/evidence/RECEIVER_WAIT_LATE_ON_20261020.json',
+    'docs/evidence/RECEIVER_WAIT_OFFLINE_20261020.json',
+    'docs/RF_PID_TRANSITION_COMPARISON.md',
+    'docs/evidence/RF_PID_TRANSITIONS_20261020.json',
+    'docs/RF_LINK_CONNECTION_WITNESS.md', 'docs/STARTUP_TIMELINE_PROTOTYPE.md',
+    'docs/evidence/RF_LINK_100A_RETURN_ATTEMPT_20261020.json',
+    'docs/evidence/RF_LINK_WITNESS_20261020.json',
+    'docs/evidence/XPAD_START_QUERY_REVIEW_20261019.json',
     'docs/BOOTSTRAP_CACHYOS_FIX.md',
     'docs/evidence/CACHYOS_BOOTSTRAP_20261015.json',
     'docs/DUALSENSE_SENSOR_COMPARISON.md',
@@ -95,6 +110,7 @@ def source_files(root=ROOT):
                       'bin/gamesir-native', 'systemd/gamesir-native.service',
                       'sysusers/gamesir-native.conf',
                       'udev/70-gamesir-native-sensors.rules',
+                      'modprobe.d/91-gamesir-native-receiver-wait.conf',
                       'arch/PKGBUILD.in', 'arch/60-gamesir-native-release.hook',
                       'arch/60-gamesir-native-upgrade.hook'),
     }
@@ -196,6 +212,8 @@ def stage(dest, client, root=ROOT):
          'usr/lib/systemd/system/gamesir-native.service')
     copy(root / 'packaging/sysusers/gamesir-native.conf',
          'usr/lib/sysusers.d/gamesir-native.conf')
+    copy(root / 'packaging/modprobe.d/91-gamesir-native-receiver-wait.conf',
+         'usr/lib/modprobe.d/91-gamesir-native-receiver-wait.conf')
     copy(root / 'packaging/udev/70-gamesir-native-sensors.rules',
          'usr/lib/udev/rules.d/70-gamesir-native-sensors.rules')
     for hook in (root / 'packaging/arch').glob('*.hook'):

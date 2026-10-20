@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "scope": "file-only existing capture and saved phase/confirmation/journal comparison; no payload-byte hunt",
+  "original_captures_rehashed_and_matching": 11,
+  "capture_inventory": [
+    {
+      "label": "20261011T124333963714488Z-stage4-5s",
+      "sha256": "8dbe77e235c2ff5666964c6241a642be3f508d813ee947fbe00af5ac52ff0230"
+    },
+    {
+      "label": "20261011T133916365243Z-measurement-B-deadband",
+      "sha256": "192200c431e8ef767ed872f79a658803418a68b991a60474aeac071575226628"
+    },
+    {
+      "label": "20261011T134320608606Z-measurement-B-deadband",
+      "sha256": "d9613598e5a22a7e3732a5bcda295c97df5f67890db47ec196c67ff7c805ed17"
+    },
+    {
+      "label": "20261011T140000665674Z-measurement-B-deadband",
+      "sha256": "280d1fc3b06e80f7767a80a6263c589e8edaa8a869f5efb8834378c28f733159"
+    },
+    {
+      "label": "20261011T141131938846Z-measurement-B-deadband",
+      "sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89"
+    },
+    {
+      "label": "20261012T165154770784Z-motor-comparison-deadband",
+      "sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954"
+    },
+    {
+      "label": "20261011T105132490089957Z-test-A",
+      "sha256": "891f20d5d61fcd1e58a5c53487a50cc50d7ee1bc92badb8f993b076e5c118622"
+    },
+    {
+      "label": "native300s-motor-comparison",
+      "sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998"
+    },
+    {
+      "label": "005-passive-hid-90-20261018T040502294162Z",
+      "sha256": "6c93e41d81fe50bd6d6f92a52a7605cc9659a9323a656be506d0024e96af21ce"
+    },
+    {
+      "label": "006-passive-hid-90-20261018T041459001544Z",
+      "sha256": "85cc7d24dc98069e345348cfddf6f2ecefd3de2e7241f7a600a458be046ca125"
+    },
+    {
+      "label": "approved_passive_radio_on_20261020",
+      "sha256": "dc5f5f2b2b68ed85a2162a591d6a50ddb1b5acb1ea60c7b2324153fd936a35bd"
+    }
+  ],
+  "captured_109c_to_100a_cases": [
+    {
+      "label": "20261011T141131938846Z-measurement-B-deadband",
+      "original_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "transition": "109c_to_100a",
+      "first_100a_descriptor": {
+        "frame": 174003,
+        "relative_us": 243290142
+      },
+      "radio_state_at_transition": "not synchronously labelled",
+      "context": "Release to games / close Deadband cue; not passive radio-only",
+      "release_close_cue_relative_us": 233029687,
+      "us_after_release_close_cue": 10260455
+    },
+    {
+      "label": "20261012T165154770784Z-motor-comparison-deadband",
+      "original_sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954",
+      "transition": "109c_to_100a",
+      "first_100a_descriptor": {
+        "frame": 177348,
+        "relative_us": 239827530
+      },
+      "radio_state_at_transition": "not synchronously labelled",
+      "context": "Release to games / close Deadband cue; not passive radio-only",
+      "release_close_cue_relative_us": 233001951,
+      "us_after_release_close_cue": 6825579
+    },
+    {
+      "label": "native300s-motor-comparison",
+      "original_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+      "transition": "109c_to_100a",
+      "first_100a_descriptor": {
+        "frame": 298575,
+        "relative_us": 320358494
+      },
+      "radio_state_at_transition": "not synchronously labelled",
+      "context": "approved session finalization with END/stop and return; not passive radio-only",
+      "finalization_begin_relative_us": 317342653,
+      "us_after_finalization_begin": 3015841
+    },
+    {
+      "label": "approved_passive_radio_on_20261020",
+      "original_sha256": "dc5f5f2b2b68ed85a2162a591d6a50ddb1b5acb1ea60c7b2324153fd936a35bd",
+      "transition": "109c_to_100a",
+      "old_109c_shutdown_relative_us": 31883869,
+      "first_100a_descriptor": {
+        "frame": 16243,
+        "relative_us": 33431024,
+        "endpoint": 128
+      },
+      "power_on_cue_relative_us": 30053342,
+      "human_connection_confirmation_relative_us": 40078859,
+      "context": "Native paused, receiver remains inserted, power-on cue only; ordinary xpad/HID software may initialize new instance",
+      "radio_state_at_transition": "bracketed by power-on cue and human connection confirmation, not exact RF timestamp"
+    }
+  ],
+  "retained_radio_cycle": {
+    "private_source_hashes": {
+      "observation.jsonl": "15c22e4301632e13ed22272384680dd3322003b8d40c360fb88aab8f66d8bd0a",
+      "user-confirmations.json": "a7e427f27d5286dd153588c702e71b4462766824440e427f20f530161a029234",
+      "user-off-confirmation.json": "1943a965c8d943682ffe50414a5fa90f389fa001ff0e239f23e28ca688ae7452"
+    },
+    "status_observations": 217,
+    "controller_off_and_later_on_confirmed": true,
+    "off_confirmation_has_no_timestamp": true,
+    "100a_epoch_cannot_be_labelled_off_or_on_from_that_confirmation": true
+  },
+  "off_state_controls": [
+    {
+      "reference": "RF_LINK_100A_RETURN_ATTEMPT_20261020.json",
+      "controller_off_confirmed": true,
+      "observed_pid": "109c",
+      "manager_paused_and_empty": true,
+      "100a_baseline_reached": false
+    },
+    {
+      "reference": "RELEASE_AUDIT.md revision14 controller-off reboot",
+      "controller_off_reported": true,
+      "current_pid": "109c",
+      "native_bootstrap_failed_without_pad_or_imu": true,
+      "historical_100a_failures_not_current_instance": true
+    }
+  ],
+  "verdict": {
+    "one_labelled_passive_radio_on_transition": true,
+    "three_return_context_transitions": true,
+    "synchronously_proven_100a_while_radio_off_in_selected_evidence": false,
+    "this_absence_proves_100a_means_connected": false,
+    "pid_transition_sufficient_rf_proof": false,
+    "production_changes": false,
+    "pid_transition_mandatory_for_already_present_device": false,
+    "preferred_architecture": "kernel receiver-wait lifecycle; thin manager retains ownership and recovery policy",
+    "waiting_implementation_or_late_on_validation_completed": false
+  },
+  "limits": [
+    "One passive transition bracketed by human cue/confirmation; exact RF timing not measured.",
+    "Three return-phase transitions are confounded, not proved radio-only events or proof that END caused the transition.",
+    "No synchronously labelled 100a/controller-off negative control in selected evidence.",
+    "The 14 October off confirmation has no timestamp; intermediate 100a radio state stays unknown.",
+    "Indefinite waiting does not prove that setup sent while off remains effective; no initialization replay is authorized.",
+    "No new packet-byte search, hardware, root, SSH, network or installed-system access."
+  ]
+}

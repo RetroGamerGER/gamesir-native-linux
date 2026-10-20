@@ -1,6 +1,16 @@
 # Alpha-Laufzeit und Besitzregeln
 
-PRE-ALPHA-Architekturstand: 17. Oktober 2026, Modul `0.1.0.alpha3`.
+20. Oktober: Eine enge Offline-Korrektur löst die Sperre einer neuen,
+noch unversuchten `100a`-Instanz nach nachgewiesen beendetem direktem
+`109c`-Start mit fehlenden Daten und VERIFY-Timeout. Erst ein neuer vollständiger
+Scan und die üblichen Besitz-/Budgetprüfungen erlauben den nächsten Start.
+Keine Wiederholung auf der fehlgeschlagenen Instanz oder Migration alter Sperren.
+[Abgrenzung und Tests](REVISION13_FIRST_START.md#offline-manager-correction--20-october-2026).
+Noch nicht installiert; der folgende Architekturstand ist historisch.
+
+PRE-ALPHA-Architekturstand: 19. Oktober 2026, Modul `0.1.0.alpha3`,
+vorbereitete Paketrevision 12. Die korrigierten Startfälle sind nur offline
+geprüft; ihre Hardwareabnahme steht aus. [Änderungsumfang](STANDALONE_STARTUP.md).
 Dieser Text beschreibt Besitz- und Laufzeitregeln, keinen aktuellen Zustand
 eines bestimmten Rechners. Der Standardpfad ist in begrenzten Hardwareläufen
 mit eigenständigem Start, Eingaben und Roh-IMU bestätigt; ein Boot mit späterem
@@ -47,13 +57,18 @@ Hubwechsel. USB-Adresse und Produktname sind keine individuelle UID.
 Die vorhandenen Serienstrings sind nicht als stabile modusübergreifende UID
 bestätigt. Ein passendes Gerät an einem fremden Port ist kein Übergangskandidat.
 
-Beim Standardexemplar übernimmt der Manager ein geprüftes 100a-Interface 0 von xpad, wartet
-passiv auf akzeptierte Gamepad-Daten und beauftragt dann einmal den vorhandenen
-Bootstrap. Der Kernel korreliert die neue 109c-Instanz am aktuellen Anschluss
-und initialisiert sie genau einmal. Eine fremde, bereits aktive 109c-Sitzung
-wird nicht automatisch übernommen. Interface 1 bleibt unverändert.
-Für `105e` übernimmt er ebenfalls ausschließlich das geprüfte Interface 0
-von xpad. Der einmalige Bootstrap beginnt direkt auf dieser Instanz mit der
+Beim Standardexemplar übernimmt der Manager ein geprüftes freies oder optional
+xpad-gebundenes 100a-Interface 0, prüft den passiven Laufzeitstatus und
+beauftragt einmal den vorhandenen Bootstrap. Seit Revision 12 ist dafür kein
+vorheriger Tastendruck oder akzeptierter Gamepad-Bericht mehr erforderlich. Der Kernel korreliert die neue 109c-Instanz am aktuellen Anschluss
+und initialisiert sie genau einmal. Ein bereits als 109c erkanntes Gerät kann
+seit Revision 12 mit einem eigenen exakten Übernahmeauftrag direkt initialisiert
+werden, sofern IF0 frei oder xpad-gebunden ist. Fremde/native Besitzer werden
+weiterhin ausgeschlossen; keine Übernahme allein aufgrund der PID. Interface 1
+bleibt unverändert. Direkter 109c-Start und 105e benötigen keinen Moduswechsel.
+Für `105e` übernimmt er ebenfalls ausschließlich das geprüfte freie oder
+xpad-gebundene Interface 0. xpad wird weder geladen noch vorab zur Initialisierung
+gebunden. Der einmalige Bootstrap beginnt direkt auf dieser Instanz mit der
 gemeinsamen GIP-Initialisierung und den Heartbeats. Keine Übergangspakete,
 keine neue PID, kein `--handoff-xpad`; frische IMU und eindeutige Kernel-Tokens
 bleiben Voraussetzungen der Runtime-Übergabe. Ausbleibende IMU führt zu einer
@@ -67,34 +82,52 @@ behalten den strengen Guard. [Statusvertrag](MANAGER_CONFLICT_FIX.md).
 Pro Instanz gibt es einen Startversuch und zusätzlich ein Budget
 von drei Starts pro Anschluss innerhalb von zehn Minuten. Das Budget wird vor
 der Übernahme geprüft und der Versuch unmittelbar vor dem Bootstrap persistent
-verbucht. Passives Warten auf Eingabedaten verbraucht noch keinen Startversuch.
+verbucht. Eine noch nicht mögliche Statusprüfung verbraucht keinen Startversuch;
+eine fehlende Tastenänderung verhindert den Start nach gültiger Prüfung nicht.
 Die Startberechtigung ist von der Bereinigung eigener Instanzen getrennt.
 
-Im Dauerbetrieb lehnt der Kernel jeden gewöhnlichen 100a-/105e-Probe ab. Fehlende
+Im Dauerbetrieb lehnt der Kernel jeden gewöhnlichen Start-Probe ohne passenden
+Übernahmeauftrag ab; für den korrelierten Übergang gilt dessen Besitznachweis. Fehlende
 Autoload-Aliase allein würden dies bei bereits geladenem Modul nicht verhindern.
 Erst der budgetgeprüfte Manager darf die private, versionierte Schreibschnittstelle
-`/sys/bus/usb/drivers/gs_native/claim_100a` beziehungsweise `claim_105e`
+`/sys/bus/usb/drivers/gs_native/acquire_100a`, `acquire_105e` oder `acquire_109c`
 verwenden (0200 und CAP_SYS_ADMIN). Jeder Eingang prüft seine exakte PID;
 es gibt keine pauschale Gerätefreigabe.
 Ihr Format ist `1 IFNAME BUS ADDRESS DEVICE_INODE PARENT_INODE` mit abschließendem
-Zeilenumbruch. Nach gezieltem xpad-Unbind prüft der Kernel das referenzierte
-Interface, die aktuelle USB-Identität und beide sysfs-Inodes unter den USB-Core-
-Sperren. Die Probe-Erlaubnis gilt nur einmal innerhalb dieses synchronen Aufrufs
+Zeilenumbruch. Der Kernel prüft das referenzierte Interface, die aktuelle
+USB-Identität und beide sysfs-Inodes unter der USB-Gerätesperre. Er hält eine
+Referenz auf dieses Interface und löst ausschließlich dort einen optionalen
+xpad-Besitzer. Freie Interfaces werden direkt übernommen. Die anschließende
+Probe prüft die Identität erneut. Die Probe-Erlaubnis gilt nur einmal innerhalb dieses synchronen Aufrufs
 für genau dessen Task und Interface; Hotplug und generisches `bind` erhalten
 keine solche Freigabe. Es bleibt kein ungenutztes Claim-Ticket zurück.
 Der spätere korrelierte 109c-Probe verwendet weiterhin den vorhandenen Bootstrap-
-Besitznachweis. Der endliche historische Testmodus bleibt unverändert.
+Besitznachweis. Ein direkt übernommenes 109c muss dagegen auf derselben
+referenzierten Instanz bleiben; ein Ersatz ist kein gültiger Direktstart.
+Der endliche historische Testmodus bleibt unverändert.
+Die bisherigen `claim_100a`-/`claim_105e`-Attribute bleiben unverändert auf freie
+Interfaces begrenzt. Der neue Manager verlangt die neuen Attribute; ein altes
+geladenes Modul wird nicht durch einen unsicheren Kompatibilitätspfad umgangen.
+Eine vor dem Schreibzugriff abgelehnte Übernahme gewährt keinen Rückgabebesitz.
+Bei Prozessabbruch oder Fehler vor bestätigter Übernahme einer nativen Bindung
+bleibt diese gesperrt zur manuellen Klärung. Der ursprüngliche Übernahmefehler
+bleibt auch bei späteren Bereinigungsfehlern und Manager-Neustarts gespeichert.
 
-**Verbleibende Grenze:** Die anfängliche xpad-Abbindung und eine spätere
-100a-/105e-Rückgabe des Managers sind zwischen letzter Metadatenprüfung und
-Schreibzugriff nicht atomar gegen
+**Verbleibende Grenze:** Eine spätere 100a-/105e-Rückgabe des Managers ist
+zwischen letzter Metadatenprüfung und Schreibzugriff nicht atomar gegen
 extrem schnelles Abziehen/Ersetzen am selben Anschluss. Nachprüfungen und der
 Kernel-Probe verhindern einen ungeprüften Bootstrap; eine zwischenzeitliche
 Abbindung eines Ersatzgeräts ist dadurch nicht vollständig ausgeschlossen.
+Die anfängliche optionale xpad-Abbindung findet dagegen seit Revision 11 am
+geprüften, referenzierten Kernelobjekt statt. Konkurrierende Probes oder
+Entfernung beim anschließenden Attach können weiterhin zum Abbruch führen.
 Diese Alpha ist keine Zusicherung atomarer Geräteübernahme. Die spätere
 Produktionsfreigabe benötigt hierfür eine gezielte Lösung oder nachweisbar
 engere Besitzgarantien. Auch ein gleichartiger Ersatzdongle ohne authentisierte
 UID kann nicht allein aus Hersteller-/Produktkennung unterschieden werden.
+Fehlt die xpad-Rückbindeschnittstelle, stoppt der Manager vor dem Abbindeschritt
+mit ausdrücklichem Fehler; er lädt xpad nicht implizit nach und behauptet keine
+Rückkehr. Auch bei vorhandenem xpad muss der reale Rückkehrzustand bestätigt werden.
 
 ## Dauerbetrieb, Funkverlust und Suspend
 

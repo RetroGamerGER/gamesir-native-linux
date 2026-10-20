@@ -1,8 +1,11 @@
 # Gamescope: later power-on and gyro reconnection
 
-19 October 2026. **Kernel/client/manager integration implemented and tested
-OFFLINE at `f1f6c00`; subsequent CachyOS installation is recorded below,
-and continuous late Steam gyro operation remains unaccepted.** This supersedes
+19 October 2026. **One user-led radio reconnect under revision 11 now has a
+positive Steam/Gamescope gyro result without held Guide or Steam restart;
+see the bounded acceptance below. General hotplug reliability remains open.**
+Kernel/client/manager readiness integration was implemented and tested
+offline at `f1f6c00`; subsequent revision-10 installation and failed late-gyro
+observations are retained below. This supersedes
 the unintegrated prototype at `468ddc6`. The existing gyro/acceleration units,
 axis maps, raw IIO, paddles, FF and trigger ownership remain unchanged. During
 the initial offline integration no installed file, running module, Steam or
@@ -10,6 +13,42 @@ controller was changed or opened.
 The separately requested CachyOS check reads kernel/header metadata over SSH
 and builds selected sources in an unprivileged working directory only.
 Calibration remains paused. Historical SDL reproduction below retains its scope.
+
+## Revision 11 user-led radio reconnect — 19 October 2026
+
+Following the separately verified revision-11 installation, the maintainer
+reported starting the service and invoking Resume manually. Unprivileged
+readback confirms the new loaded srcversion `06354BBF7CEC05B29300CC8`, the two
+root-write-only acquisition attributes, and an active/enabled service with no
+automatic restart recorded. Available journals report bootstrap state 7,
+error 0, failed stage 0, gamepad/IMU readiness and confirmed input publication.
+The gamepad and six-axis motion node have the same nonempty session identity
+and native USB parent. Registration/capabilities are not themselves motion proof.
+
+The maintainer then explicitly confirms all of the following:
+
+- The radio controller was switched off and back on; its USB dongle stayed
+  connected.
+- Gyro continued working in **Steam's gyro display in Gaming Mode**.
+- Guide was not held and Steam was not restarted.
+
+This is a **positive application result for this reported radio reconnect**.
+The later metadata read still shows the same native USB instance, module and
+service. No continuous RF trace, live input capture, game-gyro mapping, timed
+radio-outage measurement or fresh paddle/motor regression was performed.
+The protected manager socket and effective root-only module parameters were
+not newly read with elevated rights; available journal and sysfs evidence have
+their stated scope. Codex performed no start, Resume or device operation in
+this user-led phase.
+
+The observed startup began with an already xpad-initialized 100a device; kernel
+logs show the optional handoff, including `handover=1` for the transition.
+It therefore does **not** prove cold startup without previous xpad activity,
+nor that removing such activity caused this gyro improvement. Revision 11 did
+not change the sensor units or Steam configuration. Keep the earlier failures
+and startup workaround as historical/known-limit evidence until repeatable
+late-power-on, USB replug and boot cases are separately accepted on both hosts.
+No extra test or automatic retry is authorized by this successful report.
 
 ## Result and evidence boundary
 

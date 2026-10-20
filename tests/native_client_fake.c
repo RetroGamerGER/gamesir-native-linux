@@ -22,6 +22,7 @@ static unsigned long fail_request;
 static unsigned int expected_pulse_ms = 400;
 static unsigned int boot_calls, expected_boot_flags;
 static int boot_case;
+static int waiting_case;
 
 static int fake_clock(clockid_t id, struct timespec *ts)
 {
@@ -90,8 +91,8 @@ static int fake_ioctl(int fd, unsigned long request, ...)
 	} else if (request == GSN_GET_BOOT_STATUS) {
 		struct gsn_boot_status *s = va_arg(args, struct gsn_boot_status *);
 		*s = (struct gsn_boot_status){ .abi_version = 1,
-			.state = fail_request ? 8 : 7, .error = fail_request ? -EIO : 0,
-			.imu_seen = !fail_request, .port_token = 11, .instance_token = 22 };
+			.state = fail_request ? 8 : waiting_case ? 9 : 7, .error = fail_request ? -EIO : 0,
+			.imu_seen = !fail_request && !waiting_case, .port_token = 11, .instance_token = 22 };
 	} else if (request == GSN_GET_INFO) {
 		struct gsn_info *info = va_arg(args, struct gsn_info *);
 		*info = (struct gsn_info){ .abi_version = 1, .pid = boot_case ? 0x100a : 0x109c, .state = 1,
@@ -152,6 +153,7 @@ int main(int argc, char **argv)
 		char *client_argv[] = {"gsnative-ctl", "bootstrap", "/dev/gsnative-offline-test",
 			!strcmp(mode, "bootstrap-invalid") ? "--guess" : "--handoff-xpad", NULL};
 		boot_case = 1;
+		waiting_case = !strcmp(mode, "bootstrap-wait");
 		allow_open = strcmp(mode, "bootstrap-invalid") != 0;
 		expected_boot_flags = !strcmp(mode, "bootstrap-handover") ? 1 : 0;
 		if (!strcmp(mode, "bootstrap-fail"))
@@ -160,6 +162,16 @@ int main(int argc, char **argv)
 		assert(!starts && !ends && !pulses && !stops);
 		assert(opens == allow_open && closes == allow_open && boot_calls == (unsigned)allow_open);
 		assert(result == (!allow_open ? 2 : fail_request ? 1 : 0));
+		return result;
+	}
+	if (!strcmp(mode, "end-wait") || !strcmp(mode, "info-wait")) {
+		waiting_case = allow_open = 1;
+		char *client_argv[] = {"gsnative-ctl", !strcmp(mode, "end-wait") ? "end" : "info",
+			"/dev/gsnative-offline-test", "--expect-port", "11", "--expect-instance", "22", NULL};
+		result = unused_client_main(7, client_argv);
+		assert(result == (!strcmp(mode, "info-wait") ? 1 : 0));
+		assert(ends == !strcmp(mode, "end-wait") && !starts && !pulses && !stops && !boot_calls);
+		assert(opens == 1 && closes == 1);
 		return result;
 	}
 	if (!strcmp(mode, "end-fail"))

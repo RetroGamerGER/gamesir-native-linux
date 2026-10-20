@@ -2,6 +2,35 @@
 
 # Optionale Steam-Einbindung für CachyOS Gamescope
 
+## Revision 14: Spiel-Gyro bestätigt, Nullanzeige als TODO
+
+Am 20. Oktober 2026 meldet der Nutzer mit Revision 14 im laufenden Gaming-Mode-
+Test: normale Eingaben und vier unabhängige Paddles funktionieren. Steams drei
+Gyro-Anzeigewerte bleiben bei Bewegung null. Eden erkennt den Gyro über SDL.
+Anschließend steuert die Controllerbewegung in Arc Raiders tatsächlich die
+Kamera, beim angekündigten Test von Steam Input „Gyro als rechter Stick“.
+Damit ist die Anwendungsnutzung in dieser Sitzung positiv; die Nullanzeige
+belegt keinen allgemeinen Ausfall von Sensor oder Steam Input.
+
+**Zurückgestelltes TODO:** Diskrepanz zwischen Steams Gyroanzeige und nutzbarer
+Bewegungssteuerung untersuchen. Für den bestätigten Spielpfad kein Blocker.
+Die genaue interne Ursache ist nicht nachgewiesen. Guide-Unabhängigkeit,
+Ruhedrift und weitere Start-/Reconnect-Fälle wurden bei diesem Spieltest nicht
+separat bestätigt. Kein universelles Spieleversprechen und keine zusätzliche
+Steam-/Treiberänderung. [Prüfstand und Grenzen](RELEASE_AUDIT.md#revision-14-activation-readback--20-october-2026).
+
+## Revision 11: positiver Steam-Gyro-Funk-Reconnect
+
+Am 19. Oktober 2026 bestätigt der Nutzer nach eigenem Dienststart/Resume mit
+Revision 11 einen erfolgreichen Funkcontroller-Aus-/Einschaltzyklus: Dongle
+blieb eingesteckt, Steams Gyro-Anzeige im Gaming Mode arbeitet ohne gehaltene
+Guide-Taste und ohne Steam-Neustart. Lesende Kontrollen bestätigen das neue
+Modul, erfolgreichen Bootstrap und gepaarte Eingabe-/Sensorknoten.
+[Genauer Nachweis und Grenzen](STEAM_GYRO_HOTPLUG.md#revision-11-user-led-radio-reconnect--19-october-2026).
+Ein positiver Fall belegt noch keine allgemeine Hotplug-Zuverlässigkeit oder
+Ursache der Verbesserung. Der beobachtete Start nutzte den optionalen xpad-
+Übergabepfad; ein unabhängiger Kaltstart ist damit nicht geprüft.
+
 ## Eden: manueller SDL-Kompatibilitätshinweis
 
 Am 19. Oktober 2026 ist ein Eden-Anwendungstest im Gaming Mode bestanden:

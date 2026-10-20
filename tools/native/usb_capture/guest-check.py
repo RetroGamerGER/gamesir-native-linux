@@ -22,10 +22,12 @@ signal.signal(signal.SIGINT, interrupted)
 try:
     host = json.loads(sys.argv[1])
     profile = host.get('capture_profile')
-    need(profile in (None, 'passive-hid-100a-300', 'passive-hid-100a-90'), 'Unknown capture profile')
-    duration = 90 if profile == 'passive-hid-100a-90' else (300 if profile == 'passive-hid-100a-300' else 450)
+    need(profile in (None, 'passive-hid-100a-300', 'passive-hid-100a-90', 'passive-rf-109c-xpad-90'), 'Unknown capture profile')
+    duration = 90 if profile == 'passive-rf-109c-xpad-90' else (90 if profile == 'passive-hid-100a-90' else (300 if profile == 'passive-hid-100a-300' else 450))
     if profile is not None:
         r['scope'] = 'passive HID 100a one isolated dumpcap capture, maximum duration ' + str(duration) + ' seconds'
+    if profile == 'passive-rf-109c-xpad-90':
+        r['scope'] = 'passive RF109c xpad one isolated dumpcap capture, maximum duration90 seconds'
     outer_mnt = sys.argv[2]
     names = ("mnt", "pid", "net", "ipc", "uts", "user")
     r["ns"] = {n: os.readlink("/proc/self/ns/" + n) for n in names}

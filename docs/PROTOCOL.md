@@ -25,11 +25,19 @@ Interface 1 `usbhid` geprüft.
 | Typ | Richtung/Länge | Struktur |
 |---|---|---|
 | XInput | IN 0x82, 20 Byte | `00 14`; Tasten 2/3; 8-Bit-Trigger 4/5; vier signed-LE16-Sticks ab 6 |
+| GIP Hello (Forschungsnachweis) | IN 0x82, 32 Byte | `02 20 seq 1c`; Struktur in zwei Mitschnitten mit Microsoft-GIPUSB abgeglichen; noch kein universell bestätigter Funk-Startauslöser |
+| GIP Status (Forschungsnachweis) | IN 0x82, 8 Byte | `03 20 seq 04`; 51 Berichte mit Payload `87 00 00 00`; periodisch und nach START, kein Initialisierungs-ACK |
 | GIP | IN 0x82, 36 Byte | `20 00 seq 20`; Tasten LE16 ab 4; Trigger LE16 ab 6/8 (0..1023); Sticks signed-LE16 ab 10 |
 | IMU | IN 0x82, 64 Byte | Typ `10`, Byte 3 `3c`, Byte 4 `e0`; Gyro signed-LE16 ab 17/19/21; Accel ab 23/25/27; Zusatztasten 57/58 |
 | vier Motoren | OUT 0x02, 13 Byte | `09 00 seq 09 00 0f LT RT LG RG duration pause repeat` |
 | Wartung | OUT 0x02, 64 Byte | `0f 00 seq 02 f2...` Heartbeat oder `0f 00 seq 01 selector...` Abfrage |
 | Identitätsübergang | OUT, neun 8-Byte-Pakete | fünf `00 08 00 <Wort> 00 00 00`, dazwischen vier leere Flush-Pakete; Wörter `ga`, `me`, `si`, `ra`, `pp` |
+
+Die neuen Hello-/Status-Zeilen beschreiben den Forschungsstand, keine Änderung
+des Laufzeit-Decoders: `gs_decode()` lässt diese Typen weiterhin unbekannt.
+Das von xone als verbunden gewertete Statusbit 7 ist in den gespeicherten
+positiven Berichten gesetzt; ein passender ausgeschalteter Gegenfall fehlt.
+[Zeitfolgen, offizielle Quellen und Grenzen](DUALSENSE_STARTUP_GAMESCOPE.md#online-gip-sequence-cross-check--20-october-2026).
 
 Motorwerte liegen in 0..100. Der geprüfte Builder verwendet bei aktiven
 Motoren Dauer `0x28`, sonst null; Pause/Wiederholung sind null. Die Deutung

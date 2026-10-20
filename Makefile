@@ -33,6 +33,8 @@ test-public-readme:
 	$(PYTHON) -B tests/test_public_readme.py
 
 test-alpha:
+	$(PYTHON) -B tests/test_manager_standalone.py
+	$(PYTHON) -B tests/test_receiver_wait.py
 	$(PYTHON) -B tests/test_input_publication.py
 	$(PYTHON) -B tests/test_kernel_toolchain.py
 	$(PYTHON) -B tests/test_service_manager.py
@@ -69,6 +71,8 @@ test-startup:
 	$(PYTHON) -B tests/check_kernel_ff_lifetime.py
 
 test-hardware-helper:
+	$(PYTHON) -B tests/test_rf_link_capture.py
+	$(PYTHON) -B tests/test_rf_link_preflight.py
 	$(PYTHON) -B tests/test_hardware_test_002.py
 	$(PYTHON) -B tests/test_hardware_test_003.py
 	$(PYTHON) -B tests/test_bootstrap_observation.py

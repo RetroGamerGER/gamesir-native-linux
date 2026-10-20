@@ -258,7 +258,7 @@ static int read_boot_info(int fd, struct gsn_boot_status *status)
 		perror("GET_BOOT_STATUS");
 		return 1;
 	}
-	if (status->abi_version != GSN_ABI_VERSION || status->state > 8 || status->reserved)
+	if (status->abi_version != GSN_ABI_VERSION || status->state > 9 || status->reserved)
 		return 1;
 	printf("bootstrap state=%u error=%d failed_stage=%u pad=%u imu=%u handover=%u port_token=%llu instance_token=%llu\n",
 	       status->state, status->error, status->failed_stage, status->pad_seen,
@@ -287,16 +287,21 @@ static int bootstrap(int fd, bool handover)
 	sigemptyset(&action.sa_mask);
 	sigaction(SIGINT, &action, NULL);
 	sigaction(SIGTERM, &action, NULL);
-	puts("One explicit native bootstrap; no motor pulses. Protocol deadline: 30 seconds; kernel cleanup may take longer.");
+	puts("One explicit native bootstrap; no motor pulses. Setup deadline: 30 seconds; opt-in receiver standby returns pending, never reinitializes.");
 	fflush(stdout);
 	ret = ioctl(fd, GSN_BOOTSTRAP, &request);
 	if (ret)
 		perror("BOOTSTRAP failed; no retry or automatic restore");
 	if (read_boot_info(fd, &status))
 		return 1;
-	/* HANDED_OFF=7. A completed ioctl alone is not a runtime handoff. */
-	if (ret || status.error || status.state != 7 || !status.port_token || !status.instance_token)
+	/* HANDED_OFF=7; WAIT_RECEIVER=9 is pending, never runtime success. */
+	if (ret || status.error || (status.state != 7 && status.state != 9) ||
+	    !status.port_token || !status.instance_token || (status.state == 9 && status.failed_stage))
 		return 1;
+	if (status.state == 9) {
+		puts("Native receiver waiting. One setup completed; no runtime readiness or radio connection claimed.");
+		return 0;
+	}
 	puts("Native startup completed. Attested device owns the native runtime; no second initialization needed.");
 	return 0;
 }
@@ -306,11 +311,12 @@ static int check_boot_owner(int fd, unsigned long long port, unsigned long long 
 {
 	struct gsn_boot_status status;
 
-	/* Both getters use this pinned FD. PM quiesces runtime state, while the
-	 * successful bootstrap remains HANDED_OFF=7; FAILED=8 proves ownership only.
+	/* Both getters use this pinned FD. HANDED_OFF=7 and FAILED=8 are existing
+	 * ownership proofs. WAIT_RECEIVER=9 permits END only, never runtime input.
 	 */
 	if (read_boot_info(fd, &status) || status.port_token != port ||
-	    status.instance_token != instance || (status.state != 7 && status.state != 8)) {
+	    status.instance_token != instance || (status.state != 7 && status.state != 8 &&
+	    !(status.state == 9 && !strcmp(operation, "END")))) {
 		fprintf(stderr, "%s ownership proof mismatch; no %s issued\n", operation, operation);
 		return 1;
 	}

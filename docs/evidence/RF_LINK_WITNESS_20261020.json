@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "scope": "offline_payload_and_chronology_review_only",
+  "original_sha256": "dc5f5f2b2b68ed85a2162a591d6a50ddb1b5acb1ea60c7b2324153fd936a35bd",
+  "recording_source_commit": "a2522d3",
+  "prior_metadata_review_commit": "c431f4d",
+  "comparison": {
+    "earlier_native_fresh_epochs": 4,
+    "earlier_native_pad_to_imu_ms": [
+      514.028,
+      606.02
+    ],
+    "new_epoch_personality": "100a_XInput",
+    "no_native_IMU_phase_observed_in_new_reference": true
+  },
+  "crosschecks": {
+    "frames": 7195,
+    "tshark_payload_rows": 3575,
+    "all_fields_match": true,
+    "startup_query_setups_independently_matched": 4
+  },
+  "new_epoch": {
+    "successful_XInput_0014_20byte_interrupt_reports": 3571,
+    "neutral_reports_before_input_cue": 11,
+    "neutral_bodies_all_zero": true,
+    "first_report": {
+      "frame": 16381,
+      "relative_us": 33640775,
+      "endpoint": 130
+    },
+    "last_initial_neutral": {
+      "frame": 16546,
+      "relative_us": 33923788
+    },
+    "first_non_neutral_input": {
+      "frame": 33528,
+      "relative_us": 68631627,
+      "endpoint": 130
+    },
+    "last_report": {
+      "frame": 42526,
+      "relative_us": 72717710,
+      "endpoint": 130
+    },
+    "largest_input_gap_us": 34707839,
+    "gap_boundary_frames": [
+      16546,
+      33528
+    ],
+    "human_connection_confirmation_us": 40078859,
+    "input_cue_us": 60092090,
+    "human_input_and_final_normal_operation_confirmed": true
+  },
+  "host_startup_query": {
+    "setup": {
+      "bmRequestType": 193,
+      "bRequest": 1,
+      "wValue": 256,
+      "wIndex": 0,
+      "wLength": 20
+    },
+    "submission_frames": [
+      16380,
+      16390,
+      16536,
+      16563
+    ],
+    "completion_frames": [
+      16387,
+      16395,
+      16541,
+      16570
+    ],
+    "all_full_successful_replies": true,
+    "first_input_between_first_query_submit_and_complete": true,
+    "necessity_or_sufficiency_proven": false
+  },
+  "HID_descriptor": {
+    "frame": 16339,
+    "bytes": 214,
+    "observed_short_inputs": [
+      {
+        "report_id": 3,
+        "wire_bytes": 13,
+        "usage_page": 7,
+        "body_all_zero": true
+      },
+      {
+        "report_id": 9,
+        "wire_bytes": 8,
+        "usage_pages": [
+          1,
+          9
+        ],
+        "body_all_zero": true
+      }
+    ],
+    "report_3_LED_output_bytes": 2,
+    "declared_vendor_input_report_ids": [
+      16,
+      18
+    ],
+    "declared_vendor_input_wire_bytes": 64,
+    "descriptor_proves_active_sensor": false
+  },
+  "verdict": {
+    "input_transport_observed": true,
+    "changed_controller_input_demonstrated_in_this_run": true,
+    "neutral_reports_sufficient_automatic_RF_proof": false,
+    "universal_pre_button_connection_witness_proven": false,
+    "native_runtime_ready_proven_by_this_capture": false,
+    "ownership_or_retry_authority_granted": false,
+    "no_input_alone_proves_disconnect": false
+  },
+  "limits": [
+    "Separate old 109c and new 100a lifetimes; old shutdown is not a new-instance fault.",
+    "Host cue correlation is approximate, not exact physical RF timing.",
+    "Neutral reports may be receiver-generated; changed input is not a proposed button requirement.",
+    "No paired 100a receiver-off contrast and no no-query counterfactual.",
+    "No later power-off cue; quiet tail is not a radio-off observation.",
+    "Input gap does not justify weakening native IMU verification or motor STOP.",
+    "Raw payloads, host IDs, addresses and private paths remain outside Git."
+  ],
+  "runtime_driver_manager_steam_changes": false,
+  "new_hardware_or_network_access": false,
+  "push": false
+}

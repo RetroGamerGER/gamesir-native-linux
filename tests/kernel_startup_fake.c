@@ -72,7 +72,7 @@ typedef int pm_message_t;
 #define CAP_SYS_ADMIN 1
 #define current NULL
 #define dev_warn(...) ((void)0)
-static char bootstrap_log[512];
+static char bootstrap_log[1024];
 static void capture_log(const char *format, ...)
 {
 	va_list args;
@@ -247,6 +247,10 @@ struct file {
 #define usb_endpoint_is_int_out(e) (usb_endpoint_type(e) == 3 && !((e)->bEndpointAddress & 128))
 #define device_is_registered(d) ((d)->registered)
 #define usb_sndintpipe(d, e) (e)
+#define usb_rcvctrlpipe(d, e) (0x80 | (e))
+#define USB_DIR_IN 0x80
+#define USB_TYPE_VENDOR 0x40
+#define USB_RECIP_INTERFACE 1
 static struct usb_device *usb_get_dev(struct usb_device *d)
 {
 	assert(d && d->refs);
@@ -282,6 +286,7 @@ static void usb_unlock_device(struct usb_device *d)
 static void usb_free_urb(struct urb *u) { free(u); }
 static void usb_kill_urb(struct urb *u);
 static bool bootstrap_mode = true, enable_output = true, admin = true, persistent_mode;
+static bool receiver_wait;
 static unsigned session_ms = 30000;
 static struct mutex boot_list_lock;
 static struct list_head boot_list;
@@ -293,6 +298,7 @@ static void input_report_key(struct input_dev *, unsigned, int);
 static void input_report_abs(struct input_dev *, unsigned, int);
 static void input_sync(struct input_dev *);
 static int usb_interrupt_msg(struct usb_device *, unsigned, void *, int, int *, int);
+static int usb_control_msg(struct usb_device *, unsigned, u8, u8, unsigned short, unsigned short, void *, unsigned short, int);
 static int device_driver_attach(const struct device_driver *, struct device *);
 static void device_release_driver(struct device *);
 static int usb_for_each_dev(void *, int (*)(struct usb_device *, void *));
@@ -312,10 +318,13 @@ static struct usb_interface old_intf, new_intf;
 static struct gsn_device *old_g, *new_g;
 static struct file old_fd;
 static unsigned tx_count, releases, attaches, neutrals, instance;
+static unsigned query_count, query_race;
+static int query_result;
+static u64 query_delay;
 static int fault_tx, attach_error, scenario, submit_error;
 static u64 probe_published;
 static bool short_tx, moved, appeared, no_imu, sent_imu, interrupted, found_foreign, all_data,
-    direct_probe, direct_105e;
+    direct_probe, direct_native;
 static u64 removal_marked_us, removal_delay_us;
 static int rx_fault_tx, rx_fault_status, removal_rx_error;
 static bool rx_inject_submit, removal_rx_submit;
@@ -397,15 +406,44 @@ static void synthetic_unlock_hook(void *lock)
 	}
 	submit_error = previous_submit_error;
 }
+/* Captured control IN reply; not interpreted as controller readiness. */
+static int usb_control_msg(struct usb_device *d, unsigned pipe, u8 request, u8 type,
+                          unsigned short value, unsigned short index, void *buf, unsigned short size, int timeout)
+{
+	static const unsigned char response[20] = {
+		0x00, 0x14, 0xff, 0xf7, 0xff, 0xff, 0xc0, 0xff, 0xc0, 0xff,
+		0xc0, 0xff, 0xc0, 0xff, 0, 0, 0, 0, 0, 0
+	};
+	assert(d == &old_usb && d->descriptor.idProduct == 0x100a && pipe == 0x80);
+	assert(request == 1 && type == 0xc1 && value == 0x0100 && !index);
+	assert(size == 20 && timeout == 25 && buf == old_g->tx_buf);
+	assert(old_g->io_lock.held && !old_g->boot->lock.held && !old_g->lock.held);
+	assert(!tx_count && !query_count && clock_us >= GS_BOOT_SETTLE_US);
+	assert(old_g->boot->core.state == GS_BOOT_TRANSITION &&
+	       !old_g->boot->core.step && old_g->boot->core.pending_length == 8);
+	assert(old_g->boot->xinput_query_attempted);
+	query_count++;
+	clock_us += query_delay;
+	memcpy(buf, response, sizeof(response));
+	if (query_race == 1) old_intf.dev.driver = &foreign;
+	if (query_race == 2) old_alt.desc.bAlternateSetting = 1;
+	if (query_race == 3) old_usb.state = USB_STATE_NOTATTACHED;
+	if (query_race == 4) {
+		old_g->rx_urb->status = -EPROTO;
+		gsn_rx(old_g->rx_urb);
+	}
+	return query_result;
+}
 static int usb_interrupt_msg(struct usb_device *d, unsigned ep, void *buf, int len, int *actual,
 			     int timeout)
 {
 	assert(ep == 2 && timeout == 250 && len > 0 && len <= 64);
+	assert(query_count == (direct_native ? 0u : 1u));
 	assert((d == &old_usb && old_g->io_lock.held) || (d == &new_usb && new_g->io_lock.held));
-	if (direct_105e && tx_count < 6) {
+	if (direct_native && tx_count < 6) {
 		const struct captured_tx *c = &captured_native[tx_count];
 		assert(d == &old_usb && len == (int)c->length && !memcmp(buf, c->data, len));
-	} else if (!direct_105e && tx_count < 15) {
+	} else if (!direct_native && tx_count < 15) {
 		const struct captured_tx *c =
 		    tx_count < 9 ? &captured_transition[tx_count] : &captured_native[tx_count - 9];
 		assert(len == (int)c->length && !memcmp(buf, c->data, len));
@@ -511,6 +549,10 @@ static struct usb_interface *usb_ifnum_to_if(struct usb_device *u, unsigned n)
 }
 static bool signal_pending(void *p)
 {
+	struct gsn_device *waiting_g = direct_native ? old_g : new_g;
+	if (scenario == 16 && waiting_g && waiting_g->boot &&
+	    waiting_g->boot->core.state == GS_BOOT_WAIT_RECEIVER)
+		return true;
 	/* The supervisor has just polled the core successfully. Another producer
 	 * can latch a fatal cause before this signal check returns true.
 	 */
@@ -543,7 +585,7 @@ static void disconnect_fake(struct gsn_device *g)
 static void msleep_interruptible(unsigned ms)
 {
 	clock_us += (u64)ms * 1000;
-	struct gsn_device *active = direct_105e ? old_g : new_g;
+	struct gsn_device *active = direct_native ? old_g : new_g;
 	if (active && active->resuming && !no_imu) {
 		active->sample.sample_number++;
 		active->sample.host_monotonic_ns = clock_us * 1000;
@@ -611,7 +653,7 @@ static void msleep_interruptible(unsigned ms)
 		new_g = NULL;
 		disconnect_fake(gone);
 	}
-	active = direct_105e ? old_g : new_g;
+	active = direct_native ? old_g : new_g;
 	if (active && !no_imu && !sent_imu && active->boot->core.state == GS_BOOT_INITIALIZE &&
 	    active->boot->core.step == 6) {
 		sent_imu = true;
@@ -672,6 +714,7 @@ static void setup(unsigned root_port, unsigned child_port, bool via_hub)
 	INIT_LIST_HEAD(&boot_list);
 	clock_us = 0;
 	tx_count = releases = attaches = neutrals = instance = 0;
+	query_count = query_race = 0; query_result = 20; query_delay = 1000;
 	fault_tx = attach_error = scenario = submit_error = 0;
 	bootstrap_log[0] = '\0';
 	removal_marked_us = removal_delay_us = 0;
@@ -688,27 +731,29 @@ static void setup(unsigned root_port, unsigned child_port, bool via_hub)
 	signal_rx_submit = signal_rx_injected = false;
 	removal_action = 0;
 	moved = appeared = no_imu = sent_imu = interrupted = found_foreign = direct_probe =
-	    all_data = direct_105e = false;
+	    all_data = direct_native = false;
 	bootstrap_mode = enable_output = admin = true;
 	persistent_mode = false;
+	receiver_wait = false;
 	new_g = NULL;
 	short_tx = false;
 	old_g = new_device(&old_usb, &old_intf);
 	old_fd.private_data = &old_g->misc;
 	assert(!gsn_open(NULL, &old_fd));
 }
-static void setup_105e(bool persistent)
+static void setup_native(unsigned int pid, bool persistent)
 {
 	setup(4, 3, true);
-	direct_105e = true;
+	direct_native = true;
 	persistent_mode = persistent;
-	old_usb.descriptor.idProduct = 0x105e;
+	old_usb.descriptor.idProduct = pid;
 	old_alt = new_alt;
 	old_alt.endpoint[0].desc.bInterval = 2;
 	old_alt.endpoint[1].desc.bInterval = 4;
 	assert(!gsn_describe(&old_intf, &old_g->identity));
-	assert(!gs_runtime_init(&old_g->rt, 0x105e, 1));
+	assert(!gs_runtime_init(&old_g->rt, pid, 1));
 	old_g->rt.owner = 1;
+	old_g->direct_native = pid == 0x109c;
 }
 
 static void cleanup(void)
@@ -1081,40 +1126,46 @@ static unsigned failed_boot_end_cases(void)
 	return cases + 1;
 }
 
-static unsigned direct_105e_cases(void)
+static unsigned direct_native_cases(unsigned int pid)
 {
 	unsigned cases = 0;
 	struct gsn_boot_status status;
 	struct gsn_info info;
+	if (pid == 0x109c) {
+		setup_native(pid, true);
+		old_g->direct_native = false;
+		assert(run(0) == -EBUSY && !tx_count);
+		cleanup(); cases++;
+	}
 	for (unsigned int persistent = 0; persistent < 2; persistent++) {
-		setup_105e(persistent);
+		setup_native(pid, persistent);
 		assert(run(GSN_BOOT_ALLOW_XPAD_HANDOVER) == -EINVAL && !tx_count);
 		assert(!run(0));
 		assert(!new_g && !releases && !attaches && !moved && tx_count == 6);
-		assert(old_g->boot_handoff && old_g->rt.pid == 0x105e);
+		assert(old_g->boot_handoff && old_g->rt.pid == pid);
 		assert(!gsn_ioctl(&old_fd, GSN_GET_BOOT_STATUS, (unsigned long)&status));
 		assert(status.state == GS_BOOT_HANDED_OFF && !status.handover_attempted &&
 		       status.instance_token == old_g->identity.instance &&
 		       status.port_token == old_g->identity.port);
 		assert(!gsn_ioctl(&old_fd, GSN_GET_INFO, (unsigned long)&info));
-		assert(info.pid == 0x105e && info.session_active);
+		assert(info.pid == pid && info.session_active);
 		assert(!gsn_ioctl(&old_fd, GSN_START_SESSION, 0) && tx_count == 6);
 		if (persistent) {
 			assert(!gsn_suspend(&old_intf, PMSG_SUSPEND));
 			assert(!gsn_resume(&old_intf));
 			mutex_lock(&old_g->io_lock);
 			assert(!gsn_resume_session(old_g));
-			assert(gs_pid_native(old_g->rt.pid) && old_g->rt.pid == 0x105e);
+			assert(gs_pid_native(old_g->rt.pid) && old_g->rt.pid == pid);
 			assert(gsn_resume_session(old_g) == -EINVAL);
 			mutex_unlock(&old_g->io_lock);
 		}
 		assert(!gsn_ioctl(&old_fd, GSN_END_SESSION, 0));
-		assert(!old_g->rt.session_active && old_usb.descriptor.idProduct == 0x105e);
+		assert(!old_g->rt.session_active && old_usb.descriptor.idProduct == pid);
 		cleanup(); cases++;
 	}
 	/* Every init transfer failure preserves exact same-instance diagnostics. */
 	for (unsigned int failure = 0; failure < 9; failure++) {
-		setup_105e(true);
+		setup_native(pid, true);
 		if (failure < 6) fault_tx = failure + 1;
 		if (failure == 6) no_imu = true;
 		if (failure == 7) interrupted = true;
@@ -1133,7 +1184,7 @@ static unsigned direct_105e_cases(void)
 	}
 	/* Failed direct bootstrap cannot neutralize a changed identity, route or owner. */
 	for (unsigned int invalid = 0; invalid < 8; invalid++) {
-		setup_105e(true); no_imu = true;
+		setup_native(pid, true); no_imu = true;
 		assert(run(0) == -ETIMEDOUT);
 		struct gs_boot_device saved = old_g->identity;
 		struct gs_startup core = old_g->boot->core;
@@ -1144,16 +1195,16 @@ static unsigned direct_105e_cases(void)
 		if (invalid == 3) old_usb.portnum++;
 		if (invalid == 4) old_intf.dev.driver = &foreign;
 		if (invalid == 5) old_g->boot->core.old_instance++;
-		if (invalid == 6) old_usb.descriptor.idProduct = 0x109c;
-		if (invalid == 7) old_g->boot->core.device.pid = 0x109c;
+		if (invalid == 6) old_usb.descriptor.idProduct = pid == 0x109c ? 0x105e : 0x109c;
+		if (invalid == 7) old_g->boot->core.device.pid = pid == 0x109c ? 0x105e : 0x109c;
 		assert(gsn_ioctl(&old_fd, GSN_END_SESSION, 0) == -EBUSY && tx_count == count);
 		old_g->identity = saved; old_g->boot->core = core;
 		old_usb.parent = &hub; old_usb.portnum = 3;
-		old_usb.descriptor.idProduct = 0x105e; old_intf.dev.driver = &gsn_driver.driver;
+		old_usb.descriptor.idProduct = pid; old_intf.dev.driver = &gsn_driver.driver;
 		assert(!gsn_ioctl(&old_fd, GSN_END_SESSION, 0));
 		cleanup(); cases++;
 	}
-	setup_105e(true); scenario = 15;
+	setup_native(pid, true); scenario = 15;
 	assert(run(0) < 0 && tx_count == 3 && !new_g);
 	assert(gsn_ioctl(&old_fd, GSN_END_SESSION, 0) == -ENODEV);
 	cleanup();
@@ -1476,6 +1527,151 @@ static unsigned removal_transport_cases(void)
 	return cases;
 }
 
+static unsigned xinput_query_cases(void)
+{
+	unsigned cases = 0;
+	const int results[] = {-EPIPE, -ETIMEDOUT, -ENODEV, -ESHUTDOWN, 0, 1, 19, 21};
+	for (unsigned n = 0; n < ARRAY_SIZE(results); n++) {
+		setup(4, 3, true);
+		query_result = results[n];
+		int expected = query_result < 0 ? query_result : -EREMOTEIO;
+		assert(run(GSN_BOOT_ALLOW_XPAD_HANDOVER) == expected);
+		assert(query_count == 1 && !tx_count && !new_g && !moved);
+		assert(old_g->boot->core.failed_stage == GS_BOOT_TRANSITION &&
+		       old_g->boot->core.error == expected && !old_g->boot->core.step);
+		assert(old_g->boot->xinput_query_attempted &&
+		       old_g->boot->xinput_query_result == results[n]);
+		char diagnostic[100];
+		snprintf(diagnostic, sizeof(diagnostic),
+		         "xinput_query_attempted=1 xinput_query_result=%d", results[n]);
+		assert(strstr(bootstrap_log, diagnostic));
+		assert(run(GSN_BOOT_ALLOW_XPAD_HANDOVER) < 0 && query_count == 1 && !tx_count);
+		/* 100a has no native session: END stays forbidden, no guessed output. */
+		assert(gsn_ioctl(&old_fd, GSN_END_SESSION, 0) == -EBUSY);
+		assert(gsn_ioctl(&old_fd, GSN_END_SESSION, 0) == -EBUSY);
+		assert(query_count == 1 && !tx_count);
+		cleanup(); cases++;
+	}
+	for (unsigned race = 1; race <= 4; race++) {
+		setup(4, 3, true); query_race = race;
+		int ret = run(GSN_BOOT_ALLOW_XPAD_HANDOVER);
+		assert(ret < 0 && query_count == 1 && !tx_count && !new_g);
+		if (race == 4) assert(ret == -EPROTO && old_g->boot->first_rx_status == -EPROTO);
+		old_intf.dev.driver = &gsn_driver.driver;
+		old_alt.desc.bAlternateSetting = 0;
+		old_usb.state = USB_STATE_CONFIGURED;
+		cleanup(); cases++;
+	}
+	setup(4, 3, true); query_race = 4; query_result = -EPIPE;
+	assert(run(GSN_BOOT_ALLOW_XPAD_HANDOVER) == -EPROTO);
+	assert(query_count == 1 && !tx_count && old_g->boot->xinput_query_result == -EPIPE);
+	assert(old_g->boot->first_rx_status == -EPROTO);
+	cleanup(); cases++;
+	setup(4, 3, true); query_delay = GS_BOOT_TRANSFER_US;
+	assert(run(GSN_BOOT_ALLOW_XPAD_HANDOVER) == -ETIMEDOUT);
+	assert(query_count == 1 && !tx_count);
+	cleanup(); cases++;
+	/* Bind/open/status/settle alone do not query; no human input is needed. */
+	setup(4, 3, true);
+	struct gsn_boot_status status;
+	assert(!query_count && gsn_boot_status(old_g, &status) == -ENODATA && !query_count);
+	assert(!run(GSN_BOOT_ALLOW_XPAD_HANDOVER));
+	assert(query_count == 1 && tx_count == 15 && !old_g->boot->core.pad_seen);
+	assert(!gsn_boot_status(old_g, &status) && query_count == 1);
+	cleanup(); cases++;
+	return cases;
+}
+
+static unsigned receiver_wait_adapter_cases(void)
+{
+	unsigned cases = 0;
+	for (unsigned pid_index = 0; pid_index < 3; pid_index++) {
+		unsigned pid = (unsigned[]){0x100a, 0x109c, 0x105e}[pid_index];
+		for (unsigned action = 0; action < 7; action++) {
+			struct gsn_boot_status status;
+			struct file fd;
+			if (pid == 0x100a) {
+				setup(4, 6, true);
+				persistent_mode = true;
+			} else {
+				setup_native(pid, true);
+			}
+			receiver_wait = no_imu = true;
+			if (action == 6) {
+				scenario = 16;
+				assert(run(pid == 0x100a ? GSN_BOOT_ALLOW_XPAD_HANDOVER : 0) == -EINTR);
+				struct gsn_device *cancelled = pid == 0x100a ? new_g : old_g;
+				assert(cancelled->boot->core.failed_stage == GS_BOOT_WAIT_RECEIVER);
+				assert(cancelled->boot->core.error == -EINTR && cancelled->stopping);
+				cleanup(); cases++;
+				continue;
+			}
+			assert(!run(pid == 0x100a ? GSN_BOOT_ALLOW_XPAD_HANDOVER : 0));
+			struct gsn_device *g = pid == 0x100a ? new_g : old_g;
+			unsigned count = tx_count;
+			assert(count == (pid == 0x100a ? 15u : 6u) && !g->boot_handoff);
+			assert(!gsn_boot_status(g, &status) && status.state == GS_BOOT_WAIT_RECEIVER);
+			/* Closing the original command FD does not cancel the kernel wait. */
+			if (pid != 0x100a) {
+				gsn_release(NULL, &old_fd);
+				old_fd.private_data = &old_g->misc;
+				assert(!gsn_open(NULL, &old_fd));
+			}
+			fd.private_data = &g->misc;
+			if (g != old_g) assert(!gsn_open(NULL, &fd));
+			else fd = old_fd;
+			for (unsigned hour = 1; hour <= 24; hour++) {
+				clock_us = (u64)hour * 3600000000ULL;
+				gsn_service(&g->service.work);
+				assert(tx_count == count && !g->rt.session_active && !g->rt.motors.value[0]);
+				assert(!gsn_ioctl(&fd, GSN_GET_BOOT_STATUS, (unsigned long)&status));
+				assert(status.state == GS_BOOT_WAIT_RECEIVER && !status.error);
+			}
+			if (action == 0) {
+				gsn_release(NULL, &fd); /* No userspace FD is needed for late RX/adoption. */
+				memcpy(g->rx_buf, captured_imu, sizeof(captured_imu));
+				g->rx_urb->actual_length = sizeof(captured_imu);
+				gsn_rx(g->rx_urb);
+				gsn_service(&g->service.work);
+				assert(g->boot_handoff && g->rt.session_active && g->rt.persistent && !g->rt.owner);
+				assert(tx_count == count && !g->boot->core.pad_seen);
+				fd.private_data = &g->misc;
+				assert(!gsn_open(NULL, &fd));
+				if (g == old_g) old_fd = fd;
+				assert(!gsn_ioctl(&fd, GSN_END_SESSION, 0));
+				assert(tx_count == count + 1); /* Existing final zero motor packet. */
+			} else if (action == 1) {
+				assert(!gsn_ioctl(&fd, GSN_END_SESSION, 0));
+				assert(g->stopping && g->boot->core.error == -ECANCELED && tx_count == count);
+			} else if (action == 2) {
+				gsn_fault(g, -EPIPE);
+				gsn_service(&g->service.work);
+				assert(g->stopping && g->boot->core.error == -EPIPE);
+				assert(!gsn_ioctl(&fd, GSN_END_SESSION, 0) && g->boot->core.error == -EPIPE);
+			} else if (action == 3) {
+				assert(!gsn_suspend(g->intf, PMSG_SUSPEND));
+				assert(!gsn_resume(g->intf) && !g->service.queued);
+				assert(g->stopping && tx_count == count);
+				assert(!gsn_ioctl(&fd, GSN_END_SESSION, 0));
+			} else if (action == 4) {
+				admin = false;
+				assert(gsn_ioctl(&fd, GSN_END_SESSION, 0) == -EPERM);
+				admin = true;
+				assert(!gsn_ioctl(&fd, GSN_END_SESSION, 0));
+			} else {
+				g->identity.instance++;
+				assert(gsn_ioctl(&fd, GSN_END_SESSION, 0) == -EBUSY);
+				g->identity.instance--;
+				assert(!gsn_ioctl(&fd, GSN_END_SESSION, 0));
+			}
+			assert(run(0) == -EBUSY && tx_count == count + (action == 0));
+			if (g != old_g) gsn_release(NULL, &fd);
+			cleanup(); cases++;
+		}
+	}
+	return cases;
+}
+
 int main(int argc, char **argv)
 {
 	struct gsn_boot_status status;
@@ -1484,6 +1680,8 @@ int main(int argc, char **argv)
 		assert(removal_order_cases((unsigned)atoi(argv[1])) == 1);
 		return 0;
 	}
+	cases += xinput_query_cases();
+	cases += receiver_wait_adapter_cases();
 	cases += removal_order_cases(0);
 	cases += removal_safety_cases();
 	cases += removal_transport_cases();
@@ -1565,7 +1763,7 @@ int main(int argc, char **argv)
 			bootstrap_mode = false;
 		if (n == 2)
 			enable_output = false;
-		assert(run(0) == -EPERM && !tx_count);
+		assert(run(0) == -EPERM && !tx_count && !query_count);
 		cleanup();
 		cases++;
 	}
@@ -1577,13 +1775,14 @@ int main(int argc, char **argv)
 	private_bridge_case();
 	cases++;
 	cases += failed_boot_end_cases();
-	cases += direct_105e_cases();
+	cases += direct_native_cases(0x105e);
+	cases += direct_native_cases(0x109c);
 	printf(
 	    "PASS: %u actual-kernel adapter scenarios; captured 15-TX bootstrap, arbitrary "
 	    "root/hub ports, handover permission/race, signal/disconnect/deadline/transfer "
 	    "failures, parallel reservation isolation, balanced refs, finite/persistent runtime, "
 	    "atomic bounded FF, explicit END, one-shot checked PM resume, "
-	    "actual-ioctl failed-bootstrap attestation and local END, experimental direct105e/PM/same-instance rejection, "
+	    "one-shot captured 100a control-IN query and post-transfer gates, actual-ioctl failed-bootstrap attestation and local END, direct109c/experimental105e/PM/same-instance rejection, "
 	    "delayed USB removal/RX completion/resubmit ordering with strict final OUT/deadline/ownership gates, "
 	    "immutable first RX cause, narrow post-OUT9 EPIPE/EPROTO wait, logical RX retirement, READY and supervisor-signal fault races\n",
 	    cases);

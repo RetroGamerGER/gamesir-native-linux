@@ -49,7 +49,9 @@ struct gsn_sample {
 	__s32 accel_experimental_um_s2[3];
 };
 
-/* Additive experimental ABI 1 commands. One synchronous, bounded attempt.
+/* Additive experimental ABI 1 commands. One synchronous, bounded setup attempt.
+ * Opt-in persistent receiver_wait returns in state 9 with setup complete;
+ * the kernel retains passive RX, not a userspace call or repeated setup.
  * Direct 105e startup stays on the claimed instance and uses flags=0.
  */
 #define GSN_BOOT_ALLOW_XPAD_HANDOVER 1
@@ -61,7 +63,7 @@ struct gsn_boot_request {
 
 struct gsn_boot_status {
 	__u32 abi_version;
-	__u32 state; /* gs_boot_state: IDLE=0 through FAILED=8. */
+	__u32 state; /* gs_boot_state: existing 0..8; appended WAIT_RECEIVER=9. */
 	__s32 error;
 	__u32 failed_stage;
 	__u32 pad_seen;

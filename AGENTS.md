@@ -16,7 +16,587 @@ changes locally. No public remote, tag, upload or push without explicit
 maintainer approval. Preserve third-party notices and source provenance.
 Own sources use GPL-2.0-only; preserve the UAPI Linux-syscall-note exception.
 
-## Final publication checkpoint (19 October 2026)
+## Standalone startup preparation (19 October 2026)
+
+Current publication request: the maintainer explicitly authorizes integrating
+the accepted wait policy into package installation, updating README, pushing
+the reviewed full source and creating a new tagged PRE-ALPHA release. Revision16
+ships same-basename vendor modprobe defaults under /usr/lib, preserving /etc
+local overrides. Kernel runtime is unchanged from accepted revision15; no
+live installation or hardware test is included. Review commit/function/package
+coverage, tests, privacy/history and source-only assets before publishing
+v0.1.0-pre-alpha.3. Optional userspace and experimental gyro boundaries remain.
+
+Maintainer acceptance, 20 October: the demonstrated revision15 automatic
+binding is accepted as a usable current state. The reported brief initial
+xpad/SteamOS reaction is not a blocker and does not require further live
+investigation now. Its actual cause remains unproved; do not turn the SteamOS
+suggestion into a technical finding or claim completely xpad-free first probe.
+Keep scoped cold-boot/reconnect/application tests distinct from this acceptance.
+No system change, additional test, push or release is authorized by acceptance.
+
+Latest approved revision15 late-on run: read RELEASE_AUDIT's newest entry and
+docs/evidence/RECEIVER_WAIT_LATE_ON_20261020.json. Fresh waiting lifetime and
+options reattested; observer armed before cue; maintainer confirms one power-on
+without additional inputs. New100a lifetime received controlled startup to
+native109c state7/error0/pad1/imu1/handover1, exact input publication, correct
+pad/motion names and 10.415 seconds stable active ownership. Final readiness
+belongs to the new lifetime; budget2 represents old wait plus new source,
+not same-instance replay. No new error, manual bootstrap/Resume/Release
+or service change. Human reports initial xpad; samples first see100a already
+native and cannot time-resolve first binding. Initial reply overclaimed that
+independent proof; correction is retained. Fully xpad-free first probe, cold
+boot/reconnect and new application acceptance remain open. No further live
+input, power cycle or system changes follow from this completed approval.
+
+Latest approved revision15 receiver-off insertion check: read the newest
+RELEASE_AUDIT entry and docs/evidence/RECEIVER_WAIT_CHECK_20261020.json.
+Fresh baseline matched; maintainer reinserted receiver, controller remained off.
+Kernel bootstrap state9/error0/zero pad+IMU, manager/saved lease receiver_wait;
+ten read-only samples confirm 45.653 seconds, unchanged lifetime/tokens and one
+start-budget entry, one matching bootstrap result, no new faults/xpad return.
+The private observer first stopped on raw/stripped service newline mismatch
+and an empty-list renderer defect. Preserve originals; offline controls pass;
+new reader completed without runtime/guard-field relaxation. No USB trace or
+independent wire-level no-OUT measurement. Current target has the receiver
+plugged and native waiting; no manual bootstrap/Release/Resume/service change.
+Controller stays off: require the maintainer's separate explicit Go before
+power-on. No late-on, cold-boot/reconnect/game acceptance or push is implied.
+
+Revision15 installation/activation completed under explicit staged approval;
+read the newest RELEASE_AUDIT entry and docs/evidence/RECEIVER_WAIT_INSTALL_20261020.json.
+Actual receiver removal, continuous absence and one explicit Release proved
+paused/returned/empty ownership before the single update and normal hooks.
+137 payload files match, target DKMS installed; one opt-in config and one
+service start load the expected module/sensor/wait flags. Immediate status
+ENOENT stopped the guard before Resume; independent readback proved the same
+responsive paused service. Only the still-unused approved Resume then ran;
+no repeated config/start/error Release. Current target: active/enabled, zero
+restarts, unpaused empty devices/leases, receiver removed/controller off.
+No actual state9/late-on/game/boot acceptance or push. Never interpret empty
+Resume as readiness or reuse consumed one-shot helpers. Further physical
+insertion/power-on tests require separate approval. Other host unchanged.
+
+Revision-15 target preparation, 20 October: read docs/RECEIVER_WAIT_UPDATE.md.
+The maintainer authorized fresh read-only SSH inspection and an unprivileged
+build for the current CachyOS kernel, not installation/activation. Matching
+7.2.11-1-cachyos-deckify build passes W=1/-Werror without warnings. Revision14
+remains loaded/installed, service active/enabled; current 109c/xpad has an
+unresolved blocked current-boot lease and retained original -110 VERIFY5.
+Do not install against it or bypass the package cleanup hook. Proposed next
+approval must first cover physical receiver absence, one explicit Release,
+verified paused/returned empty devices and persisted leases, then exact pinned
+package15 and opt-in receiver_wait configuration/start/Resume in stages.
+No state clearing, initialization replay, hardware test or push. Sensor/Steam
+configuration is preserved and real late-on behavior remains unvalidated.
+
+Latest authorized offline implementation, 20 October: read
+docs/RECEIVER_WAIT_KERNEL.md. Experimental receiver_wait defaults false and
+requires persistent/bootstrap/output modes; no packaged setting enables it.
+Append WAIT_RECEIVER=9 without renumbering statuses or resizing private ABI.
+After one bounded setup, keep RX but generate no OUT until fresh native IMU
+allows one bounded runtime handoff. No button/neutral/PID/status RF inference,
+init replay, heartbeat polling or budget consumption while waiting. The ioctl
+returns pending; updated ctl/manager attest tokens, persist receiver_wait and
+only poll read-only. Restarts reattest, never reinitialize. Root END cancels
+the exact waiting instance; late worker faults retain the first error and are
+locally END-able. Waiting suspend/reset/shutdown cancels; no automatic unready
+PM restart. Real 109c fallback may still require manual return. Existing active
+runtime, input publication, gyro scale, motors and Steam settings are unchanged.
+Offline day-long/core/actual-kernel/manager/client regressions and local build
+are required; no hardware acceptance is implied. Installation, activation,
+remote build/read and live tests still need separate approval. No push.
+
+Latest offline PID-transition comparison, 20 October: read
+docs/RF_PID_TRANSITION_COMPARISON.md and its sanitized evidence JSON. Eleven
+original captures rehash correctly; four recorded 109c->100a transitions are
+identified: one labelled passive power-on association, three software-return
+contexts. No synchronously labelled 100a/controller-off negative control is
+established; absence of that control does not prove 100a means RF connected.
+The coarse 14 October off confirmation cannot time-label its intermediate
+100a. Preserve current versus historical boot/lease separation. A PID edge
+may prompt exact-instance discovery, never confer connection/ownership/retry
+authority. Prefer kernel receiver waiting with a thin ownership/recovery
+manager; no implementation, timeout relaxation or initialization replay is
+authorized by this research. Offline only; no live access, installation or push.
+
+Latest offline connection-witness review, 20 October: read
+docs/RF_LINK_CONNECTION_WITNESS.md and evidence/RF_LINK_WITNESS_20261020.json.
+7,195 selected records independently match the saved capture; all 3,571 new
+100a EP82 reports are full 20-byte 00/14 XInput. Eleven initial reports are
+identical/all-neutral, not a sufficient RF-connected proof. First changed
+input follows a 34.707839-second gap; do not infer disconnect from pad silence
+or require a button press/nonzero stick for automatic startup. Keep HID IDs
+3/9 separate from native GIP status; their zero reports and LED output are
+not an IMU activation proof. Four c1/01/0100/0000/20 queries succeed, but their
+necessity/sufficiency remains unproved. Preserve exact-instance ownership,
+first errors, native init/fresh-IMU READY and all motor STOP guards. No receiver
+waiting/automatic retry fix is implemented by this evidence. Original -108
+belongs to the old lifetime. Raw exports remain private; offline only, no
+production code, new capture, live read or push. Last verified Native state
+remains paused/empty; this review does not establish a fresh runtime state.
+
+Latest approved RF reference completed, 20 October: read the completed section
+of docs/RF_LINK_109C_CAPTURE.md and sanitized RF_LINK_109C_CAPTURE_20261020.json.
+After separate successful KDE-consumer and usbmon gates, one fresh read/recording
+was approved. Local terminal GO, 30 s preparation and explicit human connection
+confirmation preceded the input phase. Recorder/terminal exit 0, isolation and
+finalization pass; 24 original chain entries independently verified. User confirms
+KDE-visible input and normal responsive system afterward. Receiver stayed plugged
+but naturally re-enumerated from 109c/xpad to a new 100a/xpad+usbhid lifetime.
+Keep both epochs separate. Old -108/zero-length completion belongs to shutdown
+of that first lifetime, not proof of a reproduced native startup fault. Offline
+metadata-only review finds 3,571 successful 20-byte EP82 completions after new
+enumeration, two short EP84 reports and no 64-byte completion in selected target
+traffic. Do not infer a radio-ready bit, mandatory Hello/ACK, absent IMU globally
+or an activation recipe. No payload export in this review. Native remains
+paused with empty ownership; no Resume, retry, reset or forced mode command.
+Capture permission is consumed. Preserve private raw/source/terminal/checksum
+evidence; no raw bus traffic/host identifiers in Git and no push. A new live
+action needs new authorization. No production driver or manager code changed.
+
+Latest offline preflight diagnostic correction, 20 October: read the diagnostic
+section of docs/RF_LINK_109C_CAPTURE.md. The separately approved first inspect
+failed its old compound baseline/consumer gate with empty stdout. Retain original
+private stderr, authorization and checksum receipts; the actual missing condition
+cannot be recovered. No retry occurred. The refined inspect emits version-2 JSON
+on failure as well as success, retaining first stage/type/message, manager output,
+field-level cached details and explicitly untested later stages. Distinguish no
+IF0 input node, an existing unopened node, missing attributes, wrong bindings and
+inaccessible inspection. Do not infer radio state from any of these. `prepare`
+requires explicit ok=true/no failure; never reuse an intermediate manifest from
+a failed report. Runtime snapshot/identity/ownership guards remain unchanged.
+58 RF tests and full make test pass offline. No new host/SSH read, capture,
+module, binding, service or installed change; no push. Old approval is consumed
+and source pins have changed; a further read requires fresh explicit approval
+and a new private output directory. Controller remains reported off/Native
+last verified paused; no current state is invented from synthetic fixtures.
+
+Latest offline RF recorder preparation, 20 October: read
+docs/RF_LINK_109C_CAPTURE.md before using rf_link_capture.py. It is a new passive
+109c/xpad/90 s scope, not relaxation of the legacy 100a HID profiles. Default/
+prepare/validate are file-only; inspect and capture are separate approved gates.
+Require fresh live/persistent pause, empty ownership, no native bindings, exact
+standard-model IF0 consumer and no foreign raw access. Controller stays off
+until the 30 s cue after local GO; connection confirmation before 60 s is human
+evidence only. Keep epochs distinct across natural same-parent 100a/109c USB
+re-enumeration; unknown metadata has bounded grace, never connection authority.
+No replayed initialization, mode command, module load or return operation exists
+in this path. Preserve original errors and private whole-bus artifacts. Source
+pins and all sandbox/stop/checksum guards remain required. New RF profile has
+offline tests only, no live validation. This step performs no host/SSH read,
+recording or runtime change. Native remains last verified paused/empty, receiver
+plugged/controller reported off. No push; future use requires new approval.
+
+Latest primary physical-return attempt: staged approval executed one removal
+and one same-port reinsertion with controller confirmed off. Fresh precheck
+matched; after >=15 s post-confirmation, protected absence read proves leases/
+devices empty, returned=true and pause retained; original -108 history records
+physical absence. Reinsertion is a new same-parent/source/boot USB lifetime but
+still 109c/xpad, IF1 unbound, not 100a. Read RF_LINK_CAPTURE_PLAN.md final section
+and RF_LINK_100A_RETURN_ATTEMPT_20261020.json. Stop at PID mismatch; no repeat,
+recording, power-on, release/resume or module/binding/reset operation. Native
+remains paused with empty ownership. returned=true describes that managed set,
+not 100a or tested RF/input functionality. Don't claim power cycling guarantees
+mode return or invent a mode command; clean 109c/xpad capture is a new scope.
+Preserve consumed physical approval, private phase evidence/checksums and fault
+history. Receiver remains plugged/controller off; no push.
+
+Latest primary-machine 100a return preparation: user selected an xpad radio-on
+reference and requests steps/cues for approval, controller off/native paused.
+Read RF_LINK_CAPTURE_PLAN.md's manual-return section and its preparation JSON.
+No fresh privileged read, removal, reinsertion or capture in this step. Private
+read helper with -B/source pins is prepared, not executed. Installed-source
+pure-method fake-host checks validate ten-second continuous known-absence
+retirement, unknown-metadata reset, original diagnostic retention and no paused
+acquisition. Plan: fresh paused 109c baseline -> cue remove -> at least 15 s out
+and prove absent/leases empty/returned=true -> cue reinsert -> prove fresh 100a
+xpad/usbhid endpoints with pause retained. Stop on deviation; don't promise
+100a, infer retirement from time or use a guessed mode/return command. No new
+release/resume/stop/module action or recording; physical/read steps await
+explicit approval. Last verified primary receiver remains paused 109c/xpad.
+
+Latest primary-machine release checkpoint: explicit approval covered one release
+and readback only, controller off, no capture/resume. Fresh precheck matched
+source/boot/state/USB. Exactly one release completed exit 1 paused=true and
+returned=false. Protected postcheck confirms persistent/live pause, unchanged
+109c/xpad binding, one unchanged blocked old 100a lease and original diagnostics.
+Read RF_LINK_CAPTURE_PLAN.md and docs/evidence/RF_LINK_RELEASE_20261020.json.
+Inhibition passes; complete return/empty ownership does not. Preserve the
+consumed receipt, raw private reports/checksums and old fault; don't repeat,
+resume, stop/restart, clear state, unplug or power on from this approval.
+No capture, module or explicit binding operation; no push. Further recovery
+and the reference recorder remain separately reviewed/approved work.
+
+Latest primary-machine pause preparation: a newly requested protected ownership
+read matches unchanged boot/state/USB before/after. One blocked old 100a lease
+has no kernel tokens/candidate/job; current 109c/xpad is a different device inode
+at the same parent. Read RF_LINK_CAPTURE_PLAN.md's controlled-pause section and
+RF_LINK_PAUSE_PREPARATION_20261020.json. The actually installed manager was
+reviewed and its three pure methods simulated offline with fake host methods:
+one release would persist pause without END/restore for this blocked replacement,
+preserve the lease, return false; unresolved resume is rejected. Client waits
+up to 45 s polling status. No actual release/stop/resume occurred. Proposal is
+one separately approved release after fresh source/ownership check, then only
+readback. Don't equate pause with returned=true, retry, clear state, remove the
+receiver or power on from preparation alone. No capture or system change.
+The protected reader created one local root-owned bytecode cache; the exact
+source-matching cache was removed and license checks pass afterward. Use -B
+for future root Python helpers/imports; never reuse the consumed reader.
+
+Latest primary-machine read checkpoint: one approved rf_link_preflight inspect
+stopped at its manager-fault gate. Read RF_LINK_CAPTURE_PLAN.md and sanitized
+RF_LINK_PREFLIGHT_20261020.json in docs/evidence. Actual observed IF0 is xpad,
+PID109c; manager unpaused/blocked with unowned replacement and stored -108
+bootstrap error at stage1. This is not the other-host -110 VERIFY failure and
+not a fresh native-control query. Only manager status ran; all subsequent reads,
+monitor access and capture were skipped. No release/resume, module/binding
+change or power-on cue; don't reuse this one-shot approval. Preserve original
+private output/checksums. xpad binding alone proves neither empty leases,
+100a return nor cleared management. Any pause/recovery or capture requires a
+separately approved concrete step. Controller remains reported off/dongle in.
+
+Earlier capture preparation targets the primary KDE machine, not the separate
+Gamescope host. User reports receiver plugged/controller off; only preparation
+is authorized. Read docs/RF_LINK_CAPTURE_PLAN.md. The new rf_link_preflight.py
+defaults to a file-only plan; inspect is a separately approved root read with
+fixed status/package/service/journal commands and cached metadata, no device
+open or automatic recovery. Twelve fake-backend tests cover it. No inspect was
+run. Existing recorder scopes cannot be reused for radio re-enumeration. Fresh
+read baseline, reference-path choice and reviewed recorder need separate gates.
+The user asks whether xpad is the better reference; no deactivation approved.
+Never confuse 100a/XInput with 109c/GIP, infer receive silence from a quiesced
+native fault or assume the prior other-host blocked state on this machine.
+
+Latest offline prototype, 20 October: read docs/STARTUP_TIMELINE_PROTOTYPE.md.
+The separate file-only startup-replay models receiver waiting, Hello, observed
+START submissions, tentative status bits and separate pad/IMU observations.
+Thirty new tests plus 23 private saved-payload classifications cover five
+historical timelines; no live capture or RF-off contrast is established.
+Never treat candidate/observation phases as native ownership, recovery, RF
+connection or automatic start authority. Silence expires observations only;
+first errors and terminal instance boundaries persist. No production callback,
+transport, retry loop or manager/kernel integration was added. Keep the saved
+boot/enumeration epoch explicit; do not infer detach or boot from EOF/addresses.
+The maintainer reports controller off/dongle attached; no SSH/target inspection
+or installed change occurred. Previous blocked state remains unverified; no
+hardware test, installation, push or precision calibration is authorized.
+
+Latest authorized online research, 20 October: Microsoft GIPUSB documents
+Hello → START → status/input; type 03 normally follows START and later repeats
+at 20 s, so it is not a prerequisite for sending START. Two saved GameSir Hello
+reports match the full standard field layout. xone uses status payload bit 7 as
+connected; all 51 positive GameSir status reports set it, but no bit-clear/off
+contrast proves G7 semantics. Do not confuse it with SDL extended device-active.
+Pinned xone/SDL code is cached privately, not executed/imported. Read the final
+online cross-check in docs/DUALSENSE_STARTUP_GAMESCOPE.md and protocol research
+rows. Plan a passive offline state prototype with announce-led and already-
+streaming paths; no prototype implemented yet. No new raw synchronized G7
+receiver-off/late-on recording found in the checked public pages, not a global
+absence claim. No SSH/hardware/installed change or push; target remains blocked.
+
+Latest offline saved-capture search, 20 October: read the final connection
+chronology in docs/DUALSENSE_STARTUP_GAMESCOPE.md. Ten originals rehashed;
+nine contain identified traffic; 106 selected frames independently match
+Wireshark payload/endpoint/stage/timing. Four native-enumeration epochs show
+unknown/status-or-announce → pad → IMU (pad-to-IMU 514–606 ms), but three start
+init before that unknown report. Type 03 is periodic (51, constant payload),
+type 02 ANNOUNCE occurs twice, and an already-streaming capture starts with
+IMU before status/pad. Never turn these into a mandatory RF-ready bit or ACK.
+Returned-100a IMU-shaped bursts use HID EP84, not native EP82. Confirmed radio
+cycle logs show USB re-enumeration with dongle plugged but no raw RF-edge
+payloads. xpad delayed-init-on-announce is a relevant design for other hardware,
+not a proved G7 quirk. No raw synchronized off/on control is established in
+this selected corpus. Preserve ownership/lifetimes and unknown states. Analysis
+only; no SSH/hardware/installed change, initialization replay or push.
+
+Latest offline architecture review, 20 October: rechecked the pinned Sony/SDL
+sources against saved controller-off reboot evidence. Read the final manager
+review in docs/DUALSENSE_STARTUP_GAMESCOPE.md. Retain a thin acquisition/admin
+manager for now; ordinary receiver/link/runtime lifecycle belongs in the kernel
+with a distinct waiting contract. Direct discovery starts too early, but the
+terminal three-second IMU gate is in shared kernel-used C, so removing Python
+or lengthening a timeout alone is insufficient. PS4 dongle has a real status
+bit and kernel connection states; PS5 HID attachment is a different topology.
+No GameSir equivalent RF bit or proven init-once/late-data contract is known.
+Do not guess one, add unconditional retries/heartbeats, weaken identity/STOP,
+add USB aliases or alter publication as an unreviewed side effect. Existing
+56 manager and shared-C ASan/UBSan startup checks pass; they characterize the
+old behavior, not a fix. Analysis/documentation only; no SSH, hardware, runtime
+change or push. Installed blocked instance/recovery remains unconfirmed.
+
+Latest revision-14 restart checkpoint, 20 October: the maintainer rebooted with
+the receiver connected and confirms Gaming Mode ready, radio controller off,
+no manual start/Resume. Fresh unprivileged readback proves a new boot, correct
+package/module, service active/enabled with zero restarts and native IF0 binding.
+The separately approved single protected status read shows a BLOCKED direct
+109c bootstrap: state=8, error=-110, failed_stage=5, pad=0, imu=0. The outer error
+is "Return deadline: still 109c; manual attention required"; actual owner remains
+gs_native. Autoload passes; healthy startup/recovery does not. Do not equate
+native binding with readiness or claim successful fallback. Stop before radio
+power-on; no Resume/release, retry, state reset or rebind is authorized here.
+Documented push prerequisite remains unmet. Preserve the connection/state and
+original diagnostics; no push or other-host change. Prior application gyro and
+paddle successes remain valid only for their earlier running session. The
+activation/checkpoints below are historical.
+
+Latest activation checkpoint, 20 October: the maintainer requested starting
+revision 14. Fresh checks matched the stopped/enabled/paused/absent baseline;
+one service start loaded the verified module/profile, followed by one Resume
+while the receiver was absent. Service is now active/enabled and unpaused.
+The maintainer then reports automatic radio power/connection on removal from
+the charging cradle. Readback confirms direct-109c bootstrap success, matching
+native lease/kernel tokens, pad/IMU reception and exact input publication.
+Original failure history is preserved. Normal Steam inputs and four independent
+paddles pass. Although all three Steam gyro UI values remain zero, the maintainer
+subsequently confirms SDL gyro recognition in Eden and actual gyro-controlled
+camera movement in Arc Raiders, in the announced Steam Input right-stick test.
+Treat application gyro use as positive for this run and the display discrepancy
+as deferred TODO. Its exact internal cause is unproved; Guide independence,
+neutral drift and all reconnect/startup cases were not separately reported.
+This is not the planned receiver-present/controller-off late-power-on or a
+cold-boot test. A transient xpad gamepad is in the journal; do not claim no xpad
+probe, or that the revision-14 returned-timeout branch was exercised.
+No additional system/Steam/driver change, automatic retry or push follows from
+these reports. Keep the current connection intact.
+The installation-only checkpoint below is historical.
+
+Latest installation checkpoint, 20 October: explicit approval covered transfer,
+physical removal after cue, one manual release, the exact revision-13-to-14
+package transaction/hooks and readback only. All completed successfully.
+Read RELEASE_AUDIT.md#revision-14-installed-on-cachyos--20-october-2026.
+Absence was freshly verified, release returned paused/returned/empty ownership;
+eleven updater tests passed before the new one-attempt guarded transaction.
+Target DKMS/srcversion and all 128 regular payload files pass; sensor/Steam
+configuration and original failure history are preserved. The service is
+inactive/dead/enabled, management paused, module absent, dongle absent, leases
+empty. No activation/Resume/reboot or hardware acceptance followed. Leave the
+dongle out until the next approved step. Preserve consumed receipts, backups,
+fixed-hash source/package and rollback 13; no reuse, other-host update or push.
+The following preparation/checkpoint paragraphs are historical.
+
+The later maintainer request authorizes revision-14 preparation and fresh target
+inspection/build, then concrete update/test commands for approval. Do not install
+or activate from preparation alone. Steam may stay open; games/Eden/Deadband are
+confirmed closed. Preserve the currently native target, rollback package, sensor
+and Steam settings. Package revision 14 changes only manager runtime code and
+adds the diagnosis/Sony comparison to the document allowlist; kernel behavior
+is unchanged. Three user-led successes with controller powered before receiver
+insertion are observations on installed revision 13, not acceptance of this fix,
+proof of no transient xpad binding, sensor tests or a Steam-causation finding.
+No other-host update, public push or precision calibration is authorized.
+
+Revision-14 preparation now passes: source 54d70fc, fixed-hash package, 128
+regular payload files, local client self-test and 25 packaging tests. Fresh
+protected state is active/unpaused with one healthy native lease; rollback 13
+is verified. Target GCC module build passes without warnings; final metadata
+is unchanged. Read the latest RELEASE_AUDIT.md artifact record. Package transfer,
+release/removal, installation and activation have not occurred. Obtain concrete
+update approval and freshly verify physical absence, pause, returned=true and
+empty ownership before installation; do not reuse a consumed helper or assume
+empty leases alone establish return. Activation/Resume and hardware acceptance
+remain separate. Preserve the frozen source/package across later doc commits.
+
+Latest offline implementation, 20 October: the separately requested manager fix
+now retires only an attested and successfully ended direct-109c no-data VERIFY
+timeout when a new unattempted 100a is observed on xpad at the same hub lifetime.
+Read REVISION13_FIRST_START.md and DUALSENSE_STARTUP_GAMESCOPE.md in docs/.
+Defer fresh discovery to the next complete scan; retain old attempted tokens,
+first diagnostics, pause, exact ownership checks and the three-start budget.
+Never migrate already-suppressed historical state, retry the failed instance,
+reuse old cleanup authority for a replacement or generalize to other faults.
+56 manager tests, seven added shared-C sensor cases and full offline tests pass.
+The raw first-IMU cause remains unknown. Sony's native HID/paired evdev path
+and PS4 dongle's explicit connection state are design references, not GameSir
+commands or RF-bit evidence. No kernel behavior/ABI, packet, sensor profile or
+deadline changed. Local build only; no SSH, install, hardware test or push.
+Installed revision 13 remains unchanged; later packaging/acceptance is separate.
+
+Latest read-only follow-up, 20 October: the maintainer independently activated
+revision 13 and reports xpad on first power-on, GameSir after another radio cycle.
+Read docs/REVISION13_FIRST_START.md. Fresh checks confirm the expected module,
+automatic active/enabled service and an unpaused, attested native runtime.
+Two saved epochs show direct-109c VERIFY timeout with pad/IMU=0, then a new
+100a/xpad retained as observed return, followed by successful direct 109c.
+The actual manager reproduces the intermediate released/attempted suppression
+offline. The missing first IMU's RF/firmware cause remains unproved; do not
+attribute it to the 100a-only query, missing module load or a required button.
+No live test, runtime/driver change or push occurred. Preserve original errors,
+attempt/budget/ownership guards and the currently working session. Further
+correction and hardware acceptance are separate. The checkpoints below are
+historical, including their activation-pending state at installation time.
+
+Latest checkpoint: revision 13 is now installed on the CachyOS target after
+explicit approval of physical removal/readback and a new conditional update.
+Read RELEASE_AUDIT.md#revision-13-installed-after-verified-physical-removal.
+Dongle absence, paused management, returned=true, empty devices/leases and
+no native bindings were confirmed before the new one-attempt guard ran.
+It pins that absent baseline and requires verified return, not just empty leases.
+Eleven offline helper tests passed. Transfer, one package transaction, all hooks,
+126 regular payload hashes, DKMS and target srcversion
+8207CE72AE527F13E1D1B1D passed. Service inactive/dead with enabled setting
+retained, management paused, module absent, dongle absent and ownership empty.
+Sensor/Steam settings and original failure history remain intact. No activation,
+Resume, reboot or cold-start/functional test was performed. Leave the dongle out
+until an explicitly approved next step. Preserve both consumed attempt receipts,
+private reports/backups and revision-12 rollback artifact; do not reuse helpers.
+The installed package is the original fixed-hash ec7adf8 source artifact, not
+rebuilt after these documentation updates. Local docs commit only; no push.
+The following abort/preparation paragraphs are historical checkpoints.
+
+Historical first attempt: the explicitly authorized one-shot revision-13 transfer
+and update was attempted and STOPPED by the installed revision-12 pre-hook.
+Read RELEASE_AUDIT.md#revision-13-update-stopped-before-package-replacement.
+No package was upgraded. The old blocked 100a entry still observes an unowned
+109c/xpad replacement, so release cannot confirm returned despite empty leases.
+The hook set persistent pause, then stopped before service stop/module unload;
+revision 12 remains intact, loaded, active/enabled but paused, with no native
+binding. Sensor/Steam files and error history are unchanged. One pre-snapshot
+was created. Do not rerun consumed local/remote receipts, bypass the hook,
+force-stop/reset state, Resume, activate or reboot under that spent approval.
+Next step needs authorization for manual physical removal and read-only
+absence/ownership confirmation; leave the dongle out until the next instruction.
+Then prepare a newly guarded single update against that fresh baseline.
+An empty lease table is not sufficient proof that manager release can succeed:
+check the existing entries and actual PID as well. No new runtime attempt or
+push; calibration remains paused. The following preparation scope is historical.
+
+Current authorization: prepare revision 13 with the captured xpad control-IN
+startup request, offline regression tests, fresh read-only target inspection
+and an unprivileged target-kernel build. Show the concrete package transaction
+for separate approval; do not install, activate, Resume, reboot or hardware-test.
+Read docs/ACQUISITION_AUTOPROBE_FIX.md and docs/STANDALONE_STARTUP.md.
+The query is allowed only in the explicit 100a bootstrap after native ownership
+and IN reception, once before its first mode-switch OUT. Exact known setup,
+20-byte response, 25-ms USB timeout; no retries, guessed command or query on
+109c/105e/probe/status. Preserve first failure and recheck identity/deadlines
+after the sleeping transfer. Its hardware necessity is still unproven; Xbox
+certification and the Guide ring do not establish it. Keep the manager's one
+strict pre-write autoprobe recheck, old blocked attempts, budgets/pause and
+cleanup authority. No automatic deletion of historical errors or leases.
+Fresh reads show revision 12 still active/enabled with a pre-acquisition blocked
+entry, no leases/native bindings and an unowned 109c on xpad. Do not call this
+successful recovery. Preserve installed sensor/Steam settings and the rollback
+package. Local commits only; precision calibration remains paused. The following
+installation/activation paragraphs are historical checkpoints.
+Revision-13 source ec7adf8 now passes full offline checks and both module
+builds (target GCC: zero warnings; local Clang patch difference disclosed).
+The fixed-hash package and one-attempt updater are prepared privately, not
+transferred/installed. Read RELEASE_AUDIT.md for artifact hashes and gates.
+The final target read was unchanged and verified the retained revision-12
+rollback artifact. Await scoped update approval; activation remains separate.
+
+
+The subsequent revision-12 installation request is completed. Source 057270a
+built for the checked CachyOS headers with zero warnings. The one approved
+package transaction verified exact ownership, hooks, hashes and single-package
+scope; DKMS/module identity and 124 payload files pass. The target is stopped
+and persistently paused, with enabled setting retained, empty ownership and
+no loaded native module. Its initial unowned 109c remains xpad-bound; do not
+call that a successful 109c-to-100a return or input acceptance. Preserve private
+logs/backups and the unused revision-11 rollback package. Activation, Resume,
+both physical power-on cases and other-host update remain separate; no push.
+See docs/RELEASE_AUDIT.md. Do not rerun the consumed installation receipt.
+
+The cold-start correction was developed offline. The subsequent explicit
+request authorizes preparation and installation of revision 12 on the CachyOS
+target, following fresh checks and a displayed concrete update command. Keep
+activation/Resume and hardware acceptance separate; no other-host update or push.
+Preserve exact one-attempt guards, package hooks and private backup evidence.
+The implementation scope remains correction of both cold-start gaps, tests
+and local commit. Revision 12 removes the positive pad-counter gate after
+valid passive 100a status and adds scoped acquire_109c plus same-instance native
+bootstrap. Never weaken exact acquisition, fresh IMU, token attestation, budgets
+or first-error/cleanup rules. Direct 109c does not authorize xpad fallback while
+still 109c, a guessed reverse command, or automatic retry. Foreign/native owners
+stay excluded. Preserve the historical revision-11 report below as evidence of
+the old policy, not current implementation instructions. The approved update
+may perform its reviewed release/stop/unload/DKMS hooks; do not independently
+activate, test, change Steam or push. Cold startup
+and late power-on, including a dongle present while RF is off, remain hardware
+acceptance cases; do not claim they passed offline. Calibration stays paused.
+
+The later user-led cold boot exposes two remaining startup limits. Read-only
+journals confirm service/module autostart, initially unowned 109c on xpad,
+then a fresh 100a acquired natively and a successful bootstrap/publication.
+The maintainer explicitly reports no service/Resume commands and that power-on
+alone did not suffice: native readiness appeared only after operating controls.
+Distinguish binding from readiness: the 100a native bind precedes the completed
+109c runtime. Source still gates bootstrap on accepted passive pad reports;
+initial unrelated 109c is excluded. No timestamped human-input trace exists,
+so do not assign the entire delay or the earlier re-enumeration to a particular
+button. Record this as incomplete power-on-only acceptance, not an autostart
+failure or a cold no-xpad pass. See docs/STANDALONE_STARTUP.md. No new live
+action or runtime change follows from this observation; local documentation
+and existing offline policy tests only.
+
+After installation the maintainer independently started the service and ran
+Resume. Read-only follow-up confirms the loaded revision-11 srcversion and
+new acquisition attributes, active/enabled service, successful bootstrap and
+paired gamepad/sensor nodes. The maintainer explicitly reports a successful
+radio off/on cycle with the dongle left plugged in: Steam's gyro display in
+Gaming Mode works without held Guide and without restarting Steam. Record
+this limited positive application result; do not repeat hardware tests from
+this report. The observed USB instance remained the same across the metadata
+snapshots; no continuous RF trace was collected. This startup used an already
+xpad-initialized 100a device and the logged handover path. Independent cold
+startup, causation of the gyro improvement, repeated cycles and the new build's
+other input/haptics regression remain separate. Protected manager status and
+effective parameters were not reread with a password; only unprivileged reads
+and available journals. No additional activation or runtime change by Codex.
+
+The subsequent explicit one-shot approval completed the revision-11 package
+update on the CachyOS target. Fresh checks and the corrected transaction guard
+passed; the package hook verified release, stopped management and unloaded
+the old module. Readback confirms revision 11, all 124 regular payload files,
+target DKMS installed and srcversion 06354BBF7CEC05B29300CC8. The device is
+observed as 100a/xpad (IF1 usbhid), with paused empty ownership; normal input
+was not tested. Service is inactive/dead with its existing enabled setting
+retained; no native module is loaded. Sensor/Steam files are unchanged.
+No activation, Resume, reboot or new runtime test was authorized/executed.
+Prepare activation and cold-start isolation separately; do not treat this
+previously xpad-initialized instance as proof of independent cold startup.
+Private logs/backups remain outside Git; no push. See the latest release audit.
+
+The earlier approved revision-11 update attempt reached only pacman's preview.
+The private wrapper rejected CachyOS's verbose old/new-version table and
+answered no before confirmation or hooks. Readback confirms revision 10,
+the same active/enabled manager and native instance; nothing was activated.
+The helper now handles the recorded table and compact format offline, with
+exact single-package/version checks and preserved one-attempt receipts.
+Nine tests include fake-child confirmation/denial and changed-device refusal.
+That attempt's consumed receipt remains intact; the successful separately
+approved second attempt is documented above. Do not reuse either receipt.
+See the latest release audit. Direct acquisition may reduce enumeration
+transitions, but is not evidence that the Steam/Guide gyro issue is fixed.
+
+The maintainer authorized isolated offline consolidation after the explicit
+publication of e2415a9. New work remains local on codex/standalone-startup;
+that prior exact-tip push permission does not authorize this branch's push.
+Read docs/STANDALONE_STARTUP.md. Revision 11 accepts free or optional xpad-owned
+100a/105e IF0 through new scoped kernel acquisition attributes. Never load/bind
+xpad as a startup prerequisite, blacklist it globally, or adopt foreign/native
+owners. Preserve budget/pause, one-shot instance checks, original errors and
+separate cleanup authority. An unconfirmed acquisition is not native ownership.
+Missing xpad fallback must stop before native unbind, without implied recovery.
+Keep protocol, paddle, motion, FF and userspace bridge behavior intact; display
+gain is not physical sensor scaling. No installation, SSH/hardware test, running
+configuration change or GUI integration. Precise calibration stays paused.
+Fresh Garuda/CachyOS hardware acceptance is separate, especially a cold start
+without earlier xpad initialization. Retain Steam's controller-on-before-start
+limitation and manual-only Eden guidance. No new command guesses to bypass it.
+
+The subsequent explicit request authorized a read-only CachyOS kernel/header
+check and an unprivileged remote module build only. Source 5b14c85 built for
+7.2.11-1-cachyos-deckify with matching headers/GCC and zero warnings; transferred
+source hashes, header fingerprints and module vermagic/hash were verified.
+Only a fresh user-owned build directory was created on the target. Installed
+revision 10 and its active/enabled service were unchanged. No installation,
+module load, Resume, controller test or push follows from this build approval.
+See the latest release audit. Both distribution builds now exist; independent
+cold-start and runtime acceptance of revision 11 remain pending.
+
+## Historical final publication checkpoint (19 October 2026)
 
 The latest request is a final check of the entire unpublished public history,
 including Eden documentation, offline tests and private-data exclusion, then

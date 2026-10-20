@@ -164,9 +164,9 @@ class Policy(unittest.TestCase):
         self.assertEqual(len(boots), 2)
         self.assertEqual({j["device"].port for j in boots}, {"1-2", "11-3.2.7"})
 
-    def test_no_implicit_109c_adoption_or_foreign_driver(self):
-        self.setup_manager([device(pid="109c", driver="xpad"), device("3-7", driver="usbfs"),
-                            device("4-2", driver=None)])
+    def test_no_implicit_native_or_foreign_driver_adoption(self):
+        self.setup_manager([device(pid="109c", driver="gs_native"), device("3-7", driver="usbfs"),
+                            device("4-2", pid="109c", driver="usbfs")])
         self.manager.tick()
         self.assertEqual(self.host.calls, [])
 
@@ -377,10 +377,9 @@ class Policy(unittest.TestCase):
         self.assertEqual(self.host.calls, before)
         self.assertEqual(self.manager.entries[entry.device.port].phase, "blocked")
 
-    def test_direct_no_adoption_of_native_foreign_or_unbound_105e(self):
+    def test_direct_no_adoption_of_native_foreign_or_unknown_pid(self):
         self.setup_manager([device("1-2", pid="105e", driver="gs_native"),
                             device("1-3", pid="105e", driver="usbfs"),
-                            device("1-4", pid="105e", driver=None),
                             device("1-5", pid="105d"), device("1-6", pid="1022")])
         self.manager.tick()
         self.assertEqual(self.host.calls, [])
@@ -773,13 +772,14 @@ class Policy(unittest.TestCase):
                     entry.job["result"] = (service.STATUS_BUSY_EXIT, "busy")
                     self.manager.tick()
                 elif via == "later-guard":
+                    entry.job["result"] = (service.STATUS_BUSY_EXIT, "busy")
                     self.manager.tick()
                     self.host.now = entry.next_check
                     self.host.control_busy.add(entry.device.port)
                     self.manager.tick()
                 for _ in range(30):
                     self.manager.tick()
-                self.assertEqual(entry.phase, "waiting_input")
+                self.assertEqual(entry.phase, "checking_start")
                 self.assertTrue(entry.status_conflict)
                 self.assertEqual(list(self.manager.budgets[entry.device.port]), [])
                 self.assertEqual(self.manager.attempted, set())
@@ -806,8 +806,8 @@ class Policy(unittest.TestCase):
         self.manager.tick()
         entry = self.manager.entries["2-3.4"]
         self.assertEqual(calls, 2)
-        self.assertEqual(entry.phase, "waiting_input")
-        self.assertEqual(self.host.saved["leases"][entry.device.port]["phase"], "waiting_input")
+        self.assertEqual(entry.phase, "checking_start")
+        self.assertEqual(self.host.saved["leases"][entry.device.port]["phase"], "checking_start")
         self.assertTrue(entry.status_conflict)
         self.assertIsNone(entry.job)
         self.assertEqual([op for op, _ in self.host.calls], ["claim"])
@@ -833,6 +833,7 @@ class Policy(unittest.TestCase):
         self.setup_manager()
         self.host.pad = 0
         self.manager.tick()
+        self.manager.entries["2-3.4"].job["result"] = (service.STATUS_BUSY_EXIT, "busy")
         self.manager.tick()
         entry = self.manager.entries["2-3.4"]
         self.host.now = entry.next_check
@@ -1321,20 +1322,16 @@ class Policy(unittest.TestCase):
         self.assertFalse(self.manager.returned())
         self.assertEqual(self.host.calls, [])
 
-    def test_passive_input_wait_has_no_deadline_or_usb_output(self):
+    def test_zero_pad_reports_do_not_block_validated_bootstrap(self):
         self.setup_manager()
         self.host.pad = 0
+        self.manager.tick()
+        self.manager.tick()
+        self.assertEqual(self.manager.entries["2-3.4"].phase, "bootstrapping")
+        self.assertEqual([op for op, _ in self.host.calls], ["claim", "info", "bootstrap"])
         for _ in range(20):
             self.manager.tick()
-            self.host.now += 1000
-        self.assertEqual(self.manager.entries["2-3.4"].phase, "waiting_input")
-        self.assertTrue(all(operation in ("claim", "info") for operation, _ in self.host.calls))
-        self.assertEqual(self.manager.attempted, set())
-        self.host.pad = 1
-        self.host.now += 1
-        self.manager.tick()
-        self.manager.tick()
-        self.assertEqual([c[0] for c in self.host.calls].count("bootstrap"), 1)
+        self.assertEqual([op for op, _ in self.host.calls].count("bootstrap"), 1)
 
     def test_release_during_input_wait_returns_without_end_or_bootstrap(self):
         self.setup_manager()
@@ -1600,7 +1597,6 @@ class Policy(unittest.TestCase):
         self.setup_manager()
         self.host.pad = 0
         self.manager.tick()
-        self.manager.tick()
         entry = self.manager.entries["2-3.4"]
         entry.phase = "blocked"
         entry.error = "Start budget denied"
@@ -1650,7 +1646,6 @@ class Policy(unittest.TestCase):
     def test_restart_passive_100a_cleans_up_without_rebootstrap(self):
         self.setup_manager()
         self.host.pad = 0
-        self.manager.tick()
         self.manager.tick()
         self.manager = service.Manager(self.host, lambda: self.host.now)
         for _ in range(4):
@@ -1742,7 +1737,6 @@ class Policy(unittest.TestCase):
         self.setup_manager()
         self.host.pad = 0
         self.manager.tick()
-        self.manager.tick()
         self.manager.command("release")
         with patch.object(self.host, "restore", side_effect=service.Unsafe("Synthetic bind failure")) as restore:
             for _ in range(5):
@@ -1766,7 +1760,7 @@ class Policy(unittest.TestCase):
         before = len(self.host.calls)
         restart.tick()
         self.assertEqual(self.host.calls[before:], [("claim", "2-3.4"), ("info", "2-3.4")])
-        self.assertEqual(restart.entries["2-3.4"].phase, "waiting_input")
+        self.assertEqual(restart.entries["2-3.4"].phase, "checking_start")
         self.assertEqual(restart.budgets["2-3.4"], service.deque())
         self.assertEqual(self.host.saved["boot_id"], self.host.boot_id)
 
@@ -2003,6 +1997,11 @@ class Adapter(unittest.TestCase):
         claim.parent.mkdir(parents=True)
         claim.write_text("")
         (claim.parent / "claim_105e").write_text("")
+        for name in ('acquire_100a', 'acquire_105e', 'acquire_109c'):
+            (claim.parent / name).write_text('')
+        fallback = self.sysfs / 'bus/usb/drivers/xpad/bind'
+        fallback.parent.mkdir(parents=True)
+        fallback.write_text('')
 
     def tearDown(self):
         self.temp.cleanup()
@@ -2111,29 +2110,30 @@ class Adapter(unittest.TestCase):
                 link.unlink()
             else:
                 link.symlink_to(self.sysfs / "bus/usb/drivers" / driver)
-        real_claim = self.host.write_claim
+        real_claim = self.host.write_acquire
         def claim(d):
             real_claim(d)
-            calls.append(("gs_native", "claim_105e"))
+            calls.append(("gs_native", "acquire_105e"))
+            (p / d.interface / "driver").unlink()
             (p / d.interface / "driver").symlink_to(self.sysfs / "bus/usb/drivers/gs_native")
         with patch.object(self.host, "write_binding", side_effect=write), \
-                patch.object(self.host, "write_claim", side_effect=claim):
+                patch.object(self.host, "write_acquire", side_effect=claim):
             self.host.claim(original)
             current = self.host.scan()[p.name]
             self.assertEqual(current.token, original.token)
             self.assertEqual(current.driver, "gs_native")
             self.host.restore(current)
-        self.assertEqual(calls, [("xpad", "unbind"), ("gs_native", "claim_105e"),
+        self.assertEqual(calls, [("gs_native", "acquire_105e"),
                                  ("gs_native", "unbind"), ("xpad", "bind")])
         expected = f"1 6-2.3:1.0 6 9 {original.sysfs_inode} {original.parent_inode}\n"
-        self.assertEqual((self.sysfs / "bus/usb/drivers/gs_native/claim_105e").read_text(), expected)
+        self.assertEqual((self.sysfs / "bus/usb/drivers/gs_native/acquire_105e").read_text(), expected)
         self.assertEqual((self.sysfs / "bus/usb/drivers/gs_native/claim_100a").read_text(), "")
         self.assertEqual(self.host.scan()[p.name].pid, "105e")
         self.assertEqual(self.host.scan()[p.name].driver, "xpad")
 
     def test_105e_missing_claim_contract_and_foreign_owner_leave_xpad_untouched(self):
         p = self.fixture(pid="105e")
-        (self.sysfs / "bus/usb/drivers/gs_native/claim_105e").unlink()
+        (self.sysfs / "bus/usb/drivers/gs_native/acquire_105e").unlink()
         with patch.object(self.host, "write_binding") as bind:
             with self.assertRaises(service.Unsafe):
                 self.host.claim(self.host.scan()[p.name])
@@ -2160,7 +2160,7 @@ class Adapter(unittest.TestCase):
     def test_105e_claim_rejects_wrong_pid_and_replacement_before_write(self):
         p = self.fixture(pid="105e")
         original = self.host.scan()[p.name]
-        for pid in ("109c", "105d", "1022", "105e/../../claim_100a"):
+        for pid in ("105d", "1022", "109c/../../acquire_100a", "105e/../../claim_100a"):
             with self.subTest(pid=pid), self.assertRaises(service.Unsafe):
                 self.host.claim_request(replace(original, pid=pid))
         (p / "6-2.3:1.0/driver").unlink()
@@ -2330,25 +2330,29 @@ class Adapter(unittest.TestCase):
             else:
                 link.symlink_to(self.sysfs / "bus/usb/drivers" / driver)
         def claim(d):
-            write(d, "gs_native", "claim_100a")
-        with patch.object(self.host, "write_binding", side_effect=write), patch.object(self.host, "write_claim", side_effect=claim):
+            self.host.guard(d)
+            (self.sysfs / "bus/usb/devices" / d.port / d.interface / "driver").unlink()
+            write(replace(d, driver=None), "gs_native", "acquire_100a")
+        with patch.object(self.host, "write_binding", side_effect=write), patch.object(self.host, "write_acquire", side_effect=claim):
             self.host.claim(self.host.scan()["6-2.3"])
             self.host.restore(self.host.scan()["6-2.3"])
-        self.assertEqual(calls, [("xpad", "unbind"), ("gs_native", "claim_100a"),
+        self.assertEqual(calls, [("gs_native", "acquire_100a"),
                                  ("gs_native", "unbind"), ("xpad", "bind")])
 
     def test_bind_race_stops_before_stealing_foreign_driver(self):
         self.fixture()
-        calls = []
-        def write(d, driver, action):
-            calls.append((driver, action))
+        real_acquire = self.host.write_acquire
+        def acquire(d):
             link = self.sysfs / "bus/usb/devices" / d.port / d.interface / "driver"
             link.unlink()
             link.symlink_to(self.sysfs / "bus/usb/drivers/foreign")
-        with patch.object(self.host, "write_binding", side_effect=write):
+            real_acquire(d)
+        with patch.object(self.host, "write_acquire", side_effect=acquire), \
+                patch.object(self.host, "write_binding") as bind:
             with self.assertRaises(service.Unsafe):
                 self.host.claim(self.host.scan()["6-2.3"])
-        self.assertEqual(calls, [("xpad", "unbind")])
+            bind.assert_not_called()
+        self.assertEqual((self.sysfs / "bus/usb/drivers/gs_native/acquire_100a").read_text(), '')
 
     def test_claim_contract_is_exact_and_versioned_on_injected_sysfs(self):
         self.fixture()
@@ -2362,7 +2366,7 @@ class Adapter(unittest.TestCase):
 
     def test_missing_claim_attribute_stops_before_xpad_unbind(self):
         self.fixture()
-        (self.sysfs / "bus/usb/drivers/gs_native/claim_100a").unlink()
+        (self.sysfs / "bus/usb/drivers/gs_native/acquire_100a").unlink()
         with patch.object(self.host, "write_binding") as write:
             with self.assertRaises(service.Unsafe):
                 self.host.claim(self.host.scan()["6-2.3"])

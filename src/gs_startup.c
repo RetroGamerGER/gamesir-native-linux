@@ -27,7 +27,8 @@ static int boot_clock(struct gs_startup *s, gs_u64 now)
 	if (now < s->now_us)
 		return boot_fail(s, -EINVAL);
 	s->now_us = now;
-	if (now >= s->deadline_us || now >= s->phase_deadline_us ||
+	if ((s->state != GS_BOOT_WAIT_RECEIVER &&
+	     (now >= s->deadline_us || now >= s->phase_deadline_us)) ||
 	    (s->pending_length && now >= s->transfer_deadline_us))
 		return boot_fail(s, -ETIMEDOUT);
 	return 0;
@@ -92,7 +93,7 @@ int gs_boot_begin(struct gs_startup *s, const struct gs_boot_device *d,
 		return -EALREADY;
 	if (authorized != 1)
 		return boot_fail(s, -EPERM);
-	if ((!boot_descriptor(d, 0x100a) && !boot_descriptor(d, 0x105e)) ||
+	if (!gs_boot_supported(d) ||
 	    d->enumerated_us > now ||
 	    now > (gs_u64)-1 - GS_BOOT_TOTAL_US)
 		return boot_fail(s, -EINVAL);
@@ -106,8 +107,8 @@ int gs_boot_begin(struct gs_startup *s, const struct gs_boot_device *d,
 	s->due_us = d->enumerated_us + GS_BOOT_SETTLE_US;
 	if (s->due_us < now)
 		s->due_us = now;
-	if (d->pid == 0x105e) {
-		/* Experimental ZZZ: already vendor/GIP, no identity-switch packets. */
+	if (gs_pid_native(d->pid)) {
+		/* Already vendor/GIP: use the captured native init, no mode switch. */
 		s->state = GS_BOOT_INITIALIZE;
 		s->due_us = now;
 		s->phase_deadline_us = boot_limit(s, GS_BOOT_VERIFY_US);
@@ -115,6 +116,16 @@ int gs_boot_begin(struct gs_startup *s, const struct gs_boot_device *d,
 		s->state = GS_BOOT_TRANSITION;
 	}
 	return 0;
+}
+
+int gs_boot_begin_receiver(struct gs_startup *s, const struct gs_boot_device *d,
+			   int authorized, gs_u64 now)
+{
+	int ret = gs_boot_begin(s, d, authorized, now);
+
+	if (!ret)
+		s->receiver_wait = 1;
+	return ret;
 }
 
 int gs_boot_next(struct gs_startup *s, const struct gs_boot_device *d,
@@ -137,10 +148,27 @@ int gs_boot_next(struct gs_startup *s, const struct gs_boot_device *d,
 	if (s->state == GS_BOOT_INITIALIZE && s->step == 6) {
 		if (now < s->due_us)
 			return 0;
-		s->state = GS_BOOT_VERIFY;
+		s->state = s->receiver_wait ? GS_BOOT_WAIT_RECEIVER : GS_BOOT_VERIFY;
 		s->phase_deadline_us = boot_after(s, s->due_us, GS_BOOT_VERIFY_US);
 		/* Same last-init 50-ms settling + 450-ms maintenance as gsn_start. */
 		s->due_us = boot_after(s, s->due_us, GS_BOOT_HEARTBEAT_US);
+	}
+	if (s->state == GS_BOOT_WAIT_RECEIVER) {
+		/* Setup is complete and no transfer is outstanding. Silence, neutral
+		 * pad reports and unknown status do not restart or finish setup.
+		 */
+		if (!s->imu_seen || now - s->imu_us > GS_BOOT_FRESH_US)
+			return 0;
+		if (now > (gs_u64)-1 - GS_BOOT_FRESH_US)
+			return boot_fail(s, -EINVAL);
+		s->state = GS_BOOT_READY;
+		/* Bound the one-shot handoff even after waiting beyond the original
+		 * setup deadline. No pending transfer or old failure is revived.
+		 */
+		s->deadline_us = now + GS_BOOT_FRESH_US;
+		s->phase_deadline_us = s->deadline_us;
+		s->due_us = now + GS_BOOT_HEARTBEAT_US;
+		return 0;
 	}
 	if (s->state == GS_BOOT_VERIFY) {
 		if (s->imu_seen && now - s->imu_us <= GS_BOOT_FRESH_US) {
@@ -259,7 +287,7 @@ int gs_boot_input(struct gs_startup *s, const struct gs_boot_device *d,
 	if (ret)
 		return ret;
 	if (s->state != GS_BOOT_INITIALIZE && s->state != GS_BOOT_VERIFY &&
-	    s->state != GS_BOOT_READY)
+	    s->state != GS_BOOT_READY && s->state != GS_BOOT_WAIT_RECEIVER)
 		return boot_fail(s, -EPROTO);
 	if (status)
 		return boot_fail(s, status < 0 ? status : -EPROTO);

@@ -17,6 +17,13 @@ oder private Git-Historie wurde übernommen. Referenzen, Originalhashes,
 Vergleichsmethode und ihre begrenzte Aussage stehen im
 [Trigger-Herkunftsbericht](TRIGGER_BRIDGE_PROVENANCE.md).
 
+Nachtrag 19. Oktober 2026: Revision 13 implementiert den in Mitschnitten und
+im unten referenzierten `xpad_start_input` belegten Control-IN-Request als
+eigenen, begrenzten Bootstrap-Schritt. Die xpad-Datei trägt GPL-2.0-or-later;
+übernommen werden die dokumentierten Transferparameter, nicht die Datei oder
+ihre übrige Implementierung. Herkunft, abweichende Fehlerbehandlung und
+Nachweisgrenzen: [Startabfrage](ACQUISITION_AUTOPROBE_FIX.md#revision-13-explicitly-requested-startup-query-integration).
+
 ## Lizenztext, SPDX und UAPI
 
 `COPYING` enthält unverändert den vollständigen GPL-v2-Text aus dem

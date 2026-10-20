@@ -19,7 +19,7 @@ class ObservationError(RuntimeError):
 
 TRANSITION_PHASES = frozenset(("bootstrapping", "locating", "attesting"))
 PUBLICATION_PHASES = frozenset(("input_check", "awaiting_sensor", "publishing_input"))
-STARTUP_PHASES = TRANSITION_PHASES | PUBLICATION_PHASES | {"waiting_input", "active"}
+STARTUP_PHASES = TRANSITION_PHASES | PUBLICATION_PHASES | {"waiting_input", "checking_start", "active"}
 PORT = re.compile(r"[1-9][0-9]*-[1-9][0-9]*(?:\.[1-9][0-9]*)*")
 EMPTY_BASES = {"idVendor": 16, "idProduct": 16, "bConfigurationValue": 10,
                "busnum": 10, "devnum": 10}

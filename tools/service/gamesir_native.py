@@ -7,7 +7,8 @@ No USB passthrough, profile writes, module loading or speculative mode resets.
 """
 import argparse
 from collections import deque
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
+import errno
 import fcntl
 import hashlib
 import json
@@ -57,7 +58,12 @@ def input_status(output, tokens):
             not value['flags'] & 4):
         raise Unsafe('Invalid exact-instance six-axis publication status')
     return value
-START_PIDS = frozenset(("100a", "105e"))
+START_PIDS = frozenset(("100a", "105e", "109c"))
+DIRECT_PIDS = frozenset(("105e", "109c"))
+FALLBACK_PIDS = frozenset(("100a", "105e"))
+# Discovery never adopts a foreign or unexplained existing native binding.
+# xpad is an optional previous owner, not a source of initialization or input.
+START_OWNERS = (None, "xpad")
 NATIVE_PIDS = frozenset(("109c", "105e"))
 STATUS_BUSY_EXIT = 4  # C client: only a getter's open(EBUSY), never an ioctl failure.
 DIAGNOSTIC_BYTES = 4096
@@ -93,7 +99,7 @@ def bootstrap_diagnostic(rc, output, timed_out, source_instance):
 
 
 def boot_proof(output):
-    """Only terminal kernel records can attest an acquired native instance."""
+    """Attest terminal runtime/failure or setup-complete pending ownership."""
     matches = list(BOOT.finditer(output))
     if len(matches) != 1:
         return None
@@ -104,11 +110,26 @@ def boot_proof(output):
     # not invalidate READY. Exact cross-FD kernel tokens are the ownership proof.
     if (state == 7 and error == 0 and imu) or (state == 8 and error < 0 and 4 <= stage <= 7):
         return {"tokens": [port, instance], "ready": state == 7}
+    if state == 9 and error == 0 and stage == 0:
+        return {"tokens": [port, instance], "ready": False, "waiting": True}
+    if state == 8 and error < 0 and stage == 9:
+        return {"tokens": [port, instance], "ready": False}
     return None
 
 
 class Unsafe(RuntimeError):
     pass
+
+
+class AcquisitionUnchanged(Unsafe):
+    """Pre-write acquisition refusal grants no ownership or cleanup authority."""
+
+
+class AcquisitionAutoprobe(Unsafe):
+    """Same exact free USB instance gained xpad before any acquisition write."""
+    def __init__(self, current):
+        super().__init__("Same-instance xpad autoprobe; full access recheck required")
+        self.current = current
 
 
 class StatusBusy(Unsafe):
@@ -228,6 +249,7 @@ class Entry:
     publication_meta: dict = field(default_factory=dict)
     publication_reason: str = ''
     publication_failure: str = ''
+    acquisition_failure: str = ''
 
 
 class Manager:
@@ -248,7 +270,7 @@ class Manager:
         self.recent_failures = checked_failures(saved.get("recent_failures", []))
         self.observed = {}
         # Exact native instances saved after completed bootstrap can survive a
-        # daemon restart. Never adopt an arbitrary matching 109c device.
+        # daemon restart. Never adopt an unexplained existing native binding.
         self.leases = saved.get("leases", {})
         self.stopping = False
         self.scan_error = ""
@@ -272,18 +294,21 @@ class Manager:
             entry.publication_deadline = record.get('publication_deadline', 0)
             entry.publication_attempted = record.get('publication_attempted', False)
             entry.publication_failure = record.get('publication_failure', '')
+            entry.acquisition_failure = record.get('acquisition_failure', '')
             if (type(entry.publication_deadline) not in (int, float) or
                     not 0 <= entry.publication_deadline < 1e12 or
                     type(entry.publication_attempted) is not bool or
                     type(entry.publication_failure) is not str or
-                    len(entry.publication_failure.encode()) > 1024):
-                raise Unsafe('Invalid saved input publication state')
+                    len(entry.publication_failure.encode()) > 1024 or
+                    type(entry.acquisition_failure) is not str or
+                    len(entry.acquisition_failure.encode()) > 1024):
+                raise Unsafe('Invalid saved publication or acquisition state')
             if record.get("candidate"):
                 entry.candidate = Device(**record["candidate"])
             entry.after_attest = record.get("after_attest", "failed")
             entry.deadline = record.get("deadline", 0)
             if (entry.origin_pid not in START_PIDS or
-                    (entry.origin_pid == "105e" and entry.device.pid != "105e") or
+                    (entry.origin_pid in DIRECT_PIDS and entry.device.pid != entry.origin_pid) or
                     (entry.origin_pid == "100a" and entry.device.pid not in ("100a", "109c"))):
                 entry.phase = "blocked"
                 entry.error = "Missing or invalid original PID; no cleanup authority"
@@ -294,6 +319,7 @@ class Manager:
             elif entry.device.pid in NATIVE_PIDS and entry.kernel_tokens:
                 entry.candidate = entry.device
                 entry.after_attest = ("returning" if entry.end_attempted else
+                                     "receiver_wait" if entry.phase == 'receiver_wait' and not entry.error else
                                      "active" if entry.phase in ('active', 'input_check', 'awaiting_sensor', 'publishing_input')
                                      and not entry.error else "failed")
                 entry.phase = "attesting"
@@ -301,7 +327,7 @@ class Manager:
                 entry.phase = "attesting"
             elif entry.kernel_tokens and entry.phase == "locating":
                 pass  # Same-boot monotonic deadline and old-FD proof persist.
-            elif entry.origin_pid == "105e" and entry.bootstrap_started:
+            elif entry.origin_pid in DIRECT_PIDS and entry.bootstrap_started:
                 # Same-instance direct startup can recover its terminal kernel
                 # proof after client/daemon loss, but never initialize twice.
                 entry.candidate = entry.device
@@ -375,7 +401,7 @@ class Manager:
         source = entry.bootstrap_diagnostic.get("source_instance", entry.device.token)
         record = {"port": entry.device.port, "source_instance": source,
                   "origin_pid": entry.origin_pid,
-                  "message": (entry.publication_failure or entry.error).encode("utf-8", "replace")[:1024].decode("utf-8", "ignore"),
+                  "message": (entry.publication_failure or entry.acquisition_failure or entry.error).encode("utf-8", "replace")[:1024].decode("utf-8", "ignore"),
                   "bootstrap_diagnostic": entry.bootstrap_diagnostic,
                   "resolution": resolution}
         self.recent_failures = [old for old in self.recent_failures
@@ -442,6 +468,7 @@ class Manager:
             "publication_deadline": entry.publication_deadline,
             "publication_attempted": entry.publication_attempted,
             "publication_failure": entry.publication_failure,
+            "acquisition_failure": entry.acquisition_failure,
         }
         if self.leases.get(entry.device.port) == record:
             return
@@ -476,13 +503,13 @@ class Manager:
         elif command == "resume":
             if any(e.job or e.phase == "returning" for e in self.entries.values()):
                 raise Unsafe("Release/operation is still in progress")
-            if any(port not in self.entries or self.entries[port].phase != "active"
+            if any(port not in self.entries or self.entries[port].phase not in ("active", "receiver_wait")
                    for port in self.leases):
                 raise Unsafe("Unresolved ownership/recovery; verify return before resuming")
             self.paused = False
             self.attempted.clear()
             self.budgets.clear()
-            self.entries = {p: e for p, e in self.entries.items() if e.phase == "active"}
+            self.entries = {p: e for p, e in self.entries.items() if e.phase in ("active", "receiver_wait")}
             self.save()
         elif command != "status":
             raise Unsafe("Only status, release and resume are accepted")
@@ -505,6 +532,7 @@ class Manager:
                                 "status_conflict": e.status_conflict,
                                 "input_publication": e.publication_reason,
                                 "input_publication_failure": e.publication_failure,
+                                "acquisition_failure": e.acquisition_failure,
                                 "status_retry_in": max(0, e.next_check - self.clock())
                                 if e.status_conflict else 0}
                             for p, e in self.entries.items()}}
@@ -528,7 +556,10 @@ class Manager:
                 # removal client is told that return has been verified.
                 return False
             origin = self.entries[port].origin_pid if port in self.entries else "100a"
-            if current and (current.pid != origin or current.driver != "xpad"):
+            # xpad on 109c is not proof of a usable fallback. Keep the same
+            # manual-recovery requirement as a transitioned standard device.
+            fallback = "100a" if origin == "109c" else origin
+            if current and (current.pid != fallback or current.driver != "xpad"):
                 return False
         return True
 
@@ -536,7 +567,7 @@ class Manager:
         """A completed child may race the preceding scan. Never lose its proof."""
         current = devices.get(entry.device.port)
         expected_instance = (current and
-            ((entry.origin_pid == "105e" and current.pid == "105e" and current.token == entry.device.token) or
+            ((entry.origin_pid in DIRECT_PIDS and current.pid == entry.origin_pid and current.token == entry.device.token) or
              (entry.origin_pid == "100a" and current.pid == "109c" and current.token != entry.device.token)))
         if (entry.device.port not in self.port_errors and
                 entry.device.port not in getattr(devices, "errors", {}) and expected_instance and
@@ -553,12 +584,12 @@ class Manager:
         """Retire only an old healthy session, never act on its replacement.
 
         A getter can finish after a normal radio reconnect has produced a new
-        xpad-owned 100a. That instance must pass ordinary discovery and its
+        free or xpad-owned standard device. It must pass ordinary discovery and its
         start budget; the old kernel tokens do not authorize any command on it.
         Faulted sessions, bootstrap handoffs and changed hubs stay fail-closed.
         """
-        if (entry.phase != "active" or entry.error or entry.timed_out or
-                entry.origin_pid != "100a" or entry.device.pid != "109c" or
+        if (entry.phase not in ("active", "receiver_wait") or entry.error or entry.timed_out or
+                entry.origin_pid not in ("100a", "109c") or entry.device.pid != "109c" or
                 not entry.kernel_tokens):
             return False
         if current is None:
@@ -568,10 +599,10 @@ class Manager:
             entry.next_check = self.clock() + 1
             return True
         if (current.token == entry.device.token or current.parent != entry.device.parent or
-                current.pid != "100a" or current.driver != "xpad"):
+                current.pid not in ("100a", "109c") or current.driver not in START_OWNERS):
             return False
         self.notice("session_replaced", entry.device,
-                    "Obsolete passive status discarded; new xpad instance requires fresh discovery")
+                    "Obsolete passive status discarded; replacement requires fresh discovery")
         self.leases.pop(entry.device.port, None)
         self.entries.pop(entry.device.port, None)
         # The tick's first snapshot may already be obsolete too. Discovery
@@ -632,6 +663,11 @@ class Manager:
                     entry.job, entry.operation, entry.pending_status = None, "", None
                     self.fail(entry, failure)
                     return
+            if operation == 'boot-info' and entry.phase == 'receiver_wait' and rc and rc != STATUS_BUSY_EXIT:
+                # Preserve this pinned old FD's result even across incomplete
+                # metadata or an independently enumerated replacement.
+                entry.bootstrap_diagnostic = bootstrap_diagnostic(rc, output, entry.timed_out, entry.device.token)
+                self.remember(entry)
             try:
                 fresh = self.host.scan()
             except (OSError, Unsafe) as error:
@@ -645,10 +681,23 @@ class Manager:
                 return
             current = fresh.get(entry.device.port)
         entry.job, entry.operation, entry.pending_status = None, "", None
+        if operation == 'boot-info' and entry.phase == 'receiver_wait' and current != entry.device:
+            old_proof = boot_proof(output)
+            status = bootstrap_diagnostic(rc, output, entry.timed_out, entry.device.token)['reported_kernel_status'] or {}
+            removed_wait = (rc == 1 and status.get('state') == 8 and
+                            status.get('error') == -errno.ENODEV and status.get('failed_stage') == 9)
+            if (old_proof and old_proof['tokens'] == entry.kernel_tokens and
+                    ((not rc and (old_proof.get('waiting') or old_proof['ready'])) or removed_wait) and
+                    not entry.timed_out and self.retire_obsolete_status(entry, current)):
+                if removed_wait:
+                    self.host.log('receiver_removed', port=entry.device.port,
+                                  diagnostic=entry.bootstrap_diagnostic)
+                return
         if operation in READ_ONLY and not entry.timed_out and rc == STATUS_BUSY_EXIT:
-            expected = entry.candidate if operation == "boot-info" else entry.device
+            expected = entry.candidate if operation == "boot-info" and entry.phase != 'receiver_wait' else entry.device
             if not expected or current != expected or current.driver != "gs_native":
-                if operation != "info" or not self.retire_obsolete_status(entry, current):
+                if ((operation != "info" and not (operation == 'boot-info' and entry.phase == 'receiver_wait')) or
+                        not self.retire_obsolete_status(entry, current)):
                     self.fail(entry, "Device changed during deferred status access", "blocked")
             else:
                 self.defer_status(entry, "Native control FD busy; status deferred")
@@ -660,7 +709,7 @@ class Manager:
             self.remember(entry)
             proof = boot_proof(output)
             if not proof:
-                if entry.origin_pid == "105e" and current == entry.device:
+                if entry.origin_pid in DIRECT_PIDS and current == entry.device:
                     # Direct startup cannot move to a replacement. Recover only
                     # this claimed instance's terminal proof; absent/early proof
                     # blocks cleanup rather than guessing whether output began.
@@ -680,8 +729,9 @@ class Manager:
             # GET_BOOT_STATUS on the independently validated new instance.
             entry.kernel_tokens = proof["tokens"]
             entry.after_attest = ("active" if proof["ready"] and not rc and
-                                  "Native startup completed." in output and
-                                  not entry.timed_out else "failed")
+                                  "Native startup completed." in output and not entry.timed_out else
+                                  "receiver_wait" if proof.get('waiting') and not rc and
+                                  "Native receiver waiting." in output and not entry.timed_out else "failed")
             entry.phase = "locating"
             entry.deadline = self.clock() + HANDOFF_SECONDS
             if entry.after_attest == "failed":
@@ -697,12 +747,14 @@ class Manager:
             self.locate_handoff(entry, fresh)
         elif operation == "boot-info":
             proof = boot_proof(output)
-            recovering_direct = (entry.origin_pid == "105e" and entry.bootstrap_started and
+            polling_receiver = entry.phase == 'receiver_wait'
+            expected = entry.device if polling_receiver else entry.candidate
+            recovering_direct = (entry.origin_pid in DIRECT_PIDS and entry.bootstrap_started and
                                  not entry.kernel_tokens and entry.candidate == entry.device and
                                  entry.after_attest == "failed")
             if (entry.timed_out or rc not in (0, 1) or not proof or
-                    (not recovering_direct and proof["tokens"] != entry.kernel_tokens) or not entry.candidate or
-                    current != entry.candidate or current.driver != "gs_native"):
+                    (not recovering_direct and proof["tokens"] != entry.kernel_tokens) or not expected or
+                    current != expected or current.driver != "gs_native"):
                 entry.candidate = None
                 self.fail(entry, "Native handoff token mismatch or unavailable; manual attention required", "blocked")
                 self.remember(entry)
@@ -712,6 +764,15 @@ class Manager:
             entry.device = current
             entry.candidate = None
             entry.phase = entry.after_attest
+            if entry.after_attest == 'receiver_wait':
+                if proof['ready'] and not rc:
+                    entry.phase = 'active'
+                    entry.after_attest = 'active'
+                elif proof.get('waiting') and not rc:
+                    entry.phase = 'receiver_wait'
+                else:
+                    entry.bootstrap_diagnostic = bootstrap_diagnostic(rc, output, entry.timed_out, entry.device.token)
+                    self.fail(entry, 'Kernel receiver wait failed; original status retained, cleanup only')
             if entry.phase == "active" and not proof["ready"]:
                 entry.phase = "failed"
                 entry.error = "Attested native instance is faulted; cleanup only"
@@ -719,7 +780,7 @@ class Manager:
             if entry.end_attempted:
                 entry.phase = "returning"
                 entry.deadline = self.clock() + RETURN_SECONDS
-            entry.next_check = self.clock()
+            entry.next_check = self.clock() + (2 if entry.phase == 'receiver_wait' else 0)
             self.remember(entry)
             if entry.phase == "active":
                 if getattr(self.host, 'readiness_enabled', False) and current.pid == '109c':
@@ -776,14 +837,15 @@ class Manager:
                 pad = PAD.search(output)
                 if rc or error or state != 1 or enabled or session or not pad:
                     self.fail(entry, "Invalid passive 100a status")
-                elif int(pad[1]) > 0 and not self.inhibited:
+                elif not self.inhibited:
                     self.status_available(entry)
-                    # These are accepted 100a input reports since native probe,
-                    # not an identity/UID and not an IMU calibration claim.
+                    # Exact acquisition plus valid passive runtime state is
+                    # the gate. A stationary controller need not send a button
+                    # report before the captured bootstrap can initialize it.
                     self.begin_bootstrap(entry)
                 else:
                     self.status_available(entry)
-                    entry.phase = "waiting_input"
+                    entry.phase = "checking_start"
                     entry.next_check = self.clock() + 1
                 return
             if state == 3 and not self.inhibited:
@@ -814,6 +876,40 @@ class Manager:
                 entry.error = "END failed; only observing verified return, no repeat"
             self.remember(entry)
 
+    def retire_returned_timeout(self, entry, current):
+        """Retire an attested, ended cold-native timeout, not its replacement.
+
+        A fresh 100a already on xpad proves observed return only. It grants no
+        ownership: defer discovery until a new scan and all normal start gates.
+        Never migrate historical attempted tokens or retry the old instance.
+        """
+        diagnostic = entry.bootstrap_diagnostic
+        status = diagnostic.get('reported_kernel_status') or {}
+        if (self.inhibited or entry.job is not None or
+                entry.origin_pid != '109c' or entry.device.pid != '109c' or
+                not entry.bootstrap_started or not entry.end_attempted or
+                not entry.end_succeeded or not entry.kernel_tokens or
+                diagnostic.get('source_instance') != entry.device.token or
+                diagnostic.get('timed_out', True) or diagnostic.get('returncode') != 1 or
+                status.get('state') != 8 or status.get('error') != -errno.ETIMEDOUT or
+                status.get('failed_stage') != 5 or status.get('pad') != 0 or
+                status.get('imu') != 0 or status.get('handover') != 0 or
+                [status.get('port_token'), status.get('instance_token')] != entry.kernel_tokens or
+                current.port != entry.device.port or current.parent != entry.device.parent or
+                current.token == entry.device.token or current.token in self.attempted or
+                current.pid != '100a' or current.driver != 'xpad'):
+            return False
+        self.record_failure(entry, 'observed_100a_xpad')
+        self.leases.pop(current.port, None)
+        self.entries.pop(current.port)
+        self.discovery_deferred.add(current.port)
+        # Old failed token, history, pause and per-port budget are preserved.
+        # Persist retirement before any future acquisition can be considered.
+        self.save()
+        self.notice('returned_start_candidate', current,
+                    'Cold-native timeout ended; new 100a requires fresh budgeted discovery')
+        return True
+
     def return_one(self, entry, current):
         if not current:
             return
@@ -824,18 +920,26 @@ class Manager:
         if current.parent != entry.device.parent:
             self.fail(entry, "Hub lifetime changed; return target not trusted", "blocked")
             return
+        if (entry.device.driver != "gs_native" and
+                current.driver == "gs_native" and not entry.kernel_tokens):
+            # Also covers daemon loss between intent and confirmed acquisition.
+            # An intent alone cannot prove who attached the native driver.
+            self.fail(entry, "Acquisition unconfirmed; native binding needs manual recovery", "blocked")
+            return
         if entry.origin_pid == "105e":
             self.return_direct(entry, current)
             return
-        if entry.origin_pid != "100a":
+        if entry.origin_pid not in ("100a", "109c"):
             self.fail(entry, "Unknown original PID; no return commands", "blocked")
             return
         if current.pid == "105e":
-            self.fail(entry, "Unexpected 105e replacement of 100a; no return commands", "blocked")
+            self.fail(entry, "Unexpected 105e replacement of standard model; no return commands", "blocked")
             return
         if current.pid == "100a":
             if current.token != entry.device.token:
                 if current.driver == "xpad":
+                    if self.retire_returned_timeout(entry, current):
+                        return
                     entry.phase = "released"  # Observed only; no write to a replacement.
                     self.record_failure(entry, "observed_100a_xpad")
                     entry.device = current
@@ -1049,11 +1153,13 @@ class Manager:
                     self.entries.pop(port)
                     self.save()
                     continue
-                if current.driver != "gs_native" and entry.phase == "active":
+                if current.driver != "gs_native" and entry.phase in ("active", "receiver_wait"):
                     self.fail(entry, "Native binding lost; never steal it back")
                     continue
                 if entry.phase == "active" and now >= entry.next_check:
                     self.start(entry, "info")
+                elif entry.phase == 'receiver_wait' and now >= entry.next_check:
+                    self.start(entry, 'boot-info')
                 elif entry.phase == 'input_check':
                     if now >= entry.publication_deadline:
                         self.fail(entry, 'Input readiness status deadline; cleanup only')
@@ -1074,7 +1180,7 @@ class Manager:
                         entry.phase = 'publishing_input'
                         self.remember(entry)
                         self.start(entry, 'publish-input')
-                elif entry.phase == "waiting_input" and now >= entry.next_check:
+                elif entry.phase in ("checking_start", "waiting_input") and now >= entry.next_check:
                     self.start(entry, "info")
                 elif entry.phase == "resuming" and now >= entry.next_check:
                     self.start(entry, "resume")
@@ -1107,13 +1213,13 @@ class Manager:
                 continue
             if getattr(self.host, 'input_error', ''):
                 continue  # Failed monitor must not authorize another takeover.
-            if device.driver != "xpad":
-                continue  # Never adopt an unrelated unbound or foreign device.
+            if device.driver not in START_OWNERS:
+                continue  # No adoption of foreign or unexplained native bindings.
             if not self.budget_available(port):
                 self.entries[port] = Entry(device, "blocked",
                     error="Three starts in 10 minutes; explicit resume required", origin_pid=device.pid)
-                continue  # Crucially: do not detach xpad before checking budget.
-            entry = self.entries[port] = Entry(device, "waiting_input", origin_pid=device.pid)
+                continue  # Budget checked before acquisition, including free IF0.
+            entry = self.entries[port] = Entry(device, "checking_start", origin_pid=device.pid)
             try:
                 self.remember(entry)  # Claim intent survives a partial bind/crash.
                 self.host.claim(device)
@@ -1128,20 +1234,30 @@ class Manager:
                     raise Unsafe("Instance changed while acquiring native driver")
                 entry.device = current
                 self.remember(entry)
-                if device.pid == "105e":
+                if device.pid in DIRECT_PIDS:
                     self.begin_bootstrap(entry)
                 else:
                     self.start(entry, "info")
             except StatusBusy:
                 self.defer_status(entry, "Native control FD busy; status deferred")
+            except AcquisitionUnchanged as error:
+                # The host refused BEFORE any write; an intent is not ownership.
+                entry.acquisition_failure = str(error).encode('utf-8', 'replace')[:1024].decode('utf-8', 'ignore')
+                self.leases.pop(port, None)
+                self.attempted.add(device.token)
+                self.fail(entry, str(error), "blocked")
+                self.save()
             except StatusUnavailable as error:
                 if entry.device.driver != "gs_native":
+                    entry.acquisition_failure = str(error).encode('utf-8', 'replace')[:1024].decode('utf-8', 'ignore')
                     self.fail(entry, str(error))  # Partial claim has no fresh native proof.
                 else:
                     self.defer_observation(entry, error, global_scan=error.global_scan)
                 if error.global_scan:
                     return
             except (OSError, Unsafe) as error:
+                if not entry.bootstrap_started and not entry.acquisition_failure:
+                    entry.acquisition_failure = str(error).encode('utf-8', 'replace')[:1024].decode('utf-8', 'ignore')
                 self.fail(entry, str(error))
                 if self.scan_error:
                     return
@@ -1306,7 +1422,17 @@ class Host:
     def observe_guard(self, expected):
         self.check_access(expected, observation=True)
 
-    def check_access(self, expected, *, observation):
+    def acquisition_guard(self, expected):
+        try:
+            self.check_access(expected, observation=False, acquisition=True)
+        except AcquisitionAutoprobe as change:
+            # One complete read-only recheck, not a retry of an acquisition or
+            # bootstrap. The strict second pass must see a stable exact owner.
+            self.guard(change.current)
+            return change.current
+        return expected
+
+    def check_access(self, expected, *, observation, acquisition=False):
         def observe():
             try:
                 result = self.scan()
@@ -1314,13 +1440,23 @@ class Host:
                 if observation:
                     raise StatusUnavailable(str(error), global_scan=True) from error
                 raise
-            if observation and expected.port in getattr(result, "errors", {}):
-                raise StatusUnavailable(result.errors[expected.port])
+            if expected.port in getattr(result, "errors", {}):
+                raise (StatusUnavailable if observation else Unsafe)(result.errors[expected.port])
             return result.get(expected.port)
 
-        actual = observe()
-        if actual != expected:
-            raise (StatusChanged if observation else Unsafe)("Device identity/binding changed before operation")
+        def verify(actual, message):
+            if actual == expected:
+                return
+            if (acquisition and expected.driver is None and
+                    actual == replace(expected, driver="xpad")):
+                raise AcquisitionAutoprobe(actual)
+            # Name differing fields without exposing tokens/paths in diagnostics.
+            changed = (','.join(key for key in asdict(expected)
+                               if getattr(actual, key) != getattr(expected, key))
+                       if isinstance(actual, Device) else 'missing or incomplete device metadata')
+            raise (StatusChanged if observation else Unsafe)(message + ': ' + changed)
+
+        verify(observe(), "Device identity/binding changed before operation")
         if observation and expected.driver != "gs_native":
             raise Unsafe("Native status requires the exact native binding")
         target = f"/dev/bus/usb/{expected.bus:03d}/{expected.address:03d}"
@@ -1343,8 +1479,7 @@ class Host:
             except PermissionError as error:
                 raise Unsafe("Cannot exclude foreign device ownership") from error
         # Check again after a potentially long process scan.
-        if observe() != expected:
-            raise (StatusChanged if observation else Unsafe)("Device changed during ownership check")
+        verify(observe(), "Device changed during ownership check")
         if control_busy:
             raise StatusBusy("Native control FD busy; status deferred")
 
@@ -1355,18 +1490,30 @@ class Host:
             out.write(device.interface)
 
     def claim(self, device):
-        self.guard(device)
-        if device.pid not in START_PIDS or device.driver != "xpad":
-            raise Unsafe("Only a validated xpad-owned start interface can be acquired")
-        self.claim_request(device)  # Check the full contract before unbinding.
-        attribute = "claim_" + device.pid
-        if not (self.sysfs / "bus/usb/drivers/gs_native" / attribute).is_file():
-            raise Unsafe("Kernel lacks scoped " + attribute + "; xpad remains bound")
-        self.write_binding(device, "xpad", "unbind")
-        current = self.scan().get(device.port)
-        if not current or current.token != device.token or current.driver is not None:
-            raise Unsafe("Unbind race; no native bind")
-        self.write_claim(current)
+        try:
+            if device.pid not in START_PIDS or device.driver not in START_OWNERS:
+                raise Unsafe("Only a validated free or xpad-owned start interface can be acquired")
+            self.claim_request(device)
+            attribute = "acquire_" + device.pid
+            if not (self.sysfs / "bus/usb/drivers/gs_native" / attribute).is_file():
+                raise Unsafe("Kernel lacks scoped " + attribute + "; no binding changed")
+        except (OSError, Unsafe) as error:
+            raise AcquisitionUnchanged(str(error)) from error
+        self.write_acquire(device)
+
+    def write_acquire(self, device):
+        try:
+            device = self.acquisition_guard(device)
+            if device.driver not in START_OWNERS:
+                raise Unsafe("Scoped acquisition refuses a foreign or native owner")
+            request = self.claim_request(device)
+        except (OSError, Unsafe) as error:
+            raise AcquisitionUnchanged(str(error)) from error
+        # Pin and validate the exact USB object in the kernel before releasing
+        # optional xpad. No userspace name-based unbind and no xpad dependency.
+        path = self.sysfs / "bus/usb/drivers/gs_native" / ("acquire_" + device.pid)
+        with path.open("w") as out:
+            out.write(request)
 
     @staticmethod
     def claim_request(device):
@@ -1396,10 +1543,12 @@ class Host:
 
     def restore(self, device):
         self.guard(device)
-        if device.pid not in START_PIDS or device.driver not in (None, "gs_native", "xpad"):
+        if device.pid not in FALLBACK_PIDS or device.driver not in (None, "gs_native", "xpad"):
             raise Unsafe("Only known 100a/105e can be returned to xpad")
         if device.driver == "xpad":
             return
+        if not (self.sysfs / "bus/usb/drivers/xpad/bind").is_file():
+            raise Unsafe("xpad fallback unavailable; no native unbind, manual recovery required")
         if device.driver == "gs_native":
             self.write_binding(device, "gs_native", "unbind")
         current = self.scan().get(device.port)

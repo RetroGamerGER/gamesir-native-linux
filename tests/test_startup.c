@@ -155,14 +155,14 @@ static void capture_replay(void)
 	assert(!gs_runtime_accepts(&runtime, GS_PAD_XINPUT));
 }
 
-/* Synthetic 105e identity, reusing 109c bytes as the explicit protocol hypothesis.
- * This is a control-flow regression, not captured ZZZ packet evidence.
+/* Direct starts use the recorded 109c native-init bytes; the 105e branch
+ * remains a synthetic variant, not captured ZZZ packet evidence.
  */
-static void direct_variant_start(void)
+static void direct_variant_start(unsigned int pid)
 {
 	for (unsigned int failure = 0; failure < 9; failure++) {
 		struct gs_startup s = {0};
-		struct gs_boot_device d = device(0x105e, 0);
+		struct gs_boot_device d = device(pid, 0);
 		struct gs_boot_tx tx;
 		struct gs_boot_handoff handoff;
 		d.in_interval = 2; d.out_interval = 4;
@@ -181,7 +181,7 @@ static void direct_variant_start(void)
 			}
 			finish(&s, &d, &tx);
 		}
-		assert(!s.transition_completed && s.device.pid == 0x105e &&
+		assert(!s.transition_completed && s.device.pid == pid &&
 		       s.device.instance == d.instance);
 		if (failure >= 1 && failure <= 6)
 			continue;
@@ -208,7 +208,7 @@ static void direct_variant_start(void)
 	}
 	for (unsigned int failure = 0; failure < 5; failure++) {
 		struct gs_startup s = {0};
-		struct gs_boot_device d = device(0x105e, 0);
+		struct gs_boot_device d = device(pid, 0);
 		struct gs_boot_tx tx;
 		if (failure == 0) d.exclusive = 0;
 		if (failure == 1) d.pid = 0x105d;
@@ -586,8 +586,8 @@ static void moved_and_reconnected(void)
 	assert(old.state == GS_BOOT_WAIT_ADD && old.device.port == d.port);
 	assert(gs_boot_next(&old, NULL, old.phase_deadline_us, &tx) == -ETIMEDOUT);
 	no_more(&old, &d); /* Never chase a matching PID to a new port. */
-	/* Uncorrelated 109c recognition never starts a guessed transition. */
-	assert(gs_boot_begin(&next, &moved, 1, old.now_us) == -EINVAL);
+	/* Mere recognition grants no direct start; exact acquisition is required. */
+	assert(gs_boot_begin(&next, &moved, 0, old.now_us) == -EPERM);
 	for (i = 0; i < 2; i++) {
 		memset(&next, 0, sizeof(next));
 		moved = device(0x100a, old.now_us);
@@ -608,10 +608,143 @@ static void moved_and_reconnected(void)
 	no_more(&old, &d);
 }
 
+/* Diagnose first-native VERIFY without changing timing or accepting fake data.
+ * All frames/timestamps below are synthetic, using the actual shared core.
+ */
+static void direct_sensor_evidence(void)
+{
+	for (unsigned int condition = 0; condition < 7; condition++) {
+		struct gs_startup s = {0};
+		struct gs_boot_device d = device(0x109c, 0);
+		struct gs_boot_tx tx;
+		gs_u8 data[64] = {3, 0x20, 1, 4, 0x87};
+		gs_u64 deadline;
+
+		assert(!gs_boot_begin(&s, &d, 1, 0));
+		/* PID/descriptor recognition alone grants no sensor-ready state. */
+		assert(!s.imu_seen && s.state == GS_BOOT_INITIALIZE);
+		for (unsigned int i = 0; i < 6; i++) {
+			tx = issue(&s, &d);
+			finish(&s, &d, &tx);
+		}
+		assert(!gs_boot_next(&s, &d, s.due_us, &tx));
+		assert(s.state == GS_BOOT_VERIFY && s.step == 6);
+		deadline = s.phase_deadline_us;
+		if (condition == 1) {
+			assert(gs_boot_input(&s, &d, 0x82, 0, data, 8, s.now_us) == GS_UNKNOWN);
+		} else if (condition == 2) {
+			data[0] = 0x10; data[3] = 0x3c; data[4] = 0xe1;
+			assert(gs_boot_input(&s, &d, 0x82, 0, data, 64, s.now_us) == GS_VENDOR);
+		} else if (condition == 3) {
+			assert(gs_boot_input(&s, &d, 0x82, 0, captured_pad,
+					     sizeof(captured_pad), s.now_us) == GS_PAD_GIP);
+		} else if (condition == 4) {
+			/* A real frame just before the deadline needs no pad/button. */
+			assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu,
+					     sizeof(captured_imu), deadline - 1) == GS_IMU);
+			assert(!gs_boot_next(&s, &d, deadline - 1, &tx));
+			assert(s.state == GS_BOOT_READY && s.imu_seen && !s.pad_seen);
+			continue;
+		} else if (condition == 5) {
+			/* Malformed telemetry fails explicitly, not as this timeout. */
+			assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu,
+					     sizeof(captured_imu) - 1, s.now_us) == -EPROTO);
+			no_more(&s, &d);
+			continue;
+		}
+		assert(s.phase_deadline_us == deadline && !s.imu_seen);
+		if (condition == 6) {
+			assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu,
+					     sizeof(captured_imu), deadline) == -ETIMEDOUT);
+		} else {
+			assert(gs_boot_next(&s, &d, deadline, &tx) == -ETIMEDOUT);
+		}
+		assert(s.failed_stage == GS_BOOT_VERIFY && s.error == -ETIMEDOUT);
+		assert(s.pad_seen == (condition == 3));
+		/* Late valid telemetry cannot erase failure or reopen initialization. */
+		assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu,
+				     sizeof(captured_imu), deadline + 1) == -ETIMEDOUT);
+		no_more(&s, &d);
+	}
+}
+
+static void receiver_wait_cases(void)
+{
+	for (unsigned int pid_index = 0; pid_index < 3; pid_index++) {
+		unsigned int pid = (unsigned int[]){0x100a, 0x109c, 0x105e}[pid_index];
+		for (unsigned int test = 0; test < 9; test++) {
+			struct gs_startup s = {0};
+			struct gs_boot_device d = device(pid, 0), changed;
+			struct gs_boot_tx tx;
+			struct gs_boot_handoff handoff;
+			gs_u64 late = 86400000000ULL;
+			unsigned int count = pid == 0x100a ? 15 : 6;
+
+			assert(!gs_boot_begin_receiver(&s, &d, 1, 0));
+			for (unsigned int i = 0; i < count; i++) {
+				if (pid == 0x100a && i == 9)
+					reenumerate(&s, &d);
+				tx = issue(&s, &d);
+				finish(&s, &d, &tx);
+			}
+			assert(!gs_boot_next(&s, &d, s.due_us, &tx));
+			assert(s.state == GS_BOOT_WAIT_RECEIVER && s.step == 6 && !tx.length);
+			for (unsigned int i = 1; i <= 24; i++) {
+				assert(!gs_boot_next(&s, &d, late * i / 24, &tx));
+				assert(!tx.length && !s.pending_length && s.sequence == 6);
+			}
+			if (test == 0) {
+				assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu, 64, late) == GS_IMU);
+				assert(!gs_boot_next(&s, &d, late, &tx) && s.state == GS_BOOT_READY);
+				assert(!gs_boot_takeover(&s, &d, late, &handoff) && !handoff.pad_seen);
+				assert(handoff.sequence == 6 && handoff.next_heartbeat_us > late);
+				continue;
+			}
+			if (test == 1) {
+				assert(gs_boot_input(&s, &d, 0x82, 0, captured_pad, sizeof(captured_pad), late) == GS_PAD_GIP);
+				assert(!gs_boot_next(&s, &d, late, &tx) && s.state == GS_BOOT_WAIT_RECEIVER);
+				gs_boot_cancel(&s);
+			} else if (test == 2) {
+				assert(gs_boot_input(&s, &d, 0x82, -EPIPE, NULL, 0, late) == -EPIPE);
+			} else if (test == 3) {
+				assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu, 63, late) == -EPROTO);
+			} else if (test == 4) {
+				changed = d; changed.instance++;
+				assert(gs_boot_next(&s, &changed, late, &tx) == -ENODEV);
+			} else if (test == 5) {
+				changed = d; changed.exclusive = 0;
+				assert(gs_boot_next(&s, &changed, late, &tx) == -EBUSY);
+			} else if (test == 6) {
+				assert(gs_boot_next(&s, &d, late - 1, &tx) == -EINVAL);
+			} else if (test == 7) {
+				assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu, 64, late) == GS_IMU);
+				assert(!gs_boot_next(&s, &d, late + GS_BOOT_FRESH_US + 1, &tx));
+				assert(s.state == GS_BOOT_WAIT_RECEIVER && !tx.length);
+				gs_boot_cancel(&s);
+			} else {
+				assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu, 64, late) == GS_IMU);
+				assert(!gs_boot_next(&s, &d, late, &tx));
+				assert(gs_boot_takeover(&s, &d, late + GS_BOOT_FRESH_US, &handoff) == -ETIMEDOUT);
+			}
+			assert(gs_boot_input(&s, &d, 0x82, 0, captured_imu, 64, s.now_us) == s.error);
+			no_more(&s, &d);
+		}
+	}
+	/* Waiting cannot extend setup or pending USB-transfer deadlines. */
+	struct gs_startup s = {0};
+	struct gs_boot_device d = device(0x109c, 0);
+	struct gs_boot_tx tx;
+	assert(!gs_boot_begin_receiver(&s, &d, 1, 0));
+	assert(gs_boot_next(&s, &d, 0, &tx) == 1);
+	assert(gs_boot_complete(&s, &d, tx.token, 0, tx.length, GS_BOOT_TRANSFER_US) == -ETIMEDOUT);
+	assert(s.failed_stage == GS_BOOT_INITIALIZE);
+}
+
 int main(void)
 {
 	capture_replay();
-	direct_variant_start();
+	direct_variant_start(0x105e);
+	direct_variant_start(0x109c);
 	transfer_failures();
 	begin_guards();
 	enumeration_guards();
@@ -621,6 +754,8 @@ int main(void)
 	independent_readiness();
 	portable_ports_and_multiple_dongles();
 	moved_and_reconnected();
-	puts("PASS: 15 captured TX packets; 75 per-transfer failures; experimental 105e direct 6-TX start/failure/same-instance guards, identity, ownership, pacing, deadlines, cancellation, idle-pad liveness, independent IMU, one-shot sequence handoff, four arbitrary topology tokens, two concurrent dongles, port moves and new reconnect sessions");
+	direct_sensor_evidence();
+	receiver_wait_cases();
+	puts("PASS: 15 captured TX packets; 75 per-transfer failures; 109c/experimental 105e direct 6-TX start/failure/same-instance guards, identity, ownership, pacing, deadlines, cancellation, idle-pad liveness, independent IMU, one-shot sequence handoff, four arbitrary topology tokens, two concurrent dongles, port moves and new reconnect sessions; 28 persistent standby cases including day-long no-TX waits and late IMU");
 	return 0;
 }

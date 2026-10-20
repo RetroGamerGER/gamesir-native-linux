@@ -1,5 +1,5 @@
 {
-  "basis": "Successful isolated Deadband comparison, 20261012T165154770784Z; historical hashes retained. The passive 300-second profile remains offline-tested only. The separate 90-second recorder completed two separately approved captures on 2026-10-18; isolation/finalization passed. Vendor HID telemetry was not established.",
+  "basis": "Successful isolated Deadband comparison, 20261012T165154770784Z; historical hashes retained. The passive 300-second profile remains offline-tested only. The separate 90-second recorder completed two separately approved captures on 2026-10-18; isolation/finalization passed. Vendor HID telemetry was not established. A separately approved passive RF109c/xpad 90-second reference completed on 2026-10-20 at source commit a2522d3: recorder/isolation/finalization passed across natural same-parent 109c to 100a re-enumeration; ordinary input confirmed. No RF-status semantics or native bootstrap validation follows.",
   "files": {
     "setup.sh": {
       "validated_source_sha256": "482cd0aac9e63c724efeccf48903fa8e0875f9b170144ad0f3701cfff211ac36",
@@ -7,9 +7,10 @@
     },
     "guest-check.py": {
       "validated_source_sha256": "105216872466430161aac6ae01e2399b54a1edd37149effcfac1cb721004e5db",
-      "current_source_sha256": "7d0931ff7581863a28f4a92c316a2d62f6328aa0189302bbb8dd7a79866beffd",
+      "current_source_sha256": "92249ce6becc8038ebd27c51a85efc77dde309f8cef2cf51e39e318aa88fe955",
       "pre_passive_profile_source_sha256": "d09a529639c1ec4df84f8ba779f33480983810e8a5ae6b649b6c806dced6b7b1",
-      "pre_short_profile_source_sha256": "cdb534b4002648893c0527b652d94c27bc0716738ff80e2fe66ba5ba2c5a0a0d"
+      "pre_short_profile_source_sha256": "cdb534b4002648893c0527b652d94c27bc0716738ff80e2fe66ba5ba2c5a0a0d",
+      "pre_rf_profile_source_sha256": "7d0931ff7581863a28f4a92c316a2d62f6328aa0189302bbb8dd7a79866beffd"
     },
     "identity-check.py": {
       "validated_source_sha256": "0de36993528e3125a2351c568024072539f3ad64c398279196b253606d9c1d17",
@@ -20,13 +21,20 @@
     "state-check.py": {
       "validated_source_sha256": "081a414833efe5a6c9a1b28a08e8b298608871e0386ba17e5f1bba744ccc8a01",
       "current_source_sha256": "b3c7f73f5eba12c37c4f064d56e9c3a55501d0c044f36e845c99b5fb7509e10e"
+    },
+    "rf-identity-check.py": {
+      "current_source_sha256": "6822a5f0e6532db6eb9e16d033ca253153c505ef4db4ccd6e294f54c03bcc66c",
+      "hardware_validated": true,
+      "pre_diagnostic_source_sha256": "96f32e82d0e1077ec92c280e9719cb1a1ec309a6e8e321a95e549253e43a5b80",
+      "validation_scope": "One separately approved RF reference; initial 109c/xpad and replacement 100a/xpad+usbhid cached metadata, consumer, pause/empty ownership and final audit. Not universal lifecycle/negative-path validation."
     }
   },
   "adaptations": {
     "setup.sh": "unchanged; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged",
     "state-check.py": "unchanged; SPDX-only GPL-2.0-only comment added for the pre-alpha licensing cleanup; executable content unchanged",
     "identity-check.py": "Legacy 109c/usbfs preparation guard retained; explicit passive-hid-100a-300 and passive-hid-100a-90 branches require exact 100a/xpad/usbhid endpoints, same boot and cached sysfs device/parent instance, paused empty manager state, and no foreign raw USB/hidraw/Deadband access. Cached metadata reads only; no device open or writes. Character-device rdev metadata checks reject aliases/bind-mounted USB or hidraw nodes; no descriptor is opened by the check. Inaccessible process metadata still aborts; diagnostics now include PID, exact operation, FD number and errno without command arguments or private paths. No pseudo-FD permission bypass.",
-    "guest-check.py": "Legacy 450 s capture and 455 s reap contract retained. Explicit passive-hid-100a-300 and passive-hid-100a-90 branches select 300/305 s or 90/95 s capture/reap ceilings and record the monotonic recorder-request origin. All original namespace, capability, mount, FD, and post-capture audit guards retained; stdout remains the sole capture output."
+    "guest-check.py": "Legacy 450 s capture and 455 s reap contract retained. Explicit passive-hid-100a-300 and passive-hid-100a-90 branches select 300/305 s or 90/95 s capture/reap ceilings and record the monotonic recorder-request origin. All original namespace, capability, mount, FD, and post-capture audit guards retained; stdout remains the sole capture output. Separate passive-rf-109c-xpad-90 selects the same 90/95-second bounded capture/reap contract; existing profiles are unchanged.",
+    "rf-identity-check.py": "Separate metadata-only RF observer. Requires protected persistent pause/empty leases, no native bindings, no second supported receiver, exact IF0 consumer and no raw USB/hidraw/Deadband access. Initial 109c/xpad lifetime is pinned; bounded unknown metadata and separate same-parent 100a/109c enumeration epochs are interpreted by rf_link_policy.py, never as RF connection proof. No device opens, driver controls or USB requests. Optional preflight diagnostics retain field-level cached observations, expected/actual binding and endpoints, missing input nodes versus unopened exact input nodes, and failed/unknown metadata access. Runtime snapshot schema and all acceptance/abort predicates are unchanged; diagnostics do not authorize retries or recovery."
   },
   "license_annotation": {
     "spdx": "GPL-2.0-only",
@@ -51,6 +59,15 @@
     "short_passive_capture_sha256": [
       "6c93e41d81fe50bd6d6f92a52a7605cc9659a9323a656be506d0024e96af21ce",
       "85cc7d24dc98069e345348cfddf6f2ecefd3de2e7241f7a600a458be046ca125"
-    ]
+    ],
+    "rf_scope": "passive-rf-109c-xpad-90",
+    "rf_duration_seconds": 90,
+    "rf_outer_timeout_seconds": 120,
+    "rf_hardware_validated": true,
+    "rf_source_commit": "a2522d3",
+    "rf_capture_sha256": "dc5f5f2b2b68ed85a2162a591d6a50ddb1b5acb1ea60c7b2324153fd936a35bd",
+    "rf_validation_scope": "One approved isolated recording with local GO, cued radio power-on, natural 109c/xpad to 100a/xpad+usbhid replacement, successful final audit/checksums and human-confirmed visible/normal input. No forced mode or native control.",
+    "rf_radio_status_semantics_validated": false,
+    "rf_native_startup_validated": false
   }
 }

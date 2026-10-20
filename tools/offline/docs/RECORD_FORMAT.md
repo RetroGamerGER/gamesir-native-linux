@@ -42,6 +42,13 @@ Nutzdaten nur beim Submit enthält, müssen Submit und erfolgreicher Completion
 später anhand der URB-ID nachvollziehbar verbunden werden. Die Lücken dürfen
 nicht durch erfundene Payloads oder einen angenommenen Erfolg ersetzt werden.
 
+Der separate spätere `startup-replay`-Prototyp kennzeichnet einen gespeicherten
+OUT-Submit von START ausdrücklich nur als beobachteten Sendeversuch. Er setzt
+ihn nicht mit einer erfolgreichen Completion oder Protokollbestätigung gleich.
+IN-Daten benötigen weiterhin vollständige erfolgreiche Completions. Für dieses
+Modell muss `session` außerdem genau eine Boot-/Enumerationsinstanz bezeichnen,
+auch wenn dieselbe Busadresse später wiederverwendet wird.
+
 `reported_length` ist die abgeschlossene tatsächliche Transferlänge, nicht
 die angeforderte Puffergröße oder `wMaxPacketSize`. `capture_truncated` kennzeichnet
 eine bekannte Begrenzung des Mitschnitts. Weniger gespeicherte Bytes als gemeldet

@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "capture_derived_event_metadata_not_raw_USB",
+  "provenance": "Selected frame/time facts independently checked against raw saved USB and tshark; see DUALSENSE_STARTUP_GAMESCOPE.md. Event names are the documented research interpretation.",
+  "limits": "Selected events only, not complete stream cadence or a synchronized radio-off/on experiment. attach means first captured native descriptor, not physical insertion. No raw ID or input payload included.",
+  "cases": [
+    {
+      "id": "A",
+      "source_sha256": "192200c431e8ef767ed872f79a658803418a68b991a60474aeac071575226628",
+      "relative_time_origin": "first_native_descriptor",
+      "expected_start_candidates": 0,
+      "expected_final_phase": "pad_and_imu_observed",
+      "events": [
+        {
+          "frame": 32728,
+          "relative_us": 0,
+          "kind": "attach"
+        },
+        {
+          "frame": 32815,
+          "relative_us": 117756,
+          "kind": "start_submit"
+        },
+        {
+          "frame": 32857,
+          "relative_us": 167750,
+          "kind": "status_positive"
+        },
+        {
+          "frame": 32861,
+          "relative_us": 169785,
+          "kind": "pad"
+        },
+        {
+          "frame": 33554,
+          "relative_us": 739798,
+          "kind": "imu"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "source_sha256": "d9613598e5a22a7e3732a5bcda295c97df5f67890db47ec196c67ff7c805ed17",
+      "relative_time_origin": "first_native_descriptor",
+      "expected_start_candidates": 0,
+      "expected_final_phase": "pad_and_imu_observed",
+      "events": [
+        {
+          "frame": 22238,
+          "relative_us": 0,
+          "kind": "attach"
+        },
+        {
+          "frame": 22332,
+          "relative_us": 118691,
+          "kind": "start_submit"
+        },
+        {
+          "frame": 22343,
+          "relative_us": 127728,
+          "kind": "hello"
+        },
+        {
+          "frame": 22390,
+          "relative_us": 184705,
+          "kind": "start_submit"
+        },
+        {
+          "frame": 22391,
+          "relative_us": 185701,
+          "kind": "status_positive"
+        },
+        {
+          "frame": 22395,
+          "relative_us": 187730,
+          "kind": "pad"
+        },
+        {
+          "frame": 22692,
+          "relative_us": 719742,
+          "kind": "imu"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "source_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "relative_time_origin": "first_native_descriptor",
+      "expected_start_candidates": 0,
+      "expected_final_phase": "pad_and_imu_observed",
+      "events": [
+        {
+          "frame": 26601,
+          "relative_us": 0,
+          "kind": "attach"
+        },
+        {
+          "frame": 26691,
+          "relative_us": 119729,
+          "kind": "start_submit"
+        },
+        {
+          "frame": 26710,
+          "relative_us": 164733,
+          "kind": "status_positive"
+        },
+        {
+          "frame": 26716,
+          "relative_us": 166769,
+          "kind": "pad"
+        },
+        {
+          "frame": 27007,
+          "relative_us": 680797,
+          "kind": "imu"
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "source_sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954",
+      "relative_time_origin": "first_native_descriptor",
+      "expected_start_candidates": 1,
+      "expected_final_phase": "pad_and_imu_observed",
+      "events": [
+        {
+          "frame": 29504,
+          "relative_us": 0,
+          "kind": "attach"
+        },
+        {
+          "frame": 29633,
+          "relative_us": 118765,
+          "kind": "hello"
+        },
+        {
+          "frame": 29636,
+          "relative_us": 118810,
+          "kind": "start_submit"
+        },
+        {
+          "frame": 29639,
+          "relative_us": 120748,
+          "kind": "status_positive"
+        },
+        {
+          "frame": 29645,
+          "relative_us": 122787,
+          "kind": "pad"
+        },
+        {
+          "frame": 30312,
+          "relative_us": 728807,
+          "kind": "imu"
+        }
+      ]
+    },
+    {
+      "id": "already-streaming",
+      "source_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+      "relative_time_origin": "capture_start",
+      "expected_start_candidates": 0,
+      "expected_final_phase": "pad_only_observed",
+      "events": [
+        {
+          "frame": 1,
+          "relative_us": 0,
+          "kind": "imu"
+        },
+        {
+          "frame": 9278,
+          "relative_us": 7548140,
+          "kind": "status_positive"
+        },
+        {
+          "frame": 19595,
+          "relative_us": 17179370,
+          "kind": "start_submit"
+        },
+        {
+          "frame": 34169,
+          "relative_us": 39720933,
+          "kind": "pad"
+        }
+      ]
+    }
+  ]
+}

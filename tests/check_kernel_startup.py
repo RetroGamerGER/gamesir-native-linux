@@ -12,9 +12,9 @@ names = ['gsn_boot_delete', 'gsn_now_us', 'gsn_now_ms', 'gsn_delete', 'gsn_seque
          'gsn_fault', 'gsn_send', 'gsn_stop', 'gsn_flush_motors', 'gsn_check_idle', 'gsn_service',
          'gsn_open', 'gsn_release', 'gsn_start', 'gsn_root', 'gsn_boot_route', 'gsn_boot_owned_route',
          'gsn_describe', 'gsn_boot_cancel_device', 'gsn_boot_detach', 'gsn_boot_pending',
-         'gsn_boot_connect', 'gsn_boot_rx', 'gsn_boot_adopt', 'gsn_boot_service',
+         'gsn_boot_connect', 'gsn_boot_rx', 'gsn_boot_adopt', 'gsn_boot_xinput_query', 'gsn_boot_service',
          'gsn_boot_find', 'gsn_boot_handover', 'gsn_bootstrap', 'gsn_boot_status', 'gsn_quiesce',
-         'gsn_resume_session', 'gsn_failed_boot_owned', 'gsn_end', 'gsn_ioctl',
+         'gsn_resume_session', 'gsn_unready_boot_owned', 'gsn_end', 'gsn_ioctl',
          'gsn_sample_snapshot', 'gsn_play_effect', 'gsn_suspend', 'gsn_resume',
          'gsn_pre_reset', 'gsn_shutdown', 'gsn_pad', 'gsn_neutral', 'gsn_neutral_locked',
          'gsn_rx', 'gsn_extras', 'gsn_imu', 'gsn_boot_rx_teardown', 'gsn_boot_old_rx', 'gsn_boot_retire_rx']

@@ -1,0 +1,462 @@
+{
+  "schema": 1,
+  "scope": "Saved regular capture files only; no capture, hardware, SSH or USB commands",
+  "method": "SHA-256 check against prior evidence; tshark -n -r USB fields, independently checked against PCAPNG USB_LINUX_MMAPPED headers/payloads and URB IDs. Public entries omit bus/address, URB pointers and host paths. Frame numbers refer to originals.",
+  "query": {
+    "bmRequestType": "c1",
+    "bRequest": "01",
+    "wValue": "0100",
+    "wIndex": "0000",
+    "wLength": 20,
+    "setup_bytes": "c101000100001400",
+    "observed_response_hex": "0014fff7ffffc0ffc0ffc0ffc0ff000000000000"
+  },
+  "captures": [
+    {
+      "capture_label": "20261011T124333963714488Z-stage4-5s",
+      "verified_original_sha256": "8dbe77e235c2ff5666964c6241a642be3f508d813ee947fbe00af5ac52ff0230",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [],
+          "successful_0014_input_count": 4870,
+          "first_input_frame": 4,
+          "last_input_frame": 12237,
+          "led_0103_submissions": []
+        }
+      ],
+      "queries": []
+    },
+    {
+      "capture_label": "20261011T133916365243Z-measurement-B-deadband",
+      "verified_original_sha256": "192200c431e8ef767ed872f79a658803418a68b991a60474aeac071575226628",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [],
+          "successful_0014_input_count": 752,
+          "first_input_frame": 14549,
+          "last_input_frame": 16403,
+          "led_0103_submissions": [
+            {
+              "frame": 31373,
+              "hex": "010300"
+            },
+            {
+              "frame": 31482,
+              "hex": "010302"
+            }
+          ]
+        }
+      ],
+      "queries": [
+        {
+          "submit": 31484,
+          "completion": 31486,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 752,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": 16403,
+          "nearest_after": null,
+          "epoch": "initial100a"
+        }
+      ]
+    },
+    {
+      "capture_label": "20261011T134320608606Z-measurement-B-deadband",
+      "verified_original_sha256": "d9613598e5a22a7e3732a5bcda295c97df5f67890db47ec196c67ff7c805ed17",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [],
+          "successful_0014_input_count": 0,
+          "first_input_frame": null,
+          "last_input_frame": null,
+          "led_0103_submissions": [
+            {
+              "frame": 21250,
+              "hex": "010300"
+            },
+            {
+              "frame": 21364,
+              "hex": "010302"
+            }
+          ]
+        }
+      ],
+      "queries": [
+        {
+          "submit": 21366,
+          "completion": 21371,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": null,
+          "nearest_after": null,
+          "epoch": "initial100a"
+        },
+        {
+          "submit": 21403,
+          "completion": 21404,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": null,
+          "nearest_after": null,
+          "epoch": "initial100a"
+        }
+      ]
+    },
+    {
+      "capture_label": "20261011T140000665674Z-measurement-B-deadband",
+      "verified_original_sha256": "280d1fc3b06e80f7767a80a6263c589e8edaa8a869f5efb8834378c28f733159",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [],
+          "successful_0014_input_count": 0,
+          "first_input_frame": null,
+          "last_input_frame": null,
+          "led_0103_submissions": []
+        }
+      ],
+      "queries": []
+    },
+    {
+      "capture_label": "20261011T141131938846Z-measurement-B-deadband",
+      "verified_original_sha256": "4045577a7a9e7a1a0f84307a45e96fd524cd7dea1d4af276ebd7db20a0994a89",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [],
+          "successful_0014_input_count": 261,
+          "first_input_frame": 2604,
+          "last_input_frame": 3248,
+          "led_0103_submissions": [
+            {
+              "frame": 25658,
+              "hex": "010300"
+            },
+            {
+              "frame": 25785,
+              "hex": "010302"
+            }
+          ]
+        },
+        {
+          "epoch": "returned100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [
+            174003
+          ],
+          "successful_0014_input_count": 1197,
+          "first_input_frame": 189078,
+          "last_input_frame": 192546,
+          "led_0103_submissions": [
+            {
+              "frame": 174092,
+              "hex": "010302"
+            }
+          ]
+        }
+      ],
+      "queries": [
+        {
+          "submit": 25787,
+          "completion": 25789,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 261,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": 3248,
+          "nearest_after": null,
+          "epoch": "initial100a"
+        },
+        {
+          "submit": 25801,
+          "completion": 25810,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 261,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": 3248,
+          "nearest_after": null,
+          "epoch": "initial100a"
+        },
+        {
+          "submit": 25824,
+          "completion": 25825,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 261,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": 3248,
+          "nearest_after": null,
+          "epoch": "initial100a"
+        },
+        {
+          "submit": 174142,
+          "completion": 174143,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 1197,
+          "nearest_before": null,
+          "nearest_after": 189078,
+          "epoch": "returned100a"
+        },
+        {
+          "submit": 174146,
+          "completion": 174147,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 1197,
+          "nearest_before": null,
+          "nearest_after": 189078,
+          "epoch": "returned100a"
+        },
+        {
+          "submit": 174186,
+          "completion": 174187,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 1197,
+          "nearest_before": null,
+          "nearest_after": 189078,
+          "epoch": "returned100a"
+        },
+        {
+          "submit": 174666,
+          "completion": 174669,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 1197,
+          "nearest_before": null,
+          "nearest_after": 189078,
+          "epoch": "returned100a"
+        }
+      ]
+    },
+    {
+      "capture_label": "20261012T165154770784Z-motor-comparison-deadband",
+      "verified_original_sha256": "140c658b3615a7aa9e04571503d9f4fe1cb13df000ef3f8cb35cec91533ae954",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [],
+          "successful_0014_input_count": 0,
+          "first_input_frame": null,
+          "last_input_frame": null,
+          "led_0103_submissions": [
+            {
+              "frame": 27350,
+              "hex": "010300"
+            },
+            {
+              "frame": 27529,
+              "hex": "010302"
+            }
+          ]
+        },
+        {
+          "epoch": "returned100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [
+            177348
+          ],
+          "successful_0014_input_count": 0,
+          "first_input_frame": null,
+          "last_input_frame": null,
+          "led_0103_submissions": [
+            {
+              "frame": 177429,
+              "hex": "010302"
+            }
+          ]
+        }
+      ],
+      "queries": [
+        {
+          "submit": 27546,
+          "completion": 27548,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": null,
+          "nearest_after": null,
+          "epoch": "initial100a"
+        },
+        {
+          "submit": 27557,
+          "completion": 27560,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": null,
+          "nearest_after": null,
+          "epoch": "initial100a"
+        },
+        {
+          "submit": 177498,
+          "completion": 177504,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": null,
+          "nearest_after": null,
+          "epoch": "returned100a"
+        },
+        {
+          "submit": 177507,
+          "completion": 177508,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": null,
+          "nearest_after": null,
+          "epoch": "returned100a"
+        }
+      ]
+    },
+    {
+      "capture_label": "20261011T105132490089957Z-test-A",
+      "verified_original_sha256": "891f20d5d61fcd1e58a5c53487a50cc50d7ee1bc92badb8f993b076e5c118622",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [
+            2
+          ],
+          "successful_0014_input_count": 2093,
+          "first_input_frame": 892,
+          "last_input_frame": 6559,
+          "led_0103_submissions": []
+        }
+      ],
+      "queries": []
+    },
+    {
+      "capture_label": "native300s-motor-comparison",
+      "verified_original_sha256": "ec53d79ba5ee46ccefb4df2cc1b6c67c0d083eafdf6e1d3a52258e80a338d998",
+      "epochs": [
+        {
+          "epoch": "returned100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [
+            298575
+          ],
+          "successful_0014_input_count": 0,
+          "first_input_frame": null,
+          "last_input_frame": null,
+          "led_0103_submissions": [
+            {
+              "frame": 298656,
+              "hex": "010302"
+            }
+          ]
+        }
+      ],
+      "queries": [
+        {
+          "submit": 298722,
+          "completion": 298723,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": null,
+          "nearest_after": null,
+          "epoch": "returned100a"
+        },
+        {
+          "submit": 298726,
+          "completion": 298727,
+          "status": 0,
+          "response_bytes": 20,
+          "successful_20byte_ep82_before": 0,
+          "successful_20byte_ep82_after": 0,
+          "nearest_before": null,
+          "nearest_after": null,
+          "epoch": "returned100a"
+        }
+      ]
+    },
+    {
+      "capture_label": "005-passive-hid-90-20261018T040502294162Z",
+      "verified_original_sha256": "6c93e41d81fe50bd6d6f92a52a7605cc9659a9323a656be506d0024e96af21ce",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [],
+          "successful_0014_input_count": 0,
+          "first_input_frame": null,
+          "last_input_frame": null,
+          "led_0103_submissions": []
+        }
+      ],
+      "queries": []
+    },
+    {
+      "capture_label": "006-passive-hid-90-20261018T041459001544Z",
+      "verified_original_sha256": "85cc7d24dc98069e345348cfddf6f2ecefd3de2e7241f7a600a458be046ca125",
+      "epochs": [
+        {
+          "epoch": "initial100a",
+          "identity_evidence": "baseline snapshot and/or 3537:100a descriptor; no address reuse seen",
+          "descriptor_frames": [],
+          "successful_0014_input_count": 10787,
+          "first_input_frame": 31137,
+          "last_input_frame": 68161,
+          "led_0103_submissions": []
+        }
+      ],
+      "queries": []
+    }
+  ],
+  "conclusions": {
+    "matched_queries": 16,
+    "successful_completions": 16,
+    "cold_start_without_prior_xpad_proven": false,
+    "query_necessary_for_native_bootstrap_proven": false,
+    "safe_to_remove_or_add_based_only_on_timing": false
+  },
+  "limits": [
+    "Some recording windows start after input initialization; absence in a window does not exclude an earlier query.",
+    "Completed 0014 inputs before a recorded query prove that particular query was not needed to start those already observed packets; they do not exclude an earlier initialization.",
+    "Return epochs have prior native runtime history, so they are not cold power-on experiments.",
+    "A vendor IN request can have side effects even with an apparently capability-shaped response.",
+    "No claim about actual cold-boot RF pairing, or a current CachyOS xpad implementation identical to the pinned saved reference.",
+    "No USB command was added to gs_native."
+  ],
+  "reference_source": {
+    "repository": "gregkh/linux",
+    "commit": "5fce161649b4d779d1b76d9fcd52dc77779774b8",
+    "path": "drivers/input/joystick/xpad.c",
+    "sha256": "19dd00fc4b0341ef18575a87b9b3fbd5f809e4588ff2909e2c357af2f2358517",
+    "functions": [
+      "xpad_start_input",
+      "xpad_open",
+      "xpad_led_probe",
+      "xpad_send_led_command"
+    ],
+    "limits": "Pinned local snapshot; not a read of or assertion about the running module."
+  }
+}

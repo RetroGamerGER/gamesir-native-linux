@@ -9,7 +9,8 @@ from project_paths import PROJECT, BUILD, RESULTS
 
 source = (PROJECT / 'kernel/gs_native_usb.c').read_text()
 names = ['gsn_describe', 'gsn_claim_parse', 'gsn_claim_identity', 'gsn_claim_find',
-         'gsn_claim_consume', 'gsn_claim_store', 'claim_100a_store', 'claim_105e_store']
+         'gsn_claim_consume', 'gsn_claim_store', 'claim_100a_store', 'claim_105e_store',
+         'acquire_100a_store', 'acquire_105e_store', 'acquire_109c_store', 'gsn_probe_authorize']
 blocks = []
 for name in names:
     match = re.search(r'^static [^;{}]*\b' + name + r'\([^;{}]*\)\n\{', source, re.M)
@@ -36,13 +37,14 @@ if result.returncode:
     raise SystemExit(result.stdout + result.stderr)
 # Also require the tested gate to precede allocation, identity publication and RX.
 probe = source[source.index('static int gsn_probe('):]
-assert probe.index('persistent_mode && (pid == 0x100a || pid == 0x105e) && !gsn_claim_consume(intf)') < probe.index('identity.instance =')
+assert probe.index('gsn_probe_authorize(intf, pid, &direct_native)') < probe.index('identity.instance =')
 report = {'passed': True, 'hardware_access': False,
           'method': 'Actual extracted claim/parser/descriptor/probe gate C functions; fake USB core and locks',
           'functions': names, 'sanitizers': ['address', 'undefined'], 'coverage': result.stdout.strip(),
           'source_sha256': {name: hashlib.sha256((PROJECT / name).read_bytes()).hexdigest() for name in
                             ['kernel/gs_native_usb.c', 'tests/kernel_claim_fake.c', 'tests/check_kernel_claim.py']},
           'limits': ['USB core attach, locks and kernfs inode objects are simulated; no real hotplug proof.',
-                     'Initial manager-side xpad-unbind sysfs race remains outside this claim gate.']}
+                     'New acquire attributes validate/pin optional xpad release under the USB lock; competing attach still fails closed.',
+                     'Historical userspace unbind and fallback binding are not made atomic by this gate.']}
 (RESULTS / 'kernel-claim-test.json').write_text(json.dumps(report, indent=2) + '\n')
 print(result.stdout.strip())

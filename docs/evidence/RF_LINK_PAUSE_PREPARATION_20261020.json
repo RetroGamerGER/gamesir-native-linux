@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "scope": "approved read-only ownership inspection; pause prepared only",
+  "target_role": "primary_KDE_machine",
+  "stable_read": true,
+  "manager_paused": false,
+  "lease_count": 1,
+  "lease_phase": "blocked",
+  "lease_source_pid": "100a",
+  "lease_source_matches_current_device": false,
+  "parent_lifetime_matches": true,
+  "lease_has_kernel_tokens": false,
+  "candidate_present": false,
+  "manager_busy": false,
+  "current_usb": {
+    "vid": "3537",
+    "pid": "109c",
+    "interface0_driver": "xpad",
+    "interface1_driver": null
+  },
+  "original_error": "Unowned new 109c instance; no END attempted",
+  "original_bootstrap_error": -108,
+  "installed_manager_sha256": "311b41bbab5310220a869d8b1dd98898c844b26eaed00b8d4f0e6d267fcdfbcc",
+  "private_ownership_report_sha256": "9db2c430df3312df8580e31804d486641b5839a1cd19aa78809167c4591963ba",
+  "offline_checks": {
+    "pure_installed_method_simulation": true,
+    "synthetic_pause_saved_once": true,
+    "blocked_replacement_no_END_or_restore": true,
+    "lease_preserved": true,
+    "return_not_claimed": true,
+    "resume_rejected_while_unresolved": true,
+    "no_live_manager_invocation_in_simulation": true
+  },
+  "release_executed": false,
+  "capture_started": false,
+  "return_confirmed": false,
+  "proposed_once": [
+    "/usr/bin/gamesir-native",
+    "release"
+  ],
+  "expected_scope": "Set persistent management pause; preserve unresolved entry. Existing client may wait up to 45 seconds, then report returned=false/exit1. No Resume or recovery implied.",
+  "local_python_cache_generated_and_removed": true,
+  "runtime_driver_service_and_USB_unchanged": true
+}

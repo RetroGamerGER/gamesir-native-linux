@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "scope": "approved_receiver_reinsertion_and_read_only_waiting_confirmation_controller_off",
+  "package": "0.1.0.alpha3-15",
+  "kernel": "7.2.11-1-cachyos-deckify",
+  "module_srcversion": "CA96E675200CE5CCEFB7DD0",
+  "authorization": {
+    "receiver_reinsertion": true,
+    "read_only_inspection": true,
+    "controller_power_on": false,
+    "new_release_resume_or_service_restart": false
+  },
+  "preflight": {
+    "same_boot_kernel_headers_package_integrity_and_configuration": true,
+    "receiver_absent": true,
+    "manager_unpaused_empty_devices_and_persisted_leases": true,
+    "receiver_wait_enabled": true
+  },
+  "physical_state": {
+    "human_confirmed_receiver_reinserted": true,
+    "human_confirmed_controller_off": true
+  },
+  "observation": {
+    "manager_phase": "receiver_wait",
+    "saved_lease_phase": "receiver_wait",
+    "kernel_bootstrap_status": {
+      "state": 9,
+      "error": 0,
+      "failed_stage": 0,
+      "pad": 0,
+      "imu": 0,
+      "handover": 0
+    },
+    "bootstrap_child_exit": 0,
+    "bootstrap_child_timed_out": false,
+    "actual_usb_pid": "109c",
+    "actual_driver": "gs_native",
+    "samples": 10,
+    "stable_wait_seconds": 45.653,
+    "beyond_old_30_second_verification_deadline": true,
+    "same_usb_lifetime_and_kernel_ownership_tokens": true,
+    "attempt_budget_unchanged": true,
+    "budget_entries_for_target": 1,
+    "matching_bootstrap_results_in_retained_journal": 1,
+    "new_failures": false,
+    "scan_or_port_or_publication_error": false,
+    "service_identity_and_configuration_unchanged": true
+  },
+  "observer_correction": {
+    "first_observer_halted_before_status_samples": true,
+    "reason": "Raw versus stripped service stdout differed at trailing newline",
+    "secondary_local_renderer_error": "Empty samples list indexed at -1",
+    "original_first_halt_preserved": true,
+    "offline_newline_reproduction_and_four_changed_service_controls_passed": true,
+    "offline_empty_sample_rendering_passed": true,
+    "new_read_only_observer_completed": true,
+    "runtime_or_service_changed_to_obtain_result": false
+  },
+  "limits": [
+    "This confirms one receiver-off waiting case after reinsertion; no later controller power-on, cold boot or reconnect acceptance is claimed.",
+    "Kernel state9 is retained bootstrap evidence; continuing receiver_wait reflects the managers existing repeated read-only attestation.",
+    "No USB packet capture was made; no claim of independently measured wire-level absence of OUT traffic.",
+    "Controller remains off and receiver plugged; a separate explicit Go is required before power-on.",
+    "No new manual bootstrap, Release, Resume, module/configuration/binding/service change, motor test or push."
+  ]
+}

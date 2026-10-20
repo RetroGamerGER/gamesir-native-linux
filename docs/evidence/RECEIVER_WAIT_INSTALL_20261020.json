@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "scope": "approved_cachyos_revision15_installation_and_opt_in_activation_without_receiver",
+  "source_commit": "3b7b7de80691fd67afe1ac7bb8cd1eb43a9a32fc",
+  "kernel_implementation_commit": "159a83f",
+  "kernel": "7.2.11-1-cachyos-deckify",
+  "matching_headers_verified": true,
+  "package": {
+    "name": "gamesir-native-dkms",
+    "before": "0.1.0.alpha3-14",
+    "after": "0.1.0.alpha3-15",
+    "sha256": "c0cfbfc4c835c786ce033b3cf54371a0e56eddf3a9d4958ca4af9b4eecec9760",
+    "pacman_calls": 1,
+    "pacman_exit_code": 0,
+    "payload_files_matched": 137,
+    "integrity_clean": true
+  },
+  "return": {
+    "human_confirmed_receiver_removed_controller_off": true,
+    "continuous_absence_at_least_15_seconds": true,
+    "explicit_release_calls": 1,
+    "release_verified_paused_returned_empty_devices_and_leases": true,
+    "normal_package_hook_cleanup_also_executed": true,
+    "original_failure_history_preserved": true
+  },
+  "hooks": {
+    "guarded_native_release_stop_unused_module_unload_passed": true,
+    "dkms_installed_for_target_kernel": true,
+    "snap_pac_pre_post_completed": true,
+    "limine_mkinitcpio_completed": true,
+    "retained_diagnostic": "DKMS Deprecated feature: CLEAN; transaction completed successfully"
+  },
+  "activation": {
+    "config_created_once": true,
+    "config_sha256": "52554ffdab0530a6c72afbe77eeb2fbf46439971db91dda6923c3acda1c5259b",
+    "service_start_calls": 1,
+    "initial_immediate_status_query": "ENOENT; guarded helper stopped before Resume",
+    "independent_readback": "same service process, active/enabled, manager responsive paused/returned/empty",
+    "configuration_or_service_start_repeated": false,
+    "remaining_authorized_resume_calls": 1,
+    "loaded_module_version": "0.1.0.alpha3",
+    "loaded_srcversion": "CA96E675200CE5CCEFB7DD0",
+    "receiver_wait": true,
+    "bootstrap_mode": true,
+    "enable_output": true,
+    "persistent_mode": true,
+    "defer_input": true,
+    "experimental_gyro": true,
+    "experimental_accel": true,
+    "accel_axis_map": [
+      1,
+      2,
+      3
+    ],
+    "accel_counts_per_g_num": 8192,
+    "accel_counts_per_g_den": 1,
+    "service_active": true,
+    "service_enabled": true,
+    "service_restarts": 0,
+    "manager_paused": false,
+    "devices_empty": true,
+    "persisted_leases_empty": true,
+    "receiver_absent": true
+  },
+  "preserved": {
+    "gyro_accel_config_hash": true,
+    "steam_gamescope_configuration_hashes": true,
+    "steam_integration_package_integrity": true,
+    "original_failure_history": true
+  },
+  "acceptance": {
+    "receiver_wait_state9_on_real_receiver_observed": false,
+    "controller_late_power_on_tested": false,
+    "gamepad_paddle_gyro_motor_tested_in_this_run": false,
+    "reboot_tested": false,
+    "suspend_tested": false,
+    "push_performed": false
+  },
+  "limits": [
+    "The opted-in module is loaded, but no receiver instance exists while the dongle remains removed.",
+    "Empty successful Resume does not prove waiting/setup/late-power-on behavior.",
+    "No automatic error Release, service restart, repeated initialization or power-on test was executed.",
+    "A future physical receiver/power-on test needs separate explicit approval."
+  ]
+}

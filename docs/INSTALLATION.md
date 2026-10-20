@@ -4,13 +4,15 @@
 procedure before enabling this experimental out-of-tree driver. This guide describes commands; it
 does not execute or authorize installation.
 
-The current source recipe is `gamesir-native-dkms 0.1.0.alpha3-6` for Arch-family `x86_64`
-systems. The published first source tag retains its original revision-5 recipe. Revision 6 adds an
-offline-tested manager reconnect correction; a subsequent native bootstrap and limited
-Forza/Xodus run succeeded. Repeated reconnect acceptance is still open. Read the
-[reconnect update scope and approval plan](MANAGER_RECONNECT_FIX.md) before updating.
-This is a preparation guide, not an available public binary release. Build the reviewed source;
-older local packages do not contain newly added licensing files merely because their name matches.
+The current source recipe is `gamesir-native-dkms 0.1.0.alpha3-16` for Arch-family
+`x86_64`, published with PRE-ALPHA source tag `v0.1.0-pre-alpha.3`. It includes
+standalone acquisition, the guarded xpad-compatible startup query, persistent
+receiver waiting, gyro/input publication and manager recovery fixes. The
+receiver-wait lifecycle passed one scoped CachyOS insertion/late-power-on test
+with revision15; revision16 packages that same kernel behavior and the vendor
+configuration. No new revision16 hardware/boot acceptance is claimed.
+See [release notes](RELEASE_PRE_ALPHA_3.md) and [functional audit](FUNCTIONAL_INTEGRATION_AUDIT.md).
+Public assets are source-only; build locally with reviewed dependencies.
 Garuda KDE and CachyOS Gamescope have limited real-hardware evidence; this is not a promise for
 every kernel, distribution, or SteamOS image. The standard G7 Pro uses `3537:100a` → `3537:109c`;
 ZZZ `3537:105e` has a separate direct-start path and more limited hardware coverage. USB ports are
@@ -66,7 +68,7 @@ computed hash checks recorded bytes; it does not authenticate an untrusted downl
 ## 3. Review and install the package, with the service inactive
 
 ```sh
-GS_PACKAGE=./GameSir-Native-Linux-PRE-ALPHA-0.1.0.alpha3-6-x86_64.pkg.tar.zst
+GS_PACKAGE=./GameSir-Native-Linux-PRE-ALPHA-0.1.0.alpha3-16-x86_64.pkg.tar.zst
 sha256sum "$GS_PACKAGE"
 pacman -Qip "$GS_PACKAGE"
 pacman -Qlp "$GS_PACKAGE"
@@ -91,9 +93,13 @@ systemctl is-enabled gamesir-native.service
 ```
 
 Require DKMS `installed` for the intended kernel, module version `0.1.0.alpha3` (the package adds
-revision `-6`), matching vermagic, and inactive/disabled service on first installation. Investigate
+revision `-16`), matching vermagic, and inactive/disabled service on first installation. Investigate
 differences before activation. Installing files does not replace an older loaded module; do not
 force its removal.
+The module version alone cannot distinguish package revisions. Before acquisition,
+also require the new loaded module's `acquire_100a`, `acquire_105e` and `acquire_109c` driver
+attributes and verify the installed package/build provenance. An older loaded
+module cannot satisfy the new manager's contract. No automatic reload is supplied.
 
 ## 4. Enable normal automatic operation
 
@@ -106,9 +112,15 @@ journalctl -u gamesir-native.service -b --no-pager
 ```
 
 The service loads the module and manages supported interfaces. Connect the dongle, turn on the
-controller, and use normal inputs: routine play needs no Deadband, terminal, or password. Bootstrap
-may wait for ordinary input from a quiet controller. Check `GameSir G7 Pro`, normal controls, and
+controller: routine play needs no Deadband, terminal, password or extra button
+press to establish native readiness. Receiver-only waiting is a valid pending
+state, not a ready gamepad; fresh native IMU enables the runtime handoff. Check `GameSir G7 Pro`, normal controls, and
 four extra buttons in an input tester. Steam integration is separate.
+Free supported interfaces need no prior xpad binding. If xpad probed first,
+only the validated GameSir interface is handed over. Do not blacklist xpad
+globally; other Xbox controllers and the documented fallback can still need it.
+For the successful Gamescope gyro startup case, connect the controller before
+Steam starts; late arrival remains a separate known limitation.
 
 `gamesir-native status` reads the manager's cached state through its protected administrative
 socket; it is not a new direct USB status probe. An active session normally reports `returned:
@@ -119,6 +131,34 @@ For updates, the guard releases ownership, stops the service, and unloads only t
 native module. Check the new DKMS build, then deliberately restart/resume management; its pause
 persists. Kernel updates also need matching headers and a successful target DKMS build before
 booting. DKMS does not guarantee compatibility with every future kernel.
+
+### Packaged receiver-wait default and local overrides
+
+Revision16 owns `/usr/lib/modprobe.d/91-gamesir-native-receiver-wait.conf`,
+mode0644, with `options gs_native receiver_wait=1`. The kernel's direct-load
+parameter default remains false; the package supplies this policy to the
+existing service, whose bootstrap/output/persistent/deferred-input flags are
+unchanged. Installing a configuration never changes an already loaded module.
+
+A file of the **same basename** under `/etc/modprobe.d/` takes precedence.
+The previously tested manual `/etc/modprobe.d/91-gamesir-native-receiver-wait.conf`
+therefore stays untouched and causes no package-file conflict. Do not add a
+second differently named options file to override the value: use the same-name
+local file. Set `options gs_native receiver_wait=0` there to opt out for the
+next separately controlled module load; do not reload a live controller merely
+to apply it. Keep unrelated options in their own existing files.
+
+After activation read the effective value, not just the file:
+
+```sh
+cat /sys/module/gs_native/parameters/receiver_wait
+sudo gamesir-native status
+```
+
+A pending receiver should report `receiver_wait`; a ready gamepad reports
+`active`. `session_ms` is the legacy finite-test parameter, not a time limit on
+`persistent_mode`. The first installation still requires deliberate service
+enablement; an update keeps the guarded pause until an intentional Resume.
 
 ### Optional persistent experimental gyro
 
@@ -236,6 +276,7 @@ test ! -e /etc/xdg/plasma-workspace/env/90-gamesir-native-steam.sh
 test ! -e /usr/share/gamesir-native-steam/session.sh
 test ! -e /usr/lib/gamesir-native-steam/gamescope-launcher
 test ! -e /usr/lib/systemd/user/steam-launcher.service.d/50-gamesir-native.conf
+test ! -e /usr/lib/modprobe.d/91-gamesir-native-receiver-wait.conf
 test ! -e /run/gamesir-native/control.sock
 test ! -e /run/gamesir-native-haptics/control.sock
 systemctl --user cat steam-launcher.service
@@ -259,6 +300,13 @@ completing removal; preserve other modprobe configuration. Removing the file
 does not alter an already loaded module. If a later boot-image rebuild copied
 it into an early-load path, review that image as well before declaring removal
 complete. The recorded activation itself did not rebuild boot images.
+
+The revision16 vendor receiver-wait file is package-owned and removed with
+the core package. A separately created same-name `/etc/modprobe.d/` override
+is user-owned and is intentionally retained. Inspect and remove only that
+explicitly added override when completing removal; preserve unrelated options
+and record its prior contents. Its removal does not alter a loaded module.
+Never remove or overwrite the vendor path by hand while its package is installed.
 
 ### Optional retained-state cleanup
 

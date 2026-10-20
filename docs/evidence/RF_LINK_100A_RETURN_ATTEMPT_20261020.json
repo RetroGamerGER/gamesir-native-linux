@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "target_role": "primary_KDE_machine",
+  "scope": "approved staged manual return attempt with protected read-only checks; stopped at PID mismatch",
+  "manual_receiver_removals": 1,
+  "manual_reinsertions": 1,
+  "user_confirmed_controller_off": true,
+  "fresh_paused_precheck_passed": true,
+  "absence_and_empty_ownership_verified_before_reinsertion": true,
+  "pause_live_and_persistent": true,
+  "leases_empty": true,
+  "managed_devices_empty": true,
+  "manager_returned": true,
+  "return_scope": "managed devices only; not proof of 100a or functional RF/input fallback",
+  "current_usb": {
+    "vid": "3537",
+    "pid": "109c",
+    "interface0_driver": "xpad",
+    "interface1_driver": null,
+    "interface0_endpoints": [
+      2,
+      130
+    ],
+    "interface1_endpoints": []
+  },
+  "same_boot_source_parent": true,
+  "fresh_usb_device_lifetime": true,
+  "native_bindings_empty": true,
+  "original_failure_preserved_in_history": true,
+  "original_failure_resolution": "physically_absent",
+  "intended100a_baseline_reached": false,
+  "stop_reason": "Receiver re-enumerated as 109c instead of 100a; no guessed mode operation",
+  "usb_monitor_opened": false,
+  "capture_started": false,
+  "release_or_resume_repeated": false,
+  "explicit_module_binding_or_reset_operation": false,
+  "further_physical_retry": false,
+  "private_reports_sha256": {
+    "before.json": "5f813c56019eb4a880aeb6fa44095efd5402bd132e83cb183b0f5dd9360f1108",
+    "absent.json": "27ecc0bf3d6c02ebad5fa3232b7c8b4432f5102e92026cfc56da5fc6cc17bd01",
+    "reinserted.json": "eef3ed671387b053ffdd8a13a400baf9465fb9430040b6f2a7eccb4ccf422542"
+  },
+  "private_identifiers_and_raw_state_omitted": true,
+  "interpretation": "Administrative recovery/pause confirmed. USB personality return to 100a not achieved. xpad binding under 109c is not an input-function test."
+}

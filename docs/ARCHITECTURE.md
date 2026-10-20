@@ -72,6 +72,15 @@ Er kennt keinen Live-Transport und sendet keine Befehle.
 
 ## Kerneladapter und Alpha-Manager
 
+Revision 11 ergänzt die [eigenständige Übernahme](STANDALONE_STARTUP.md): Der
+Manager entdeckt freie unterstützte IF0 ebenso wie optionale xpad-Vorbesitzer.
+Budget und Pause werden vor der exakten, einmaligen Kernelübernahme geprüft;
+xpad wird nicht als Initialisierungsschritt geladen oder gebunden. Der Dienst
+bleibt für die automatische Verwaltung verantwortlich. Ein optionaler
+xpad-Vorbesitzer wird nur am geprüften GameSir-Objekt gelöst. Laufender
+Input-/Sensor-/Motorcode bleibt gemeinsam; es entsteht kein zweiter Runtimepfad.
+Der neue Pfad ist offline geprüft und benötigt separate Hardwareabnahme.
+
 Der Sprint-003-Adapter in `kernel/gs_native_usb.c` registriert nach ausdrücklicher
 Testbindung ein Gamepad, in 109c ein IIO-Rohgerät und einen exklusiven Entwickler-
 zugang mit privater ABI 1. `src/gs_runtime.c` begrenzt PID, Sitzungen und Impulse.

@@ -2,12 +2,93 @@
 
 # GameSir Native Linux: Roadmap
 
-Stand: 19. Oktober 2026. Prioritäten ergänzen den
+Stand: 20. Oktober 2026. Prioritäten ergänzen den
 [aktuellen Projektstand](PROJECT_STATE.md); historische Tests behalten ihren
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
 
-## Priorität: Gyro bei spätem Einschalten / Wiederverbinden in Gamescope
+## Vor Push offen: Neustart bei ausgeschaltetem Funkcontroller
+
+Der wartende Kernel-Zustand ist inzwischen **offline implementiert**, bleibt
+aber als Option receiver_wait standardmäßig ausgeschaltet. Einmalige begrenzte
+Einrichtung, danach passiver Empfang ohne Init-Wiederholung; Client/Manager
+unterscheiden wartend von betriebsbereit. Installation und Hardwareabnahme
+stehen aus, einschließlich späterem Einschalten und neuer USB-Instanz.
+Ein im Suspend abgebrochener unbereiter Wartezustand wird nicht automatisch
+neu gestartet. Den laufenden Treiber und die aktive Konfiguration unverändert
+lassen. [Stand, Tests und Grenzen](RECEIVER_WAIT_KERNEL.md).
+
+Der Revision-14-Neustart am 20. Oktober lädt Dienst und Modul automatisch.
+Bei weiterhin ausgeschaltetem Controller meldet der Manager jedoch einen
+blockierten direkten `109c`-Bootstrap (`-110`, VERIFY, kein Pad/IMU) und keinen
+bestätigten Rückweg. Native Bindung allein ist keine Betriebsbereitschaft.
+Der Schritt zum späteren Einschalten wurde deshalb angehalten; kein Resume,
+Release oder neuer Versuch und kein Push. Diesen Start-/Wartezustand getrennt
+vom nachrangigen Steam-Anzeige-TODO untersuchen und gezielt abnehmen.
+[Nachweis und Grenzen](RELEASE_AUDIT.md#revision-14-controller-off-restart-fails--20-october-2026).
+
+Als nächster Entwurf: schlanken Manager für Übernahme/Verwaltung erhalten;
+Empfängerpräsenz, Funkbereitschaft und Laufzeit im Kernel getrennt behandeln.
+Kein bloßes Verlängern der IMU-Frist oder Entfernen des Managers. Erst belegen,
+welcher GameSir-Verbindungsnachweis vor Initialisierung verfügbar ist oder ob
+eine einmalige Empfängerinitialisierung spätere Daten erlaubt. Keine erfundene
+Sony-Statusbit-Übernahme oder unbedingte Init-Wiederholung.
+[Architekturprüfung und Testanforderungen](DUALSENSE_STARTUP_GAMESCOPE.md#manager-architecture-review-after-the-controller-off-reboot).
+
+Die gespeicherten Mitschnitte liefern inzwischen konkrete Zeitfolgen und zwei
+Kandidaten: periodischer Typ-03-Status sowie Typ-02-ANNOUNCE. In vier neuen
+nativen USB-Epochen folgt auf Status/Ankündigung erst Pad, dann IMU; meistens
+begann Initialisierung aber schon vorher. Noch kein belegter RF-Startauslöser.
+Bereits laufende IMU und neue USB-Instanzen beim Funkzyklus separat behandeln.
+[Zeitvergleich mit Gegenbeispielen](DUALSENSE_STARTUP_GAMESCOPE.md#saved-capture-connection-chronology--20-october-2026).
+
+Öffentliche Microsoft-GIPUSB-Dokumentation erklärt nun Hello → START → Status;
+Typ 03 als Vorbedingung vor START wäre zirkulär. Zwei Hello-Pakete sind anhand
+der vollständigen Struktur bestätigt. xones Verbindungsbit passt zu allen 51
+positiven Statusberichten, der ausgeschaltete Gegenfall bleibt offen. Als
+nächsten Offline-Schritt einen passiven Zustandsprototyp mit Ankündigungs- und
+bereits laufendem Datenpfad prüfen; noch keine Hardwarefreigabe daraus.
+[Online-Abgleich und Grenzen](DUALSENSE_STARTUP_GAMESCOPE.md#online-gip-sequence-cross-check--20-october-2026).
+
+Der passive Offline-Prototyp ist inzwischen umgesetzt: Wartezustand ohne
+Fehlerfrist, höchstens ein Ankündigungs-Startkandidat pro Epoche, separate
+Pad-/IMU-Beobachtungen sowie unverlierbarer Erstfehler und terminale Instanzen.
+30 neue Tests und 23 gespeicherte Payload-Abgleiche aus fünf historischen
+Zeitfolgen bestehen. Nächster Schritt bleibt die Prüfung des Integrationsvertrags
+und des fehlenden ausgeschalteten Gegenfalls; noch kein Kernel-/Manager-Fix
+oder neuer Hardwareversuch. [Modell und Grenzen](STARTUP_TIMELINE_PROTOTYPE.md).
+
+## Aktueller Spielnachweis und zurückgestellte Steam-Gyroanzeige
+
+Revision 14 ist auf dem CachyOS-Testsystem aktiviert. Normale Eingaben und
+Paddles sind bestätigt; Eden erkennt den Gyro über SDL, und in Arc Raiders
+steuert Gyro über den angekündigten Steam-Input-Rechter-Stick-Pfad die Kamera.
+Die gleichzeitig gemeldete Nullanzeige in Steams Gyromenü wird als separates,
+nachrangiges TODO geführt und blockiert diesen bestätigten Spielpfad nicht.
+Ursache und weitere Start-/Reconnect-Fälle bleiben offen; keinen reinen
+Renderingfehler oder universelle Unterstützung behaupten.
+[Anwendungsnachweis und Grenzen](STEAM_GAMESCOPE.md#revision-14-spiel-gyro-bestätigt-nullanzeige-als-todo).
+
+Die folgenden früheren Start-/Anzeigeprüfungen behalten ihren jeweiligen
+Zeitpunkt und Nachweisumfang; sie sind keine neue Test- oder Änderungsfreigabe.
+
+## Aktuelle Priorität: eigenständige Übernahme und gemeinsame Regression
+
+Revision 12 ergänzt den eigenständigen Start um Bootstrap ohne Tastendruck und
+direkte, instanzgeprüfte Übernahme eines bereits vorhandenen 109c. Beide neuen
+Startfälle sind offline geprüft; eine Hardwareabnahme fehlt. Revision 11
+entfernte zuvor xpad als Software-Voraussetzung. Freie
+unterstützte IF0 werden direkt gebunden; optionale xpad-Vorbesitzer nur am
+geprüften Kernelobjekt abgegeben. Keine globale Blacklist und keine neue
+USB-Sequenz. [Vertrag, Fehlerpfade und getrennte Abnahme](STANDALONE_STARTUP.md).
+Nach abgeschlossener Offline-Prüfung folgen separat freigegebene Installation
+und Regression auf Garuda sowie CachyOS. Kaltstart ohne vorherige xpad-Aktivität
+ist ein eigener fehlender Nachweis. Paddles, Gyro/Accel, vier Motoren, SDL,
+Steam und Eden gemeinsam erhalten; Forza-Bridge bleibt Userspace.
+Die spätere GUI mit DE/EN, Deadband-Link und klar bezeichneten geplanten
+Funktionen folgt erst nach dieser Integration. Kein GUI-Code in diesem Schritt.
+
+## Weiterhin offen: Gyro bei spätem Einschalten / Wiederverbinden in Gamescope
 
 Offline-Reproduktion und zweistufiger Kernel-/Client-/Manager-Pfad sind jetzt
 implementiert. Der bestehende Sensorvertrag, Roh-IIO, Paddles und Haptik bleiben
@@ -562,3 +643,16 @@ Geplante Reihenfolge nach gesondertem Entwicklungsauftrag:
 
 Dieser spätere Meilenstein blockiert weder den stabilen Spielbetrieb noch
 die unabhängige Entwicklung der Sensor-/Spielintegration.
+
+
+## Revision 15 startup follow-up — 20 October 2026
+
+Receiver-off waiting and one late power-on now pass their scoped target tests;
+see [the late-on audit](RELEASE_AUDIT.md#revision-15-late-power-on-starts-automatically--20-october-2026).
+The maintainer accepts automatic binding with the reported brief initial xpad
+contact; this is not a blocker. Optional later research may resolve that contact:
+snapshots first see the new100a lifetime already native. Do not claim xpad independence
+or change global xpad registration/blacklisting from this evidence. Review
+supported-device first-probe ordering and saved kernel/manager chronology
+before proposing any acquisition change. Controller-off cold boot, second RF
+reconnect and application regression remain separate acceptance items.

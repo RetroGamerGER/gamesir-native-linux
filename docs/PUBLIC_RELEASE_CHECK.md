@@ -3,7 +3,7 @@
 Historical initial preparation: 2026-10-16. The counts, versions and pending
 decisions below describe that checkpoint, not the present public repository.
 The sanitized history was subsequently published as `v0.1.0-pre-alpha.1`.
-For candidate `v0.1.0-pre-alpha.2`, see the [current release audit](RELEASE_AUDIT.md):
+For candidate `v0.1.0-pre-alpha.3`, see the [current release audit](RELEASE_AUDIT.md):
 review all newly reachable public commits/blobs and the exact final source
 commit, regenerate source-only assets and checksums, and test the frozen
 export. Include the separately reviewed optional trigger-bridge source.
