@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "result": "verified_migration_and_independent_read_only_postcheck",
+  "approved_plan_sha256": "0f5407816989deef7bfe7f997bcd7ce9d12ed8f8ac9650aa65d1f111fc4e7f8d",
+  "helper": {
+    "state": "verified_migration",
+    "phase": "policy_restored",
+    "error": "",
+    "changes_possible": true
+  },
+  "postcheck": {
+    "active_13_files_match_approved_hash_owner_mode_and_single_link": true,
+    "no_extra_active_executor_entries": true,
+    "complete_old_executor_retained_with_original_inodes_and_metadata": true,
+    "policy_original_hash_inode_metadata_and_registered_action_preserved": true,
+    "cache_and_license_directory_metadata_preserved": true,
+    "candidate_held_policy_and_failed_paths_absent": true,
+    "encrypted_backup_hash_inode_metadata_unchanged": true
+  },
+  "private_key_read_or_backup_recreated": false,
+  "automatic_retry_or_rollback": false,
+  "package_driver_service_module_or_steam_change": false,
+  "appimage_launched": false,
+  "hardware_access": false,
+  "network_or_publication": false,
+  "off_device_backup_copy_confirmation": "pending"
+}

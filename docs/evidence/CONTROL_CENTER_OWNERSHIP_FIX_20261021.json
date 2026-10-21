@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "offline_correction_and_migration_preparation_only",
+  "fix": "separate exact ownership query for each fixed helper path; no aggregate exit-code assumption",
+  "tests": {
+    "groups": 17,
+    "cases": 334,
+    "migration_cases": 26,
+    "new_regression_cases": 7,
+    "all_passed": true,
+    "host_package_or_root_or_hardware_access": false
+  },
+  "plan": {
+    "sha256": "0f5407816989deef7bfe7f997bcd7ce9d12ed8f8ac9650aa65d1f111fc4e7f8d",
+    "privileged_commands": 19,
+    "commands_unchanged": true,
+    "root_helper_payload_unchanged": true,
+    "public_key_unchanged": true,
+    "executed": false
+  },
+  "backup": {
+    "prior_recovery_verified_encrypted_file_reused": true,
+    "sha256_and_safe_metadata_match": true,
+    "decrypted_again": false,
+    "created_or_overwritten": false,
+    "private_key_read": false,
+    "off_device_copy_confirmation": "pending"
+  },
+  "normal_user_flow_documented": true,
+  "appimage_rebuilt_or_launched": false,
+  "installed_helper_or_driver_changed": false,
+  "published": false,
+  "requires": "explicit approval of new migration-only plan before execution"
+}

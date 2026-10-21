@@ -4,6 +4,66 @@ Alle Make-Ziele sind offline. Keine Installation, erhöhten
 Rechte, USB-Kommandos, Modulaktivierung oder Treiberwechsel sind Bestandteil.
 Voraussetzung: vorhandenes Python ≥ 3.11, Make und clang mit ASan/UBSan.
 
+## Control Center — Phase D offline / lesende GUI
+
+`make test-control-center-auth` prüft den vorbereiteten Berechtigungsweg in 27
+Offline-Fällen; ebenfalls Teil von `make test`. Jeder pkexec-Aufruf wird durch
+einen Fake ersetzt, reale Kindprozesse sind ausschließlich harmlose Python-
+Fixtures mit denselben Benutzerrechten. Keine echte Freigabe oder Root-
+Ausführung. Protokoll, Aktions-/Pfadbindung, rootgeschützte Dateimetadaten/
+Hashes, Abbruch, Einmaligkeit, Ausgabe-/Zeitlimits, unbestätigte Beendigung,
+Policy und Staging sind abgedeckt. Ein zusätzlicher QML-Fall verbindet den
+Client mit dem GUI-Worker und prüft Abbruch vor der simulierten Transaktion.
+[Berechtigungsweg und Grenzen](CONTROL_CENTER_AUTHORIZATION.md).
+
+Die anschließende Offline-GUI-/Backend-Anbindung ergänzt 15 reine Koordinator-
+Tests in `test_control_center_transactions.py` und acht echte Qt/QML-Tests in
+`test_control_center_transactions_ui.py`. Sie verbinden Komponentenwahl, den
+vorhandenen Planer, einmalige Bestätigung, Hintergrundarbeit und Ergebnis mit
+Speicherfixtures. Ganze Zyklen laufen mit gesperrtem Datei-/Prozess-/Netzwerk-I/O.
+Geprüft werden auch Abbruch, geänderte Pakete/Hosts, Planablauf, fremde
+Job-Ergebnisse, Doppelbestätigung und Fehler nach Transaktionsbeginn. Der
+normale lesende GUI-Pfad kann diese Aktionen nicht starten. Die acht optionalen
+Qt-Fälle sind zusätzlich in `make test-control-center-ui` enthalten.
+
+`make test-control-center` ist Teil der normalen Suite und prüft die reine
+Demo-Zustandsmaschine plus lesenden Detektor ohne Qt oder echte Systemzugriffe.
+Hinzu kommen 45 Backend-Prüfungen für Artefaktkatalog, Archiv-/Metadatenprüfung,
+versionierte Anfragen/Pläne, Einmalbestätigung, Aktualität, Abbruch, bestehende
+Paket-Hooks und Nachkontrolle. Die vier vorhandenen Paketierer erzeugen nur
+temporäre Staging-Dateien; ein vorhandener C-Compiler baut Test-Client und
+Bridge-Shim offline. Kein Programm wird installiert, kein echter Paketmanager,
+Dienst, Modul oder Passwortdialog angesprochen. Während der vollständigen
+Transaktionssimulation sind Datei-/Prozess-/Netzwerkzugriffe blockiert; der
+Rückbaucode erhält ausschließlich einen FakeHost. Zstd wird bei vorhandener
+Python-3.14-Standardbibliothek zusätzlich geprüft, nichts nachinstalliert.
+`make test-control-center-package` ergänzt 17 Offline-Prüfungen für AppImage-
+und Starter-Vorbereitung. Desktop-Validierung und GIO-Argumenttests starten nur
+einen harmlosen Testprozess in temporären Verzeichnissen, keine Menüinstallation.
+Fehlende optionale Validatoren werden als Skip gemeldet. Der separat gebaute
+AppDir/AppImage-Selbsttest nutzt nur synthetische Daten und private Präferenzen.
+[Build, Nachweise und Grenzen](CONTROL_CENTER_APPIMAGE.md).
+30 zusätzliche Prüfungen verwenden synthetische Dateibäume und eigene
+kurzlebige Prozesse: Kernel-/Header-Mismatch, Distribution/Architektur,
+Pakete/Abhängigkeiten, DKMS, Rechtefehler, USB-Instanzwechsel, Zeit-/Ausgabelimit
+und feste Systemdienst-Leseabfrage. `make test-control-center-ui`
+prüft optional mit vorhandenem PySide6/Qt6 die echte QML-Oberfläche offscreen
+und mit Softwarerendering, inklusive Maus/Tastatur, DE/EN-Persistenz, Dialogen
+und 560×480. Die echte Ansicht bekommt einen injizierten Leser: keine parallelen
+Abfragen, keine realen Aktionen, Fehler verwerfen vorherige Werte, Schließen
+während einer Abfrage bleibt sicher. Alle Präferenzen liegen temporär;
+Linköffner sind Test-Doubles. Insgesamt 26 QML-Prüfungen; der separate
+Systemdetails-Dialog verschiebt die Hauptansicht nicht, nutzt die vorhandene
+Aufnahme und ist mit Tastatur, Escape und kleinem Fenster bedienbar.
+Ein eigener Qt-Prozess
+prüft zusätzlich das Beenden bei laufendem Leser vor der Qt-Objektfreigabe.
+`python -B tests/render_control_center.py` erzeugt lokale Bildschirmansichten.
+Kein GUI-Test darf den installierten Treiber, Paketmanager, Steam, Controller,
+Manager-Socket oder einen echten Download verwenden. Der separate, ausdrücklich
+lesende Aufruf `python -B tests/render_control_center.py --status` liest dagegen
+echte lokale Metadaten für die visuelle Abnahme und gehört nicht zur Offline-
+Testsuite. Keine Geräteöffnung/Installation. [Umfang und Startweg](CONTROL_CENTER.md).
+
 ## Eigenständige Übernahme ohne xpad-Voraussetzung
 
 `make test-alpha` enthält `tests/test_manager_standalone.py`: synthetische

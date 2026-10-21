@@ -1,0 +1,8 @@
+<!-- SPDX-License-Identifier: GPL-2.0-only -->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <title>GameSir Control Center</title>
+  <rect x="4" y="4" width="120" height="120" rx="30" fill="#17231f"/>
+  <path d="M43 42 Q34 43 30 56 L23 83 Q22 94 31 94 Q37 94 46 81 H82 Q91 94 97 94 Q106 94 105 83 L98 56 Q94 43 85 42 Z" fill="none" stroke="#a6d8c2" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M42 55 V72 M34 64 H51" fill="none" stroke="#a6d8c2" stroke-width="5" stroke-linecap="round"/>
+  <g fill="#a6d8c2"><circle cx="85" cy="56" r="3.5"/><circle cx="94" cy="65" r="3.5"/><circle cx="76" cy="65" r="3.5"/><circle cx="85" cy="74" r="3.5"/></g>
+</svg>

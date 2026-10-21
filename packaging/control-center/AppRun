@@ -1,0 +1,18 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-only
+# No integration, package command, activation or network request is performed.
+set -eu
+bundle_root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+unset PYTHONHOME PYTHONPATH PYTHONSTARTUP PYTHONUSERBASE LD_LIBRARY_PATH LD_PRELOAD
+unset QT_PLUGIN_PATH QT_QPA_PLATFORM_PLUGIN_PATH QML_IMPORT_PATH QML2_IMPORT_PATH
+export PYTHONDONTWRITEBYTECODE=1
+export QT_PLUGIN_PATH="$bundle_root/usr/lib/qt6/plugins"
+export QT_QPA_PLATFORM_PLUGIN_PATH="$bundle_root/usr/lib/qt6/plugins/platforms"
+export QML_IMPORT_PATH="$bundle_root/usr/lib/qt6/qml"
+export QT_QUICK_CONTROLS_STYLE=Basic
+export QT_QUICK_BACKEND=software
+# Per-process loader search avoids exporting bundled libraries to xdg-open,
+# systemctl or any other subsequently launched desktop/system application.
+exec /lib64/ld-linux-x86-64.so.2 --library-path "$bundle_root/usr/lib" \
+    "$bundle_root/usr/bin/python3" -I -B \
+    "$bundle_root/usr/share/gamesir-control-center/entry.py" "$@"

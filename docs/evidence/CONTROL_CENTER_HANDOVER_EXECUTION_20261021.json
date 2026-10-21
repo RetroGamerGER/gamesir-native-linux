@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "approved_encrypted_backup_and_one_time_helper_handover",
+  "result": "backup_verified_helper_blocked_before_privileged_commands",
+  "approved_plan_sha256": "3362b34a2d6c7da7ee5080b076d7ed28ddd10480b2750ac2047f29f54c2d756d",
+  "backup": {
+    "encrypted_backup_verified": true,
+    "key_id": "5d9450389dafad61bb573c277557a62484e514c96dcb1acd40b9bcfe5f71544a",
+    "cipher": "PKCS8/PBES2 AES-256-CBC",
+    "kdf": "PBKDF2-HMAC-SHA256",
+    "iterations": 600000,
+    "sha256": "b0b892f815f604849d0c12d96428b364e398a065bb967cbdd5fe88846fa19385",
+    "private_key_copied_in_plaintext": false,
+    "off_device_copy_confirmed": false
+  },
+  "helper": {
+    "state": "blocked",
+    "phase": "preflight",
+    "error": "migration_package_managed_or_unknown_helper",
+    "changes_possible": false
+  },
+  "privileged_migration_calls_executed": 0,
+  "postcheck": {
+    "legacy_13_files_hash_owner_mode_inode_mtime_unchanged": true,
+    "executor_license_cache_directory_metadata_unchanged": true,
+    "migration_staging_backup_held_policy_paths_absent": true,
+    "encrypted_backup_owner_mode_single_link_hash_verified": true
+  },
+  "cause": {
+    "query": "pacman -Qoq -- <thirteen reviewed helper paths>",
+    "observed_exit_code": 13,
+    "expected_by_preflight": 1,
+    "stdout_empty": true,
+    "all_thirteen_expected_no_package_owns_diagnostics_match": true,
+    "conclusion": "incorrect aggregate ownership-query exit-code assumption"
+  },
+  "automatic_retry_or_rollback": false,
+  "driver_changed": false,
+  "published": false,
+  "next": "offline correction and regression coverage; fresh separately reviewed migration-only plan must reuse existing verified encrypted backup, never overwrite or regenerate key"
+}

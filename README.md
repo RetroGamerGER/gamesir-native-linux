@@ -235,6 +235,32 @@ The generated DKMS source archive is a deliberately smaller package-build
 input; it does not contain the full test environment. Use the complete
 repository source for `make test`. See the [build and package instructions](docs/INSTALLATION.md).
 
+## Optional Control Center — PRE-ALPHA
+
+[Download the reviewed AppImage and matching sources](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.3).
+The first application profile targets **Garuda x86_64, glibc 2.44 or newer**.
+It is not a universal AppImage or a confirmed CachyOS/Gamescope installer.
+
+The DE/EN interface shows local status without changing the driver. Technical
+details are behind a separate button. Explicitly selected installation/removal
+plans use a restricted system helper and desktop authentication; the AppImage
+itself never runs as root. First-run setup installs that helper only after a
+separate review and password confirmation. Later starts reuse it without
+asking to set it up again. Package installation does not activate the driver.
+
+Reviewed packages come from this project's GitHub releases. Both the app and
+helper verify signed update metadata and exact archive identities; downloads
+and installation require separate user actions. A compatible new driver
+catalog does not require downloading another AppImage. Firmware updates,
+stick calibration and universal trigger integration remain future work.
+
+See [normal first-run use](docs/CONTROL_CENTER_FIRST_RUN.md),
+[installation/removal limits](docs/CONTROL_CENTER_APPIMAGE_PACKAGES.md),
+[signed updates](docs/CONTROL_CENTER_RELEASE_UPDATES.md) and the
+[license/source distribution review](docs/CONTROL_CENTER_DISTRIBUTION.md).
+Existing driver faults reported on both development systems are pending
+investigation; this GUI release does not resolve or broaden driver stability.
+
 ## License
 
 GameSir Native Linux is licensed under **GNU GPL Version 2 only

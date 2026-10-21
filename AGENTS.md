@@ -16,6 +16,602 @@ changes locally. No public remote, tag, upload or push without explicit
 maintainer approval. Preserve third-party notices and source provenance.
 Own sources use GPL-2.0-only; preserve the UAPI Linux-syscall-note exception.
 
+## Current Control Center distribution and publication — 21 October 2026
+
+The maintainer explicitly requests finishing and pushing the AppImage before
+investigating different driver faults on both PCs. Scope is app/source/metadata
+publication only: no live driver/helper/service/Steam/hardware changes. Keep
+alpha3-16 installed state untouched and precise gyro calibration paused.
+Reuse the verified encrypted backup and exact signed revision1; no private-key
+read, regeneration or resigning. The requested encrypted off-device copy was
+hash-verified on separate network storage (not offline media).
+
+The license/source gap is closed for the reviewed Garuda x86_64/glibc2.44
+AppImage profile: 1,859 payload files, 1,530 source-kit files,77 components,
+complete recipes/patches/submodules/notices. 412 app tests/25 groups including
+61 QML and four final packaged synthetic lanes pass; four real GitHub package
+archives pass both download and ordinary-user installed-verifier checks.
+Publish binary plus companion sources/lock/manifest/checksums together. Preserve
+existing release assets and tag; publish the unchanged signed revision1 at
+updates/pre-alpha.json (expires20 November2026,12:36UTC). No new tag is requested.
+Use a clean final-tree public snapshot atop public main; retain private working
+history locally. See docs/CONTROL_CENTER_DISTRIBUTION.md and its evidence.
+
+## Signed-helper AppImage reuse accepted locally (21 October 2026)
+
+After explicit approval, the final reviewed AppImage was opened as the ordinary
+user with actual status data, without demo/rehearsal options. Image SHA256 and
+staged inputs match the retained build. Its bundled runtime's independent
+passive first-run inspection returned idle with no error, setup review/session
+or authentication/package invocation. The maintainer confirmed the new main
+window appeared normally, with no helper-setup offer or password window.
+
+Read-only postchecks found all thirteen helper hashes and helper/policy/retained
+old-executor/cache/license metadata unchanged. The app remains open. No package
+installation/removal, updates lookup/download, driver/service/module/Steam change,
+hardware test, network or publication occurred. This accepts local Garuda/KDE
+reuse of the new signed helper, not signed-download/package acceptance or broader
+platform support. Public rollout gates and paused gyro calibration remain.
+See docs/evidence/CONTROL_CENTER_SIGNED_HELPER_APPIMAGE_ACCEPTANCE_20261021.json.
+
+## Signed helper migration accepted locally (21 October 2026)
+
+Following explicit approval of the newly pinned migration-only plan, the single
+run completed with verified_migration/policy_restored and no error. The existing
+recovery-verified encrypted key backup was reused without a passphrase prompt,
+private-key read, regeneration, decryption or overwrite. The corrected exact
+per-path ownership guard passed. No retry, rollback or cleanup was performed.
+
+Independent read-only postchecks confirm all thirteen active helper files match
+the approved new hashes, root ownership, modes and single-link requirements;
+there are no extra executor entries. The complete old executor is retained at
+its fixed before-signed-v1 sibling with original file/directory inodes and
+metadata. The identical policy retains its original inode/hash/metadata and
+registered auth_admin action. Cache/license directory metadata and the encrypted
+backup hash/inode/metadata are unchanged. Candidate, held-policy and failed-new
+paths are absent. No package install/removal, driver/service/module/Steam change,
+hardware access, AppImage launch, network request, publication or push occurred.
+
+This consumes the one-time migration approval. Do NOT repeat apply or invoke
+rollback automatically. The final local AppImage matches the now installed
+public-key-bound helper, but no new GUI/package acceptance was performed here.
+Public signed-channel publication, actual download/package acceptance, runtime/
+corresponding-source redistribution audit and off-device encrypted-backup copy
+confirmation remain separate pending rollout gates. Gyro calibration stays paused.
+See docs/evidence/CONTROL_CENTER_HELPER_MIGRATION_ACCEPTANCE_20261021.json.
+
+## Ownership guard corrected offline; migration-only plan ready (21 October 2026)
+
+Following the maintainer request, the migration now checks each of its thirteen
+fixed helper paths separately. Each query must return exactly 1, empty stdout
+and exactly that path's unowned diagnostic. Never accept arbitrary nonzero
+codes or silently skip a path. This removes the erroneous aggregate-status
+assumption (the observed thirteen missing owners returned 13), retaining all
+other ownership/runtime/quiescence/state/rollback protections.
+
+334 Control Center tests in 17 groups pass, including 26 migration tests and
+seven new regressions: reproduced aggregate 13, all per-file queries, owned
+paths at every position, invalid codes/diagnostics/stdout, timeout and blocking
+before any privileged command. No actual host package query or live migration
+was run during this correction. The installed helper/driver remain unchanged.
+A new exact migration-only plan pins corrected sources; old/new root payloads,
+public key and all 19 privileged commands are unchanged. The existing encrypted
+backup matches the earlier recovery-verified hash and safe 0600 metadata; it was
+not decrypted/recreated and the private key was not read. No new signing.
+The previous final AppImage still matches the root payload; this fix is in the
+separate maintainer migration path, never invoked by normal first-run GUI.
+
+Execution still needs approval of the newly pinned plan, passive backup recheck,
+then one migration-only run/password flow and read-only postcheck. Do not rerun
+the old backup-then-migration command or overwrite the existing backup. No
+installation/activation/hardware/system change or publication under preparation.
+Off-device backup confirmation and public rollout gates remain open.
+See docs/evidence/CONTROL_CENTER_OWNERSHIP_FIX_20261021.json and the normal-user
+flow in docs/CONTROL_CENTER_FIRST_RUN.md. Gyro calibration remains paused.
+
+## Approved handover stopped safely after verified backup (21 October 2026)
+
+The maintainer approved the complete encrypted-backup/helper-only handover.
+The real production-key backup was created with hidden terminal input and
+verified by RAM-only recovery/public-key identity. The local encrypted file is
+0600, user-owned and single-link; an off-device copy is still pending. Do NOT
+rerun the original backup-then-migration command: its exclusive destination now
+exists. Preserve the key, backup and signed catalog; no regeneration/resigning.
+
+Migration stopped in preflight before any sudo/system mutation: the exact
+thirteen-path ownership query returned 13 with all thirteen expected unowned
+file diagnostics and empty stdout, while our guard incorrectly required 1.
+Independent checks confirm all 13 old helper files retain hash/owner/mode/inode/
+mtime, the executor/license/cache directories retain metadata, and all migration
+staging/backup/held-policy paths are absent. No driver, bridge, Steam, module,
+service, package or publication action occurred; no automatic retry/rollback.
+Only read-only diagnosis followed. The signed helper has NOT been installed.
+Next: correct this aggregate return-code assumption offline with regression
+coverage, then prepare a new exact migration-only approval reusing the verified
+backup. Do not loosen ownership diagnostics or change approved pinned bytes
+silently. Latest instruction after this run is checks only.
+See docs/evidence/CONTROL_CENTER_HANDOVER_EXECUTION_20261021.json.
+
+## Consolidated handover and final local AppImage prepared (21 October 2026)
+
+Latest request authorizes completing all offline backup/migration/AppImage
+preparation in one pass, testing and showing a concrete consolidated approval
+plan. No real backup of the production key, authentication, helper installation,
+publication/push or live driver/Steam/hardware change yet. Reuse unaffected
+same-day facts; no repetitive inventories or per-file confirmation rounds.
+Follow docs/CONTROL_CENTER_HANDOVER.md. Maintainer-only control_center_handover
+CLI verifies the exact plan/source/AppDir/image, then (only after approval)
+encrypted backup with hidden controlling-terminal passphrase twice, then fixed
+helper-only migration. Do NOT execute --apply/--rollback under preparation.
+Only public RFC fixture keys were encrypted in tests; production key not read.
+38 new cases,388 full Control Center cases/24 groups incl61 QML, four packaged
+synthetic lanes and actual-old/new-byte fixture migration/recovery pass.
+Final local image SHA256 is
+19cacca0bac2ac009749c05065a9d4f81ca050d9aa1beabab72cf4aa508d7ad9.
+Legacy13-file manifest is independent; current13 helper pins/public anchor stay
+unchanged from the production build. Exact whole-directory save/switch, policy
+held/restored last, sealed inputs, no package-owned/extra/changed helper, quiet
+root executor/ALPM checks, preserved cache/license/legacy/backups. Three fixed
+root find queries only check protected-state filename presence, never its
+contents; any signed state blocks legacy migration/recovery. Nineteen fixed
+system calls only; no root AppImage/user Python/shell, root state reset or
+automatic retry/rollback/cleanup. Recovery covers partial forward/reverse
+renames and retains failed/new bytes. Secret entry is tty-only/no echo/fallback;
+PKCS8/PBES2 AES256CBC/PBKDF2SHA256 600000 and RAM-only restoration/identity check.
+An encrypted local file is not off-device backup: external copy confirmation
+remains before rollout. Generic first-run still refuses changed/partial helper;
+no GUI auto-migration or end-user signing-key management. Keep machine-specific
+plan/commands/key paths ignored. Locally commit scoped code/docs; no key
+generation/re-signing, package/driver action, SSH or push. Runtime/source public
+distribution audit and real signed channel/package acceptance remain separate;
+gyro calibration paused. Finish preparation before requesting one combined
+execution approval, never many artificial intermediate approvals.
+
+## Earlier production key and offline-bound build completed (21 October 2026)
+
+The maintainer explicitly approved production key creation and offline builds,
+then checks only. A new Ed25519 release key was generated exclusively outside
+Git in a user0700 custody directory, private file0600/single link, using system
+OpenSSL without private terminal/log output. Do NOT generate it again or copy
+it into repository/build/AppImage. Only the public policy is tracked at
+packaging/control-center/release-signing-policy.json; key ID
+5d9450389dafad61bb573c277557a62484e514c96dcb1acd40b9bcfe5f71544a.
+The explicit helper/AppImage profile shares that public anchor, verified offline
+against catalog revision1, all four already audited release archives and five
+removal records. Signed history is retained outside Git; private-key encrypted
+offline backup remains pending. Never treat catalog-history retention as a
+private-key backup. Future signing must retain/increase revisions; do not
+overwrite/re-sign revision1 with different bytes or auto-regenerate keys.
+67 unit/packaging +3 QML tests, four packaged smoke lanes, both actual-public-
+anchor verifiers/negative cases and inclusion checks passed. Thirteen installed
+helper leaves and three directory metadata snapshots remain identical. No root
+authentication, helper/trust/state deployment, real network, package operation,
+service/module/driver/Steam/hardware change or publication/push. Generic defaults
+still have no key; only the explicitly reviewed build opts in. Helper migration
+implementation/testing/approval, encrypted backup and public distribution audit
+remain separate pending gates. Source/code modules and installed alpha3-16 stay
+unchanged; gyro calibration stays paused. Locally commit public data/docs only.
+
+## Earlier production signing and helper migration proposal (21 October 2026)
+
+Latest maintainer request is preparation and an approval plan first: no real
+key generation, installation/helper replacement, signing/publication or live
+driver change yet. Ordinary-user read-only inspection matched all thirteen
+installed helper leaves and dedicated directory modes against independent
+accepted pins. Five helper modules plus the future public-key catalog change;
+entry/policy/native bridge/license and other modules retain their bytes.
+Cache contents were not read or assumed empty. Keep private inventories and
+exact custody/backup paths in ignored output. Reuse unaffected same-day facts.
+Follow docs/CONTROL_CENTER_SIGNING_PROVISIONING.md: external private key,
+public fingerprint review, one offline-bound AppImage/helper build, then a
+separately approved exact helper-only migration with preserved complete old
+executor/policy/cache. Current first-run setup must not repair/update existing
+helpers. Final deployment pins depend on the real key and are pending; the
+proposed privileged migration is not implemented/tested/executed. No root
+AppImage/user script, incremental mixed modules, state reset, automatic retry,
+package action, SSH or push. Publishing and real signed-package tests remain
+separate. Gyro calibration stays paused; locally commit scoped preparation.
+
+## Signed update path offline (21 October 2026)
+
+Latest maintainer request authorizes offline signed release updates for the
+AppImage and package helper, suitable tests and a local commit only. No real
+network, production key generation/provisioning, publication/push, installation,
+helper/state deployment, service/driver/hardware/Steam change. Stable locally
+reviewed Ed25519 public-key policy; exact signed bytes via system OpenSSL, closed
+version-3 requests and independent root verification. Preserve legacy no-key
+path, all archive/dependency/guard/postcheck boundaries and explicit auth.
+Reject replay/downgrade/rebuild and changed guard history. Under ALPM lock,
+checkpoint accepted catalog metadata atomically; never record package success
+from that state alone. Retain safe offline removal and cache separation. Test
+keys are publicly known fixtures, never production anchors. No active endpoint
+or keys are claimed. Update docs/state/roadmap and locally commit; gyro paused.
+
+## Release package upload schema (21 October 2026)
+
+Latest follow-up authorizes embedding the reviewed public package hashes in a
+new local AppImage and testing it without installation, authentication, live
+driver/helper changes or publication. Explicit metadata-only bundle; retain
+accepted removal records and previously reviewed Steam upgrade rule. Reuse
+the audited public package bytes/CDN acceptance from this same-day workflow.
+The maintainer additionally requires future driver releases without replacing
+the AppImage. Current immutable package/helper pins do not provide that feature;
+design a separately signed release-catalog trust path for both GUI and root
+helper, never silently trust GitHub's latest hash or overwrite installed trust.
+Do not claim automatic update readiness from this current pinned rebuild.
+
+The maintainer explicitly approved supplementing existing release
+v0.1.0-pre-alpha.3 with reviewed installable ALPM packages, checksums and
+manifest. Build from its exact public tag in a neutral directory; preserve
+existing assets/tag and running systems. No new release/tag, installed helper
+catalog update, package installation/removal or driver activation is implied.
+Future package publications must follow docs/RELEASE_PACKAGE_SCHEMA.md:
+separate core/Steam/Gamescope/bridge archives, exact source provenance,
+SHA256/size/identity/dependency/cleanup-guard records and AppImage-verifier
+acceptance. Source archives alone are not installable packages. Remote metadata
+never approves itself; new archive bytes need independently reviewed AppImage
+and protected helper pins. Keep future publication approval explicit.
+
+Reuse unaffected checks during an uninterrupted same-day workflow. Recheck
+affected state after a change or interruption, and retain transaction safety
+gates; do not repeat the entire inventory without a reason.
+
+## Control Center — full package remove/reinstall rehearsal (21 October 2026)
+
+The maintainer repeats the offline GitHub-source preparation and wants a later
+complete uninstall/reinstall test. The explicit no-install/live-driver-change
+boundary still applies: prepare fixtures and a reviewable staged plan only,
+no live inventory, network, GUI launch, authentication, removal/install,
+helper/service/module/driver/bridge change or push. Scope means installed
+GameSir package components; retain AppImage/package helper as the reinstall
+tool, user settings/recovery records and unrelated packages/controllers.
+Exercise core+bridge and all-four-component synthetic remove -> verified
+absence -> distinct fresh release-install session; exact selected packages,
+explicit separate confirmations, dependency guards, failed removal, download
+failure and unexpected remaining module. No automatic chaining, force unload,
+rollback or unreviewed same-version repair. Old live receipts are historical,
+not a fresh inventory; real assets/catalog/download and complete removal need
+their own later preflight/approval. Keep reviewed offline recovery packages
+before a live removal; no public binary availability is claimed. Add scoped
+docs/regressions and locally commit, gyro paused.
+
+## Control Center — GitHub package source offline (21 October 2026)
+
+Latest instruction authorizes offline implementation/tests of reviewed GitHub
+release downloads only. No network/live AppImage/auth/installed-helper/package/
+driver/bridge/service/Steam change, SSH, publication or push. Preserve accepted
+first-/second-start artifact and installed core16/bridge2. Public binary catalog
+stays empty; do not invent available assets/URLs or turn staging hashes into
+approval. Build-only metadata maps exact reviewed components to filenames in
+the fixed project repository; trusted tags/sizes/hashes/guards stay in the
+independently reviewed catalog. Root catalog/protocol and helper code remain
+unchanged. No latest/API self-trust or arbitrary URL. Download only on explicit
+selected install preparation, as ordinary user; never on startup, helper setup,
+property refresh or removal. Bounded verified immutable bytes, scoped TLS/CDN
+redirects, cancellation/late-result rejection, no cache/extract/execute/retry;
+fresh host/helper checks before and after. Only then show the separate plan/
+authentication boundary; downloads never install. Use injected HTTPS/host/
+helper fakes, preserve embedded-bundle/first-run paths and test real offscreen
+QML. Keep platform/runtime/publication and real CDN acceptance gates explicit.
+Update docs/manifest, locally commit only; gyro calibration stays paused.
+
+## Control Center — local second-start reuse accepted (21 October 2026)
+
+The maintainer authorized a second launch of the exact reviewed AppImage, with
+fresh passive gates only and no setup/auth/package action. Image digest and
+installed helper/action checks passed; fresh FirstInspection was idle with no
+setup review/session. A new AppImage process opened, and the maintainer reported
+normal main window, no setup offer and no password window. Independent post-
+checks confirmed unchanged bytes/owners/modes/inodes/mtime for all thirteen
+leaves/three directories, preserved old six leaves/backups and unchanged core16/
+bridge2/module/service baseline, Steam still absent. No root/auth/setup/package
+action or driver/bridge/Steam change. Keep windows user-controlled; no more
+operations or backup cleanup, SSH/push without a new request. Scope remains
+local reviewed Garuda reuse, not generic/Gamescope acceptance. Commit scoped
+docs locally, private receipts ignored; gyro calibration stays paused.
+
+## Control Center — local AppImage first-run setup accepted (21 October 2026)
+
+Latest explicit approval covered fresh passive preflight and helper-only setup
+through the reviewed AppImage/password flow, then checks only. Retained-backup
+gates passed; exact image digest/source/payload pins, Garuda kernel/header
+profile and missing-helper prerequisites passed with thirteen leaves/three
+directories and no package action. The maintainer completed the GUI setup and
+reported Helper successfully set up. Independent passive installed-source,
+hash/mode/root-owner/loaded-policy checks passed; fresh FirstInspection reports
+idle/exact existing reuse without authentication. All old backups, unopened
+old cache inode and six legacy authorization leaves remain intact; new and old
+cache inodes differ. Core16/bridge2, loaded module metadata and enabled/active
+service match; Steam remains absent. The maintainer confirmed Done closes only
+the modal and the main window stays normal. No package action, driver/bridge/
+service/module/Steam change, restore or cleanup followed. Approval consumed:
+keep the window user-controlled; no more authentication/setup/package action,
+activation, restoration, backup cleanup, SSH or push without a new request.
+This accepts local reviewed Garuda helper bootstrap only, not general clean-
+system/Gamescope deployment or public binary approval. Record private receipt
+paths outside Git and sanitized results in docs; commit locally. Gyro paused.
+
+## Control Center — controlled helper rollback completed (21 October 2026)
+
+The maintainer explicitly approved the exact prepared rollback, graphical
+password and fresh/intermediate read-only gates, then checks only. All review
+hashes and before gates matched. Four individual fixed system mv operations
+(same-parent, no-copy, no overwrite) succeeded: package policy first, then
+executor, license and root0700 cache. All intermediate/held/restore-ready gates
+passed; thirteen leaves/three dedicated live directories and loaded package
+action are absent, backup bytes/modes/owners/inodes match. Cache contents were
+not inspected; its original complete directory inode is preserved. Six legacy
+authorization leaves/shared parent remain unchanged. Core16/bridge2, loaded
+module metadata and enabled/active service match; Steam package stays absent.
+Only these four privileged renames ran, no privileged script or package action.
+Approval is consumed. Do NOT restore, clean backups, launch/confirm first-run,
+install/update/remove packages or change driver/bridge/service/module/Steam.
+Real first-run setup still needs explicit approval. Check future target state
+fresh; new/partial setup blocks restoration over originals. Private receipts
+and exact backup paths remain ignored; commit sanitized result docs locally,
+no push. Gyro calibration stays paused.
+
+## Control Center — first-run rollback review, not execution (21 October 2026)
+
+Latest request authorizes fresh read-only package-helper inspection and a
+concrete later approval plan only. The thirteen manually installed helper
+leaves match independent pins, root ownership/modes and unowned package status;
+three dedicated directories and the six legacy authorization leaves match.
+Core alpha3-16/bridge alpha1-2 remain installed, Steam integration absent.
+No observed executor/package/auth process or ALPM lock; recheck at execution.
+Cache contents are root0700 and were NOT inspected. Preserve its entire inode
+and contents through a separately approved same-parent rename, never recursive
+deletion or the old empty-directory rollback recipe. Four fixed, nonoverwriting,
+no-copy rename steps (policy first) and intermediate passive gates are prepared
+privately, with a reverse path requiring all original targets still absent.
+New/partial setup blocks restoration; no overwrite, auto-cleanup/retry or
+automatic package operation. Legacy helper/shared parent stay intact. Root
+would run only fixed system mv, never the private gate script or AppImage.
+Offline fixture tests are not actual rollback acceptance. No authentication,
+rename, removal, setup, package/service/module/Steam/driver/bridge change, SSH
+or push is authorized. The later first-run GUI/password test needs its own
+explicit approval. Keep exact host paths/inventories/snapshots in ignored
+output; commit sanitized review docs locally. Gyro calibration stays paused.
+
+## Control Center — first-run helper setup offline (21 October 2026)
+
+Latest instruction authorizes implementing/testing first-start helper detection,
+setup offer/explicit confirmation, fresh local AppImage build and a concrete
+later approval flow. No real target inspection through this new setup path,
+sudo/pkexec authentication, helper installation/removal/update, package action,
+driver/service/module/Steam change, hardware I/O, SSH or push. Existing helper
+and alpha3-16 stay unchanged; Steam integration remains absent after the user's
+accepted removal. Use only injected file/session/agent/command boundaries and
+same-user temporary fake roots in tests; packaged smoke must ignore real host
+payloads and use fixtures. No subagent work is requested.
+
+The first root-code trust step must be explicit: independently reviewed build
+pins plus fixed thirteen helper/policy/license payloads, not a self-generated
+staging approval. Root runs only allowlisted system sudo/mkdir/install argv,
+never a user-owned AppImage/script/interpreter or shell. Seal all immutable
+inputs before authentication, create only fixed absent directories exclusively
+(no -p), copy exact leaves, policy last. Exact existing helper is reused without
+authentication; partial/mismatching/existing unexpected files stop, never
+update/overwrite/adopt/repair or auto-remove them. Preserve legacy helpers and
+unrelated files. Timeout/failure stops without retry/rollback and reports
+possible partial effects; new actions stay locked pending fresh review. Keep
+setup separate from package confirmation and activation. Done closes only its
+modal, then refreshes passively; no automatic package request. No credentials
+stored; initial sudo/KDE askpass availability/prompt policy and separate later
+Polkit package agent remain explicit. Local scoped ABI/kernel build and public
+runtime/binary provenance limits remain; no general cross-distro claim. Update
+docs/manifest and commit locally; gyro calibration remains paused.
+
+## Control Center — user-completed Steam removal and Done accepted
+
+21 October: current agent authorization was fresh read-only preflight and
+Steam-only removal-plan display in the new AppImage; no agent confirmation,
+authentication or removal. After confirming the visible unsubmitted plan,
+the maintainer independently completed the GUI removal and reported
+Successfully uninstalled. Passive postchecks confirmed Steam package absence
+and all five payload files absent; core alpha3-16/bridge alpha1-2, helper pins,
+native module metadata/presence and service enablement were unchanged. The
+maintainer also confirmed Done closes only the operation dialog while the
+main window stays open. Record this scoped optional-package removal/UI result,
+not core removal or remote/Gamescope acceptance. Steam integration is currently
+absent. No automatic reinstall, retry, activation, service/module/Steam action,
+SSH or push is authorized. Further package work requires a fresh explicit
+request/plan. Keep private pre/post records ignored and commit docs locally.
+Gyro calibration remains paused.
+
+## Control Center — Steam package install accepted; success-dialog refinement
+
+21 October: the maintainer authorized exactly one AppImage installation of
+Steam integration alpha2-1 after fresh passive preflight and desktop permission
+window, no removal/driver activation. Exact image/helper/package/selection
+checks passed. The user reported a verified GUI success; independent passive
+postchecks confirmed alpha2-1, all five root-owned payload files/modes/hashes,
+unchanged core alpha3-16/bridge alpha1-2, helper pins, native module metadata/
+presence and service enablement. No Steam restart or activation was performed.
+That package-operation approval is consumed. No further package test/removal,
+retry, driver/service/module/Steam action, SSH or push is authorized.
+
+The user additionally requested clear success feedback and chose closing only
+the operation dialog after pressing Done, leaving the main window open. Apply
+and test this UI refinement offline. Show install/removal success only for a
+verified package receipt; never turn a fixture rehearsal, failure/cancellation
+or uncertain result into real success or auto-close it. No automatic closing
+or app exit; package hooks remain protected from interruption. Build a fresh
+local AppImage if needed, document both the scoped real install result and
+offline UI checks, and commit locally. Gyro calibration stays paused.
+
+## Control Center — live read-only package review accepted (21 October 2026)
+
+The maintainer approved opening the exact prepared AppImage with real local
+facts and showing the package plan only. Image digest and passive helper/host
+checks passed; kernel/headers match. The AppImage was opened normally, and the
+maintainer confirmed the visible plan for Steam integration alpha1-1 to
+alpha2-1 without final confirmation. No authentication, submission, host ALPM
+handle/lock/transaction, install/removal, helper/driver/service/Steam change or
+activation occurred. Keep the window under the user's control; do not confirm
+it. The review is not a package-operation grant. Recreate expired/stale plans
+for any later separately authorized action; no automatic retry, activation,
+remote action or push. Gyro calibration remains paused.
+
+## Control Center — AppImage package binding offline (21 October 2026)
+
+Latest instruction authorizes connecting install/removal to the AppImage,
+offline regression tests/builds and presenting the real flow for separate
+approval. No real host inspection through the new binding, authentication,
+package operation, helper update/removal, driver/service/module/Steam change,
+hardware action, SSH or push. The previous helper setup is already completed;
+its approval is consumed. A deliberately build-selected local package bundle
+may enable the reviewed GUI coordinator; generic source/AppImage, demo and
+rehearsal keep their distinct boundaries. Bundle only closed data, exact
+reviewed package bytes and independently reviewed fixed helper pins. Never
+bootstrap privileged code from the AppImage, invent public binary approval or
+change the independently installed helper catalog. Inspect/attest in bounded
+background jobs, refresh selected planning facts before confirmation and
+keep Qt properties side-effect-free. No submission on launch or review,
+no stale completion after cancel, no automatic retry/rollback/activation.
+Use only fake readers/agents/system edges in GUI/packaged smoke tests. After
+possible effects lock new actions; ordinary status refresh cannot unlock them.
+Keep private bundle/profile/artifacts and target receipts ignored, update
+public docs/manifest, commit locally and present separate install/removal gates.
+
+## Control Center — package helper setup completed (21 October 2026)
+
+The maintainer explicitly approved the concrete local setup prepared from
+`f30638e`. Fresh passive gates passed, then the sealed-input ordinary-user
+orchestrator installed exactly thirteen reviewed root-owned files and three
+new directories using fixed system install commands; the separate package
+policy was last. Exact installed hashes/modes and loaded action passed. The
+existing authorization-only helper stayed unchanged. No pkexec execution,
+permission probe, host ALPM handle/lock/transaction, package hooks, manager,
+driver/service/module/Steam change or hardware access occurred. This approval
+is consumed. Do not infer permission for a package action, probe, removal,
+activation, remote deployment or push. Normal GUI/AppImage stays read-only;
+live GUI integration and installation/removal acceptance remain separate.
+Keep the local catalog private and source/public defaults empty. Gyro
+calibration remains paused. Record further work locally, no push.
+
+## Control Center — local package/helper review (21 October 2026)
+
+Latest scope: inspect concrete local packages, the passive planning reader and
+new package helper; prepare exact helper setup/removal commands for approval.
+Unprivileged metadata/config/header/service reads and offline package builds
+from audited local sources are allowed. No sudo/pkexec prompt, deployment,
+manager/device access, host ALPM handle/lock/transaction, driver/service/Steam
+change or SSH. Local Garuda preparation only; do not infer CachyOS acceptance.
+Catalog data must be independently reviewed, closed schema and fixed protected
+installed path; public binary defaults remain empty. Keep payload provenance,
+existing-file refusal, sealed stdin handoff, exact target hashes/modes, policy
+last, guarded removal and immutable review pins. Do not run prepared scripts
+or consume historical installation approvals. Private paths, inventories,
+packages/build metadata and deployment scripts stay ignored. Test source
+corrections offline, document limits and commit locally; no push.
+
+## Control Center — offline package execution (21 October 2026)
+
+Latest authorization: prepare genuine GUI installation/removal offline, with
+tests and a concrete flow for later approval. No deployment, authentication,
+host package transaction, hardware I/O or installed driver/service/Steam change.
+Read docs/CONTROL_CENTER_PACKAGES.md. Separate package action/helper/schema2
+from the installed authorization-only probe; its acknowledgement is never a
+transaction grant. Root trust catalogs remain empty until independent binary
+review; no invented release records, deployment pins or automatic live CLI.
+Keep ordinary GUI/AppImage read-only and alpha3-16 unchanged. Exercise system
+edges only with injected doubles; real ALPM tests require a fresh temporary
+root/database/cache and only temporary hooks, never host DB/hooks or elevation.
+Preserve exact-lock preview/commit/postchecks, existing cleanup hooks and first
+errors; uncertain effects lock further actions. No automatic retry, rollback,
+activation, dependency fetch, system upgrade or push. Commit completed work
+locally and present the separately gated installation/removal sequence.
+
+## Control Center — completed permission-only test (20 October 2026)
+
+The maintainer explicitly approved the reviewed helper/Polkit setup and exactly
+one authorization-only probe. Both completed successfully on the local KDE
+Wayland session: six pinned root-owned files and three directories installed,
+loaded action verified before/after the probe, correlated result
+authorized_only/executed:false. No package/driver/service/module/Steam action
+ran. The optional helper remains installed; normal GUI actions remain locked.
+This is neither real installation acceptance nor permission for another probe,
+removal, package operation or push. Gamescope authentication and live
+cancellation/removal remain untested. Keep installed alpha3-16 unchanged.
+
+Earlier preparation scope:
+
+Inspect local prerequisites read-only and prepare exact
+helper/Polkit setup, probe and removal commands for maintainer approval. Local
+service/session/agent metadata and pkaction inspection are allowed, but no
+sudo/pkexec authentication, policy/helper installation, driver/system change
+or live probe. Keep personal command paths/logs only in ignored build output;
+record sanitized readiness in docs. Prepare sealed immutable input handoff:
+root install must not reopen mutable user source paths or execute a user-owned
+script. Verify exact fresh destination absence, reviewed commit/payload hashes,
+installed ownership/modes and registered policy before any future probe.
+Removal must retain modified/package-owned/unrelated files. Separate explicit
+approval is still required before running any prepared setup/test/removal.
+
+Earlier offline implementation scope:
+
+The maintainer accepted GUI install/removal rehearsal and now authorizes
+preparing/testing the real password-window path offline. Source and staged
+Polkit policy/fixed helper are allowed; installing them, invoking pkexec or a
+real authentication agent, root execution and any package/driver/system action
+are not. Keep GUI defaults/read-only and accepted installed alpha3-16 unchanged.
+Use test doubles for elevation; any real child in a transport test must be an
+explicit harmless same-user fixture. The initial helper is authorization-only:
+no package executor, credential/token storage, future authorization grant,
+arbitrary commands/paths, shell, device I/O or persistent permission rule.
+Keep exact policy/action/helper binding, root-owned non-writable installed
+code checks, explicit reviewed pins, strict bounded protocol/output/deadlines
+and first-result/cancellation handling. Stage only in a fresh build directory;
+self-generated staging checksums are not trusted installation approval.
+Document review and deployment gates; commit locally, no push.
+
+Earlier GUI binding scope:
+
+Latest scope: the maintainer accepted real read-only AppImage status on the
+local desktop and now authorizes offline GUI/session integration, regression
+tests, documentation and a local commit. Keep ordinary read-only mode locked;
+the explicit --rehearse-backend mode uses only in-memory fixture packages,
+catalog/evidence and RehearsalPort. Never promote Phase-B status into privileged
+transaction evidence, fabricate trusted public binaries or bind a live adapter.
+Show explicit selection, exact plan, confirmation, bounded background rehearsal
+and first-result handling. No real password prompt, root helper, package action,
+installation/removal, driver/system/Steam change or push is authorized. Present
+the future real flow for separate review; do not perform it. Keep screenshot
+and read-only windows independent from the offline test. Read docs/CONTROL_CENTER.md.
+
+Earlier Phase D packaging scope:
+
+The maintainer freezes installed alpha3-16 for multi-day normal-use testing.
+Phases A/B, the separate System details dialog and Phase C offline backend
+were accepted. Phase D authorizes offline AppDir/AppImage and desktop-integration
+staging, tests, documentation and local commits. Never install a menu/desktop/
+autostart entry or alter a user profile. Use only local build inputs, no download
+or tool installation. Test packaged UI only with demo/synthetic data and private
+temporary preferences. Keep build provenance, licenses and platform limits;
+local packaging is no public binary-release approval. The GUI stays read-only.
+Use synthetic host/privilege/package adapters only; never connect them to the
+installed system. No real authorization, download, package action or activation
+is part of this phase. Read docs/CONTROL_CENTER.md. No SSH, installation/removal,
+sudo prompt, system changes, manager commands, Steam/SDL changes or direct
+hardware I/O. Do not reuse
+consumed activation/update approvals. The only persisted GUI setting is its own
+explicit language preference; external project links open only on user action.
+Keep simulated status labelled, receiver presence separate from RF readiness,
+and installation separate from module/service activation. Use central DE/EN
+catalogs, responsive scroll/focus and disabled future-feature cards. Direct
+gamepad I/O, live action transport and real desktop integration await later phases. Keep snapshots
+timestamped, refresh bounded and asynchronous, access failures explicit and all
+real installation/removal controls disabled. Never infer RF connection from
+receiver presence, module/service activity or input-node publication. Read
+package/DKMS metadata as data; do not source configuration or run DKMS hooks.
+Accepted UI refinement: keep the main view compact. Technical metadata belongs
+behind the explicit DE/EN System details button in a separate read-only dialog
+for experienced users; no expanded diagnostics panel in the main page. Opening
+the dialog reuses the snapshot and must not refresh or change system state.
+Reuse reviewed package/removal guards for future integration; no second runtime
+policy or Eden-specific installer behavior. No push/release is authorized.
+
 ## Standalone startup preparation (19 October 2026)
 
 Current publication request: the maintainer explicitly authorizes integrating

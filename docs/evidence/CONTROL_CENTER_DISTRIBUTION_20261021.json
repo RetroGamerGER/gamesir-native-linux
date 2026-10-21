@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-21",
+  "scope": "Control Center PRE-ALPHA alpha1 distribution review",
+  "image_sha256": "2fab3e69a6702b2fb7589f950ab2bcd7596f2bb7edb1d850f236b53a23fddbbc",
+  "source_archive_sha256": "4e1d55d1037d86edf8360a27ae82752c758c7f982b687427782c248732195e5b",
+  "source_lock_sha256": "891b8efe657ac7a8affb5e553fead4918343c11603decaf6438360f58b7f4648",
+  "appdir_files": 1859,
+  "source_files": 1530,
+  "components": 77,
+  "distribution_packages": 73,
+  "distribution_package_bases": 69,
+  "tests": {
+    "control_center_cases": 412,
+    "groups": 25,
+    "qml_cases_included": 61,
+    "final_packaged_synthetic_lanes": 4,
+    "real_release_package_https_verifications": 4,
+    "installed_helper_independent_unprivileged_signature_and_archive_verification": true
+  },
+  "production_catalog": {
+    "revision": 1,
+    "sha256": "c1fa2b6062badcf8576b8086c427790da40151c964fae1c5ab106cb852c53c3c",
+    "expires_utc": "2026-11-20T12:36:00Z",
+    "resigned": false
+  },
+  "encrypted_key_backup_separate_storage_copy_hash_verified": true,
+  "backup_copy_limit": "Destination filesystem emulates permissions; encrypted contents only, passphrase not copied. Separate network storage is not offline storage.",
+  "runtime": {
+    "bytes": 944632,
+    "components": [
+      "runtime:musl",
+      "runtime:libfuse",
+      "runtime:squashfuse",
+      "runtime:zstd",
+      "runtime:mimalloc",
+      "runtime:zlib",
+      "runtime:type2"
+    ],
+    "sha256": "617aa77314d57c8b8e4fae9c3f0b35af7b30d5529cb69e98f64f92510ed98a46",
+    "source_revision": "fedfad51acc2860b2916a1eef32ba4a500ff31ef"
+  },
+  "license_review": {
+    "excluded_sqlite_html_docs_checksum_mismatch": true,
+    "project_license": "GPL-2.0-only",
+    "reviewed": true,
+    "runtime_source_options": "Qt/PySide explicitly offered GPL2 runtime option; unrelated GPL3-only tools not included.",
+    "runtime_vendor_revision_reproducible": false,
+    "scope": "Technical license/source coverage and retained original notices; not a legal guarantee.",
+    "static_runtime_base_versions_verified": true
+  },
+  "publication_authorization": "Maintainer explicitly requested finishing the AppImage and pushing it; retain existing release tag.",
+  "live_system_changes": false,
+  "driver_diagnosis": false,
+  "package_installation_or_removal": false,
+  "new_hardware_tests": false,
+  "driver_follow_up": "Maintainer reports different faults on both PCs. Diagnosis deferred until AppImage completion; no stability claim."
+}

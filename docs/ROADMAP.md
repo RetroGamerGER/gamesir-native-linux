@@ -1,11 +1,173 @@
+# Control Center publication checkpoint — 21 October 2026
+
+- Alpha1 AppImage license/source closure completed; reviewed Garuda x86_64
+  profile, matching sources/recipes/notices, source lock and packaged checks.
+- Publish with the exact signed revision1 and existing PRE-ALPHA.3 assets.
+- Next: investigate reported driver faults on both PCs in a separate task.
+- Other distro/ABI GUI profiles, broader lifecycle acceptance and a real full
+  signed removal/reinstall test remain separate work. Gyro calibration paused.
+
 > Public export: personal tester, host and path references were anonymized. Historical evidence hashes refer to the private originals.
 
 # GameSir Native Linux: Roadmap
 
-Stand: 20. Oktober 2026. Prioritäten ergänzen den
+Stand: 21. Oktober 2026. Prioritäten ergänzen den
 [aktuellen Projektstand](PROJECT_STATE.md); historische Tests behalten ihren
 jeweiligen begrenzten Nachweisumfang. Ein Roadmap-Eintrag ist keine Hardware-,
 Installations-, Veröffentlichungs- oder Netzwerkfreigabe.
+
+## Aktuell: alpha3-16 im Alltagstest; lokale GUI-Helfereinrichtung abgenommen
+
+Zusätzlich offline vorbereitet: vollständiger GameSir-Paketabbau und spätere
+Neuinstallation über GitHub in getrennten, frisch geprüften Sitzungen. Sechs
+neue synthetische Regressionen decken beide Paketumfänge und Fehlerstopps ab.
+AppImage/Helfer und Benutzereinstellungen bleiben erhalten. Vor echter
+Entfernung zuerst Release-Dateien und Rückweg prüfen; noch keine Live-Aktion.
+[Gestufter Testplan](CONTROL_CENTER_GITHUB_PACKAGES.md#later-complete-uninstallreinstall-test--prepared-not-authorized-live).
+
+Neu offline vorbereitet: [geprüfte GitHub-Release-Pakete](CONTROL_CENTER_GITHUB_PACKAGES.md)
+statt eingebetteter Archive. Download nur nach ausdrücklicher Komponentenauswahl,
+danach vollständige Paket- und frische Systemprüfung vor separatem Installations-
+und Passwortschritt. Start/Helfereinrichtung/Entfernung bleiben ohne Download.
+Keine echte Netz-/Paketaktion; reale Release-Assets, öffentlicher Build und
+separater Downloadtest bleiben Freigabe-/Prüfschritte.
+Offline bestätigt: 1.589 Python- und58 Qt-Fälle sowie vier simulierte
+AppImage-Testläufe; neuer Downloadpfad mit23 Integrations-/vier GUI-Fällen.
+
+Auch der separat freigegebene zweite AppImage-Start ist lokal abgenommen:
+Helfer ohne neue Einrichtung oder Passwortabfrage erkannt. Unabhängige
+Nachprüfung bestätigt unveränderte Helferdateien/-verzeichnisse und erhaltene
+Sicherungen; Treiber/Bridge/Dienst unverändert. Keine Paketaktion.
+
+Neuester separat freigegebener Live-Schritt: der Helfer-Erststart über das
+geprüfte AppImage ist lokal unter Garuda abgenommen. Frische Vorprüfung,
+13 Dateien/drei Verzeichnisse, GUI-/Passwortweg, unabhängige Nachprüfung und
+„Fertig“ mit offenbleibendem Hauptfenster erfolgreich. Alte Sicherungen und
+Cache bleiben intakt, Treiber/Bridge/Dienst unverändert; Steam-Paket bleibt
+entfernt. Keine Paketinstallation/-entfernung oder Aktivierung im Anschluss.
+Generische Neuinstallation, CachyOS/Gamescope-Erststart und öffentliche
+Binärfreigabe bleiben eigene offene Prüfungen. Keine automatische Bereinigung.
+[Nachweis und Grenzen](CONTROL_CENTER_FIRST_RUN.md#local-first-run-acceptance).
+
+Frühere Rückbauvorbereitung und -abnahme:
+
+Neuester separat freigegebener Live-Schritt: der kontrollierte Helferrückbau
+ist mit vier einzelnen Umbenennungen und allen lesenden Zwischen-/Endprüfungen
+abgeschlossen. Sicherungen inklusive ungeöffnetem root0700-Cache bleiben
+vollständig erhalten; alter Berechtigungshelfer, Treiber/Bridge/Dienst bleiben
+unverändert. Keine Paketaktion, Wiederherstellung oder Erststarteinrichtung.
+Als Nächstes ist nur nach eigener Freigabe der echte Erststarttest möglich;
+dessen Abnahme ist weiterhin offen. Keine automatische Sicherungsbereinigung.
+
+Neuester lesender Prüfstand: vorhandener Pakethelfer und alter
+Berechtigungshelfer passen. Für einen späteren Erststarttest ist ein separat
+freizugebender Rückbau vorbereitet: vier feste Umbenennungen erhalten Policy,
+Code, Lizenz und den gesamten geschützten Cache; keine rekursive Löschung.
+Zwischenprüfungen und gesperrter Rückweg bei neuer/teilweiser Einrichtung sind
+mit acht temporären Fixtures geprüft;22 vorhandene Erststarttests bestehen.
+Noch kein Rückbau/Passwort-/Erststartlauf und keine Systemänderung.
+[Vorbereitung und Grenzen](CONTROL_CENTER_FIRST_RUN.md#controlled-rollback-preparation-for-a-later-first-start-test).
+
+Konkrete lokale Pakete und der neue Helfer sind inzwischen separat geprüft:
+bekannter Kernstand16, aus dem öffentlichen Tag gebaute Steam-/Bridge-Kandidaten,
+gemeinsame rein lesende Plan-/Root-Fakten und ein geschützter Datenkatalog.
+Auf dem lokalen Garuda-Ziel passen Kernel/Header und Bauvoraussetzungen.
+Die reine Helfereinrichtung mit13 Dateien/drei Verzeichnissen und geprüftem
+Rückbau liegt zur Freigabe bereit; noch keine Einrichtung oder Treiberänderung.
+Gamescope/CachyOS ist von dieser lokalen Freigabevorbereitung ausgenommen.
+[Nachweise und genaue Grenzen](CONTROL_CENTER_DEPLOYMENT_REVIEW.md).
+
+Der separate echte Paketexecutor ist jetzt offline vorbereitet: eigener
+Polkit-Helfer, begrenzte Byteübergabe, unabhängige Root-Prüfung, gleiche
+ALPM-Sperre für Vorbereitung/Commit/Nachprüfung und explizite GUI-Anbindung.
+Regressionen nutzen Test-Doubles; echte libalpm läuft ausschließlich auf einem
+leeren temporären Testsystem mit harmlosen Markerpaketen. Keine Installation
+auf dem laufenden System. Der bereits abgenommene reine Berechtigungstest
+erteilt dafür keine Paketfreigabe. Freigegebene Binärpakete/Vertrauenskatalog,
+Zieldeployment, explizite Planleser-Anbindung und normale Live-Freischaltung sowie die
+getrennte Installations-/Deinstallationsabnahme bleiben offen.
+[Vorbereiteter Ablauf und Grenzen](CONTROL_CENTER_PACKAGES.md).
+
+Der veröffentlichte PRE-ALPHA.3-Stand und seine Paketvorgabe receiver_wait=1
+sind auf beiden Testsystemen separat freigegeben installiert/aktiviert. Der
+Nutzer akzeptiert den bisherigen begrenzten Lauf und sammelt nun mehrere Tage
+Alltagsfehler. Kein neuer Start-/Funk-/Gyro-Eingriff während dieser Phase.
+Die folgenden älteren Startprüfungen bleiben historische Nachweise mit ihren
+jeweiligen Grenzen; kein neuer Push-Blocker wird daraus pauschal abgeleitet.
+
+Nach akzeptierten echten lesenden AppImage-Statusdaten folgt nun die Offline-
+Verknüpfung von QML und vorhandenen Backend-Sitzungsprüfungen. Explizite Auswahl,
+Paketplan, Bestätigung, Hintergrund-Probelauf und Ergebnis sind über reine
+Speicherfixtures verbunden und getestet. Die normale Statusansicht bleibt
+gesperrt. Reale Paketfreigaben, Polkit/Systemhelfer, geschützte Artefaktübergabe
+und Installation/Entfernung auf Zielsystemen bleiben separat zu prüfen; der
+[geplante echte Ablauf](CONTROL_CENTER.md#future-real-flow-presented-for-maintainer-approval)
+liegt zur späteren Freigabe vor. Kein laufender Treiber wird geändert.
+
+Nach akzeptiertem GUI-Probelauf ist jetzt auch der feste Polkit-/Passwortweg
+offline vorbereitet: optionaler Systemhelfer und Policy als Staging-Dateien,
+begrenztes Protokoll und Tests mit simulierten Agenten. Der erste Helfer kann
+ausschließlich eine Berechtigungsprüfung quittieren; er installiert nichts.
+Echter Passworttest, Installation der Policy und der spätere Paketexecutor
+bleiben getrennte Freigabe-/Prüfschritte. [Details](CONTROL_CENTER_AUTHORIZATION.md).
+
+Neue Offline-Vorbereitung: [Erststart-Helfereinrichtung](CONTROL_CENTER_FIRST_RUN.md)
+mit automatischer Erkennung, ausdrücklicher Bestätigung und Passwortfenster,
+festen Systemprogrammen und versiegelten Daten. Passende Helfer unverändert
+weiterverwenden; Teilstände sperren, keine automatische Reparatur/Paketaktion.
+Echter Erstinstallations-/Passworttest und Gamescope bleiben separat offen;
+vorhandenen Helfer nicht ohne eigene Freigabe für einen Test entfernen.
+
+Vorheriger begrenzter Nachweis: Die vom Nutzer abgeschlossene Entfernung nur
+der Steam-Integration wurde lesend nachgeprüft; das Paket und fünf Nutzdateien
+sind entfernt. Treiber/Bridge blieben unverändert. „Erfolgreich deinstalliert“
+und „Fertig“ (nur Dialog schließen, Hauptfenster offen) sind live bestätigt.
+Keine automatische Wiederinstallation; Kerneltreiber-Deinstallation bleibt
+separat offen.
+
+Vorheriger begrenzter Nachweis: ein echtes AppImage-Update der lokalen
+Steam-Integration auf alpha2-1 ist einschließlich unabhängiger Nachkontrolle
+bestanden. Kerneltreiber/Bridge blieben unverändert. Kerneltreiberinstallation,
+Deinstallation, Erst-Helfereinrichtung und Gamescope bleiben getrennt offen.
+Die Erfolgsanzeige mit „Fertig“ schließt nur den Vorgangsdialog und ist offline
+getestet; dafür wurde keine weitere Paketaktion ausgeführt.
+
+Historischer Vorbereitungsstand, 21. Oktober: [AppImage-Paketanbindung](CONTROL_CENTER_APPIMAGE_PACKAGES.md)
+offline umgesetzt. Ein gezielt geprüfter Build verbindet lokale Paketdaten,
+Hintergrund-Vorprüfung und Einmalbestätigung mit dem separat eingerichteten
+Helfer. Kein Paketaufruf beim Öffnen; generische Builds bleiben lesend.
+Gebündelter synthetischer Installations-/Entfernungstest; echte GUI-Installation
+und Deinstallation, Erstinstallation des Helfers aus dem AppImage und
+Gamescope-Freigabe bleiben getrennte nächste Schritte.
+
+Historischer Phasenstand:
+
+[Control Center](CONTROL_CENTER.md): Phase A visuell abgenommen. Phase B ergänzt
+echte lokale Metadaten für System, Kernel/Header, Pakete/DKMS, Modul, Dienst
+und USB-Geräte mit manueller Hintergrundaktualisierung und eindeutigen
+Unbekannt-/Zugriffsfehleranzeigen. Funkverbindung bleibt ohne Datenbeleg unbekannt;
+keine Manager-Befehle oder Geräteöffnung. Regressionen und eine lokale lesende
+Bildprüfung abgeschlossen. Die DE/EN-Demo bleibt getrennt verfügbar; reale
+Installation/Entfernung und vier geplante Funktionen bleiben gesperrt.
+
+Phase C, die schmale Installations-/Entfernungsschnittstelle über vorhandene
+Paket-Hooks, ist zunächst **offline
+vorbereitet**: Artefaktprüfung, versionierter Plan, Einmalbestätigung,
+Transaktionssimulation und Nachkontrolle. 45 neue Backend-Prüfungen verwenden
+die vorhandenen Paketierer und den echten Rückbaucode mit Test-Doubles.
+GUI-Aktionen bleiben gesperrt; kein produktiver Root-/ALPM-Adapter und keine
+erfundenen Binär-Releases. Vertrauenswürdige Artefakte, unter ALPM-Sperre
+erneut geprüfte Transaktion und reale Berechtigungs-/Rückbauabnahme stehen aus.
+Phase D bereitet AppDir/AppImage und Desktop-Payload offline vor: eigene
+Python-/Qt-Laufzeit, synthetischer Selbsttest und begrenzte Rückbauvorschau,
+keine Menü-/Desktop-/Autostart-Installation. Der lokale Build verlangt glibc
+2.44; Portabilität und vollständige Drittanbieter-/Runtime-Quellfreigabe bleiben
+offen. [Details](CONTROL_CENTER_APPIMAGE.md). Danach Phase E mit getrennter
+KDE/Gamescope- und realer Integrationsabnahme.
+Download-Provenienz, passende freigegebene Artefakte und echte Administrator-
+aktionen müssen vor Freischaltung geprüft werden. Gamepad-Navigation braucht
+eine spätere Gerätefreigabe. Firmware-/Stick-/Software-Update bleiben Coming
+soon; keine vorgezogene Hardwareimplementierung und kein Push/Release.
 
 ## Vor Push offen: Neustart bei ausgeschaltetem Funkcontroller
 
@@ -656,3 +818,55 @@ or change global xpad registration/blacklisting from this evidence. Review
 supported-device first-probe ordering and saved kernel/manager chronology
 before proposing any acquisition change. Controller-off cold boot, second RF
 reconnect and application regression remain separate acceptance items.
+
+## Control Center: package updates without replacing the AppImage
+
+Maintainer requirement, 21 October: compatible driver-package releases should
+be discoverable/installable through the existing application. The current
+reviewed public-package rebuild uses immutable per-version pins and does not
+implement this yet. Follow the [signed catalog design](CONTROL_CENTER_RELEASE_UPDATES.md):
+review verifier/key lifecycle and bounded versioned protocol, independently
+verify in both GUI and root helper, preserve upgrade/removal guards and reject
+replay/downgrade. Start with offline fixture tests; a production signing key,
+publication and one-time helper migration require explicit review. No silent
+adoption of GitHub latest/checksums or installed helper overwrite.
+
+### Signed update implementation checkpoint
+
+Offline app/helper verification, protocol v3, replay/downgrade/guard checks,
+atomic root catalog checkpoint, explicit DE/EN worker UI/cancellation, user
+cache/offline removal and external-key publisher are implemented with fixtures.
+Two driver versions use unchanged app/helper anchors in the end-to-end test.
+Pending: production key lifecycle/policy review, one-time helper/profile
+migration, publication of the signed metadata channel, real metadata-only
+transport acceptance and separately authorized installation/hardware tests.
+No production key or live change is part of this checkpoint.
+
+### Approved production-key/offline-build checkpoint
+
+A separate external Ed25519 release key and explicit public-only policy now
+exist after maintainer approval. The new local AppImage and staged helper share
+that public anchor and verify catalog revision1 offline. Existing public core16,
+Steam2, Gamescope1 and bridge2 archives/removal history are unchanged. Targeted
+67 unit/packaging +3 QML cases, four packaged synthetic smoke lanes, actual-key
+positive/negative checks and private-material inclusion checks pass. Installed
+helper/driver/state and all live services/Steam remain unchanged. Nothing
+published or uploaded. Generic unbound builds still have no automatic key.
+
+Next: encrypted offline key backup; tested/exactly reviewed helper-only migration
+and separate approval; runtime/source redistribution audit; signed-channel
+publication/download-only acceptance; separately approved package acceptance.
+No blind legacy-helper rollback after signed-state acceptance. See
+[custody, public fingerprint and build limits](CONTROL_CENTER_SIGNING_PROVISIONING.md).
+
+### Consolidated backup/handover preparation complete
+
+The offline maintainer backup, exact helper migration and partial recovery,
+single approval launcher and final local AppImage are implemented/tested.
+388 Control Center cases incl61 QML, four packaged lanes and an actual-payload
+temporary-root forward/reverse proof pass; zero production backup/root/live
+driver operations. Source defaults/normal first-run remain unchanged. Next is
+one exact approved local handover, followed by off-device encrypted backup
+confirmation and the existing public distribution/channel/package acceptance
+gates. No new driver/kernel work or automatic package action is required for
+the helper migration. [Final workflow](CONTROL_CENTER_HANDOVER.md).

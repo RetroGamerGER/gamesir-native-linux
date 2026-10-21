@@ -1,0 +1,37 @@
+#!/usr/bin/python3 -IBS
+# SPDX-License-Identifier: GPL-2.0-only
+"""Separately reviewed root-owned package entry. No root GUI or user imports."""
+import os
+from pathlib import Path
+import stat
+import sys
+
+BASE = Path('/usr/lib/gamesir-control-center/package-executor')
+MODULES = ('artifacts.py', 'backend.py', 'package_execution.py', 'package_wire.py',
+           'package_host.py', 'package_alpm.py', 'package_helper.py', 'package_catalog.py',
+           'REVIEWED_PACKAGES.json', 'alpm_bridge.so')
+
+
+def main():
+    if (os.geteuid() != 0 or len(sys.argv) != 1 or not sys.flags.isolated
+            or not sys.flags.no_site or not sys.flags.dont_write_bytecode
+            or Path(__file__).absolute() != BASE / 'execute'):
+        return 2
+    try:
+        for name in ('execute', *MODULES):
+            path = BASE / name
+            for candidate in (path, *path.parents):
+                info = candidate.lstat()
+                if (info.st_uid != 0 or info.st_gid != 0 or info.st_mode & 0o022
+                        or not (stat.S_ISREG(info.st_mode) if candidate == path else
+                                stat.S_ISDIR(info.st_mode))):
+                    return 2
+    except OSError:
+        return 2
+    sys.path.insert(0, str(BASE))
+    from package_helper import main as execute
+    return execute()
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

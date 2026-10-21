@@ -20,7 +20,7 @@ def sources():
         for path in (ROOT / folder).rglob("*"):
             if not path.is_file():
                 continue
-            if (path.suffix in (".c", ".h", ".py", ".sh", ".service", ".hook", ".conf") or
+            if (path.suffix in (".c", ".h", ".py", ".sh", ".qml", ".service", ".hook", ".conf") or
                     path.name in ("Kbuild", "PKGBUILD.in", "dkms.conf.in") or
                     path.read_bytes().startswith(b"#!")):
                 found.add(path)
@@ -46,7 +46,7 @@ class Licensing(unittest.TestCase):
                 lines = text.splitlines()
                 index = int(lines[0].startswith("#!"))
                 expression = "GPL-2.0-only WITH Linux-syscall-note" if relative == UAPI else "GPL-2.0-only"
-                expected = (f"// SPDX-License-Identifier: {expression}" if path.suffix == ".c" else
+                expected = (f"// SPDX-License-Identifier: {expression}" if path.suffix in (".c", ".qml") else
                             f"/* SPDX-License-Identifier: {expression} */" if path.suffix == ".h" else
                             f"# SPDX-License-Identifier: {expression}")
                 self.assertEqual(lines[index], expected)

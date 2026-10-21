@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "offline_only",
+  "status": "implemented_tested_not_deployed",
+  "full_python": {
+    "cases": 1628,
+    "groups": 60,
+    "passed": true
+  },
+  "offscreen_qml": {
+    "cases": 61,
+    "groups": 7,
+    "passed": true
+  },
+  "signed_update_specific": {
+    "unit_protocol_publisher_integration_cases": 28,
+    "qml_cases": 3,
+    "passed": true
+  },
+  "two_version_proof": {
+    "unchanged_appimage_profile": true,
+    "unchanged_helper_anchor": true,
+    "independent_helper_signature_check": true,
+    "state_checkpoint_under_lock": true,
+    "restart_expired_offline_removal": true,
+    "real_packages_installed": false
+  },
+  "build_checks": {
+    "package_helper_staged": true,
+    "helper_files": 13,
+    "native_bridge_build": true,
+    "bundled_python_signature_verification": true,
+    "production_key_in_profile": false
+  },
+  "crypto": {
+    "algorithm": "Ed25519",
+    "verifier": "system OpenSSL via sealed memfd inputs",
+    "key_fixture": "public RFC 8032 section 7.1 test seed only",
+    "production_key_created": false
+  },
+  "guards": [
+    "signature_key_project_protocol",
+    "metadata_size_schema_duplicates",
+    "time_expiry_clock",
+    "revision_replay_equivocation",
+    "package_downgrade_same_version_rebuild",
+    "upgrade_origin_removal_history",
+    "root_verification_before_payload_reads",
+    "checkpoint_rechecks_concurrent_state",
+    "atomic_write_and_fsync_failures",
+    "separate_catalog_acceptance_and_package_success",
+    "offline_removal_and_user_cache_separation",
+    "explicit_worker_check_cancel_no_automatic_auth"
+  ],
+  "changes": {
+    "installation": false,
+    "installed_helper_or_trust": false,
+    "live_driver_service_module": false,
+    "hardware_access": false,
+    "real_network_requests": false,
+    "production_signing_or_publication": false,
+    "push": false
+  },
+  "remaining": [
+    "production key lifecycle and public-key policy review",
+    "one-time helper/profile migration with approval",
+    "publication of signed metadata channel",
+    "real signed-metadata download-only acceptance",
+    "separately approved installation and hardware tests"
+  ]
+}

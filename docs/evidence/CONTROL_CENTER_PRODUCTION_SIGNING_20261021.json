@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "authorized_key_creation_and_offline_build_only",
+  "status": "built_verified_not_installed_or_published",
+  "key": {
+    "algorithm": "Ed25519",
+    "public_key": "2bc5d23e1900e7d529bbf226118946994a6b58caf7439cfbf3446a7855a75226",
+    "id": "5d9450389dafad61bb573c277557a62484e514c96dcb1acd40b9bcfe5f71544a",
+    "external_to_git": true,
+    "private_directory_mode": "0700",
+    "private_file_mode": "0600",
+    "exclusive_creation": true,
+    "regular_single_link": true,
+    "protected_parent_checks": true,
+    "private_material_logged_or_bundled": false,
+    "sign_verify_challenge": true,
+    "encrypted_offline_backup": "pending"
+  },
+  "artifacts": {
+    "appimage_sha256": "ab90d0a57cb6e7134f35e74f69f7940b8b306054607f90aa1bc09f6912dc0da2",
+    "appimage_bytes": 70175224,
+    "root_review_sha256": "f56140daee38e7439b11c45cb486af363f5083c41aa7c03d639261c1a5dd3803",
+    "signed_catalog_sha256": "c1fa2b6062badcf8576b8086c427790da40151c964fae1c5ab106cb852c53c3c",
+    "helper_files": 13,
+    "public_policy_matches_app_and_helper": true,
+    "local_runtime_distribution_review": "pending",
+    "release_ready": false
+  },
+  "catalog": {
+    "revision": 1,
+    "issued_at": 1792586160,
+    "expires_at": 1795178160,
+    "validity_days": 30,
+    "components": [
+      "core",
+      "steam",
+      "gamescope",
+      "bridge"
+    ],
+    "retained_removal_records": 5,
+    "exact_history_retained_externally": true,
+    "published": false
+  },
+  "checks": {
+    "unit_packaging_cases": 67,
+    "qml_cases": 3,
+    "packaged_synthetic_smoke_lanes": 4,
+    "independent_actual_key_verifiers": [
+      "staged_helper_modules",
+      "bundled_appimage_python"
+    ],
+    "each_verifier_negative_cases": [
+      "changed_signature",
+      "changed_payload",
+      "expired",
+      "unknown_key"
+    ],
+    "real_reviewed_archives_verified": 4,
+    "private_material_scan_files": 1719,
+    "all_passed": true
+  },
+  "preservation": {
+    "installed_helper_leaves_identical": 13,
+    "helper_directory_metadata_identical": 3,
+    "cache_contents_read": false,
+    "installed_trust_and_signed_state_changed": false
+  },
+  "operations": {
+    "authentication": false,
+    "helper_installation": false,
+    "real_package_transaction": false,
+    "live_driver_service_module_change": false,
+    "steam_change": false,
+    "hardware_access": false,
+    "network": false,
+    "publication_or_push": false
+  },
+  "remaining": [
+    "encrypted offline private-key backup",
+    "tested exact helper migration and explicit approval",
+    "runtime and corresponding-source public distribution audit",
+    "signed metadata channel publication and download-only acceptance",
+    "separately approved real package acceptance"
+  ]
+}

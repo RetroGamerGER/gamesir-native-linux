@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "offline_preparation_only",
+  "status": "final_local_appimage_and_consolidated_approval_ready",
+  "appimage": {
+    "sha256": "19cacca0bac2ac009749c05065a9d4f81ca050d9aa1beabab72cf4aa508d7ad9",
+    "bytes": 70179320,
+    "packaged_smoke_lanes": 4,
+    "passed": true,
+    "public_distribution_audit": "pending"
+  },
+  "tests": {
+    "control_center_cases": 388,
+    "groups": 24,
+    "qml_cases_included": 61,
+    "new_backup_cases": 14,
+    "new_migration_cases": 19,
+    "new_handover_cases": 5,
+    "all_passed": true,
+    "actual_payload_temporary_root_round_trip": true,
+    "actual_bundled_public_key_verifier": true
+  },
+  "backup": {
+    "format": "PKCS8/PBES2 AES-256-CBC",
+    "kdf": "PBKDF2-HMAC-SHA256",
+    "iterations": 600000,
+    "recovery_identity_check": true,
+    "real_tty_no_echo_test": true,
+    "unprotected_stdin_fallback": false,
+    "exclusive_output": true,
+    "production_key_read": false,
+    "production_backup_created": false,
+    "fixtures": "public RFC8032 test seed only",
+    "off_device_copy_confirmation": "pending after creation"
+  },
+  "migration": {
+    "reviewed_active_files": 13,
+    "fixed_privileged_tool_calls_when_approved": 19,
+    "privileged_calls_executed": 0,
+    "actual_old_and_new_payload_fixture": true,
+    "old_directory_and_cache_inode_preservation": true,
+    "partial_forward_and_reverse_recovery": true,
+    "signed_state_blocks_legacy_recovery": true,
+    "automatic_rollback_or_cleanup": false,
+    "normal_first_run_changed": false,
+    "installed_helper_changed": false
+  },
+  "approval": {
+    "consolidated_sha256": "3362b34a2d6c7da7ee5080b076d7ed28ddd10480b2750ac2047f29f54c2d756d",
+    "approved_to_execute": false,
+    "steps": [
+      "hidden passphrase twice in controlling terminal",
+      "encrypted backup verification",
+      "fixed helper-only migration and postcheck",
+      "stop without package/application launch"
+    ]
+  },
+  "preservation": {
+    "key_regeneration_or_resigning": false,
+    "helper_public_key_and_pins_changed": false,
+    "private_material_in_new_payload": false,
+    "unmodified_bytes_reuse_prior_inclusion_scan": true,
+    "live_driver_service_module_steam_change": false,
+    "hardware_access": false,
+    "network_or_publication": false
+  },
+  "remaining": [
+    "explicit consolidated handover approval",
+    "off-device encrypted backup copy confirmation",
+    "runtime/corresponding-source public distribution audit",
+    "signed metadata publication and actual download/package acceptance"
+  ]
+}

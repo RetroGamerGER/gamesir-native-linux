@@ -1,0 +1,43 @@
+#!/usr/bin/python3 -IBS
+# SPDX-License-Identifier: GPL-2.0-only
+"""Fixed installed entry; never run from the AppImage as an elevated script."""
+import sys
+sys.dont_write_bytecode = True
+import os
+from pathlib import Path
+import stat
+
+BASE = Path('/usr/lib/gamesir-control-center')
+
+
+def protected(path):
+    for candidate in (path, *path.parents):
+        info = candidate.lstat()
+        if info.st_uid != 0 or info.st_mode & 0o022 or stat.S_ISLNK(info.st_mode):
+            return False
+        if candidate != path and not stat.S_ISDIR(info.st_mode):
+            return False
+    return True
+
+
+def main():
+    if (os.geteuid() != 0 or not sys.flags.isolated or not sys.flags.no_site
+            or not sys.flags.dont_write_bytecode or len(sys.argv) != 1):
+        return 2
+    try:
+        if Path(__file__).absolute() != BASE / 'authorize':
+            return 2
+        for path in (BASE / 'authorize', BASE / 'privilege/__init__.py',
+                     BASE / 'privilege/protocol.py', BASE / 'privilege/helper.py'):
+            if not protected(path) or not stat.S_ISREG(path.lstat().st_mode):
+                return 2
+    except OSError:
+        return 2
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, str(BASE))
+    from privilege.helper import main as probe
+    return probe()
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

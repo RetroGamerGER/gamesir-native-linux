@@ -1,3 +1,21 @@
+# Current AppImage publication check — 21 October 2026
+
+The maintainer authorizes the completed Control Center app and source/metadata
+push before driver diagnosis. Preserve private development history and the
+existing public main ancestry: publish one reviewed final-tree snapshot.
+Current public tree and both project-source companion archives were scanned
+for private home paths, machine/network identifiers and private key/token
+patterns; no such findings were identified. Only the public release trust
+anchor and the public GitHub noreply identity are included. Third-party
+source author/license notices must remain. Raw evidence, custody/backup paths,
+private keys and firmware remain outside the publication. This is a bounded
+content review, not a guarantee against every possible disclosure.
+
+[Distribution/source closure and exact evidence](CONTROL_CENTER_DISTRIBUTION.md)
+cover the final AppImage and companion sources. Driver/kernel/source byte
+changes are not part of this app publication. Older checks below retain their
+historical scope.
+
 # PRE-ALPHA publication check and artifact policy
 
 Historical initial preparation: 2026-10-16. The counts, versions and pending

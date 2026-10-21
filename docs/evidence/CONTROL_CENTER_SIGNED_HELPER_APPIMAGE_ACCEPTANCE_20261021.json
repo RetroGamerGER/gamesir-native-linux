@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "approved_real_data_appimage_launch_after_helper_migration",
+  "image_sha256": "19cacca0bac2ac009749c05065a9d4f81ca050d9aa1beabab72cf4aa508d7ad9",
+  "image_and_staged_manifest_verified": true,
+  "mode": "actual_status_not_demo_or_rehearsal",
+  "bundled_passive_inspection": {
+    "accepted": true,
+    "state": "idle",
+    "error": "",
+    "setup_review": false,
+    "setup_session": false,
+    "setup_result": false,
+    "helper_reused_without_setup": true,
+    "real_host_data": true,
+    "authentication_invoked": false,
+    "package_operation_invoked": false
+  },
+  "user_confirmed": {
+    "new_main_window_normal": true,
+    "no_helper_setup_offer": true,
+    "no_password_window": true
+  },
+  "postcheck": {
+    "active_13_helper_hashes_unchanged": true,
+    "helper_policy_backup_cache_license_metadata_unchanged": true,
+    "appimage_process_running": true,
+    "no_observed_fatal_launch_log_marker": true
+  },
+  "package_install_remove_or_update_check": false,
+  "driver_service_module_or_steam_change": false,
+  "hardware_test": false,
+  "network_or_publication": false,
+  "window_left_open": true
+}

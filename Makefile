@@ -3,7 +3,53 @@ PYTHON ?= python
 
 .PHONY: test test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-capture test-sdl test-sdl-buttons analyze-imu manifest kernel kernel-analyze tools test-tools test-hardware-helper test-alpha alpha-source test-steam steam-source test-trigger-bridge trigger-bridge trigger-bridge-source
 
-test: test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-tools test-hardware-helper test-alpha test-steam test-trigger-bridge
+test: test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-tools test-hardware-helper test-alpha test-steam test-trigger-bridge test-control-center
+
+# Optional desktop UI: isolated demo or unprivileged local metadata (no actions).
+.PHONY: test-control-center test-control-center-ui test-control-center-package test-control-center-auth control-center-demo control-center-status control-center-rehearsal
+test-control-center:
+	$(PYTHON) -B tests/test_control_center.py
+	$(PYTHON) -B tests/test_control_center_status.py
+	$(PYTHON) -B tests/test_control_center_backend.py
+	$(PYTHON) -B tests/test_control_center_transactions.py
+	$(PYTHON) -B tests/test_control_center_authorization.py
+	$(PYTHON) -B tests/test_control_center_execution.py
+	$(PYTHON) -B tests/test_control_center_preflight.py
+	$(PYTHON) -B tests/test_control_center_app_packages.py
+	$(PYTHON) -B tests/test_control_center_first_run.py
+	$(PYTHON) -B tests/test_control_center_release_download.py
+	$(PYTHON) -B tests/test_control_center_public_packages.py
+	$(PYTHON) -B tests/test_control_center_signed_updates.py
+	$(PYTHON) -B tests/test_release_key_backup.py
+	$(PYTHON) -B tests/test_control_center_helper_migration.py
+	$(PYTHON) -B tests/test_control_center_handover.py
+	$(PYTHON) -B tests/test_control_center_release_reinstall.py
+	$(PYTHON) -B tests/test_packaging_control_center.py
+	$(PYTHON) -B tests/test_control_center_distribution.py
+
+test-control-center-package:
+	$(PYTHON) -B tests/test_packaging_control_center.py
+
+test-control-center-auth:
+	$(PYTHON) -B tests/test_control_center_authorization.py
+
+test-control-center-ui:
+	$(PYTHON) -B tests/test_control_center_ui.py
+	$(PYTHON) -B tests/test_control_center_transactions_ui.py
+	$(PYTHON) -B tests/test_control_center_execution_ui.py
+	$(PYTHON) -B tests/test_control_center_app_packages_ui.py
+	$(PYTHON) -B tests/test_control_center_first_run_ui.py
+	$(PYTHON) -B tests/test_control_center_release_ui.py
+	$(PYTHON) -B tests/test_control_center_signed_updates_ui.py
+
+control-center-demo:
+	$(PYTHON) -B tools/control_center/main.py --demo
+
+control-center-status:
+	$(PYTHON) -B tools/control_center/main.py
+
+control-center-rehearsal:
+	$(PYTHON) -B tools/control_center/main.py --rehearse-backend
 
 # Optional research-helper tests: synthetic metadata/mocks only, no REA launch.
 .PHONY: test-rea-local

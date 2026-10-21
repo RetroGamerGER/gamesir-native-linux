@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "repository": "RetroGamerGER/gamesir-native-linux",
+  "assets": [
+    {
+      "component": "core",
+      "filename": "gamesir-native-dkms-0.1.0.alpha3-16-x86_64.pkg.tar.zst"
+    },
+    {
+      "component": "steam",
+      "filename": "gamesir-native-steam-0.1.0.alpha2-1-any.pkg.tar.zst"
+    },
+    {
+      "component": "gamescope",
+      "filename": "gamesir-native-steam-gamescope-0.1.0.alpha1-1-any.pkg.tar.zst"
+    },
+    {
+      "component": "bridge",
+      "filename": "gamesir-native-trigger-bridge-0.1.0.alpha1-2-x86_64.pkg.tar.zst"
+    }
+  ]
+}

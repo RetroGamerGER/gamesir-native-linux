@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!-- SPDX-License-Identifier: GPL-2.0-only -->
+<policyconfig>
+  <vendor>GameSir Native Linux community project</vendor>
+  <action id="io.github.RetroGamerGER.gamesir_native.control_center.packages">
+    <description>Apply a reviewed GameSir package transaction</description>
+    <description xml:lang="de">Geprüfte GameSir-Paketänderung ausführen</description>
+    <message>Authenticate to install or remove the reviewed GameSir packages. Package hooks may stop the driver and rebuild kernel modules.</message>
+    <message xml:lang="de">Geprüfte GameSir-Pakete installieren oder entfernen. Paket-Hooks können den Treiber stoppen und Kernelmodule bauen.</message>
+    <defaults><allow_any>no</allow_any><allow_inactive>no</allow_inactive><allow_active>auth_admin</allow_active></defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/gamesir-control-center/package-executor/execute</annotate>
+  </action>
+</policyconfig>

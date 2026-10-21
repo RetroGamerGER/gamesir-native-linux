@@ -1,0 +1,19 @@
+{
+  "files": {
+    "/usr/lib/gamesir-control-center/package-executor/REVIEWED_PACKAGES.json": "d1de1e84c708ad240de08bf06781f5d55ecedb28632fb6ec10d93599a5959ffc",
+    "/usr/lib/gamesir-control-center/package-executor/alpm_bridge.so": "2faf8a0f3ad402fad0af376bec36b2acba00f2663e0b6674a0e0196eaf4f0dc0",
+    "/usr/lib/gamesir-control-center/package-executor/artifacts.py": "386885b2dc703a4206783ff65f2986b162a8c17e2957d319e37e1fe5a02779a4",
+    "/usr/lib/gamesir-control-center/package-executor/backend.py": "0c05abcfc8d9e222955b69fa9e6ac7fe7be9d3f0091661afbb8aacac480207a4",
+    "/usr/lib/gamesir-control-center/package-executor/execute": "329ec6f276e42a7992eef0c80dd7e04f27cefd4b008b4d2702aa7fd47c3e12ea",
+    "/usr/lib/gamesir-control-center/package-executor/package_alpm.py": "bf6c582355d76d97015a27de26f8ab7262a54df4b4a63fdf79df600d5c2a7172",
+    "/usr/lib/gamesir-control-center/package-executor/package_catalog.py": "f2cb9cd75538e12646829414b78b0c7a6a7e964204a4b20b6dd22c275860e54a",
+    "/usr/lib/gamesir-control-center/package-executor/package_execution.py": "edbd2a91d44c12f9326894b698faf521443c5e7ce12d7bb63353cbcd6cec3db5",
+    "/usr/lib/gamesir-control-center/package-executor/package_helper.py": "5a7ad204d1bfba3727d2f6e1bf79ea2b9ada426e822033724c81fb97d883b517",
+    "/usr/lib/gamesir-control-center/package-executor/package_host.py": "376b9de80ef7efb8b3861b924ae10bf5161609c843d1a0ecebf99f75a7921ac9",
+    "/usr/lib/gamesir-control-center/package-executor/package_wire.py": "493e36f2b40e6b46e4f672d57829fd71f64532598bd961eb0ba21ea62ce1bfd0",
+    "/usr/share/licenses/gamesir-control-center-executor/COPYING": "e6d6a009505e345fe949e1310334fcb0747f28dae2856759de102ab66b722cb4",
+    "/usr/share/polkit-1/actions/io.github.RetroGamerGER.gamesir_native.control_center.packages.policy": "b08d3edf22ebe763d02053f6477745f3454a1b3ddae1b90d04fd79473140bb6e"
+  },
+  "id": "first-run-v1-to-signed-v1",
+  "schema": 1
+}

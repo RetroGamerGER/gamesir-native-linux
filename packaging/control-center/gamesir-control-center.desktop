@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: GPL-2.0-only
+[Desktop Entry]
+Type=Application
+Name=GameSir Control Center
+Comment=Read-only GameSir Native Linux status (PRE-ALPHA)
+Comment[de]=GameSir Native Linux Statusanzeige (PRE-ALPHA, nur lesend)
+Exec=gamesir-control-center
+TryExec=gamesir-control-center
+Icon=gamesir-control-center
+Terminal=false
+Categories=System;Utility;
+Keywords=GameSir;Gamepad;Controller;
+StartupNotify=true
+X-AppImage-Name=GameSir Control Center

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-2.0-only -->
+<policyconfig>
+  <vendor>GameSir Native Linux community project</vendor>
+  <vendor_url>https://github.com/RetroGamerGER/gamesir-native-linux</vendor_url>
+  <action id="io.github.RetroGamerGER.gamesir_native.control_center.authorize">
+    <description>Check GameSir administrator authorization</description>
+    <description xml:lang="de">GameSir-Administratorfreigabe prüfen</description>
+    <message>Authenticate for the GameSir permission check. No packages or devices will be changed.</message>
+    <message xml:lang="de">Bitte die GameSir-Berechtigungsprüfung freigeben. Pakete und Geräte werden nicht verändert.</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/gamesir-control-center/authorize</annotate>
+  </action>
+</policyconfig>

@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "scope": "local_review",
+  "packages": [
+    {
+      "component": "core",
+      "version": "0.1.0.alpha3-16",
+      "digest": "9442bedb086aad9fc97a6bf532b42399ebe0dc4ded9123fab64f798572819b46",
+      "size": 782026,
+      "source_commit": "b5b9cc34534e5afdb6505322308b364f15e31c2b",
+      "tag": "v0.1.0-pre-alpha.3",
+      "dependencies": [
+        "dkms",
+        "python",
+        "systemd",
+        "kmod",
+        "clang",
+        "llvm",
+        "lld",
+        "make",
+        "gcc",
+        "binutils"
+      ],
+      "upgrade_from": [],
+      "guards": [
+        [
+          "usr/lib/gamesir-native/prepare_remove.py",
+          "e0409e421cea644f1db05947cd16afbdd30bf4e51c2d141c6bc2d3d92f02547f"
+        ],
+        [
+          "usr/share/libalpm/hooks/60-gamesir-native-release.hook",
+          "4a478c84c0bc347c0bc76968ac918e1063e374f49b1040381f343adf6769b44b"
+        ],
+        [
+          "usr/share/libalpm/hooks/60-gamesir-native-upgrade.hook",
+          "1eaa0750b04e6edced4730e624b858df51387996ddea2f151727f8d3f8eccff9"
+        ]
+      ]
+    },
+    {
+      "component": "steam",
+      "version": "0.1.0.alpha2-1",
+      "digest": "702b0390a71d73159cba678742d51ba72d56e95bee127aa80a54f5428d8a3b06",
+      "size": 37985,
+      "source_commit": "b5b9cc34534e5afdb6505322308b364f15e31c2b",
+      "tag": "v0.1.0-pre-alpha.3",
+      "dependencies": [
+        "bash"
+      ],
+      "upgrade_from": [
+        "0.1.0.alpha1-1"
+      ],
+      "guards": []
+    },
+    {
+      "component": "gamescope",
+      "version": "0.1.0.alpha1-1",
+      "digest": "33a77a04c46c74220e42a5c84e777c4f3316fdf53f61387f0fde3d019b9f3058",
+      "size": 41295,
+      "source_commit": "b5b9cc34534e5afdb6505322308b364f15e31c2b",
+      "tag": "v0.1.0-pre-alpha.3",
+      "dependencies": [
+        "gamesir-native-steam>=0.1.0.alpha2",
+        "gamescope-session-cachyos"
+      ],
+      "upgrade_from": [],
+      "guards": []
+    },
+    {
+      "component": "bridge",
+      "version": "0.1.0.alpha1-2",
+      "digest": "26e3f0c1a809ce9fa47d2b7951813efb03f643b98a4329788e661b8b1a0ab0be",
+      "size": 64133,
+      "source_commit": "b5b9cc34534e5afdb6505322308b364f15e31c2b",
+      "tag": "v0.1.0-pre-alpha.3",
+      "dependencies": [
+        "python",
+        "glibc",
+        "libusb",
+        "gamesir-native-dkms>=0.1.0.alpha3"
+      ],
+      "upgrade_from": [],
+      "guards": []
+    }
+  ],
+  "installed": [
+    {
+      "component": "core",
+      "guards": [
+        [
+          "usr/lib/gamesir-native/prepare_remove.py",
+          "e0409e421cea644f1db05947cd16afbdd30bf4e51c2d141c6bc2d3d92f02547f"
+        ],
+        [
+          "usr/share/libalpm/hooks/60-gamesir-native-release.hook",
+          "4a478c84c0bc347c0bc76968ac918e1063e374f49b1040381f343adf6769b44b"
+        ],
+        [
+          "usr/share/libalpm/hooks/60-gamesir-native-upgrade.hook",
+          "1eaa0750b04e6edced4730e624b858df51387996ddea2f151727f8d3f8eccff9"
+        ]
+      ],
+      "version": "0.1.0.alpha3-16"
+    },
+    {
+      "component": "steam",
+      "guards": [],
+      "version": "0.1.0.alpha2-1"
+    },
+    {
+      "component": "bridge",
+      "guards": [],
+      "version": "0.1.0.alpha1-2"
+    },
+    {
+      "component": "steam",
+      "guards": [],
+      "version": "0.1.0.alpha1-1"
+    },
+    {
+      "component": "gamescope",
+      "version": "0.1.0.alpha1-1",
+      "guards": []
+    }
+  ]
+}

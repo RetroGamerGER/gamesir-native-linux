@@ -74,6 +74,9 @@ credentials*
 secrets*
 *.pem
 *.key
+*.der
+*.p8
+*.pkcs8
 *.p12
 *.pfx
 .netrc
