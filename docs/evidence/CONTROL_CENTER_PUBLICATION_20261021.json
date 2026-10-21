@@ -1,0 +1,56 @@
+{
+  "public_commit": "eb99dce9068727929b37fb9683fd54bbe79bba58",
+  "release_tag": "v0.1.0-pre-alpha.3",
+  "release_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.3",
+  "prerelease": true,
+  "new_tag_created": false,
+  "existing_assets_unchanged": true,
+  "assets": [
+    {
+      "name": "GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-Corresponding-Sources.tar.zst",
+      "bytes": 1143790750,
+      "sha256": "4e1d55d1037d86edf8360a27ae82752c758c7f982b687427782c248732195e5b",
+      "github_digest_matched": true,
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.3/GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-Corresponding-Sources.tar.zst"
+    },
+    {
+      "name": "GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-DISTRIBUTION_LOCK.json",
+      "bytes": 742879,
+      "sha256": "891b8efe657ac7a8affb5e553fead4918343c11603decaf6438360f58b7f4648",
+      "github_digest_matched": true,
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.3/GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-DISTRIBUTION_LOCK.json"
+    },
+    {
+      "name": "GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-SHA256SUMS",
+      "bytes": 531,
+      "sha256": "7aa4cf6111dd3061213e056fd11b105a14ad826c1e8521b71abfeec216060d99",
+      "github_digest_matched": true,
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.3/GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-SHA256SUMS"
+    },
+    {
+      "name": "GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-manifest.json",
+      "bytes": 1053,
+      "sha256": "4fc4538567144e78a77d1ae3faeb5b8ee4188f43c5ecd96c408b22954704fbed",
+      "github_digest_matched": true,
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.3/GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-manifest.json"
+    },
+    {
+      "name": "GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-x86_64.AppImage",
+      "bytes": 70416888,
+      "sha256": "2fab3e69a6702b2fb7589f950ab2bcd7596f2bb7edb1d850f236b53a23fddbbc",
+      "github_digest_matched": true,
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.3/GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha1-x86_64.AppImage"
+    }
+  ],
+  "signed_catalog_verified_by_bundled_and_installed_ordinary_user_verifiers": true,
+  "system_changes": false,
+  "date": "2026-10-21",
+  "tests": {
+    "app_cases": 412,
+    "groups": 25,
+    "qml_included": 61,
+    "packaged_lanes": 4
+  },
+  "public_catalog_sha256": "c1fa2b6062badcf8576b8086c427790da40151c964fae1c5ab106cb852c53c3c",
+  "driver_issues": "Reported on both PCs; not diagnosed or changed during app publication."
+}

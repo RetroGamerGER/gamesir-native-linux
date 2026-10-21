@@ -1,6 +1,6 @@
 # Signed driver updates without replacing the Control Center
 
-**Current distribution checkpoint (21 October 2026):** the reviewed Garuda
+**Published distribution checkpoint (21 October 2026):** the reviewed Garuda
 x86_64/glibc2.44 alpha1 build, corresponding sources, signed revision1 and
 publication scope are documented in [the distribution review](CONTROL_CENTER_DISTRIBUTION.md).
 Older phase entries below retain their historical dates and boundaries.

@@ -1,4 +1,24 @@
-# Current: Control Center alpha1 distribution closure — 21 October 2026
+# Current: Control Center alpha1 published — 21 October 2026
+
+The approved clean app snapshot eb99dce is on public main. The existing
+v0.1.0-pre-alpha.3 release now also contains the five app assets: AppImage,
+complete corresponding sources, distribution lock, manifest and checksums.
+GitHub's SHA256 digest, byte size and uploaded state match every local asset;
+all previous release asset IDs/sizes/digests remain unchanged, with no new tag.
+The actual public signed catalog matches unchanged revision1 and verifies in
+both the bundled app runtime and installed helper imported as an ordinary user.
+No root invocation/transaction, driver/helper/service/Steam/hardware change.
+
+The license/source publication gap is closed for this Garuda x86_64/glibc2.44
+profile. 412 app cases and four final packaged synthetic lanes passed. Keep
+private working history and key material private. The encrypted separate-storage
+backup copy is complete; no regeneration or resigning. Further app uploads must
+retain matching sources/notices/lock/manifest/checksums. Catalog expiry remains
+20 November2026,12:36UTC. Driver faults reported on both PCs are the separate
+next task; this publication does not fix or certify them. Gyro calibration paused.
+See docs/evidence/CONTROL_CENTER_PUBLICATION_20261021.json.
+
+# Earlier: Control Center alpha1 distribution closure — 21 October 2026
 
 The maintainer explicitly requests finishing and pushing the AppImage before
 investigating different driver faults on both PCs. Scope is app/source/metadata

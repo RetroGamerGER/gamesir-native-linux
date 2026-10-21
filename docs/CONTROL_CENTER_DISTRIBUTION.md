@@ -88,3 +88,13 @@ until this app publication is finished. No driver, module, service, installed
 helper, Steam setting or device binding was changed by this distribution review.
 Precise gyroscope calibration remains paused. See the
 [evidence](evidence/CONTROL_CENTER_DISTRIBUTION_20261021.json).
+
+## Publication result
+
+The five assets are published in the existing
+[PRE-ALPHA.3 release](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.3).
+GitHub's uploaded asset digests/sizes match all local bytes. Existing assets
+and the original tag are unchanged. The actual public metadata download
+verifies in both the bundled runtime and installed helper's unprivileged
+verification path. Source snapshot: `eb99dce9068727929b37fb9683fd54bbe79bba58`.
+[Publication receipt](evidence/CONTROL_CENTER_PUBLICATION_20261021.json).
