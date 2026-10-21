@@ -1,5 +1,11 @@
 # GameSir Native Linux
 
+> ⚠️ **PRE-ALPHA — experimental software.** For experienced Linux users.
+> Crashes, freezes and data loss are possible. Do not use on critical systems.
+
+<details>
+<summary>Read the full warning</summary>
+
 ⚠️ **WARNING: EXPERIMENTAL SOFTWARE**
 
 This project is in a **PRE-ALPHA** development stage.
@@ -19,269 +25,124 @@ Installation and use are entirely at your own risk.
 
 No stability, compatibility or safety guarantees are provided.
 
+</details>
+
+GameSir Native Linux brings the G7 Pro's extra buttons, motion controls and
+vibration features to Linux. It started because I wanted to use my own controller
+without missing out on its features.
+
+The project includes a driver and the **GameSir Control Center**, a desktop app
+for checking status and managing installation, in German and English.
+
+<p align="center">
+  <img src="docs/images/control-center.png" alt="GameSir Control Center showing system status, installation options and the Deadband link" width="640">
+</p>
+
+*Control Center with real system status. Available actions depend on your system.*
+
+<a id="confirmed-hardware-results"></a>
+
+## Features
+
+- **Normal gamepad controls** — buttons, sticks, triggers and D-pad.
+- **Four independent extra buttons** — assign L4, R4, L5 and R5 separately.
+- **Motion controls** — use controller movement in Eden and through Steam Input.
+  This feature is experimental and needs separate setup.
+- **Vibration** — grip rumble and independent control of both trigger motors.
+  Trigger effects need additional game support; see the limitations below.
+- **Controller detection** — the driver waits for your wireless controller
+  to connect. Some reconnect problems remain under investigation.
+- **Control Center** — system status, installation, removal and driver-update checks.
+
+## Acknowledgements / Special Thanks
+
+A special thank you to the developer of
+**[Deadband](https://github.com/broroeror/gamesir-linux-tools)**.
+Your work on GameSir configuration, gyroscope support and trigger vibration
+gave this project a valuable starting point. Getting this far would have been
+much harder without it. For additional controller settings, take a look at Deadband.
+
+Thanks also to **[g7ctl](https://github.com/questionablesyntax/g7ctl)** for the open
+research and documentation of GameSir G7 protocols.
+
+These independent projects were technical references for our work.
+
+<a id="project-status-and-supported-scope"></a>
+
+## Supported hardware and systems
+
+Support currently focuses on the **2.4 GHz USB receiver**.
+
+| Hardware / system | Current scope |
+| --- | --- |
+| GameSir G7 Pro | Main development and testing device. |
+| G7 Pro Zenless Zone Zero Edition | Experimental support. Its gyro update is not yet in the published release. |
+| Garuda Linux with KDE Plasma | Driver and Control Center tested. |
+| CachyOS Handheld Edition with Gamescope | Driver tested; use the manual installation guide. |
+
+Other controllers, connection modes and distributions have not been validated.
+
+**Current release:** [PRE-ALPHA.3](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.3),
+with driver `0.1.0.alpha3-16` and Control Center `0.1.0.alpha1`.
+
+<a id="installation-verification-and-complete-removal"></a>
+<a id="optional-control-center--pre-alpha"></a>
+
+## Installation
+
+The current Control Center download is for **64-bit Garuda Linux**.
+Read the [requirements](docs/CONTROL_CENTER_DISTRIBUTION.md) and
+[installation guide](docs/INSTALLATION.md), and close games and Deadband first.
+
+1. Download the **Control Center `.AppImage`** from the
+   [GitHub release](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.3).
+2. Make it executable in your file manager and open it as your normal user.
+3. If offered, choose **Set up helper** and review the request. Enter your
+   password only in the system's password window.
+4. Choose **Review installation**, select the components you need and confirm
+   the plan when the app's checks pass.
+5. Follow the [activation and verification steps](docs/INSTALLATION.md#4-enable-normal-automatic-operation).
+   Installing packages and enabling the driver are separate steps.
+
+The app downloads checked packages from our GitHub releases. Compatible driver
+updates can be checked in the app without downloading a new AppImage each time.
+
+For manual installation, CachyOS setup or complete removal, follow the
+[installation guide](docs/INSTALLATION.md).
+
+## Known limitations
+
+- After a long time switched off or after reconnecting, a controller may fail
+  to be detected, or some buttons may stop working. We are investigating.
+- Motion support is experimental; precise calibration is not complete.
+  Steam's gyro display can stay at zero even when motion works in a game.
+- **Eden in Gaming Mode** may need a
+  [manual launch adjustment](docs/SDL_EDEN_GYRO.md#manual-steps-for-the-tested-launcher-shape)
+  to see the real controller and its motion sensors.
+- **Trigger vibration** has been confirmed with Forza Horizon 6 through Xodus
+  Nexus. General Steam/Proton game support is not confirmed.
+- Control Center alpha1 may print terminal errors when closing. A correction
+  is being checked for a future update.
+- Firmware updates and stick calibration are planned, not available features.
+
+## Documentation
+
+[Installation, recovery and removal](docs/INSTALLATION.md) ·
+[Motion controls and Eden](docs/SDL_EDEN_GYRO.md) ·
+[Trigger vibration](docs/TRIGGER_BRIDGE.md) · [Roadmap](docs/ROADMAP.md)
+
+For developers: [Architecture](docs/ARCHITECTURE.md) ·
+[Build and tests](docs/TESTING.md) · [Tested scope and release notes](docs/RELEASE_AUDIT.md)
+
 ## Project Goals
 
 Our goal is to provide native, community-driven Linux support for GameSir controllers, including advanced features that are often unavailable through generic Xbox-compatible drivers.
 
 The long-term ambition is to develop maintainable, upstream-quality support suitable for consideration in the Linux kernel.
 
-The current implementation targets the GameSir G7 Pro over its 2.4 GHz USB
-dongle. Wider device support and upstream inclusion are long-term goals,
-not claims of current compatibility or acceptance.
-
-## Acknowledgements / Special Thanks
-
-- **[Deadband](https://github.com/broroeror/gamesir-linux-tools)** — for its
-  work on GameSir controller support under Linux and valuable technical
-  findings about device configuration, gyroscope functionality and trigger
-  vibration.
-- **[g7ctl](https://github.com/questionablesyntax/g7ctl)** — for openly
-  documented research into GameSir G7 protocols and its value as a technical
-  reference for this project.
-
-These projects were used as **technical references only**. This
-acknowledgement does not imply affiliation, participation, official
-collaboration, endorsement, or support by their developers. Their code and
-licenses remain their own; see the [provenance and licensing audit](docs/LICENSING.md).
-
-## Project Status and Supported Scope
-
-**Publication stage: PRE-ALPHA.** The source code is published in the
-[public GitHub repository](https://github.com/RetroGamerGER/gamesir-native-linux).
-Existing module/package version identifiers such as `0.1.0.alpha3` do not
-change this status. [Tagged PRE-ALPHA source snapshots](https://github.com/RetroGamerGER/gamesir-native-linux/releases)
-record their exact source and component-package versions.
-
-| Device / environment | Evidence and limits |
-| --- | --- |
-| GameSir G7 Pro, 2.4 GHz dongle, observed `3537:100a` → `3537:109c` | Controlled native startup, gamepad input, raw IMU and individual motor tests recorded. No general firmware or edition guarantee. |
-| G7 Pro Zenless Zone Zero edition, `3537:105e` | **Experimental:** a bounded native input/raw-IMU run and return to `xpad` were confirmed. Complete paddle, motor, Steam and long-term validation is still missing for this edition. |
-| Garuda Linux with KDE Plasma, x86_64 | Recorded builds and controlled tests with `7.2.9-2-garuda` and `7.2.11-1-garuda`; feature coverage differs between recorded runs. |
-| CachyOS Handheld Edition with Gamescope, x86_64 | Recorded builds and controlled tests with `7.2.9-2-cachyos-deckify` and `7.2.11-1-cachyos-deckify`; input/paddles and limited startup cases confirmed. Steam gyro has the startup/reconnect limits below. This is not a Valve SteamOS compatibility claim. |
-| Other controllers, wired/Bluetooth operation, distributions and kernels | Not validated by this project's current hardware evidence. |
-
-This matrix describes recorded configurations, not a minimum-kernel promise
-or a guarantee for every later update. The [release audit](docs/RELEASE_AUDIT.md)
-separates hardware results, offline tests and outstanding validation.
-
-**Current source release: `v0.1.0-pre-alpha.3`; core recipe
-`gamesir-native-dkms 0.1.0.alpha3-16`.** The package now supplies receiver
-waiting as a vendor modprobe default. Service activation remains an explicit
-installation step; no installation automatically starts or resumes management.
-A same-name local override is preserved. See [installation](docs/INSTALLATION.md)
-and [release notes](docs/RELEASE_PRE_ALPHA_3.md).
-
-[Standalone acquisition](docs/STANDALONE_STARTUP.md) supports free interfaces
-and scoped takeover from xpad without a global blacklist. Revision15's
-receiver-only waiting and subsequent power-on without additional inputs passed
-one CachyOS Gamescope test and were accepted by the maintainer. The receiver
-re-enumerated and the manager acquired the new lifetime automatically. A brief
-initial xpad contact was reported but not resolved by the status samples;
-completely xpad-free first probing is not claimed. Cold-boot and repeated
-lifecycle acceptance remain separate. [Function/commit audit](docs/FUNCTIONAL_INTEGRATION_AUDIT.md).
-
-## Confirmed Hardware Results
-
-- **Native gamepad input:** buttons, D-pad, both sticks and analog triggers
-  were recorded through `gs_native`. The Linux input device is named
-  `GameSir G7 Pro`.
-- **Independent extra buttons:** L4, R4, L5 and R5 are separate Linux inputs
-  alongside the normal buttons. For the standard model, all four were
-  independently usable in Steam Input with the optional integration,
-  including combinations and release events.
-- **Standalone startup:** controlled standard-model tests started the native
-  mode without Deadband. One tested boot required only turning on the
-  controller afterwards; this does not establish universal boot reliability.
-  Revision15 additionally kept an off-controller receiver in WAIT_RECEIVER=9
-  beyond the old deadline, then reached active native input/IMU publication
-  after one power-on without other inputs or manual Resume. This is one
-  accepted late-power-on case, not a cold-boot/reconnect guarantee.
-- **Four physical vibration motors:** the native driver sent separately
-  captured commands to the left/right grip and left/right impulse-trigger
-  motors. Three one-second pulses per motor were felt and stopped while
-  input and raw IMU data continued. This proves the tested hardware commands,
-  not universal game integration.
-- **Motion data:** all six raw gyro/accelerometer channels were observed.
-  Six gyro directions and a preferred 0.07 °/s/raw response were qualitatively
-  tested in the local diagnostic window. One approved local test of the
-  optional SDL gyro path in Eden's controller settings confirmed responsive
-  motion, matching direction/sensitivity and four independently assignable
-  paddles with ordinary input preserved. In-game acceptance remains separate.
-  A later controlled test with optional real evdev acceleration confirmed all
-  three gyro rates respond in Steam's UI, with ordinary input and independent
-  paddles retained. This experimental profile is saved in a local opt-in.
-  A subsequent CachyOS Gamescope reboot case succeeded with the controller
-  already on before Steam started; late arrival and reconnect remain limited.
-  Eden also passed the later Gaming Mode application test using the manual
-  launch workaround below. A later maintainer report confirms gyro-as-right-stick
-  camera control in Arc Raiders despite zero Steam gyro UI values. This remains
-  a specific application report, not general Proton-game or lifecycle acceptance; no new physical calibration was performed. See
-  [the activation record](docs/STEAM_ACCEL_EXTENSION.md).
-- **Forza Horizon 6 through Xodus Nexus:** one controlled run of the optional
-  trigger bridge `0.1.0.alpha1-2` produced felt effects on both impulse
-  triggers, pauses between effects and renewed vibration on later effects.
-  Normal inputs and grip rumble remained usable; both triggers were quiet
-  after normal game exit. The explicit Forza profile uses LT 1x / RT 3x.
-  This is a specific game/launcher result, not universal Steam/Proton support.
-
-Individual evidence and its limits are linked from the
-[release audit](docs/RELEASE_AUDIT.md). Historical reports remain available;
-they describe their own test runs rather than the present state of a user's
-computer.
-
-## Known Limitations
-
-- **Gyro integration remains experimental.** The selected 0.07 °/s/raw
-  profile and experimental `8192 LSB/g` acceleration/axis mapping remain opt-in;
-  the new packaged receiver-wait default does not enable them automatically.
-  Steam's calibration display may remain zero although application gyro works,
-  as reported with Arc Raiders. Eden's SDL path and its manual Gaming Mode
-  workaround have separate accepted tests. For the established Gamescope gyro
-  startup case, connect the controller before Steam starts. The successful new
-  late native takeover is not a new Steam gyro/game test. Precise calibration
-  remains paused; raw IIO is retained. See [SDL/Eden scope](docs/SDL_EDEN_GYRO.md),
-  [Steam results](docs/STEAM_ACCEL_EXTENSION.md) and the [release audit](docs/RELEASE_AUDIT.md).
-- **Receiver waiting has limited hardware acceptance.** One setup waits for
-  fresh native IMU without repeatedly initializing the same instance. A new
-  USB lifetime receives its own guarded startup. Waiting suspend/reset cancels
-  the unready state; automatic recovery of that cancelled state is not implemented.
-  Cold boot with the controller off, repeated RF/USB reconnect and long sessions
-  require further acceptance. [Waiting contract](docs/RECEIVER_WAIT_KERNEL.md).
-- **Trigger vibration has no confirmed universal games path.** Standard
-  Linux `FF_RUMBLE` for the two grip motors is implemented and tested offline,
-  with game-specified effect duration. Four-channel hardware support and the
-  experimental application API do not automatically enable impulse triggers
-  in SDL, Steam or Proton games. The [reviewed optional bridge](docs/TRIGGER_BRIDGE.md)
-  has one successful integrated Forza/Xodus test after a failed first trial
-  and an offline-tested correction. Steam/Proton integration, other game
-  backends and automatic launcher setup remain unvalidated. Reconnect,
-  suspend, process-crash and multi-device bridge acceptance remain open.
-  The [offline Steam/Proton feasibility study](docs/STEAM_PROTON_TRIGGER_BRIDGE.md)
-  identifies an SDL2 entry point and the remaining container, identity and
-  Steam Input constraints; it does not enable the Steam adapter.
-- **Steam paddles do not extend XInput.** Steam Input can map four independent
-  sources, but a game's input API determines whether it can bind additional
-  controller buttons directly. Universal in-game binding is not promised.
-- **Eden in Steam Gaming Mode:** inherited SDL device filters can hide the
-  physical GameSir, leaving Eden with a virtual Xbox controller without motion
-  sensors. A manually configured, Eden-only workaround passed one CachyOS
-  Gamescope application test with gyro and independent paddles. Follow the
-  [tested steps and rollback](docs/SDL_EDEN_GYRO.md#manual-steps-for-the-tested-launcher-shape)
-  for the matching shortcut type. This is a compatibility note, not an
-  automatic installer or driver change; other controllers and duplicate input
-  still require attention within the application.
-- **Suspend/resume, repeated hotplug, many reconnect cycles, multiple active
-  dongles and long-term operation are not comprehensively hardware-tested.**
-  Revision 12 permits exact acquisition of free/xpad-owned `109c`; unexplained
-  native or foreign owners remain excluded. General cold-start acceptance is pending. There
-  are documented race limits during attach and fallback binding; revision 11
-  narrows the initial xpad-detach race through exact-object kernel acquisition.
-- A manager race could latch a newly reconnected `100a/xpad` instance as
-  released after an obsolete status query. The local revision-6
-  [reconnect correction](docs/MANAGER_RECONNECT_FIX.md) is offline-tested and
-  installed locally. A subsequent native bootstrap succeeded; real reconnect
-  acceptance remains pending separate approval.
-- Earlier development included system freezes. A confirmed force-feedback
-  teardown memory bug was corrected and regression-tested; that does not
-  explain every earlier freeze or establish complete stability. An earlier
-  short left-grip pulse was not felt; later successful longer pulses do not
-  prove all short-duration behavior correct.
-- Deadband must not concurrently own the same interface. Firmware flashing,
-  automatic firmware updates and general controller profile editing are not
-  release features of this driver.
-
-See [runtime ownership rules](docs/ALPHA_RUNTIME.md),
-[force-feedback API boundaries](docs/HAPTICS_API.md) and
-[Steam/game API limits](docs/STEAM_PROTON_BUTTONS.md).
-
-## Installation, Verification and Complete Removal
-
-Read the [installation, verification, recovery and removal guide](docs/INSTALLATION.md)
-**before installing anything**. It covers the core DKMS package, optional
-Steam/KDE and CachyOS/Gamescope integrations, matching kernel headers,
-explicit service activation, verification, fallback and removal of retained
-state. No installer command is executed by reading this repository.
-
-The optional packages are separate from the kernel driver:
-
-- `gamesir-native-dkms` — kernel sources, session manager, packaged receiver-wait default and guarded removal.
-- `gamesir-native-steam` — Steam paddle mapping for supported session starts.
-- `gamesir-native-steam-gamescope` — additional integration for the tested
-  CachyOS Gamescope session layout.
-- `gamesir-native-trigger-bridge` — optional SDL2 trigger adapter with a
-  limited Forza/Xodus hardware test; no automatic activation or launcher edits. See its
-  [scope and validation boundaries](docs/TRIGGER_BRIDGE.md).
-
-Installation and service activation are separate decisions. A successful
-package transaction alone is not proof that DKMS built a loadable module.
-Existing package hooks can rebuild boot images. Stop if validation or the
-return to the normal driver fails; do not bypass the removal guard.
-
-## Build and Offline Tests
-
-From the project root of a **full source checkout**, with the required tools
-already installed:
-
-```sh
-make test
-```
-
-This builds synthetic userspace tests and exercises fake device/process
-backends. It does not load modules, change bindings or access controller
-hardware. Optional module builds, static analysis and device-free SDL tests
-are described in [TESTING.md](docs/TESTING.md).
-
-The generated DKMS source archive is a deliberately smaller package-build
-input; it does not contain the full test environment. Use the complete
-repository source for `make test`. See the [build and package instructions](docs/INSTALLATION.md).
-
-## Optional Control Center — PRE-ALPHA
-
-[Download the reviewed AppImage and matching sources](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.3).
-The first application profile targets **Garuda x86_64, glibc 2.44 or newer**.
-It is not a universal AppImage or a confirmed CachyOS/Gamescope installer.
-
-The DE/EN interface shows local status without changing the driver. Technical
-details are behind a separate button. Explicitly selected installation/removal
-plans use a restricted system helper and desktop authentication; the AppImage
-itself never runs as root. First-run setup installs that helper only after a
-separate review and password confirmation. Later starts reuse it without
-asking to set it up again. Package installation does not activate the driver.
-
-Reviewed packages come from this project's GitHub releases. Both the app and
-helper verify signed update metadata and exact archive identities; downloads
-and installation require separate user actions. A compatible new driver
-catalog does not require downloading another AppImage. Firmware updates,
-stick calibration and universal trigger integration remain future work.
-
-See [normal first-run use](docs/CONTROL_CENTER_FIRST_RUN.md),
-[installation/removal limits](docs/CONTROL_CENTER_APPIMAGE_PACKAGES.md),
-[signed updates](docs/CONTROL_CENTER_RELEASE_UPDATES.md) and the
-[license/source distribution review](docs/CONTROL_CENTER_DISTRIBUTION.md).
-Existing driver faults reported on both development systems are pending
-investigation; this GUI release does not resolve or broaden driver stability.
-
 ## License
 
-GameSir Native Linux is licensed under **GNU GPL Version 2 only
-(`GPL-2.0-only`)**. The complete license text is provided in [COPYING](COPYING).
-The existing UAPI header exception is retained:
-[`GPL-2.0-only WITH Linux-syscall-note`](LICENSES/exceptions/Linux-syscall-note).
-Third-party notices and rights remain applicable. The
-[licensing and provenance report](docs/LICENSING.md) documents these boundaries
-and the requirements for considering a future Linux-kernel submission.
-
-## Release Policy
-
-The first tagged source release is explicitly labeled **PRE-ALPHA**, with
-known limitations and exact source/package versions. Future releases and
-GitHub pushes continue to require explicit maintainer approval.
-
-The [publication/privacy check](docs/PUBLIC_RELEASE_CHECK.md) requires a
-separate sanitized source snapshot. The private development history is not
-approved for upload; source archives and future binary packages need their
-own content and metadata review.
-
-[Release audit and remaining publication gates](docs/RELEASE_AUDIT.md) ·
-[Architecture](docs/ARCHITECTURE.md) · [Protocol evidence](docs/PROTOCOL.md) ·
-[Testing](docs/TESTING.md) · [Roadmap](docs/ROADMAP.md)
+**GNU GPL Version 2 only (`GPL-2.0-only`)** — see [COPYING](COPYING).
+Third-party notices and the existing
+[Linux UAPI exception](LICENSES/exceptions/Linux-syscall-note) remain in place.
+[Licensing and source credits](docs/LICENSING.md).

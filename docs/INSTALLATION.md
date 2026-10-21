@@ -12,7 +12,9 @@ receiver-wait lifecycle passed one scoped CachyOS insertion/late-power-on test
 with revision15; revision16 packages that same kernel behavior and the vendor
 configuration. No new revision16 hardware/boot acceptance is claimed.
 See [release notes](RELEASE_PRE_ALPHA_3.md) and [functional audit](FUNCTIONAL_INTEGRATION_AUDIT.md).
-Public assets are source-only; build locally with reviewed dependencies.
+The release includes source archives and separately reviewed installable packages.
+The manual source-build path below remains available. For the graphical Garuda
+installer and its requirements, see [Control Center](CONTROL_CENTER_DISTRIBUTION.md).
 Garuda KDE and CachyOS Gamescope have limited real-hardware evidence; this is not a promise for
 every kernel, distribution, or SteamOS image. The standard G7 Pro uses `3537:100a` → `3537:109c`;
 ZZZ `3537:105e` has a separate direct-start path and more limited hardware coverage. USB ports are

@@ -18,6 +18,7 @@ SYSTEM_ROOTS = ('/usr', '/etc', '/var', '/opt', '/bin', '/sbin', '/lib', '/lib64
 LICENSE_FILES = ('COPYING', 'LICENSES/exceptions/Linux-syscall-note')
 DOCUMENT_FILES = (
     'README.md', 'AGENTS.md',
+    'docs/images/control-center.png',
     'docs/LICENSING.md',
     'docs/INSTALLATION.md', 'docs/RELEASE_AUDIT.md', 'docs/PUBLIC_RELEASE_CHECK.md',
     'tools/offline/docs/source-map.json',
@@ -69,6 +70,7 @@ DOCUMENT_FILES = (
     'docs/CONTROL_CENTER_APPIMAGE_PACKAGES.md',
     'docs/CONTROL_CENTER_FIRST_RUN.md',
     'docs/CONTROL_CENTER_GITHUB_PACKAGES.md', 'docs/RELEASE_PACKAGE_SCHEMA.md',
+    'docs/CONTROL_CENTER_DISTRIBUTION.md',
     'docs/CONTROL_CENTER_RELEASE_UPDATES.md',
     'docs/evidence/CONTROL_CENTER_SIGNED_UPDATES_20261021.json',
     'docs/SDL-SENSOR-ERGEBNIS.rst', 'docs/SDL-SKALIERUNG-UND-ACHSEN.rst',

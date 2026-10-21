@@ -1,4 +1,15 @@
-# Current: Control Center alpha1 published — 21 October 2026
+# Current: approved public README refresh — 21 October 2026
+
+The README now introduces the project in plain language, with the maintainer's
+motivation, a real Control Center screenshot, visible credits, user-oriented
+installation steps and concise limitations. The short PRE-ALPHA warning remains
+visible; the original full text and GPL-2.0-only notices are retained. Published
+versions stay PRE-ALPHA.3/core revision16/Control Center alpha1. ZZZ motion and the
+app shutdown correction remain unpublished. Old source-only/unpublished wording
+in the linked installation/first-run guides is corrected. Existing technical
+documents and release approval rules remain in place. No installed system change.
+
+# Earlier: Control Center alpha1 published — 21 October 2026
 
 The approved clean app snapshot eb99dce is on public main. The existing
 v0.1.0-pre-alpha.3 release now also contains the five app assets: AppImage,

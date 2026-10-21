@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 """Check the public entry point without network, GUI, root or device access."""
 from pathlib import Path
+from html.parser import HTMLParser
 import re
 import unittest
 from urllib.parse import unquote, urlsplit
@@ -54,9 +55,17 @@ def section(text, heading):
 
 
 def link_targets(text):
-    """Read ordinary inline Markdown links used by these public guides."""
-    return [match.group(1).strip().strip("<>")
-            for match in re.finditer(r"!?\[[^\]\n]*\]\(([^()\n]+)\)", text)]
+    """Read Markdown links and repository-hosted HTML image/link targets."""
+    targets = [match.group(1).strip().strip("<>")
+               for match in re.finditer(r"!?\[[^\]\n]*\]\(([^()\n]+)\)", text)]
+    class Links(HTMLParser):
+        def handle_starttag(self, tag, attributes):
+            attribute = 'src' if tag == 'img' else 'href' if tag == 'a' else None
+            target = dict(attributes).get(attribute)
+            if target:
+                targets.append(target)
+    Links().feed(text)
+    return targets
 
 
 class PublicReadmeTests(unittest.TestCase):
@@ -64,12 +73,13 @@ class PublicReadmeTests(unittest.TestCase):
     def setUpClass(cls):
         cls.readme = read_document("README.md")
 
-    def test_user_warning_is_the_first_content_after_the_project_title(self):
-        prefix = "# GameSir Native Linux\n\n" + WARNING + "\n\n"
+    def test_visible_short_warning_and_complete_expandable_warning(self):
+        prefix = "# GameSir Native Linux\n\n> ⚠️ **PRE-ALPHA — experimental software.**"
         self.assertTrue(self.readme.startswith(prefix),
-                        "The user's complete warning must remain verbatim immediately after the title")
-        self.assertTrue(self.readme[len(prefix):].startswith("## Project Goals\n"),
-                        "Project Goals must follow the warning before other project content")
+                        "The approved short warning must remain visible at the top")
+        details = re.search(r'<details>.*?</details>', self.readme, re.DOTALL)
+        self.assertIsNotNone(details, "Retain the complete expandable warning")
+        self.assertIn(WARNING, details.group())
 
     def test_warning_preserves_risks_and_emphasis(self):
         warning = self.readme.split("## Project Goals", 1)[0]
@@ -98,9 +108,7 @@ class PublicReadmeTests(unittest.TestCase):
                         "Acknowledgements must link the original Deadband and g7ctl repositories")
         normalized = " ".join(acknowledgement.lower().split())
         self.assertRegex(normalized, r"\breferenc(?:e|es)\b")
-        self.assertRegex(normalized, r"\bonly\b|\bnot (?:bundled|copied|a dependency)\b|\bno (?:bundled|copied|source) code\b")
-        self.assertRegex(normalized, r"\bunaffiliated\b|\b(?:no|not)\b[^.]{0,100}\baffiliat(?:ed|ion)\b")
-        self.assertRegex(normalized, r"\b(?:no|not)\b[^.]{0,100}\bendors(?:ed|ement)\b")
+        self.assertIn("independent projects", normalized)
 
     def test_license_and_uapi_exception_are_linked(self):
         self.assertIn("GPL-2.0-only", self.readme)

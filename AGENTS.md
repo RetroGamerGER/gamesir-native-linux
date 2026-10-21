@@ -16,6 +16,17 @@ changes locally. No public remote, tag, upload or push without explicit
 maintainer approval. Preserve third-party notices and source provenance.
 Own sources use GPL-2.0-only; preserve the UAPI Linux-syscall-note exception.
 
+## Reader-friendly public README — 21 October 2026
+
+The maintainer approved the shorter README, first-person project motivation and
+Control Center screenshot directly after the introduction. Keep the short
+PRE-ALPHA warning visible and the complete original text in an expandable block.
+Keep credits personal and accurate: Deadband and g7ctl are independent technical
+references. Installation should describe user actions; protocol/test detail stays
+in linked docs. Check claims against published versions, not local candidates.
+The screenshot belongs in the repository and packaged documentation. This change
+publishes documentation only; no driver/app binaries, signed catalogs or new tag.
+
 ## Published Control Center alpha1 — 21 October 2026
 
 The approved clean app snapshot eb99dce is on public main. The existing

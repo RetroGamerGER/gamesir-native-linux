@@ -49,12 +49,10 @@ On a supported clean system:
    require a separately reviewed application/helper update.
 
 A conflicting, changed or partial helper installation is blocked, not repaired
-silently. The current developer machine has an older helper, hence its separate
-one-time migration. Initial setup remains the tested Garuda/KDE flow; other
-runtime/session support is limited to the explicitly reviewed profile. The
-signed production update channel and current final AppImage are not published
-yet; this describes the prepared user flow, not a completed public rollout.
-See [handover state and remaining gates](CONTROL_CENTER_HANDOVER.md).
+silently. Initial setup remains the tested Garuda/KDE flow; other runtime/session
+support is limited to the explicitly reviewed profile. The reviewed AppImage and
+signed update channel are published; see [requirements and publication scope](CONTROL_CENTER_DISTRIBUTION.md).
+The older development and migration checkpoints below retain their historical scope.
 
 ## Local first-run acceptance
 
