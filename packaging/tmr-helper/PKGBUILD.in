@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: GPL-2.0-only
+pkgname=gamesir-native-tmr-helper
+pkgver=0.1.0.alpha1
+pkgrel=2
+pkgdesc='Experimental scoped GameSir TMR calibration permission helper'
+arch=('any')
+license=('GPL-2.0-only')
+depends=('python' 'polkit' 'gamesir-native-dkms>=0.1.0.alpha3-20')
+options=('!debug' '!strip')
+source=('gamesir-native-tmr-helper-0.1.0.alpha1.tar.gz')
+sha256sums=('@SOURCE_SHA256@')
+package() {
+    cd "$srcdir/gamesir-native-tmr-helper-$pkgver"
+    cp -a usr "$pkgdir/"
+}

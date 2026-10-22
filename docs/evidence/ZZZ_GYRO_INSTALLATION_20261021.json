@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-21",
+  "scope": "Approved secondary CachyOS host update only; no activation or hardware test",
+  "source_commit": "b1f68f1939d95ef225014a0cef43e08a16728814",
+  "package": "gamesir-native-dkms 0.1.0.alpha3-17",
+  "package_sha256": "5c4919cb6db16d4d3fa8465976f621dc14d31aad962a561870ebd143ba71532d",
+  "kernel": "7.2.11-1-cachyos-deckify",
+  "header_package": "linux-cachyos-deckify-headers 7.2.11-1",
+  "target_build": {
+    "built": true,
+    "returncode": 0,
+    "compiler": "gcc (GCC) 16.2.1 20260810",
+    "compiler_family": "gcc",
+    "header_compiler": "\"gcc (GCC) 16.2.1 20260810, GNU ld (GNU Binutils) 2.47\"",
+    "warnings": 0,
+    "code_warnings": 0,
+    "environment_warnings": [],
+    "module_sha256": "750d4dc7f799420d87bf1c23fca26930a45dc2332ba41e7f78bb431fcb9f5b38",
+    "vermagic": "7.2.11-1-cachyos-deckify SMP preempt mod_unload",
+    "autoload_aliases": []
+  },
+  "module_srcversion": "2C3CD9E0768198E709B871B",
+  "precheck": {
+    "native_bindings": 0,
+    "enumerated_gamesir_devices": 0,
+    "manager_leases": 0,
+    "manager_paused": false,
+    "manager_errors": false,
+    "games_and_controller_tools_closed_confirmed": true,
+    "steam_allowed_open": true
+  },
+  "transaction": {
+    "attempts": 1,
+    "pacman_exit_code": 0,
+    "matched_payload_files": 157,
+    "package_integrity": {
+      "gamesir-native-dkms": "gamesir-native-dkms: 190 total files, 0 altered files",
+      "gamesir-native-steam": "gamesir-native-steam: 17 total files, 0 altered files",
+      "gamesir-native-steam-gamescope": "gamesir-native-steam-gamescope: 15 total files, 0 altered files"
+    },
+    "snapshot_hooks_completed": true,
+    "dkms_installed": true,
+    "initramfs_completed": true,
+    "notice": "DKMS warns that CLEAN is deprecated; no build/transaction failure"
+  },
+  "postcheck": {
+    "independent_read_only_check_passed": true,
+    "service": "inactive/dead; enabled retained",
+    "module_loaded": false,
+    "manager_paused": true,
+    "leases": {},
+    "old_failure_history_preserved": true,
+    "standard_sensor_config_preserved": true,
+    "receiver_wait_config_preserved": true,
+    "zzz_config": "/etc/modprobe.d/92-gamesir-native-zzz-gyro.conf",
+    "zzz_config_sha256": "a256b2d6d792b3f770c472960f6e19fb5a320bea10b8a5f6362532d2ff61a3b9",
+    "zzz_config_owner": "root:root",
+    "zzz_config_mode": "0644",
+    "zzz_config_previously": "absent",
+    "zzz_config_effective_next_module_load_only": true,
+    "steam_package": "0.1.0.alpha2-1",
+    "gamescope_package": "0.1.0.alpha1-1"
+  },
+  "rollback": {
+    "retained_package": "gamesir-native-dkms 0.1.0.alpha3-16",
+    "sha256": "9a29dd1ba57df9f183b25ab7bc20a4dd30af5bddab16fc41483bd91d9713aebd",
+    "configuration": "Remove only the new 92 override after approval; preserve existing 90/91 files",
+    "executed": false
+  },
+  "offline_transaction_guard_checks": 15,
+  "main_host_modified": false,
+  "activation": false,
+  "resume": false,
+  "hardware_acceptance": false,
+  "published": false,
+  "signed_catalog_changed": false,
+  "remaining": [
+    "ZZZ binding/sensor/input acceptance after separate activation",
+    "Long-off binding and partial ordinary-input failures remain unresolved",
+    "Precise physical gyro calibration remains paused"
+  ]
+}

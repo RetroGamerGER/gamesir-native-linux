@@ -1,0 +1,463 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "Static stick-record loading and calibration telemetry; no target execution or emulation.",
+  "sources": [
+    {
+      "name": "JS_3103_DV_V209_No_Key.app.bin",
+      "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6",
+      "size": 379140
+    },
+    {
+      "name": "JS_3103_U_DV_V515_No_Key.app.bin",
+      "sha256": "77e77be00ccd03d4c7dc6e469875c977988ffcbecac78a66cfe337c633308673",
+      "size": 379364
+    },
+    {
+      "name": "JS_3103_U_DV_V608_No_Key.app.bin",
+      "sha256": "6c2155168aae2bfa01b8b391ec2295c4cbf0c27696a49a7d5a063eefdb22147b",
+      "size": 379364
+    },
+    {
+      "name": "HJC.GameSir.Nexus2_0.dll",
+      "sha256": "36cb48433ca270994ada6625348af7f1c51a1a50f7dc6d63b7d0fff372c0a040",
+      "size": 33306624
+    }
+  ],
+  "static_decode": {
+    "rows": 9,
+    "records": 224,
+    "failed_rows": 0,
+    "sources_unchanged": true,
+    "network_and_device_isolation": true,
+    "decoder_changed": false,
+    "decoder_sha256": "53aaff9f06ad5c65e640cff8360cd74b80a3551a494a0823329796e7164f4458",
+    "request_sha256": "63c1d053a57b6dc3989bbc036522b5abfb78712642c99625e532d02158ee8f91",
+    "output_sha256": "d8f96d957e9bcf9e6a28c30e1813e399a5c208d7f7c144679e82e0f9a10a8de6"
+  },
+  "firmware_anchors": [
+    {
+      "label": "report_base",
+      "offset": "0x1ace6",
+      "instruction_sha256": "dcc50f83c1f6de2aaca96b318d8b070873e059eabc7dd260e7e7945ba8242f8d"
+    },
+    {
+      "label": "read_requests",
+      "offset": "0xb264",
+      "instruction_sha256": "d804abad016c452eeb6313e229d6021453f505757735d8c1f85c56edda4ff154"
+    },
+    {
+      "label": "read_requests",
+      "offset": "0xb268",
+      "instruction_sha256": "544f818e3195501663d794a3d053b96b8deec357c5d87f8851e1c50cee8bcfa4"
+    },
+    {
+      "label": "read_requests",
+      "offset": "0xb26c",
+      "instruction_sha256": "76c38bb4514b944c3d585bc95418a8cf4b225aa3ba945683dd1e14f0148a4755"
+    },
+    {
+      "label": "read_requests",
+      "offset": "0xb28a",
+      "instruction_sha256": "def391c462cfe1c90b4dddcf7d9be71adf6f3caa805bd06d59b9a23911c753d7"
+    },
+    {
+      "label": "read_requests",
+      "offset": "0xb28e",
+      "instruction_sha256": "02bd5aadce7cf11a770f35c7c5f043952c084d235c61b66e1736f1dcae4cee9d"
+    },
+    {
+      "label": "read_requests",
+      "offset": "0xb292",
+      "instruction_sha256": "76c38bb4514b944c3d585bc95418a8cf4b225aa3ba945683dd1e14f0148a4755"
+    },
+    {
+      "label": "left_record",
+      "offset": "0xb2f8",
+      "instruction_sha256": "93d45b23e1f5c94fbbd82b7bcdca332448bebcc4e2017d968b13d69fb43b1108"
+    },
+    {
+      "label": "left_record",
+      "offset": "0xb300",
+      "instruction_sha256": "312d9d08682609442d0434085f3080654322fd7f9a3fe1fbde2348d97a628503"
+    },
+    {
+      "label": "left_record",
+      "offset": "0xb304",
+      "instruction_sha256": "99841ba834ca8c2ffc60c97b4dc0d0c5129a499902336e991040884ffa6e5f46"
+    },
+    {
+      "label": "left_record",
+      "offset": "0xb30c",
+      "instruction_sha256": "9b4ec5dfc4b9e970eab6d67b9167d806e80dc4bd384febaa69b16a3d6c378b80"
+    },
+    {
+      "label": "left_record",
+      "offset": "0xb354",
+      "instruction_sha256": "81846f79d6dbd10bca54a68ab18dd97857a985e13b13d979db4dfa4ad119a488"
+    },
+    {
+      "label": "left_record",
+      "offset": "0xb356",
+      "instruction_sha256": "12741065974fa0b0a841cc03d88e413c46d4dcfe5e7d1ba920b3867bf41900e4"
+    },
+    {
+      "label": "left_record",
+      "offset": "0xb370",
+      "instruction_sha256": "339415101b3154197a852df10dfb6ce6e2c74f5ad70465e7b1519809acaa49d8"
+    },
+    {
+      "label": "left_record",
+      "offset": "0xb376",
+      "instruction_sha256": "2acb85d02e059c92ce4149a0c45b67a5fad5944d9ebc11d9a87df19e221be0d6"
+    },
+    {
+      "label": "right_record",
+      "offset": "0xb37a",
+      "instruction_sha256": "0ce6c7020a81ede4caaeda2edb888a61e157ac0a04b22f104957d090a7ff4532"
+    },
+    {
+      "label": "right_record",
+      "offset": "0xb382",
+      "instruction_sha256": "b110f087c112625a63a2749c8a1e7996f8d6d34d3e63ceaf689be063e3a7bd23"
+    },
+    {
+      "label": "right_record",
+      "offset": "0xb386",
+      "instruction_sha256": "c3914a3d050a14d34fba64c0199b79ffe8d5788a647e3a4107a7b5fe821cbc5d"
+    },
+    {
+      "label": "right_record",
+      "offset": "0xb38e",
+      "instruction_sha256": "c9fe7855ff81b9094cce343014e405a1a63b084389fb9d1f2bb3f235f0db327e"
+    },
+    {
+      "label": "right_record",
+      "offset": "0xb3da",
+      "instruction_sha256": "81846f79d6dbd10bca54a68ab18dd97857a985e13b13d979db4dfa4ad119a488"
+    },
+    {
+      "label": "right_record",
+      "offset": "0xb3dc",
+      "instruction_sha256": "d1cb61908db5e9592b549d020e474c7c37158dc59f8d0cbcd5ef0008b599a9ce"
+    },
+    {
+      "label": "right_record",
+      "offset": "0xb3f6",
+      "instruction_sha256": "f170a2ce82fed1d98573fcef832fd4e920d53fca7e8c27430504ec2ad48cf1f0"
+    },
+    {
+      "label": "right_record",
+      "offset": "0xb3fc",
+      "instruction_sha256": "2acb85d02e059c92ce4149a0c45b67a5fad5944d9ebc11d9a87df19e221be0d6"
+    },
+    {
+      "label": "load_flags",
+      "offset": "0xb4ae",
+      "instruction_sha256": "31804d291a2530cea50989ef1b3c089484c41e127acf3ce791927226e6b4ea49"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1aeda",
+      "instruction_sha256": "aeccd6902e1d254f60dc7af9b71323f2dd09cd539dec12ca39644b7e522b5334"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1aeec",
+      "instruction_sha256": "d60d526453433c45690487ad37f18635908d04f07f3105b4029476e1fa6a595a"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1aef0",
+      "instruction_sha256": "2ac3e029f2ae0ed36a9af34bd225e889df2818556266577aeb79530d6c14a8b3"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1af0c",
+      "instruction_sha256": "9245009c897ab9706d9c5d97b6edc4371ee61034ccc8c8302813efe53835ea06"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1af10",
+      "instruction_sha256": "f2358b1fd386e4b1a49b8aa7d08ec3dfcc020a8f36a4f0e927b9d9a0c0d573a4"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1af16",
+      "instruction_sha256": "815c32dbdb9c719a83d40483051e0f277263c0dd15ea1e1f76060acd54354585"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1af1a",
+      "instruction_sha256": "398c9897baa490837c4200cdf72c868194c834251b5235dfb5df8b840488876c"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1af20",
+      "instruction_sha256": "815c32dbdb9c719a83d40483051e0f277263c0dd15ea1e1f76060acd54354585"
+    },
+    {
+      "label": "report_fields",
+      "offset": "0x1af24",
+      "instruction_sha256": "bc8c7b8fb5fc2bf1fc2391791dad72c019d35bc5013e19484aa883fbda61fab8"
+    },
+    {
+      "label": "report_send",
+      "offset": "0x1afc4",
+      "instruction_sha256": "4d2ae2d6e0000b72a5739078e0e83bc029b6232edabff84d012acd1d4803db51"
+    },
+    {
+      "label": "report_send",
+      "offset": "0x1afce",
+      "instruction_sha256": "12e94a2df908650e2fbbfc95519939f4d884d92715fc20a0fcc9cb0de6134cb5"
+    },
+    {
+      "label": "compare_copy",
+      "offset": "0x1aa9c",
+      "instruction_sha256": "67db9279eb832db6c47ced109cc6e0bcacd5b395e1881d98f7e82daa20de2012"
+    },
+    {
+      "label": "compare_copy",
+      "offset": "0x1aaa2",
+      "instruction_sha256": "e8587c7a3951cfa2c372e2edcc4e31d7e1de736f9f2cd0eb5d047bea7d729c64"
+    },
+    {
+      "label": "queue",
+      "offset": "0x308",
+      "instruction_sha256": "a77604231128bcd7f1300412a23d9c485f7bd06e7d15f0f44d4b11610af8aa6d"
+    },
+    {
+      "label": "queue",
+      "offset": "0x320",
+      "instruction_sha256": "42809720add7c9285d851b6b947cbaba33936913e85ba9d5fb10b108f296ce6f"
+    },
+    {
+      "label": "queue",
+      "offset": "0x322",
+      "instruction_sha256": "0f590825786418f8f84259b8dc1cf6e89301efb66cec7e85db402f06af373bf5"
+    }
+  ],
+  "native_anchors": [
+    {
+      "label": "payload26_primary",
+      "rva": "0x189590f",
+      "length": 12,
+      "sha256": "a86a1ff0cc319e8fdde8fa3bb88349cf5547ea52c8e62666f0a66203680b8a24"
+    },
+    {
+      "label": "payload27_primary",
+      "rva": "0x189591b",
+      "length": 12,
+      "sha256": "d76379e410cbdb900afef565c03bb54ee964eb9a2d1c5ef85207501c165544cd"
+    },
+    {
+      "label": "payload26_alternate",
+      "rva": "0x1984f49",
+      "length": 12,
+      "sha256": "a86a1ff0cc319e8fdde8fa3bb88349cf5547ea52c8e62666f0a66203680b8a24"
+    },
+    {
+      "label": "payload27_alternate",
+      "rva": "0x1984f55",
+      "length": 12,
+      "sha256": "d76379e410cbdb900afef565c03bb54ee964eb9a2d1c5ef85207501c165544cd"
+    },
+    {
+      "label": "payload26_third",
+      "rva": "0x1989f7d",
+      "length": 12,
+      "sha256": "a86a1ff0cc319e8fdde8fa3bb88349cf5547ea52c8e62666f0a66203680b8a24"
+    },
+    {
+      "label": "payload27_third",
+      "rva": "0x1989f89",
+      "length": 12,
+      "sha256": "d76379e410cbdb900afef565c03bb54ee964eb9a2d1c5ef85207501c165544cd"
+    },
+    {
+      "label": "new_state_block_copy",
+      "rva": "0x198a6ad",
+      "length": 14,
+      "sha256": "ee63c1a9361133bfdbc2601eea2d4c737f400c7433ef58f41547db24b76afe62"
+    },
+    {
+      "label": "notification_wrapper_argument",
+      "rva": "0x198a79a",
+      "length": 3,
+      "sha256": "3f89491210b5be5cf6b59c57c822e8d90a308212ed0bd345dc687687e1826976"
+    },
+    {
+      "label": "notification_wrapper_copy",
+      "rva": "0x198a80c",
+      "length": 14,
+      "sha256": "f747839fba30bf38cbf9b1db23cbe210a257565c1bf7b917b41cdcf09475ade6"
+    },
+    {
+      "label": "notification_frame_base",
+      "rva": "0x198a84c",
+      "length": 10,
+      "sha256": "89a03ccc59f01a9ba4d07cbfc79a22fb4be71358dd9f4084a5a34e41f2babce1"
+    },
+    {
+      "label": "active_change_filter",
+      "rva": "0x198a9e7",
+      "length": 11,
+      "sha256": "0b365c33364b67cef9b3a42bfac8530e778e57d0c8ba611d8720d0140b6a6e18"
+    },
+    {
+      "label": "ready_change_filter",
+      "rva": "0x198a9d9",
+      "length": 5,
+      "sha256": "855a530792327c77dc8e3d33f419ef7a26459581bd82fbb5ca9cc6b74fd3c9f8"
+    },
+    {
+      "label": "mode_comparison",
+      "rva": "0x198aa59",
+      "length": 9,
+      "sha256": "388feefbf09978c2b45fadc9540846d59f566d2cd7616a29a8bad81a3460f69e"
+    },
+    {
+      "label": "notification_delegate_pointer",
+      "rva": "0x1a64da8",
+      "length": 7,
+      "sha256": "28b26cbfd7835ed932a2c3125a719afa50b28e25a90dd66975a688e06e7361b5"
+    }
+  ],
+  "calls": [
+    {
+      "offset": "0xb270",
+      "target": "0x87f2"
+    },
+    {
+      "offset": "0xb294",
+      "target": "0x87f2"
+    },
+    {
+      "offset": "0xb4be",
+      "target": "0x8e3c"
+    },
+    {
+      "offset": "0x1afc0",
+      "target": "0x1aa92"
+    },
+    {
+      "offset": "0x1afd2",
+      "target": "0x2e8"
+    }
+  ],
+  "cross_image_fragments": [
+    {
+      "start": "0xb2f8",
+      "end_exclusive": "0xb400",
+      "sha256": "68143be0a38c18bba7704efc5e77a04f4b7d4028af9fa8cb228cfb7117e9327f",
+      "occurrences": {
+        "JS_3103_DV_V209_No_Key.app.bin": [
+          "0xb2f8"
+        ],
+        "JS_3103_U_DV_V515_No_Key.app.bin": [
+          "0xb2fa"
+        ],
+        "JS_3103_U_DV_V608_No_Key.app.bin": [
+          "0xb2fa"
+        ]
+      }
+    },
+    {
+      "start": "0x1af0c",
+      "end_exclusive": "0x1af2a",
+      "sha256": "157233cd5d58837009005316a89ab5412a8373edf64ae5b2a11906347b47ec8c",
+      "occurrences": {
+        "JS_3103_DV_V209_No_Key.app.bin": [
+          "0x1af0c"
+        ],
+        "JS_3103_U_DV_V515_No_Key.app.bin": [
+          "0x1afe4"
+        ],
+        "JS_3103_U_DV_V608_No_Key.app.bin": [
+          "0x1afe2"
+        ]
+      }
+    },
+    {
+      "start": "0x1aa92",
+      "end_exclusive": "0x1aaac",
+      "sha256": "68019626bf411aab2dce20f6e611a60dccc5c152ae5fd40a85c6a247d187b009",
+      "occurrences": {
+        "JS_3103_DV_V209_No_Key.app.bin": [
+          "0x1aa92"
+        ],
+        "JS_3103_U_DV_V515_No_Key.app.bin": [
+          "0x1ab6a"
+        ],
+        "JS_3103_U_DV_V608_No_Key.app.bin": [
+          "0x1ab68"
+        ]
+      }
+    }
+  ],
+  "records": {
+    "length": 30,
+    "body_halfwords": 14,
+    "byte_order": "high byte then low byte",
+    "marker_offsets": [
+      28,
+      29
+    ],
+    "markers": [
+      "0xa6",
+      "0x6a"
+    ],
+    "left": {
+      "logical_address": "0x1700",
+      "read_buffer": "B+0x1f2a",
+      "loaded_flag": "B+0x1b8e"
+    },
+    "right": {
+      "logical_address": "0x1720",
+      "read_buffer": "B+0x1f49",
+      "loaded_flag": "B+0x1bf6"
+    }
+  },
+  "telemetry": {
+    "buffer": "B+0x1434",
+    "length": 64,
+    "header_length": 4,
+    "payload_marker": "0xe0",
+    "active": {
+      "source": "B+0x1b3a",
+      "report_offset": 30,
+      "payload_offset": 26
+    },
+    "ready": {
+      "source": "B+0x1b3b",
+      "report_offset": 31,
+      "payload_offset": 27
+    },
+    "native_state_offsets": [
+      4,
+      8
+    ],
+    "notification_frame_offsets": [
+      "0x2c",
+      "0x30"
+    ]
+  },
+  "synthetic_controls": {
+    "marker_byte_mutations_rejected": 510,
+    "body_bit_mutations_not_detected_by_marker_predicate": 224,
+    "byte_order_and_geometry_checked": true,
+    "target_execution": false
+  },
+  "limits": [
+    "The bounded record-copy gates check markers, not the complete body; later validation outside these ranges is not excluded.",
+    "Loading old valid records is not verification of the current Finish transaction. No complete readback-after-save or host persistence acknowledgement was established.",
+    "Report-field correspondence and native notification layout do not close every provider/framing/receiver/model-selection edge.",
+    "The surrounding report routine has an unresolved instruction at 0x1ad4c; base-register anchor and bounded field block do not prove full scheduler reachability.",
+    "Queue capacity and delivery can limit reporting; equal reports are suppressed by compare/copy. No hardware false-success event has been reproduced.",
+    "EE53 and bus bit7 retain the independent-reference limits in NEXUS_STICK_STORAGE.md."
+  ],
+  "verifier_sha256": "ca192c90d4293109db35b3c5a4b88da0bac65efa80a39b12f2bea580ca7f4578",
+  "hardware_access": false,
+  "network_access": false,
+  "driver_changed": false
+}

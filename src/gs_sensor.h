@@ -59,12 +59,15 @@ int gs_sensor_convert(const struct gs_sensor_calibration *cal,
  * SDL frame: +X right, +Y up/out of face, +Z towards the player.
  * The observed body (G0,-G2,G1) becomes SDL (G0,G1,G2).
  * 7 output counts/raw at 100 counts/(degree/s) preserves exactly 0.07.
- * No accelerometer mapping, bias estimate or display sensitivity is applied.
+ * The 105e ZZZ may reuse it only with a separate experimental opt-in; its
+ * axes and scale have not been physically validated. No accelerometer
+ * mapping, bias estimate or display sensitivity is applied.
  */
 #define GS_GYRO_OBSERVED_RESOLUTION 100
 #define GS_GYRO_OBSERVED_MIN (-32768 * 7)
 #define GS_GYRO_OBSERVED_MAX (32767 * 7)
-int gs_gyro_convert_observed(gs_u16 pid, int enabled,
+int gs_gyro_profile_enabled(gs_u16 pid, int enabled, int experimental_105e);
+int gs_gyro_convert_observed(gs_u16 pid, int enabled, int experimental_105e,
 			     const gs_s16 raw[3], gs_s32 out[3]);
 
 /* Host receive-time clock for evdev, not a sensor/device clock. A paused

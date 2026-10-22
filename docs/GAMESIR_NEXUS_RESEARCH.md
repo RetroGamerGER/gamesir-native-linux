@@ -2,6 +2,13 @@
 
 # GameSir Nexus: statische Firmware- und Sensoranalyse
 
+**Fortsetzung vom 21. Oktober 2026:** Die
+[Wartungsanalyse zu Stickkalibrierung und Firmwareupdates](NEXUS_MAINTENANCE_RESEARCH.md)
+verfolgt den UI-Ablauf und sechs Updatefunktionen mit lokalem REA weiter.
+Sie präzisiert die Grenzen der Geräteprüfung, Bestätigungsschleifen und
+Abschlussmeldungen. Kein schreibender Linux-Updater und kein Recovery-Nachweis.
+Die folgenden Sensoranalysen behalten ihren historischen Stand.
+
 Stand: 18. Oktober 2026. Untersucht wurde das lokal vorhandene Windows-Paket
 **GameSir Nexus 2.1.23.0**. Dieser Bericht dokumentiert eigene Beobachtungen,
 Dateimetadaten und begrenzte statische Codeanalyse; Herstellerdateien werden

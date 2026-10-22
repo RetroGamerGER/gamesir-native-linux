@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "date": "2026-10-22",
+  "base_commit": "7ad8861",
+  "scope": "Offline controller-calibration adapter preparation only; default live channel unavailable",
+  "source_sha256": {
+    "tools/control_center/calibration_protocol.py": "0f44ffa3ab10ec421977b4ced29478e6dc697888776f8cdcab3931d3bc47ca14",
+    "tools/control_center/calibration_controller.py": "5ee5fe5590fb44284031eca3f53e359958c38e2f6d27dda055f7349cc35c70e3",
+    "tools/control_center/stick_calibration.py": "51af2c28138d36e2992be49e7d7257ca79455165604a0ffd96df7357aaa3be89",
+    "tests/test_calibration_controller.py": "7271ceb6f0e128c07f943dabfa0a53525761568a87f12610c3729dc7a9137ba8"
+  },
+  "reference_sha256": {
+    "docs/NEXUS_STICK_TRANSPORT.md": "c415ffb446564201a7c14c374f8cfc2ac10374fb3db30520de3ceec8173414ec",
+    "docs/NEXUS_STICK_WIRE_PATH.md": "30fb8156b6f72d34a270b73245811dc47b4e359fc8eb6ea30d55095fcbbf076f",
+    "docs/NEXUS_STICK_READBACK.md": "5e266a6d6c543dc6c778dc8a8252c0796354104373af5cf079b1217e37b11f2f",
+    "docs/PROTOCOL.md": "601969dff2cbb62e9af5e7304b0734dacf4355973a9160cbd279e10b48eccb24",
+    "fixtures/sprint002-target.json": "ca6ecab7370948a343e9f4fd03398dcd60992707164aec8b1215c5c7c1c66ccf"
+  },
+  "preserved_source_sha256": {
+    "include/uapi/gs_native.h": "dc135a12a36463ecd1e6abee2463552d3867ed6ae16aa234cf7010503edc19ce",
+    "kernel/gs_native_usb.c": "1369592e24fbc46816beb9d2ded40b7f28429bc94d19775b299b51b3e1cb323f",
+    "tools/service/gamesir_native.py": "20cf81522b8a281a055fcae32c91b483d292ecca0b75391f70e2d5f1d07e98ce",
+    "tools/service/haptics_broker.py": "5081b71918f5e059167620c5380b3563c6b1d03b6b0d69256aee69cd937eff63",
+    "tools/control_center/qt_bridge.py": "ccef140464ed356ee111dd66293a60863e410083c482a858bfdf2451187b77a7",
+    "tools/control_center/calibration_bridge.py": "7efdca5fbbf543870ddd95f118ebcaa8fad4011fb56ed4dc6c59549a6d7b75e3",
+    "tools/control_center/main.py": "b57b475426454dfd881cf91696c3fb13ddaa4c4b91cfb07f7ad6d81c6be2b2c4",
+    "tools/control_center/qml/CalibrationDialog.qml": "7f1df643d03c7455db05528a13ce95142179eba5bed0e4ba1420670d4aa27bac"
+  },
+  "validation": {
+    "control_center": 411,
+    "qt_lifecycle": 79,
+    "new_controller_cases": 35,
+    "licensing_cases": 3,
+    "public_readme_cases": 7,
+    "nexus_flow_cases": 16,
+    "all_control_center_groups_passed": true
+  },
+  "provider_messages": {
+    "type": "0x0f",
+    "Start": "fe0003",
+    "Finish": "fe0100",
+    "Exit": "fe0200",
+    "scope": "Internal provider contents ONLY, not full USB frames"
+  },
+  "telemetry_contract": {
+    "type": "0x10",
+    "options": 0,
+    "full_length": 64,
+    "payload_length": 60,
+    "marker": "0xe0",
+    "processed_sticks": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "raw_sticks": [
+      51,
+      52,
+      53,
+      54
+    ],
+    "active_full_report_byte": 30,
+    "done_full_report_byte": 31,
+    "wire_sequence_is_monotonic_host_counter": false,
+    "display_mapping": "explicit raw/processed source and signs; endpoint normalization only"
+  },
+  "owner_contract": {
+    "scope": "Proposed injected API, not existing kernel/manager protocol",
+    "checks": [
+      "VID/PID admission",
+      "port/binding tokens",
+      "actual RF connection lifetime",
+      "local run generation",
+      "exclusive native owner",
+      "unexpired owner lease",
+      "required provider/stream capabilities",
+      "before-and-after send checks",
+      "bounded first-report wait without premature Start or disconnect"
+    ],
+    "uncertain_submission_retried": false,
+    "blind_exit_on_loss": false,
+    "cleanup_error_overwrites_first_error": false
+  },
+  "limitations": [
+    "Current ABI1 has neither native TMR command nor full E0 stream export. Manager status/release/resume and haptics are not a calibration owner API.",
+    "No Linux hardware channel, socket/ioctl implementation, privileged deployment, normal-GUI live binding or new live CLI flag.",
+    "Windows provider-to-USB framing/sequence/padding and exact active firmware/edition behavior remain unverified. No guessed header or packet is emitted.",
+    "Position source/signs and preview E0 age limit are candidate policies; real report suppression/RF proof and axis behavior require review before live use.",
+    "The saved capture validates normal E0 layout with inactive flags, not a real calibration.",
+    "A lease-shaped Python object is not authentication; a future trusted local owner must implement permissions, serialization, cancellation/lifetime and bounded operations.",
+    "Existing out-of-scope core-package ZZZ documentation allowlist issue remains separately recorded; no core packaging acceptance claimed."
+  ],
+  "hardware_access": false,
+  "network_access": false,
+  "firmware_executed": false,
+  "kernel_changed": false,
+  "manager_changed": false,
+  "uapi_changed": false,
+  "helper_changed": false,
+  "gui_backend_enabled": false,
+  "installed_driver_changed": false,
+  "appimage_rebuilt": false,
+  "published": false
+}

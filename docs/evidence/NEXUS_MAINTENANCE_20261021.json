@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "package": "GameSir Nexus 2.1.23.0",
+  "scope": {
+    "static_only": true,
+    "network_access": false,
+    "hardware_access": false,
+    "vendor_code_execution": false,
+    "firmware_emulation": false,
+    "installed_driver_changes": false,
+    "firmware_write_implemented": false,
+    "hardware_calibration_implemented": false
+  },
+  "sources": [
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "sha256": "5402b15f22c2a95a4ead965d707bef72217b6bc69a2f10e5f126133083868f0f",
+      "bytes": 1975162
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "sha256": "36cb48433ca270994ada6625348af7f1c51a1a50f7dc6d63b7d0fff372c0a040",
+      "bytes": 33306624
+    },
+    {
+      "file": "FirmwarePackages/JL_Upgrade_Gip.dll",
+      "sha256": "48385268c56638d953b60796ad76d950f6f1c104b1450fd48f42d0911af8ce37",
+      "bytes": 119808
+    }
+  ],
+  "javascript_landmarks": [
+    {
+      "id": "stick_completion_requires_both",
+      "file_byte_offset": 1572418,
+      "length": 52,
+      "sha256": "2778ac9ebe88bd7ceb9319ec950f3b82e5deba271272941b80167194bb9ed81c"
+    },
+    {
+      "id": "completion_delay_ms",
+      "file_byte_offset": 1573295,
+      "length": 33,
+      "sha256": "19f34d248cb5a7813e279ab59352dc0bf56fd2760040d7534ec8eb4e65d31e14"
+    },
+    {
+      "id": "preparation_ticks",
+      "file_byte_offset": 1574010,
+      "length": 21,
+      "sha256": "56a9bc2fc13cb7f7ac2eb298469b09c621ebed452317ad46832a6542f30212b8"
+    },
+    {
+      "id": "start",
+      "file_byte_offset": 1574708,
+      "length": 55,
+      "sha256": "124629440de605cde77bfca02086831637d2fe51b5ab6fd2a20084fbeb60f80e"
+    },
+    {
+      "id": "finish_without_part",
+      "file_byte_offset": 1574820,
+      "length": 34,
+      "sha256": "dc5f3599b484c62a71e635082371232ed8d8800c61688af5c8e2a78bcd4acec3"
+    },
+    {
+      "id": "exit_without_part",
+      "file_byte_offset": 1574907,
+      "length": 34,
+      "sha256": "f46cf81d1781cfc2c545e90977874b709229b9d49503ef98a83f47213aa2b090"
+    },
+    {
+      "id": "status_listener",
+      "file_byte_offset": 1574413,
+      "length": 90,
+      "sha256": "a2f00341f2e1ee37937c108151d0a9a5678242badb27e04cf7edca199da60d21"
+    },
+    {
+      "id": "ui_progress_capped_at_99",
+      "file_byte_offset": 1945494,
+      "length": 38,
+      "sha256": "1fb5132ec0cb4a440bcd1223df1c899327a997679dcf1c5eedcde34e30eb2c8b"
+    },
+    {
+      "id": "ui_success_ret_nonnegative",
+      "file_byte_offset": 1945620,
+      "length": 38,
+      "sha256": "dab7e6ecdd8443203999865fdc7e807d448170160a91aa65bac6c05429d5b59f"
+    },
+    {
+      "id": "post_update_calibration",
+      "file_byte_offset": 1198151,
+      "length": 25,
+      "sha256": "05e263e705125c3ac221397ac6fb1419b1fdcc91a2b8f2a5afec3d38a6d1b331"
+    }
+  ],
+  "assembly_crosschecks": [
+    {
+      "id": "fragment_ack_wait_1000_ms",
+      "rva": "0x13797",
+      "file_byte_offset": 76695,
+      "length": 5,
+      "sha256": "ef590deb7cc86ec26be7e0f5429ad5d97f9cead107f39828a5318d36e9416868"
+    },
+    {
+      "id": "fragment_retry_back_edge",
+      "rva": "0x137b2",
+      "file_byte_offset": 76722,
+      "length": 2,
+      "sha256": "32b6940c1397fb8e8b1746a9d3a28f82b8af57ba026452096451b8465879ee74"
+    },
+    {
+      "id": "payload_crc_mismatch_branch",
+      "rva": "0x13a0b",
+      "file_byte_offset": 77323,
+      "length": 7,
+      "sha256": "5e47bf7319887adbf534bfc9422bcdf87d5c60038ffd19fc4fb2c3c564e2eead"
+    },
+    {
+      "id": "payload_crc_mismatch_length_and_return",
+      "rva": "0x13a44",
+      "file_byte_offset": 77380,
+      "length": 6,
+      "sha256": "dea98506be346836a2e5cb4059f3bb656c146eecd67f64b8d344b0291707e753"
+    },
+    {
+      "id": "result_call_then_zero_check",
+      "rva": "0x151b8",
+      "file_byte_offset": 83384,
+      "length": 11,
+      "sha256": "b84a14765dd7f7e859150028f7063d9b9025cde15678b0eafabc38f261aa0583"
+    },
+    {
+      "id": "callback_progress_100_and_zero_status",
+      "rva": "0x151e4",
+      "file_byte_offset": 83428,
+      "length": 7,
+      "sha256": "38f9c1a1010016625db369576968c7f9b0d7e11fc83ae7911b153106848cb47d"
+    }
+  ],
+  "rea_functions": [
+    {
+      "procedure_va": "0x180014a20",
+      "report_sha256": "311d214c1989cc0ccecb4ef30d31d49c5bd9fb50b2101860ad4751ff0051e36e",
+      "provider": "REA 6.5.0 / Ghidra 12.1.4",
+      "completed": true,
+      "original_unchanged": true,
+      "staged_input_unchanged": true
+    },
+    {
+      "procedure_va": "0x1800140c0",
+      "report_sha256": "516eb5be51220e269295987f10687f1f57170326b8733fb7691d5bdf69667e0f",
+      "provider": "REA 6.5.0 / Ghidra 12.1.4",
+      "completed": true,
+      "original_unchanged": true,
+      "staged_input_unchanged": true
+    },
+    {
+      "procedure_va": "0x180013610",
+      "report_sha256": "2d2af8511ccdd770e2a48e0e26f88fa38215ec2474e9e1a7589ecf0966c45fdf",
+      "provider": "REA 6.5.0 / Ghidra 12.1.4",
+      "completed": true,
+      "original_unchanged": true,
+      "staged_input_unchanged": true
+    },
+    {
+      "procedure_va": "0x18000b3f0",
+      "report_sha256": "364efb0ebc6c1b85d4e8eeabe1ef3acce87e1feb2054e4cee6d54b0b8f31f54a",
+      "provider": "REA 6.5.0 / Ghidra 12.1.4",
+      "completed": true,
+      "original_unchanged": true,
+      "staged_input_unchanged": true
+    },
+    {
+      "procedure_va": "0x180015330",
+      "report_sha256": "186ea20b831d22e91a3e216b5b20ad94a41c1cd45de8e850cd5e722f0e5b0557",
+      "provider": "REA 6.5.0 / Ghidra 12.1.4",
+      "completed": true,
+      "original_unchanged": true,
+      "staged_input_unchanged": true
+    },
+    {
+      "procedure_va": "0x180014330",
+      "report_sha256": "e4bbb1accfbdf3ad378c805861f8ad7dccb6ca7ecbbde096cc06e70fab676bff",
+      "provider": "REA 6.5.0 / Ghidra 12.1.4",
+      "completed": true,
+      "original_unchanged": true,
+      "staged_input_unchanged": true
+    }
+  ],
+  "limitations": [
+    "Static branch findings only; no target runtime or fault-injection reproduction.",
+    "Default update branch 0x14a20 reviewed; alternate 0x17180 not followed in this pass.",
+    "Payload CRC failure acceptance in the whole application is unproved; outer checks and reachability remain open.",
+    "Calibration wire framing, model routing, persistence and rollback remain unverified.",
+    "No flash safety guarantee or recovery capability follows from checksums or static analysis."
+  ]
+}

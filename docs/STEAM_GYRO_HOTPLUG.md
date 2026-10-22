@@ -1,5 +1,22 @@
 # Gamescope: later power-on and gyro reconnection
 
+## Revision 18: later power-on accepted in current use — 21 October 2026
+
+After the separately recorded revision18 installation and activation, the
+maintainer reports both hosts working. On the secondary host, Steam Gaming
+Mode now recognizes gyro when the controller is switched on later, rather
+than already on at system startup. The maintainer explicitly accepts this
+working state and asks for no further investigation, tests or runtime changes.
+
+This is a positive user report for the current setup. No new log, input capture
+or live state query accompanies it; exact timing and the cause of the change
+are not established. Do not infer that revision18's manager-budget correction
+alone fixes every Steam gyro discovery case. Earlier observations below remain
+historical evidence. Leave the working systems unchanged unless a new task or
+problem report calls for action.
+
+## Earlier status — 19 October 2026
+
 19 October 2026. **One user-led radio reconnect under revision 11 now has a
 positive Steam/Gamescope gyro result without held Guide or Steam restart;
 see the bounded acceptance below. General hotplug reliability remains open.**

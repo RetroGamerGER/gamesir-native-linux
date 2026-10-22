@@ -1,0 +1,893 @@
+{
+  "schema": 1,
+  "date": "2026-10-22",
+  "base_commit": "fb62850",
+  "scope": "Static USB framing reconstruction; not a Windows capture or target execution",
+  "sources": [
+    {
+      "image": "DG144",
+      "bytes": 246552,
+      "sha256": "b1181a4a244e885f033b281289f87a49893ea7fdfd8e70f019f681fe95aaf3e6"
+    },
+    {
+      "image": "DG510",
+      "bytes": 246884,
+      "sha256": "db5a7a1d22d57525cd1d2ead62362d1ebd487a0d5ecd6a90638352fd8ca34de8"
+    },
+    {
+      "image": "DG604",
+      "bytes": 246884,
+      "sha256": "0169481cbd484b478b5c2443160c2075b4a89e8bdde58ba5b19bb36802158330"
+    },
+    {
+      "image": "DV209",
+      "bytes": 379140,
+      "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6"
+    },
+    {
+      "image": "DV515",
+      "bytes": 379364,
+      "sha256": "77e77be00ccd03d4c7dc6e469875c977988ffcbecac78a66cfe337c633308673"
+    },
+    {
+      "image": "DV608",
+      "bytes": 379364,
+      "sha256": "6c2155168aae2bfa01b8b391ec2295c4cbf0c27696a49a7d5a063eefdb22147b"
+    }
+  ],
+  "decoder_sha256": "53aaff9f06ad5c65e640cff8360cd74b80a3551a494a0823329796e7164f4458",
+  "decode_runs": [
+    {
+      "rows": 21,
+      "records": 351,
+      "request_sha256": "1dc931b698813e004e6507cbf578966b673476e6372626f3a266d00ebdf8ad1e",
+      "output_sha256": "260a3f72f223df99b660f49ab8af3343bdc80c71d866bd1497ed2daa1ea9cff8",
+      "isolation_verified": true
+    },
+    {
+      "rows": 12,
+      "records": 106,
+      "request_sha256": "2dd40a1164d0927e6085d05ad11b2efd74238c956865d5cdb770d79e9fc5a6e9",
+      "output_sha256": "4981bc706bb97c12b704e9519294712fb9fbe4f64e6e8a59d2c72d269d1506da",
+      "isolation_verified": true
+    },
+    {
+      "rows": 6,
+      "records": 58,
+      "request_sha256": "c1cc10ff606891e733e14b69983451317697e9e6b0576b3a433896065c509d3d",
+      "output_sha256": "21d99754585c3b0d1cfedd29467137ec523ed524304d86c74d3b4bbf3dc934ca",
+      "isolation_verified": true
+    }
+  ],
+  "anchors": [
+    {
+      "image": "DG144",
+      "offset": "0x4c2c",
+      "instruction_sha256": "2c82f1a940be4d2d4f23fb6511ffd6e3250009f6ba23f576903c5b10cbc8e483",
+      "length": 4,
+      "landmark": "0x3"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x4c46",
+      "instruction_sha256": "60728539e40d75be3aa2375a9dc0c2131afb8dc7895aae984482d834723f3925",
+      "length": 4,
+      "landmark": "0x4ca0"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x4cbe",
+      "instruction_sha256": "015fd220de8e1e38c3e601bf3ca6f4c0944c1f1f480c55ed027bd44f262dd7bc",
+      "length": 6,
+      "landmark": "0x1e00a0e"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x4cde",
+      "instruction_sha256": "ff1407119ae10b28df9841db7a6dca1628d543771940dffa150abf9a4be254cc",
+      "length": 4,
+      "landmark": "0x4e44"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x4e4c",
+      "instruction_sha256": "d518d47db898623c3e3dcbf50a51f23bac36667950882a42225a7e3b37427bab",
+      "length": 2,
+      "landmark": "0x40"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x4e64",
+      "instruction_sha256": "3ea8fdd83db4c6773b5e655200343049b26b82da7a39f3090de8e54a53b8e2e3",
+      "length": 4,
+      "landmark": "STORE"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x4e6c",
+      "instruction_sha256": "4b32a3d897611e1e088a9f7ccf9efa0d7d7603e6208a198156d249ce6bf02552",
+      "length": 2,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x4e76",
+      "instruction_sha256": "f9ff35752a48d05b02cc36832fed7112f8e8ba989dd3a4a9b350d6d0c32bce3c",
+      "length": 4,
+      "landmark": "0x15d0"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x95c",
+      "instruction_sha256": "7816b2dddd232e21cafae12b6e9368e9f991853a66c6ccd2db7cd7d9a6ea656d",
+      "length": 4,
+      "landmark": "0x104"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x964",
+      "instruction_sha256": "83f476742938b1477b9f1745745ce92a7e2d497b565c2a51ec57c94bfef715e2",
+      "length": 4,
+      "landmark": "0x31e"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x96c",
+      "instruction_sha256": "d508dccddecc308fab8be362efc2b757452fc741a3df3386e97a82e67b2c974f",
+      "length": 4,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa4c",
+      "instruction_sha256": "b99c7674f183f88dd32848dd63923e3467300813069b1b1828d6861838e96bc3",
+      "length": 4,
+      "landmark": "0x10"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xb2c",
+      "instruction_sha256": "a2ef575c973c783d12baf86eedb67446e34b012817732fb42ee5e10e1d85acff",
+      "length": 4,
+      "landmark": "0xf"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xb30",
+      "instruction_sha256": "aed375ce32c114ccbcb5432b81f6f6a310fdc8bc5345ef9426817a885d4229d8",
+      "length": 2,
+      "landmark": "0x4"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xb32",
+      "instruction_sha256": "04727dcc576a1c1ba16901491becc5e20c7fdbd0a12c93af3f212c8d3cfb9de2",
+      "length": 4,
+      "landmark": "0xbca"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xbca",
+      "instruction_sha256": "e59a79a81aaaf0e70cf7626246e05c2feb94234e70d74bb175fd528db0e36a05",
+      "length": 4,
+      "landmark": "0x2dc"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xbce",
+      "instruction_sha256": "50d169ca173b4bf8b8660e314bbf3319a8530651bc54fdc0758ba642dc447301",
+      "length": 2,
+      "landmark": "INT_ZEXT"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xbd2",
+      "instruction_sha256": "ad154eac257c7ce86dd27cae9d7379c1cff0118f3ebe90a392a3907893113880",
+      "length": 2,
+      "landmark": "COPY"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xbd4",
+      "instruction_sha256": "bb7fb65e96464d788e5ac1300853d7c7586ea0d32047fee6a7802b1d85e0ac59",
+      "length": 4,
+      "landmark": "0x680"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x32a",
+      "instruction_sha256": "874cd58408a43ee4d81b09407b9137a539b0d5869f62485b45615e00f79d46dc",
+      "length": 2,
+      "landmark": "0x40"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x32e",
+      "instruction_sha256": "c1410bed12c1cb9f4f90510d88532697025e70b1134bbd2c2b841806c513740d",
+      "length": 2,
+      "landmark": "0x270"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x2c4",
+      "instruction_sha256": "05bb9b62e2999afa956759db92fe10631066a79ee0d483232a9f60fe72aa7f1e",
+      "length": 2,
+      "landmark": "0x17"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x2bc",
+      "instruction_sha256": "748443df32740523a3bb07947ff306beb8502bb1b5c52bc1e9c4cf40c8d8087e",
+      "length": 2,
+      "landmark": "0x16"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x308",
+      "instruction_sha256": "2e29879b7d3bb9cf6a37bd439ee28d4e2bd759c8e714752586ef79014f71ee54",
+      "length": 2,
+      "landmark": "INT_ADD"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x31a",
+      "instruction_sha256": "e41767b0dddf8fdbe40d7affdb8589279431c192a71b8cf6ccfb07de706c2651",
+      "length": 2,
+      "landmark": "COPY"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x6b2",
+      "instruction_sha256": "362403502c584d0a218365486737654281d47b6a2c42f0673511972df15a348a",
+      "length": 2,
+      "landmark": "LOAD"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x6b4",
+      "instruction_sha256": "69a848931bcc2ec97d3be6ba89cc12f1ec669e860b1a9a3b21aba320bdbdb8fd",
+      "length": 4,
+      "landmark": "STORE"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa80e",
+      "instruction_sha256": "4a77fdfde24c705a4b9d21b92c4dd1849c96d039eea0a876dec39fde6cd649c7",
+      "length": 4,
+      "landmark": "0x31e2"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa824",
+      "instruction_sha256": "77f973f7759e2a529aaab918bfa7023fb1f2ff5334b33b6a7c6d185955f3d3a7",
+      "length": 4,
+      "landmark": "0x3126e8"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa82e",
+      "instruction_sha256": "893a3d2c8f4d7f6d6c9d626729af3d44398ec3f3e851c199b9dd9fd53d1fd3e4",
+      "length": 2,
+      "landmark": "0xa0"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa83a",
+      "instruction_sha256": "a805160a1cc20826abc3426cc70d944e10eb62d439403386381c305aab531f07",
+      "length": 4,
+      "landmark": "STORE"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa844",
+      "instruction_sha256": "57742460719fa6adfd95138b721b65e94f1fafd25551b2789ba173d9d07b0405",
+      "length": 2,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DG510",
+      "offset": "0x95c",
+      "instruction_sha256": "7816b2dddd232e21cafae12b6e9368e9f991853a66c6ccd2db7cd7d9a6ea656d",
+      "length": 4,
+      "landmark": "0x104"
+    },
+    {
+      "image": "DG510",
+      "offset": "0x964",
+      "instruction_sha256": "83f476742938b1477b9f1745745ce92a7e2d497b565c2a51ec57c94bfef715e2",
+      "length": 4,
+      "landmark": "0x31e"
+    },
+    {
+      "image": "DG510",
+      "offset": "0xa4c",
+      "instruction_sha256": "b99c7674f183f88dd32848dd63923e3467300813069b1b1828d6861838e96bc3",
+      "length": 4,
+      "landmark": "0x10"
+    },
+    {
+      "image": "DG510",
+      "offset": "0xb2c",
+      "instruction_sha256": "a2ef575c973c783d12baf86eedb67446e34b012817732fb42ee5e10e1d85acff",
+      "length": 4,
+      "landmark": "0xf"
+    },
+    {
+      "image": "DG510",
+      "offset": "0xb32",
+      "instruction_sha256": "04727dcc576a1c1ba16901491becc5e20c7fdbd0a12c93af3f212c8d3cfb9de2",
+      "length": 4,
+      "landmark": "0xbca"
+    },
+    {
+      "image": "DG510",
+      "offset": "0xbca",
+      "instruction_sha256": "b53082ada0801877937b29f9309065ce8c5745fbb63559129c4d5745bb2704aa",
+      "length": 4,
+      "landmark": "0x2e0"
+    },
+    {
+      "image": "DG510",
+      "offset": "0xbd4",
+      "instruction_sha256": "bb7fb65e96464d788e5ac1300853d7c7586ea0d32047fee6a7802b1d85e0ac59",
+      "length": 4,
+      "landmark": "0x680"
+    },
+    {
+      "image": "DG510",
+      "offset": "0x4ccc",
+      "instruction_sha256": "015fd220de8e1e38c3e601bf3ca6f4c0944c1f1f480c55ed027bd44f262dd7bc",
+      "length": 6,
+      "landmark": "0x1e00a0e"
+    },
+    {
+      "image": "DG510",
+      "offset": "0x4e5a",
+      "instruction_sha256": "d518d47db898623c3e3dcbf50a51f23bac36667950882a42225a7e3b37427bab",
+      "length": 2,
+      "landmark": "0x40"
+    },
+    {
+      "image": "DG510",
+      "offset": "0x4e7a",
+      "instruction_sha256": "4b32a3d897611e1e088a9f7ccf9efa0d7d7603e6208a198156d249ce6bf02552",
+      "length": 2,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DG510",
+      "offset": "0x4e84",
+      "instruction_sha256": "27e6f992899513b08f07c5b167caa6423a0f834fe46463d62e963fafa0011328",
+      "length": 4,
+      "landmark": "0x15d0"
+    },
+    {
+      "image": "DG604",
+      "offset": "0x95c",
+      "instruction_sha256": "7816b2dddd232e21cafae12b6e9368e9f991853a66c6ccd2db7cd7d9a6ea656d",
+      "length": 4,
+      "landmark": "0x104"
+    },
+    {
+      "image": "DG604",
+      "offset": "0x964",
+      "instruction_sha256": "83f476742938b1477b9f1745745ce92a7e2d497b565c2a51ec57c94bfef715e2",
+      "length": 4,
+      "landmark": "0x31e"
+    },
+    {
+      "image": "DG604",
+      "offset": "0xa4c",
+      "instruction_sha256": "b99c7674f183f88dd32848dd63923e3467300813069b1b1828d6861838e96bc3",
+      "length": 4,
+      "landmark": "0x10"
+    },
+    {
+      "image": "DG604",
+      "offset": "0xb2c",
+      "instruction_sha256": "a2ef575c973c783d12baf86eedb67446e34b012817732fb42ee5e10e1d85acff",
+      "length": 4,
+      "landmark": "0xf"
+    },
+    {
+      "image": "DG604",
+      "offset": "0xb32",
+      "instruction_sha256": "04727dcc576a1c1ba16901491becc5e20c7fdbd0a12c93af3f212c8d3cfb9de2",
+      "length": 4,
+      "landmark": "0xbca"
+    },
+    {
+      "image": "DG604",
+      "offset": "0xbca",
+      "instruction_sha256": "b53082ada0801877937b29f9309065ce8c5745fbb63559129c4d5745bb2704aa",
+      "length": 4,
+      "landmark": "0x2e0"
+    },
+    {
+      "image": "DG604",
+      "offset": "0xbd4",
+      "instruction_sha256": "bb7fb65e96464d788e5ac1300853d7c7586ea0d32047fee6a7802b1d85e0ac59",
+      "length": 4,
+      "landmark": "0x680"
+    },
+    {
+      "image": "DG604",
+      "offset": "0x4ccc",
+      "instruction_sha256": "015fd220de8e1e38c3e601bf3ca6f4c0944c1f1f480c55ed027bd44f262dd7bc",
+      "length": 6,
+      "landmark": "0x1e00a0e"
+    },
+    {
+      "image": "DG604",
+      "offset": "0x4e5a",
+      "instruction_sha256": "d518d47db898623c3e3dcbf50a51f23bac36667950882a42225a7e3b37427bab",
+      "length": 2,
+      "landmark": "0x40"
+    },
+    {
+      "image": "DG604",
+      "offset": "0x4e7a",
+      "instruction_sha256": "4b32a3d897611e1e088a9f7ccf9efa0d7d7603e6208a198156d249ce6bf02552",
+      "length": 2,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DG604",
+      "offset": "0x4e84",
+      "instruction_sha256": "27e6f992899513b08f07c5b167caa6423a0f834fe46463d62e963fafa0011328",
+      "length": 4,
+      "landmark": "0x15d0"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1c9c",
+      "instruction_sha256": "b5a3f98a77b73ab6883b851c28faeaa46dce20fbf9ade997e280c1bc3b13c446",
+      "length": 4,
+      "landmark": "0xf"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1cb6",
+      "instruction_sha256": "2eb07db4823884eb58c65ba135ed96b81af827e6d3dc328517ab8ba936e871c2",
+      "length": 2,
+      "landmark": "0x1"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1cb8",
+      "instruction_sha256": "acfa6b0e008d0208f16026b4d17a4c070e8f9f8d05461bf3ad590044fcd89026",
+      "length": 2,
+      "landmark": "0x1cbc"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1cbc",
+      "instruction_sha256": "11360b25e8e8767fbb68761e39d7ef31bdae726426358326f0cba0a8edea6d1b",
+      "length": 2,
+      "landmark": "0x4"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1d32",
+      "instruction_sha256": "6e38ee3cb9c4162fd7b4d61013345cd1d1479136cb815b342fa75e202df29fde",
+      "length": 6,
+      "landmark": "0xfe"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1fa8",
+      "instruction_sha256": "72337057851d4293479911945ddbc988eebc79d4c197d6529d8c82db868ca789",
+      "length": 2,
+      "landmark": "0x5"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1faa",
+      "instruction_sha256": "b509fd5ae188a157a0f5ad0b0b88e0087ea7156c541ff190a60d9618983914fe",
+      "length": 4,
+      "landmark": "0x6"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1fba",
+      "instruction_sha256": "92bd463ee892f03818b2f1118018558705f3d19e953c7ec8cd4e50a5ebc8338d",
+      "length": 6,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x1fc0",
+      "instruction_sha256": "b77c3a001ea7e51a5ac2c7ddfcfd1eab767eb772156ae17fe7c8a437e07b8964",
+      "length": 6,
+      "landmark": "0x1"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1c9c",
+      "instruction_sha256": "b5a3f98a77b73ab6883b851c28faeaa46dce20fbf9ade997e280c1bc3b13c446",
+      "length": 4,
+      "landmark": "0xf"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1cb6",
+      "instruction_sha256": "2eb07db4823884eb58c65ba135ed96b81af827e6d3dc328517ab8ba936e871c2",
+      "length": 2,
+      "landmark": "0x1"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1cb8",
+      "instruction_sha256": "acfa6b0e008d0208f16026b4d17a4c070e8f9f8d05461bf3ad590044fcd89026",
+      "length": 2,
+      "landmark": "0x1cbc"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1cbc",
+      "instruction_sha256": "11360b25e8e8767fbb68761e39d7ef31bdae726426358326f0cba0a8edea6d1b",
+      "length": 2,
+      "landmark": "0x4"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1d32",
+      "instruction_sha256": "6e38ee3cb9c4162fd7b4d61013345cd1d1479136cb815b342fa75e202df29fde",
+      "length": 6,
+      "landmark": "0xfe"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1fa8",
+      "instruction_sha256": "72337057851d4293479911945ddbc988eebc79d4c197d6529d8c82db868ca789",
+      "length": 2,
+      "landmark": "0x5"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1faa",
+      "instruction_sha256": "b509fd5ae188a157a0f5ad0b0b88e0087ea7156c541ff190a60d9618983914fe",
+      "length": 4,
+      "landmark": "0x6"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1fba",
+      "instruction_sha256": "92bd463ee892f03818b2f1118018558705f3d19e953c7ec8cd4e50a5ebc8338d",
+      "length": 6,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DV515",
+      "offset": "0x1fc0",
+      "instruction_sha256": "b77c3a001ea7e51a5ac2c7ddfcfd1eab767eb772156ae17fe7c8a437e07b8964",
+      "length": 6,
+      "landmark": "0x1"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1c9c",
+      "instruction_sha256": "b5a3f98a77b73ab6883b851c28faeaa46dce20fbf9ade997e280c1bc3b13c446",
+      "length": 4,
+      "landmark": "0xf"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1cb6",
+      "instruction_sha256": "2eb07db4823884eb58c65ba135ed96b81af827e6d3dc328517ab8ba936e871c2",
+      "length": 2,
+      "landmark": "0x1"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1cb8",
+      "instruction_sha256": "acfa6b0e008d0208f16026b4d17a4c070e8f9f8d05461bf3ad590044fcd89026",
+      "length": 2,
+      "landmark": "0x1cbc"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1cbc",
+      "instruction_sha256": "11360b25e8e8767fbb68761e39d7ef31bdae726426358326f0cba0a8edea6d1b",
+      "length": 2,
+      "landmark": "0x4"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1d32",
+      "instruction_sha256": "6e38ee3cb9c4162fd7b4d61013345cd1d1479136cb815b342fa75e202df29fde",
+      "length": 6,
+      "landmark": "0xfe"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1fa8",
+      "instruction_sha256": "72337057851d4293479911945ddbc988eebc79d4c197d6529d8c82db868ca789",
+      "length": 2,
+      "landmark": "0x5"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1faa",
+      "instruction_sha256": "b509fd5ae188a157a0f5ad0b0b88e0087ea7156c541ff190a60d9618983914fe",
+      "length": 4,
+      "landmark": "0x6"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1fba",
+      "instruction_sha256": "92bd463ee892f03818b2f1118018558705f3d19e953c7ec8cd4e50a5ebc8338d",
+      "length": 6,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DV608",
+      "offset": "0x1fc0",
+      "instruction_sha256": "b77c3a001ea7e51a5ac2c7ddfcfd1eab767eb772156ae17fe7c8a437e07b8964",
+      "length": 6,
+      "landmark": "0x1"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x2434",
+      "instruction_sha256": "028ba124f6b482c3dd0a6406140090f5f5bf89efc894385890d0e3e442887378",
+      "length": 4,
+      "landmark": "0xf"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x243a",
+      "instruction_sha256": "632ad35c3cd8eaf8d7f91e5f6856e49111855167bb41c88c11a2152274d23948",
+      "length": 4,
+      "landmark": "0x1c98"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe240",
+      "instruction_sha256": "a82e3e6b468c97c290ca14d7dcfa1286d367723dff26cb9268b142496efc3df9",
+      "length": 4,
+      "landmark": "0xa0"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe246",
+      "instruction_sha256": "35cdb6835aa8fae1a67476b87b2078f2943fa96ccf67415b75227510e5eee9fc",
+      "length": 4,
+      "landmark": "0x50"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe252",
+      "instruction_sha256": "b0eb0be8f4fc8e3701c0bacf626d93ce94a53b08ebb98507bdb80134d27dbb42",
+      "length": 2,
+      "landmark": "0x2"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe258",
+      "instruction_sha256": "7577feaa3eba8b526ebc54cecac31083e30edfd867670b83cde90fbc29687ca8",
+      "length": 4,
+      "landmark": "0xde2a"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe25e",
+      "instruction_sha256": "4e808094851fc2eac7a386fc7d64677b34bda5e41d366ec4943233f9e6f2cd63",
+      "length": 2,
+      "landmark": "0x14"
+    }
+  ],
+  "nexus_anchors": [
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x198b563",
+      "file_offset": 26773859,
+      "length": 5,
+      "sha256": "3b915f9fa826c0a2f4ea2dc40ee0ad61737c8f9675dfbee6eb8e754634527846"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x198b578",
+      "file_offset": 26773880,
+      "length": 4,
+      "sha256": "33c04b8ddba402d59c3e16b7ac4387974a0e5f767786f73bd1f938bc101afb5e"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x198b581",
+      "file_offset": 26773889,
+      "length": 3,
+      "sha256": "28e778617565499bfc4a37afa3b32ba9dabbff6d21b24cea78f285a31b0e3c02"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x198b584",
+      "file_offset": 26773892,
+      "length": 4,
+      "sha256": "d0278e1ce1bcb3b79a9690934dbe21df8a80f53c9869f26f87be832f93410e65"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x198b5a5",
+      "file_offset": 26773925,
+      "length": 4,
+      "sha256": "997677d9dc69f392e9b7fd1012b452a88bbed5367999faaf24b5f3a3f3090e90"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x198b5be",
+      "file_offset": 26773950,
+      "length": 8,
+      "sha256": "bf78c756b9e869d5f2bf79664d9c3460c512cbd4d410f8243bd0f035f5a630af"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1bf8",
+      "file_offset": 4088,
+      "length": 5,
+      "sha256": "819d91338fc966438903e849cb72ffc03d7329927b6f92fb46d936a674398c40"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1bfd",
+      "file_offset": 4093,
+      "length": 3,
+      "sha256": "0d7da70aafa0a036e2ac5603ef95ec1b8b11e7f5d2808511011850adcc657b67"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1c00",
+      "file_offset": 4096,
+      "length": 4,
+      "sha256": "553a86c99fee42d0227b5c0249db8978648f575a777911b29a28ea155c9147d7"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1c04",
+      "file_offset": 4100,
+      "length": 2,
+      "sha256": "a843932057795ea71b924ac1dbe4196f846aa6e914088874b991473831eeb65b"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1c06",
+      "file_offset": 4102,
+      "length": 3,
+      "sha256": "f801a6f1f65f33a9b750f2f1a009031db41328122f5449d3b6fb81f92fbb2fc6"
+    }
+  ],
+  "independent_call_checks": 13,
+  "changed_call_operands_rejected": 13,
+  "changed_pointer_operands_rejected": 3,
+  "header": {
+    "type": "0x0f",
+    "options": "0x00 required by calibration parser",
+    "host_sequence": "shared native sequence; not consumed as RF duplicate key in the reviewed FE path",
+    "logical_length": "03: Nexus payload length3 plus cached short-GIP varint encoding; original Windows output remains unobserved",
+    "selector": "0xfe",
+    "operations": {
+      "Start": [
+        0,
+        3
+      ],
+      "Finish": [
+        1,
+        0
+      ],
+      "Exit": [
+        2,
+        0
+      ]
+    },
+    "usb_transfer_length": 64,
+    "padding": "57 zero bytes, chosen native layout; firmware calibration reads only through byte6",
+    "windows_exact_usb_padding_observed": false
+  },
+  "path": {
+    "endpoint": "interrupt OUT 0x02, max/configured64",
+    "callback": "DG144/DG510/DG604 file0x94e",
+    "native_mode": "D+3 == 0x10",
+    "dg_queue": {
+      "DG144": "D+0x2dc",
+      "DG510": "D+0x2e0",
+      "DG604": "D+0x2e0"
+    },
+    "forward_length": "actual endpoint read count, not packet byte3",
+    "controller_dispatch": "0x23ae -> 0x1c98 -> selector0xfe -> 0x1fa8",
+    "rf_sequence": "separate dongle A0 sequence; not USB byte2",
+    "rf_response": "0x14/0x15 transport status, not storage ACK"
+  },
+  "limits": [
+    "Windows GIP provider implementation is outside the analyzed package; exact original USB transfer length, padding and sequence selection remain unobserved",
+    "Static acceptance/layout evidence under native-mode, queue, link and runtime preconditions; no guarantee of actual delivery or installed firmware path",
+    "Short transfers, queue-full behavior and device errors are not validated by a hardware test",
+    "Known decoder parallel/conditional limits retained; overlapping exports are not sequential repeated execution",
+    "No new persistence ACK requirement or host retry; old reconnect retention questions stay deferred"
+  ],
+  "hardware_access": false,
+  "network_access": false,
+  "target_executed": false,
+  "installed_or_activated": false,
+  "driver_changed": false,
+  "manager_changed": false,
+  "gui_changed": false,
+  "push": false,
+  "consumed_packet_offsets_in_selected_calibration_path": [
+    0,
+    1,
+    4,
+    5,
+    6
+  ],
+  "byte2_byte3_and_tail_claim": "not calibration parameters in selected path; not a general GIP parser acceptance claim",
+  "validation_tests": {
+    "packet_tests": 3,
+    "sequence_operation_vectors": 768,
+    "provider_codec_comparisons": 768,
+    "unsupported_operations": 7,
+    "asan_ubsan": true
+  },
+  "packets_seq01": {
+    "Start": "0f000103fe0003000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "Finish": "0f000103fe0100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "Exit": "0f000103fe0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "excluded_exploration": [
+    "table/incorrect entry boundaries excluded from final ranges",
+    "four-image JVM admission rejected and split into two two-image runs",
+    "blanket +2 parser displacement rejected; exact reviewed entries used"
+  ],
+  "source_sha256": {
+    "src/gs_tmr.h": "cb883de65f8f3e157bbd20d7efa7be12fc1520930f3a8a15d44fe5b521cd8379",
+    "include/uapi/gs_native.h": "32f735d47bd48c5ceda4594ecb50f4576a6199c4444006255058f57550d43e25",
+    "kernel/gs_native_usb.c": "440bbd74ce9fd0a5da77347f1ec29566756dcdda8195e8165b909ad884c1152d",
+    "tools/service/gamesir_native.py": "16e09610a412aa41e1fb49d83e4099ce54be58df793ff7f9d0771a2ceea982b7",
+    "tools/service/tmr_maintenance.py": "05841a30f6c74d62ee960ee3d514232a8b24cceccb300c9313c41e561ed0388a",
+    "tools/control_center/calibration_controller.py": "5ee5fe5590fb44284031eca3f53e359958c38e2f6d27dda055f7349cc35c70e3",
+    "tools/control_center/calibration_protocol.py": "0f44ffa3ab10ec421977b4ced29478e6dc697888776f8cdcab3931d3bc47ca14"
+  },
+  "cached_gip_reference": {
+    "repository": "medusalix/xone",
+    "commit": "3484f603484782dd7551c64e5a33fc602b127051",
+    "path": "bus/protocol.c",
+    "sha256": "08bc9980acdf3346a6ca5fda9a0e5ca1a87deb1ec44e1d00e356bfb2ec1a235d",
+    "reviewed_as_text_only": true,
+    "downloaded_this_turn": false,
+    "header_function_line": 244,
+    "header_function_text_sha256": "e2379936d419dc283134901c9f5e91468be10c5ff3b4ff7d6fab0a1be19f23f5",
+    "findings": [
+      "payload_length3 -> four-byte short header with byte3=03",
+      "ACK request flag bit4 is off for options00",
+      "generic submission uses header+payload length7, not a universal OUT64-padding rule",
+      "positive shared sequence policy corroborated; not Windows provider behavior"
+    ]
+  },
+  "validation_logs": {
+    "alpha-tests.log": {
+      "passed": true,
+      "python_cases": 455,
+      "sha256": "a903315324a0e32a9067f61f57b8de7893cc078f4cf785bc2de45c477cb81421"
+    },
+    "packet-tests.log": {
+      "passed": true,
+      "python_cases": 3,
+      "sha256": "9386c551a4ab6b903a001d293d4bcb3ec4a6055bf87649b7d463e9500ae8e572"
+    },
+    "license-tests.log": {
+      "passed": true,
+      "python_cases": 3,
+      "sha256": "79897d011a1aaa76145e639592b1207fa563cb1187e00ac85c3ee31c86a0b15f"
+    },
+    "readme-tests.log": {
+      "passed": true,
+      "python_cases": 7,
+      "sha256": "e586fc0f3bb2a05f4c80f07d1b4c6171e830592f6c7aaf70d4af3b0aa3ebd072"
+    },
+    "flow-tests.log": {
+      "passed": true,
+      "python_cases": 16,
+      "sha256": "4b28e869d14d819488ca086813c445b7316884e933bf3c70f63b2aa4b5c4a424"
+    }
+  },
+  "new_test_source_sha256": "a695710ec8adc341feebb736ae98edef1b538c66a49566b420a4aa745d86045b"
+}

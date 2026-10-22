@@ -1,0 +1,1001 @@
+{
+  "schema": 1,
+  "date": "2026-10-22",
+  "scope": "Offline sleep/off-entry and startup RAM-lifetime research, not physical wake/retention acceptance.",
+  "sources": [
+    {
+      "image": "DG144",
+      "size": 246552,
+      "sha256": "b1181a4a244e885f033b281289f87a49893ea7fdfd8e70f019f681fe95aaf3e6"
+    },
+    {
+      "image": "DV209",
+      "size": 379140,
+      "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6"
+    }
+  ],
+  "static_decode": {
+    "rows": 22,
+    "records": 539,
+    "failed_rows": 0,
+    "isolated": true,
+    "sources_unchanged": true,
+    "decoder_changed": false,
+    "decoder_sha256": "53aaff9f06ad5c65e640cff8360cd74b80a3551a494a0823329796e7164f4458",
+    "request_sha256": "41dae0387c5c3161396a8e225c2b142dda6fc26554dcfd4b16a1ad4ab2d2240c",
+    "output_sha256": "0c616901ad6664edc30de03484daa8976f00faf894c08b927a76d1c471c463b1"
+  },
+  "ranges": [
+    {
+      "label": "dv_off_start",
+      "image": "DV209",
+      "start": "0x50392",
+      "last": "0x5043e",
+      "end": "0x50442",
+      "load_base": -325400,
+      "records": 64,
+      "sha256": "780a44fb977c44c5e3fb216d56d40582065a8fb466b2b78cd4bc9daeaabd653c"
+    },
+    {
+      "label": "dv_off_registers",
+      "image": "DV209",
+      "start": "0x50442",
+      "last": "0x504ee",
+      "end": "0x504f2",
+      "load_base": -325400,
+      "records": 64,
+      "sha256": "e25e472db0b644cb53d03c582692b32becd75eb2e4e829672c8e79155a11419f"
+    },
+    {
+      "label": "dv_off_select",
+      "image": "DV209",
+      "start": "0x504f2",
+      "last": "0x5052c",
+      "end": "0x50530",
+      "load_base": -325400,
+      "records": 17,
+      "sha256": "51a8789ff4acd7dc0b1dd1646f9e3422bd98f1ff4e2f9adb159896a2c860d5de"
+    },
+    {
+      "label": "dv_off_loop_a",
+      "image": "DV209",
+      "start": "0x50530",
+      "last": "0x505cc",
+      "end": "0x505d0",
+      "load_base": -325400,
+      "records": 47,
+      "sha256": "caf7c24c91cf54ad88cffb78f8c8ad4a90778e668ad5e1b67b8f0b897fee2cc1"
+    },
+    {
+      "label": "dv_off_loop_b",
+      "image": "DV209",
+      "start": "0x505d0",
+      "last": "0x50620",
+      "end": "0x50622",
+      "load_base": -325400,
+      "records": 26,
+      "sha256": "b43fb9dad3ac7732247ea7b51be432b0bea12c8af1151d18df2ef68839d99fdb"
+    },
+    {
+      "label": "dv_p33_or",
+      "image": "DV209",
+      "start": "0x501ce",
+      "last": "0x50214",
+      "end": "0x50218",
+      "load_base": -325400,
+      "records": 22,
+      "sha256": "45868772ad6d62f8a7ec02cfcf2399e5a3161eef242f8b203ac6a488fb5ab2e4"
+    },
+    {
+      "label": "dv_p33_and",
+      "image": "DV209",
+      "start": "0x50218",
+      "last": "0x5025e",
+      "end": "0x50262",
+      "load_base": -325400,
+      "records": 22,
+      "sha256": "4d1f1420bae20f2a4fe7dfc76a88947f047acd985b4a39e0f88ee10cb4586a45"
+    },
+    {
+      "label": "dv_prepare_a",
+      "image": "DV209",
+      "start": "0x9568",
+      "last": "0x961e",
+      "end": "0x9620",
+      "load_base": 0,
+      "records": 64,
+      "sha256": "e8d04074d767c77a1552d273b0efb97b37013de310b7c03b779ecb3c82830f26"
+    },
+    {
+      "label": "dv_prepare_b",
+      "image": "DV209",
+      "start": "0x9620",
+      "last": "0x9692",
+      "end": "0x9694",
+      "load_base": 0,
+      "records": 43,
+      "sha256": "2eaecba5870787f572995230ffdac04c7496759df9c32e555985f702dff49183"
+    },
+    {
+      "label": "dv_prepare_finish",
+      "image": "DV209",
+      "start": "0x955e",
+      "last": "0x9566",
+      "end": "0x9568",
+      "load_base": 0,
+      "records": 4,
+      "sha256": "69cdd7e8340fd0538917d581b3a37677ba4918ba5627fdcaa07f49c8b2b69214"
+    },
+    {
+      "label": "dv_clock_a",
+      "image": "DV209",
+      "start": "0x50286",
+      "last": "0x50316",
+      "end": "0x50318",
+      "load_base": -325400,
+      "records": 40,
+      "sha256": "a47c4f0f63e8be71527108caed83e30926e3664c14a7708535fa20cd5010c37c"
+    },
+    {
+      "label": "dv_clock_b",
+      "image": "DV209",
+      "start": "0x5031a",
+      "last": "0x50390",
+      "end": "0x50392",
+      "load_base": -325400,
+      "records": 34,
+      "sha256": "02075ce943340e7374b569722408e70457c7210b7b98e49a1ffe558b368b90cc"
+    },
+    {
+      "label": "dv_delay",
+      "image": "DV209",
+      "start": "0x50262",
+      "last": "0x50276",
+      "end": "0x50278",
+      "load_base": -325400,
+      "records": 8,
+      "sha256": "7bac28a7f1773bddd1d4a18b388e9f943a712415f298b7ac5366fe9bf2535da8"
+    },
+    {
+      "label": "dv_clock_read",
+      "image": "DV209",
+      "start": "0x50278",
+      "last": "0x50284",
+      "end": "0x50286",
+      "load_base": -325400,
+      "records": 4,
+      "sha256": "c07e27f63c413df1108cb7ea6ac49a69d278f5bb73fe3aed7bc7a47791884abf"
+    },
+    {
+      "label": "dv_irq_helpers",
+      "image": "DV209",
+      "start": "0x50c06",
+      "last": "0x50c3a",
+      "end": "0x50c3c",
+      "load_base": -325400,
+      "records": 16,
+      "sha256": "5da9e717d841dd77f7485c6a0924931adc762313bd592e692d55d1e7e6b125a9"
+    },
+    {
+      "label": "dv_boot_metadata",
+      "image": "DV209",
+      "start": "0x45cfa",
+      "last": "0x45d2a",
+      "end": "0x45d2e",
+      "load_base": 0,
+      "records": 21,
+      "sha256": "1960c02cf55964fbc3697973ce8e6ab46a580adee70f509fa1f2ad458cc34d0b"
+    },
+    {
+      "label": "dv_startup_entry",
+      "image": "DV209",
+      "start": "0x0",
+      "last": "0x26",
+      "end": "0x28",
+      "load_base": 0,
+      "records": 8,
+      "sha256": "86dba02345b2f1e1efa36d003d94f8408faaed4c4c4d4394af5986c8bee97f4c"
+    },
+    {
+      "label": "dv_startup_bss",
+      "image": "DV209",
+      "start": "0x36",
+      "last": "0x44",
+      "end": "0x46",
+      "load_base": 0,
+      "records": 4,
+      "sha256": "a66c643164f65e7466e6241fd04606f265ce32255a68891330986d64fd0a2049"
+    },
+    {
+      "label": "dv_startup_copy",
+      "image": "DV209",
+      "start": "0x62",
+      "last": "0x74",
+      "end": "0x76",
+      "load_base": 0,
+      "records": 4,
+      "sha256": "6f0f72d4ed423c0669f490decb8d26b1465e3a12b4d73ca9ce66cc1932d5dbaa"
+    },
+    {
+      "label": "dv_startup_tail",
+      "image": "DV209",
+      "start": "0x7e",
+      "last": "0x98",
+      "end": "0x9a",
+      "load_base": 0,
+      "records": 7,
+      "sha256": "979fc77ab742ec61eb278c72846534c7816a1022882fd5263d5e647580636236"
+    },
+    {
+      "label": "dv_finish_sticks",
+      "image": "DV209",
+      "start": "0x2268",
+      "last": "0x2290",
+      "end": "0x2294",
+      "load_base": 0,
+      "records": 12,
+      "sha256": "0c3917a64127387c8bc5786049db7fed148f337a23c144d90b73d116ea2f1b30"
+    },
+    {
+      "label": "dv_sequence",
+      "image": "DV209",
+      "start": "0xe244",
+      "last": "0xe25c",
+      "end": "0xe25e",
+      "load_base": 0,
+      "records": 8,
+      "sha256": "530bb4fd74a534739ff6e1c374be4ff5bf3a2e02cd6f47406b2f9d682f42b52b"
+    }
+  ],
+  "transfers": [
+    {
+      "offset": "0x50392",
+      "kind": "call",
+      "target": "0xffe09628"
+    },
+    {
+      "offset": "0x503aa",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x503b2",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x503b6",
+      "kind": "call",
+      "target": "0xffe09448"
+    },
+    {
+      "offset": "0x503be",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x503c6",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x503d0",
+      "kind": "call",
+      "target": "0xffe09450"
+    },
+    {
+      "offset": "0x503da",
+      "kind": "call",
+      "target": "0xffe09450"
+    },
+    {
+      "offset": "0x503e2",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x503ee",
+      "kind": "call",
+      "target": "0xe2"
+    },
+    {
+      "offset": "0x503f6",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x503fe",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x50406",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x5040e",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x50416",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x5041e",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x50426",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x5042e",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x50436",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x5043e",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x50446",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x5044a",
+      "kind": "call",
+      "target": "0xffe094d0"
+    },
+    {
+      "offset": "0x50452",
+      "kind": "call",
+      "target": "0xab6"
+    },
+    {
+      "offset": "0x5045a",
+      "kind": "call",
+      "target": "0xab6"
+    },
+    {
+      "offset": "0x50462",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x5046a",
+      "kind": "call",
+      "target": "0xab6"
+    },
+    {
+      "offset": "0x50472",
+      "kind": "call",
+      "target": "0xab6"
+    },
+    {
+      "offset": "0x5047a",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x50482",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x5048a",
+      "kind": "call",
+      "target": "0xab6"
+    },
+    {
+      "offset": "0x50492",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x5049a",
+      "kind": "call",
+      "target": "0xab6"
+    },
+    {
+      "offset": "0x5049e",
+      "kind": "call",
+      "target": "0xffe094d8"
+    },
+    {
+      "offset": "0x504aa",
+      "kind": "call",
+      "target": "0xe2"
+    },
+    {
+      "offset": "0x504b2",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x504ba",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x504c2",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x504ca",
+      "kind": "call",
+      "target": "0xb00"
+    },
+    {
+      "offset": "0x504d0",
+      "kind": "call",
+      "target": "0x58"
+    },
+    {
+      "offset": "0x504da",
+      "kind": "call",
+      "target": "0x58"
+    },
+    {
+      "offset": "0x504e4",
+      "kind": "call",
+      "target": "0x58"
+    },
+    {
+      "offset": "0x504ee",
+      "kind": "call",
+      "target": "0x58"
+    },
+    {
+      "offset": "0x504fe",
+      "kind": "call",
+      "target": "0xab6"
+    },
+    {
+      "offset": "0x50540",
+      "kind": "call",
+      "target": "0x1127b4"
+    },
+    {
+      "offset": "0x5056e",
+      "kind": "call",
+      "target": "0xb6e"
+    },
+    {
+      "offset": "0x50572",
+      "kind": "call",
+      "target": "0xb60"
+    },
+    {
+      "offset": "0x50582",
+      "kind": "call",
+      "target": "0xb4a"
+    },
+    {
+      "offset": "0x505b2",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x505f0",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x505f8",
+      "kind": "call",
+      "target": "0xa0"
+    },
+    {
+      "offset": "0x5061c",
+      "kind": "call",
+      "target": "0xab6"
+    },
+    {
+      "offset": "0x50620",
+      "kind": "goto",
+      "target": "0xe18"
+    },
+    {
+      "offset": "0x501d6",
+      "kind": "call",
+      "target": "0x14ee"
+    },
+    {
+      "offset": "0x501f8",
+      "kind": "call",
+      "target": "0x40"
+    },
+    {
+      "offset": "0x50200",
+      "kind": "call",
+      "target": "0x40"
+    },
+    {
+      "offset": "0x50206",
+      "kind": "call",
+      "target": "0x40"
+    },
+    {
+      "offset": "0x50214",
+      "kind": "goto",
+      "target": "0x150a"
+    },
+    {
+      "offset": "0x50220",
+      "kind": "call",
+      "target": "0x14ee"
+    },
+    {
+      "offset": "0x50242",
+      "kind": "call",
+      "target": "0x40"
+    },
+    {
+      "offset": "0x5024a",
+      "kind": "call",
+      "target": "0x40"
+    },
+    {
+      "offset": "0x50250",
+      "kind": "call",
+      "target": "0x40"
+    },
+    {
+      "offset": "0x5025e",
+      "kind": "goto",
+      "target": "0x150a"
+    },
+    {
+      "offset": "0x9572",
+      "kind": "call",
+      "target": "0x44da2"
+    },
+    {
+      "offset": "0x9576",
+      "kind": "call",
+      "target": "0x20142e"
+    },
+    {
+      "offset": "0x957c",
+      "kind": "call",
+      "target": "0x907a"
+    },
+    {
+      "offset": "0x959c",
+      "kind": "call",
+      "target": "0x912c"
+    },
+    {
+      "offset": "0x95a0",
+      "kind": "call",
+      "target": "0x9388"
+    },
+    {
+      "offset": "0x95a8",
+      "kind": "call",
+      "target": "0x200a40"
+    },
+    {
+      "offset": "0x95b0",
+      "kind": "call",
+      "target": "0x200a40"
+    },
+    {
+      "offset": "0x95ba",
+      "kind": "call",
+      "target": "0x9390"
+    },
+    {
+      "offset": "0x95c4",
+      "kind": "call",
+      "target": "0x9390"
+    },
+    {
+      "offset": "0x95cc",
+      "kind": "call",
+      "target": "0x200a40"
+    },
+    {
+      "offset": "0x95d8",
+      "kind": "call",
+      "target": "0x200022"
+    },
+    {
+      "offset": "0x95e0",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x95e8",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x95f0",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x95f8",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9600",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9608",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9610",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9618",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9620",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9624",
+      "kind": "call",
+      "target": "0x9410"
+    },
+    {
+      "offset": "0x962c",
+      "kind": "call",
+      "target": "0x200a40"
+    },
+    {
+      "offset": "0x9634",
+      "kind": "call",
+      "target": "0x2009f6"
+    },
+    {
+      "offset": "0x963c",
+      "kind": "call",
+      "target": "0x2009f6"
+    },
+    {
+      "offset": "0x9644",
+      "kind": "call",
+      "target": "0x2009f6"
+    },
+    {
+      "offset": "0x964c",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9654",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x965c",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9660",
+      "kind": "call",
+      "target": "0x9418"
+    },
+    {
+      "offset": "0x966c",
+      "kind": "call",
+      "target": "0x200022"
+    },
+    {
+      "offset": "0x9674",
+      "kind": "call",
+      "target": "0x200a40"
+    },
+    {
+      "offset": "0x967c",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x9684",
+      "kind": "call",
+      "target": "0x1fffe0"
+    },
+    {
+      "offset": "0x968c",
+      "kind": "call",
+      "target": "0x200a40"
+    },
+    {
+      "offset": "0x9692",
+      "kind": "goto",
+      "target": "0x955e"
+    },
+    {
+      "offset": "0x9560",
+      "kind": "call",
+      "target": "0x9424"
+    },
+    {
+      "offset": "0x50288",
+      "kind": "call",
+      "target": "0xb60"
+    },
+    {
+      "offset": "0x5026e",
+      "kind": "goto",
+      "target": "0xb5c"
+    },
+    {
+      "offset": "0x45d0a",
+      "kind": "call",
+      "target": "0x3126e8"
+    },
+    {
+      "offset": "0x45d2a",
+      "kind": "goto",
+      "target": "0x3126e8"
+    },
+    {
+      "offset": "0x0",
+      "kind": "call",
+      "target": "0x45cfa"
+    },
+    {
+      "offset": "0x8a",
+      "kind": "call",
+      "target": "0x1c6be"
+    },
+    {
+      "offset": "0x8e",
+      "kind": "call",
+      "target": "0xf712"
+    },
+    {
+      "offset": "0xe258",
+      "kind": "call",
+      "target": "0xde2a"
+    }
+  ],
+  "p33_instruction_witnesses": [
+    {
+      "offset": "0x501ce",
+      "reference_offset": "0x1111a6",
+      "sha256": "17939dd714ea208681c914081d0e69e725c85480a30e9bd19b3b46ed6f426d51"
+    },
+    {
+      "offset": "0x501d0",
+      "reference_offset": "0x1111a8",
+      "sha256": "f904fc98684571dae80b719ed63f26ad5905edcb0955a025a40bd35c0e3d1cb7"
+    },
+    {
+      "offset": "0x501d2",
+      "reference_offset": "0x1111aa",
+      "sha256": "8af9015d11cf6d63d0346cbd7b5ce507151ea0c8899c7a8f687072cb33a3075e"
+    },
+    {
+      "offset": "0x501d4",
+      "reference_offset": "0x1111ac",
+      "sha256": "ca45337a565f879a4d7c97c1a08b65ace7ca447358afcc341343d16939cbd962"
+    },
+    {
+      "offset": "0x501da",
+      "reference_offset": "0x1111b2",
+      "sha256": "4ace15f918bd5065c993bc32ac47700a13d9d9b9632d0094995ac27de9d0cedd"
+    },
+    {
+      "offset": "0x501e0",
+      "reference_offset": "0x1111b8",
+      "sha256": "76fd76c593d30299a33b32d73b55b1de640b1d04b845fe7fe76fa6b429662e2b"
+    },
+    {
+      "offset": "0x501e4",
+      "reference_offset": "0x1111bc",
+      "sha256": "19428141522500c75801b3450252c539d131e28ff0230ed9384979fdef8d3654"
+    },
+    {
+      "offset": "0x501e8",
+      "reference_offset": "0x1111c0",
+      "sha256": "0e332dc6d6c545d9b249056afe514fe8236ed2875723247a1b7a0a0665f786a0"
+    },
+    {
+      "offset": "0x501ea",
+      "reference_offset": "0x1111c2",
+      "sha256": "2e0ac7c7d35a4ad7df5b2bd0eafe652dd1abd2fed2a93910fa60b2142875ff70"
+    },
+    {
+      "offset": "0x501ee",
+      "reference_offset": "0x1111c6",
+      "sha256": "b25ab545198e8914d28998720233f3363b39081dde061b41b71d04b71a410f8f"
+    },
+    {
+      "offset": "0x501f2",
+      "reference_offset": "0x1111ca",
+      "sha256": "9863525de6e80b57c4bd3de310c033e7c8815b68a2b52a74b95fc1389e06fa43"
+    },
+    {
+      "offset": "0x501f6",
+      "reference_offset": "0x1111ce",
+      "sha256": "d9a847a1a79ab44825bbf8e5720bca771d53d1344d871bf9be1567382a022718"
+    },
+    {
+      "offset": "0x501fc",
+      "reference_offset": "0x1111d4",
+      "sha256": "f469da8d889869dbf65a9c3c963d26a7160e8f4e689148c0e009065efe5a3f5a"
+    },
+    {
+      "offset": "0x50204",
+      "reference_offset": "0x1111dc",
+      "sha256": "4d42da678ad4a71319c4d360927bd59e7cbc4c3d5e7590bcb4f16769d14fc993"
+    },
+    {
+      "offset": "0x5020a",
+      "reference_offset": "0x1111e2",
+      "sha256": "4bd7bfbfa9286ef8d904cfd5c4b15a44fd8b600d331ad57357912c4a08720c11"
+    },
+    {
+      "offset": "0x5020e",
+      "reference_offset": "0x1111e6",
+      "sha256": "541ea8c3134248dad02bbb1670dab5e930667481d5eef7b1a7360b4b4a990e8f"
+    },
+    {
+      "offset": "0x50212",
+      "reference_offset": "0x1111ea",
+      "sha256": "5fc90579d3b247ef8bfbd1243e677061ba71660e46ce35ff52241bf5d0ce5bd5"
+    }
+  ],
+  "off_path": {
+    "entry_file": "0x50392",
+    "entry_ram": "0xc7a",
+    "prepare_file": "0x9568",
+    "loop_file": "0x50530",
+    "counter_ram": "0xeb39",
+    "counter_width_bits": 8,
+    "repeat_if_updated_counter_less_than": 101,
+    "reset_request_file": "0x50618..0x5061c",
+    "reset_register": "0xa0",
+    "reset_or_mask": "0x10",
+    "unconditional_loop_file": "0x50620",
+    "time_units_proven": false,
+    "calibration_retransmission": false,
+    "peripheral_clear": {
+      "start": "0x1e2900",
+      "length": "0xf4"
+    },
+    "open_prepare_callback": "word at 0x23db0"
+  },
+  "startup": {
+    "bss_start": "0xda60",
+    "bss_end": "0x240e8",
+    "suffix_copy_start": "0x0",
+    "suffix_copy_end": "0xd1ec",
+    "boot_argument_copies": [
+      {
+        "destination": "0xda30",
+        "length": 8
+      },
+      {
+        "destination": "0xda40",
+        "length": 8
+      }
+    ],
+    "calibration_and_sequence_fields": [
+      {
+        "start": "0xf190",
+        "length": 1
+      },
+      {
+        "start": "0x10c7a",
+        "length": 3
+      },
+      {
+        "start": "0x10c7e",
+        "length": 30
+      },
+      {
+        "start": "0x10c9d",
+        "length": 30
+      },
+      {
+        "start": "0x10cce",
+        "length": 104
+      },
+      {
+        "start": "0x10d36",
+        "length": 104
+      }
+    ],
+    "physical_retention_proven": false
+  },
+  "finish": {
+    "read_done_byte": "B+0x1b3b",
+    "sets_request_bits": "B+0x1b3c only for corresponding done bits",
+    "fresh_start_done_zero": true,
+    "sequence_last_after_startup": 0,
+    "standalone_old_finish_after_completed_startup": "Does not set either new stick-finish bit while done remains zero; not a global transport cancellation claim."
+  },
+  "references": [
+    {
+      "name": "Jieli-Tech fw-AC63_BT_SDK official ROM listing",
+      "commit": "fdc018de81629e21e594d677cf05f87d288be0f0",
+      "path": "cpu/br23/tools/rom.lst",
+      "sha256": "650bd301951a311207aad7000fa27bdfa8fce0ae8101576eaaf302072982f1d2",
+      "landmarks": [
+        "0x11013e word store",
+        "0x110146 repeat",
+        "0x1102ba loop back",
+        "0x1102de chip_reset",
+        "0x1110c8 p33_tx_1byte",
+        "0x11111c p33_rx_1byte",
+        "0x112418 P33_CON_SET",
+        "0x112428 NOT"
+      ]
+    },
+    {
+      "name": "Jieli-Tech fw-AC63_GP_MCU cached commit record",
+      "commit": "53fd6bc15600a4c06aa9932b1f1b7b66a2d54c29",
+      "sha256": "480deb7bec5d266375e21eba078f9ec354351b78a2d1abd7fb0170486e53d8b8",
+      "paths": [
+        "sdk/bsp/AC632N/include/asm/cpu.h",
+        "sdk/bsp/AC632N/include/asm/power/p33.h",
+        "sdk/bsp/AC632N/src/startup.S"
+      ],
+      "scope": "Family reference, not proof of exact MCU model"
+    }
+  ],
+  "validation": {
+    "bounded_ranges": 22,
+    "decoded_records": 539,
+    "outer_routine_records": 218,
+    "reference_controls": {
+      "literal": 171,
+      "short_transfer": 179,
+      "relative22": 293,
+      "unsigned_less_immediate": 6
+    },
+    "transfer_checks": 106,
+    "changed_transfer_controls": 106,
+    "changed_conditional_controls": 2,
+    "p33_exact_instruction_witnesses": 17,
+    "calibration_ram_intervals": 6,
+    "disjoint_interval_comparisons": 18,
+    "own_finish_sequence_cases": 1024,
+    "existing_dialog_tests": 16
+  },
+  "limitations": [
+    "No proof that every wake reaches normal startup, no exact Boot-ROM resume/retained-SRAM-bank map.",
+    "Prepare callback at 0x23db0 and lower wake-port setup remain bounded gaps; reset request is not observed hardware reset success.",
+    "Controller-only reset does not clear dongle pending data. Actual late delivery/purge across loss or sleep is not demonstrated.",
+    "Finish state guards do not exclude delivery of an old command during a later active, ready calibration session. No observed late Finish or brick.",
+    "Known NOT/REP issues retain preceding independent witnesses; DV 0xe976 excluded. Parallel member export is not counted twice.",
+    "The 0x80a5 literal at 0x5039e is a subsequent P33 helper argument, not evidence of a second RAM clear at 0x80a5.",
+    "Own Finish/sequence truth table is conditional arithmetic, not target emulation or observed hardware traffic.",
+    "No new persistence ACK, replay policy, writable backend, decoder or driver change implemented."
+  ],
+  "hardware_access": false,
+  "network_access": false,
+  "driver_changed": false,
+  "target_executed": false
+}

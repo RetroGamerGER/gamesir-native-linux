@@ -1,0 +1,75 @@
+{
+  "acceptance": {
+    "cachyos_calibration": "not tested",
+    "firmware_variants": "not established",
+    "independent_nvm_readback": "not performed",
+    "post_power_cycle_persistence": "not tested",
+    "quantitative_center_or_range_measurements": "not recorded",
+    "same_connection_functional_check": true,
+    "single_live_workflow": true,
+    "zzz_calibration": "not tested"
+  },
+  "additional_resume_or_driver_restart": false,
+  "automatic_finish_or_exit_after_completion": false,
+  "automatic_start": false,
+  "calibration_retried": false,
+  "controller": {
+    "model": "standard GameSir G7 Pro",
+    "product": "109c",
+    "vendor": "3537"
+  },
+  "date": "2026-10-22",
+  "documentation_checks": {
+    "groups": 3,
+    "passed": true,
+    "scope": "packaging, licensing, public README",
+    "unittest_cases": 35
+  },
+  "explicit_calibration_go": true,
+  "firmware_image_updated": false,
+  "guidance": {
+    "finish_clicks_instructed": 1,
+    "gui_preparation_seconds": 3,
+    "outer_edge_circles_per_stick": 3,
+    "release_before_finish": true,
+    "release_before_start": true
+  },
+  "installed_core": "0.1.0.alpha3-20",
+  "installed_tmr_helper": "0.1.0.alpha1-2",
+  "kernel": "7.3.0-2-garuda",
+  "maintainer_reports": {
+    "both_sticks_ready_and_finish_enabled": true,
+    "finish_message": "Abschlussbefehl \u00fcbermittelt",
+    "kde_independent_check": {
+      "buttons": "normal",
+      "center_return": "normal",
+      "four_paddles": "normal",
+      "full_travel": "normal",
+      "triggers": "normal"
+    }
+  },
+  "network_access": false,
+  "next": "Preserve completed run; later persistence or further calibration tests need a new explicit request",
+  "persistence_interpretation": "Finish accepted; firmware owns storage. No additional storage ACK is required, but durable storage was not independently demonstrated.",
+  "platform": "Garuda Linux",
+  "power_cycle_performed": false,
+  "precision_gyro_calibration": "paused",
+  "push": false,
+  "readonly_after_finish": {
+    "busy_ports": [],
+    "gui_log_bytes": 0,
+    "helper_exited": true,
+    "input_publication": "Exact input publication confirmed",
+    "manager_phase": "active",
+    "native_driver": "gs_native",
+    "same_usb_instance": true,
+    "tmr_last": {
+      "cleanup_error": "",
+      "error": "",
+      "state": "finished"
+    }
+  },
+  "schema": 1,
+  "scope": "first guided TMR calibration workflow and independent same-connection input check",
+  "source_commit": "5ee3199"
+}

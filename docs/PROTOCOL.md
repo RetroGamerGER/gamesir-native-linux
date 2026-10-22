@@ -33,6 +33,11 @@ Interface 1 `usbhid` geprüft.
 | Wartung | OUT 0x02, 64 Byte | `0f 00 seq 02 f2...` Heartbeat oder `0f 00 seq 01 selector...` Abfrage |
 | Identitätsübergang | OUT, neun 8-Byte-Pakete | fünf `00 08 00 <Wort> 00 00 00`, dazwischen vier leere Flush-Pakete; Wörter `ga`, `me`, `si`, `ra`, `pp` |
 
+Der zusätzlich [offline geprüfte TMR-Testentwurf](TMR_USB_FRAMING.md) verwendet
+`0f 00 seq 03 fe op parts` und 57 Nullbytes. Empfängerseitig gestützte
+Rekonstruktion, kein Windows-Mitschnitt oder erfolgreicher Kalibriertest;
+`experimental_tmr` bleibt standardmäßig aus.
+
 Die neuen Hello-/Status-Zeilen beschreiben den Forschungsstand, keine Änderung
 des Laufzeit-Decoders: `gs_decode()` lässt diese Typen weiterhin unbekannt.
 Das von xone als verbunden gewertete Statusbit 7 ist in den gespeicherten

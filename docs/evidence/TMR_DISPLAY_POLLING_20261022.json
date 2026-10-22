@@ -1,0 +1,109 @@
+{
+  "added_regressions": {
+    "gui": 7,
+    "helper_path": 2,
+    "manager_policy": 5,
+    "metadata_adapter": 2
+  },
+  "calibration_commands_in_fix": false,
+  "corrected_policy": {
+    "command_replay": false,
+    "display_does_not_set_action_busy": true,
+    "display_interval_ms": 33,
+    "fresh_metadata_and_kernel_continuity_on_display": true,
+    "full_ownership_audit_on_admission": true,
+    "full_pre_and_post_submit_ownership_audit": true,
+    "helper_inspections_per_snapshot": 1,
+    "lease_seconds": 2,
+    "max_inflight_requests": 1,
+    "max_pending_explicit_clicks": 1,
+    "queued_poll_backlog": 0,
+    "sample_freshness_seconds": 1.5
+  },
+  "date": "2026-10-22",
+  "installed_core": "0.1.0.alpha3-19",
+  "installed_files_changed": false,
+  "installed_tmr_helper": "0.1.0.alpha1-1",
+  "kernel_source_changed": false,
+  "live_acceptance_of_correction": false,
+  "module_reloaded": false,
+  "negative_controls": {
+    "baseline": "658e0c8",
+    "disabled_button": true,
+    "full_fd_audits_for_30_polls_and_30_watchdog_ticks": 90,
+    "lost_click": true,
+    "manager_polls_per_new_display_snapshot": 2,
+    "slow_periodic_cadence": true
+  },
+  "network_access": false,
+  "new_hardware_test": false,
+  "next": "Review matching manager/helper/hash-pinned GUI update, then separately approve preview before calibration",
+  "precision_gyro_calibration": "paused",
+  "push": false,
+  "reported_live_preview": {
+    "calibration_hardware_acceptance": false,
+    "cpu_load_disappeared_reported": true,
+    "dialog_cancel_confirmed_by_maintainer": true,
+    "main_window_remained_open": true,
+    "manager_cpu_screenshot_percent": 49.0,
+    "start_button_blinks": true,
+    "start_not_pressed_confirmed_by_maintainer": true,
+    "stick_delay": true,
+    "stick_plots_move": true
+  },
+  "schema": 1,
+  "scope": "offline TMR display/manager CPU correction after interrupted live preview",
+  "service_restarted": false,
+  "source_sha256": {
+    "tools/control_center/calibration_controller.py": "af374390fae67d7345ffee8cab0e15aae4a36882852d6846a2a39ea71ca4f732",
+    "tools/control_center/tmr_bridge.py": "a9343216e83dbbbff02d538be38cd1761593e8a4e442a9987f4e8cb9b5c29d6f",
+    "tools/control_center/tmr_helper.py": "e7aa0310a75f09e8880241af78fd905c250ba82823556b209196445b55d93a77",
+    "tools/service/gamesir_native.py": "ba733f84c29357c3e425689ec4fa47b141d0c019442920e2549d9d5e2b086a54",
+    "tools/service/tmr_maintenance.py": "112783e5babb78faec5676c767261cb185bad58007e4d7a1c3ce00a88ae20f2a"
+  },
+  "synthetic_cpu_comparison": {
+    "processes": 120,
+    "results": [
+      {
+        "cpu_seconds": 0.872463,
+        "device_commands": [],
+        "full_process_audits": 90,
+        "metadata_checks": 0,
+        "polls": 30,
+        "version": "before",
+        "wall_seconds": 0.875692,
+        "watchdog_ticks": 30
+      },
+      {
+        "cpu_seconds": 0.014265,
+        "device_commands": [],
+        "full_process_audits": 0,
+        "metadata_checks": 60,
+        "polls": 30,
+        "version": "after",
+        "wall_seconds": 0.014318,
+        "watchdog_ticks": 30
+      }
+    ],
+    "scope": "offline synthetic metadata and process FD tree only; not a hardware CPU claim",
+    "unrelated_fds_per_process": 64
+  },
+  "validation": {
+    "post_documentation": {
+      "passed": true,
+      "scope": "packaging, licensing, public README",
+      "unittest_cases": 35,
+      "unittest_groups": 3
+    },
+    "regression": {
+      "passed": true,
+      "unittest_cases": 1868,
+      "unittest_groups": 69
+    },
+    "ui-regression": {
+      "passed": true,
+      "unittest_cases": 98,
+      "unittest_groups": 10
+    }
+  }
+}

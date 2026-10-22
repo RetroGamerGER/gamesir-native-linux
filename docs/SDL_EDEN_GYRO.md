@@ -34,8 +34,10 @@ The live window established a preferred qualitative response, not a measured
 scale/bias certificate. The new runtime profile is explicitly experimental.
 
 The new `experimental_gyro=1` module option enables the reviewed standard
-G7 Pro `3537:109c` profile. Default is off; `100a`, `105e` and other variants
-do not inherit this sensor assumption. It does not change USB initialization,
+G7 Pro `3537:109c` profile. Default is off; other variants do not
+inherit this sensor assumption. Revision17 separately prepares `105e` behind
+`experimental_gyro_105e=1` in addition to the primary opt-in. This is an
+unvalidated ZZZ candidate; see [scope, tests and rollback](ZZZ_GYRO_EXTENSION.md). It does not change USB initialization,
 controller configuration, the manager, the gamepad name, or motor ownership.
 
 ## Data path

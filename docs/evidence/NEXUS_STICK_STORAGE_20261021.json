@@ -1,0 +1,558 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "Static EE53 operand hypothesis and storage completion/error trace; no target execution or emulation.",
+  "sources": [
+    {
+      "name": "JS_3103_DV_V209_No_Key.app.bin",
+      "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6",
+      "size": 379140
+    },
+    {
+      "name": "JS_3103_U_DV_V515_No_Key.app.bin",
+      "sha256": "77e77be00ccd03d4c7dc6e469875c977988ffcbecac78a66cfe337c633308673",
+      "size": 379364
+    },
+    {
+      "name": "JS_3103_U_DV_V608_No_Key.app.bin",
+      "sha256": "6c2155168aae2bfa01b8b391ec2295c4cbf0c27696a49a7d5a063eefdb22147b",
+      "size": 379364
+    }
+  ],
+  "static_decode": {
+    "rows": 28,
+    "records": 745,
+    "failed_rows": 0,
+    "network_and_device_isolation": true,
+    "sources_unchanged": true,
+    "decoder_changed": false,
+    "decoder_sha256": "53aaff9f06ad5c65e640cff8360cd74b80a3551a494a0823329796e7164f4458",
+    "helper_sha256": "fb73ad722172fa936450df32223f0ce382311092f4ac767fec157bc9114da876",
+    "request_sha256": "f3e0dfd74ba15d4eefd3102154e1a97110a6f51a55c684b22f12e0cbaecbe557",
+    "output_sha256": "3b6a7df87a7fd6aaebd4ea6726fa29e344daf91f32d78cf7896c55474588010e"
+  },
+  "anchors": [
+    {
+      "label": "left_after_gap",
+      "offset": "0x18ac",
+      "instruction_sha256": "fd6beaa74519b566fc945e1e4a39b1f103f367a9d4f897cd66ddc6cc5a6691e9"
+    },
+    {
+      "label": "right_after_gap",
+      "offset": "0x192e",
+      "instruction_sha256": "fd6beaa74519b566fc945e1e4a39b1f103f367a9d4f897cd66ddc6cc5a6691e9"
+    },
+    {
+      "label": "restore_left",
+      "offset": "0x1a0a",
+      "instruction_sha256": "04856bac7bd9fa1ff67045b05238c2d2121e71f395063cbc346b3ab95a1f4d59"
+    },
+    {
+      "label": "restore_left",
+      "offset": "0x1a0e",
+      "instruction_sha256": "4d346b20ed13fa403a3e0d89c073bf3733dc0058387509dbad8cb0111ec3270f"
+    },
+    {
+      "label": "restore_right",
+      "offset": "0x1ad4",
+      "instruction_sha256": "7b36dea183ed998ac4460d0b2a90fda1e476f845e955605c875d6e7a16ceb4dc"
+    },
+    {
+      "label": "dispatch_write",
+      "offset": "0x169e8",
+      "instruction_sha256": "d10fee09baef941295bab2f86d6143b1f4a388898055dea95bb45cf3f4919820"
+    },
+    {
+      "label": "dispatch_write",
+      "offset": "0x169f8",
+      "instruction_sha256": "0e332dc6d6c545d9b249056afe514fe8236ed2875723247a1b7a0a0665f786a0"
+    },
+    {
+      "label": "dispatch_write",
+      "offset": "0x169fa",
+      "instruction_sha256": "f04f8785d2447be7edae52841f080d4bb3850a74e67f0b719aaf8935e4d3701f"
+    },
+    {
+      "label": "async_submit",
+      "offset": "0x11522",
+      "instruction_sha256": "2494b896815f638758ced986322367a3b663e758441171ffaec226afe1562bcc"
+    },
+    {
+      "label": "async_submit",
+      "offset": "0x1154e",
+      "instruction_sha256": "260de7e1951823111416d8b39caaf52b4e7fdceb21510657dd964e40de4b8040"
+    },
+    {
+      "label": "write_chunk",
+      "offset": "0x109ae",
+      "instruction_sha256": "b2c4806b3bf650998d75f9eb6fa2ccc1cc5e1c9102a77b4d58bc63457a3eea2e"
+    },
+    {
+      "label": "write_chunk",
+      "offset": "0x109d0",
+      "instruction_sha256": "716f517c79e37a7c2ab448fe38dd2df57cc98e11f8a4e330e9d9d6336eb5a6df"
+    },
+    {
+      "label": "write_chunk",
+      "offset": "0x109dc",
+      "instruction_sha256": "d4877b5569fa14e54ae30b13bf897ab07e9896523545e9472fbc536893a28a57"
+    },
+    {
+      "label": "poll_completion",
+      "offset": "0x10974",
+      "instruction_sha256": "d45c0ecef548074918cf28043c428c6b33565fe03bb8c69af1129a7def07e8a0"
+    },
+    {
+      "label": "poll_completion",
+      "offset": "0x1097a",
+      "instruction_sha256": "d1ba6e25667d7c716a80f26bdd414eaeb31c5fe07542d56e20f1a76054e41503"
+    },
+    {
+      "label": "poll_completion",
+      "offset": "0x10982",
+      "instruction_sha256": "64d88da42e318eda2575032936a2688a1df8977451cc290535d33f248865e294"
+    },
+    {
+      "label": "poll_completion",
+      "offset": "0x1098a",
+      "instruction_sha256": "7f559e2271f48020ab1a22f53366c9867047baaee826bb020302ac3007ddcfac"
+    },
+    {
+      "label": "complete_callback",
+      "offset": "0x10760",
+      "instruction_sha256": "aadc6dc07187e9de80d29dad0ce6fb3b533df132d4e890f78eb3f38242476f6c"
+    },
+    {
+      "label": "complete_callback",
+      "offset": "0x1077c",
+      "instruction_sha256": "69a848931bcc2ec97d3be6ba89cc12f1ec669e860b1a9a3b21aba320bdbdb8fd"
+    },
+    {
+      "label": "complete_callback",
+      "offset": "0x10788",
+      "instruction_sha256": "c00b4d3c929cb5cc316691ed4636f634576f2c9b2954767234c5274e9dde185d"
+    },
+    {
+      "label": "complete_callback",
+      "offset": "0x1078a",
+      "instruction_sha256": "e9aff84fdb699ca706c0a1fed47bb095cb25e3c95aa5d1c5d216ff2cfbcd4998"
+    },
+    {
+      "label": "write_setup",
+      "offset": "0x8e18",
+      "instruction_sha256": "531e8197bad1378ec4b53acc1f01d83e76e190fd009fb71b5ae3a831d2b3b2c4"
+    },
+    {
+      "label": "write_setup",
+      "offset": "0x8e26",
+      "instruction_sha256": "e6afb3fd8f28dbee1641107bec830416171defba14b59e5b797cf5202a102acd"
+    },
+    {
+      "label": "handler_register",
+      "offset": "0x72dc",
+      "instruction_sha256": "39bd936fbc0ab5d1ff3272993e36b59510fefd79c40d4bf3dad092bbbcc2ac82"
+    },
+    {
+      "label": "handler_register",
+      "offset": "0x72e2",
+      "instruction_sha256": "748443df32740523a3bb07947ff306beb8502bb1b5c52bc1e9c4cf40c8d8087e"
+    },
+    {
+      "label": "handler_register",
+      "offset": "0x72e6",
+      "instruction_sha256": "5eb522d19a781c2a79cb10726d1019063f4245232a5de8ed45bba80d058ae2a0"
+    },
+    {
+      "label": "handler_head",
+      "offset": "0x586ba",
+      "instruction_sha256": "faa686e2cc99966d4ca9da88ddeec3fa8a8bd3b2b09f3435982d7f93b03c9794"
+    },
+    {
+      "label": "handler_bytes",
+      "offset": "0x58748",
+      "instruction_sha256": "ff6418ec6f1f001e5b13c261ddf95ee22ebddb10958698b092ea7ab61c2b1fef"
+    },
+    {
+      "label": "handler_bytes",
+      "offset": "0x58752",
+      "instruction_sha256": "66940004a6959c0eb09f4a0260fb84041f6c5980951e96d7832d123ea7662f6f"
+    },
+    {
+      "label": "handler_bytes",
+      "offset": "0x587c6",
+      "instruction_sha256": "4592d369d215e5c01c35610d2f05c73cf8e7731e7e2d3b64708ebcce93e167b3"
+    },
+    {
+      "label": "handler_tail",
+      "offset": "0x58838",
+      "instruction_sha256": "9a5f7081b80392a1e2a7757954b65d552f8b2892f7bdf60d86e4573c1135b2a9"
+    },
+    {
+      "label": "handler_tail",
+      "offset": "0x58884",
+      "instruction_sha256": "8982b44a300b2c1170ef77bbac5d691de2631fb64b4b617af0eb78327b300e6b"
+    },
+    {
+      "label": "handler_tail",
+      "offset": "0x58886",
+      "instruction_sha256": "a57bb1491fa926fce9854306cf815e213994b4f264a4dc178052272efec1eba1"
+    },
+    {
+      "label": "status_flag",
+      "offset": "0x1035a",
+      "instruction_sha256": "d637a863283f7a8c6d58cd21da1f987982eb9023b69053e67e8e1836a3f58529"
+    },
+    {
+      "label": "timeout_path",
+      "offset": "0x10820",
+      "instruction_sha256": "87ca47153dd4e4f6d755846596d178c9cb1a74bdcf805cfcbb89fd652bddf2a3"
+    },
+    {
+      "label": "timeout_path",
+      "offset": "0x10846",
+      "instruction_sha256": "c4530eb5bbad26696ef38133d59bd08ca9c2a415f76cbe565ea97c56ae8fc2bb"
+    },
+    {
+      "label": "timeout_path",
+      "offset": "0x10852",
+      "instruction_sha256": "e75712f3f29039b5d04397e592d83e9f8387dd6e1e480610da985c9867cc583f"
+    },
+    {
+      "label": "timeout_path",
+      "offset": "0x1087c",
+      "instruction_sha256": "72c73320418cb13cc2cf809a8fa5076ed6c28848e0fd59946ef1ccec16ec57fd"
+    },
+    {
+      "label": "separate_readback",
+      "offset": "0xb0fa",
+      "instruction_sha256": "280d07dffb4a40acf873aa9536083eaec43c23535f89d73af6520058fb4f4dc9"
+    },
+    {
+      "label": "separate_readback",
+      "offset": "0xb128",
+      "instruction_sha256": "1c39c847441eabc0d21c7a18032a48084464ae0bfd0c631bb3372cbbcac90a71"
+    },
+    {
+      "label": "separate_readback",
+      "offset": "0xb142",
+      "instruction_sha256": "cc1c4b0f09706fabe42ee1114864739866312303bbd47ca075d1f2719079ab41"
+    }
+  ],
+  "calls": [
+    {
+      "offset": "0x16a66",
+      "target": "0x11500",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x109d0",
+      "target": "0x8dc0",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x1098a",
+      "target": "0x1075e",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x72d8",
+      "target": "0x71d6",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x72e6",
+      "target": "0x44ff4",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x10766",
+      "target": "0x44d38",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x10356",
+      "target": "0x20a048",
+      "space": "prefix",
+      "kind": "goto"
+    },
+    {
+      "offset": "0xb0de",
+      "target": "0x8dc0",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0xb0fa",
+      "target": "0x87f2",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x1086a",
+      "target": "0x72c2",
+      "space": "prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x586c2",
+      "target": "0x101a8",
+      "space": "suffix-to-prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x587ea",
+      "target": "0x44f46",
+      "space": "suffix-to-prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x5882e",
+      "target": "0x10198",
+      "space": "suffix-to-prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x58834",
+      "target": "0x7442",
+      "space": "suffix-to-prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x5887c",
+      "target": "0x10198",
+      "space": "suffix-to-prefix",
+      "kind": "call"
+    },
+    {
+      "offset": "0x5888a",
+      "target": "0x10348",
+      "space": "suffix-to-prefix",
+      "kind": "call"
+    }
+  ],
+  "ee53": {
+    "classification": "Strong internal consistency for fixed negative signed9 displacement byte store; no exact independent oracle. Prior postincrement name withdrawn.",
+    "sites": [
+      {
+        "offset": "0x18a2",
+        "source_register": 4,
+        "base_register": 1,
+        "candidate_displacement": -70,
+        "instruction_sha256": "1523921c30be63b8de7702b7d919368e77f7eebe79e0fc3b6f764e61c1468f85"
+      },
+      {
+        "offset": "0x18a6",
+        "source_register": 3,
+        "base_register": 1,
+        "candidate_displacement": -69,
+        "instruction_sha256": "2e0549ba9dab8a2116e47f1faa76ea3fd0fcdc13fa5e68ec4d37fec50a1321c4"
+      },
+      {
+        "offset": "0x1924",
+        "source_register": 4,
+        "base_register": 1,
+        "candidate_displacement": -143,
+        "instruction_sha256": "ab1841bbdb24a18e827ed7938f471117b40af52d8f26f326a8f148a738126920"
+      },
+      {
+        "offset": "0x1928",
+        "source_register": 3,
+        "base_register": 1,
+        "candidate_displacement": -142,
+        "instruction_sha256": "4b1ebc8c66b6a33edb73a2721ec936520af87aa0302b3c4b0973b0fa0898c628"
+      }
+    ],
+    "default_decoder_support": false,
+    "independent_exact_sdk_examples": 0,
+    "sibling_ee52_controls": 44,
+    "sibling_ee59_controls": 2,
+    "geometry": [
+      {
+        "side": "left",
+        "table": "0x1b90",
+        "record": "0x1b3e",
+        "covered_record_offsets": [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "halfword_roundtrip_cases": 65536
+      },
+      {
+        "side": "right",
+        "table": "0x1bf8",
+        "record": "0x1b5d",
+        "covered_record_offsets": [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "halfword_roundtrip_cases": 65536
+      }
+    ],
+    "mutations_and_refusals": 13
+  },
+  "strings": [
+    {
+      "text": "eeprom write over",
+      "file_offset": "0x23048",
+      "sha256": "e883c3ce83855e05ac1213645e7bc6a7301c6a43e299db5ac89637dd282d0d56"
+    },
+    {
+      "text": "iic op time over time",
+      "file_offset": "0x26d8b",
+      "sha256": "4ca61bbfe6f96fc949773c2bb9e6e43b6e8659aa0107cc0c17d6f0e2f0a1bb72"
+    },
+    {
+      "text": "hw i2c op over time re init %d",
+      "file_offset": "0x28660",
+      "sha256": "10e8adf9fbd049f98720c81cc84fcafd91621235012c7915cb4335e89f20563b"
+    }
+  ],
+  "cross_image_fragments": [
+    {
+      "label": "pack_left",
+      "size": 130,
+      "sha256": "ddece42892b51f37dc25da06e0f0dd3166e6a270d386c0722dfa6cd03c7eaaaa",
+      "matches": {
+        "JS_3103_DV_V209_No_Key": {
+          "count": 1,
+          "offset": "0x1856"
+        },
+        "JS_3103_U_DV_V515_No_Key": {
+          "count": 1,
+          "offset": "0x1856"
+        },
+        "JS_3103_U_DV_V608_No_Key": {
+          "count": 1,
+          "offset": "0x1856"
+        }
+      }
+    },
+    {
+      "label": "pack_right",
+      "size": 128,
+      "sha256": "cbef3101e1d117c45c34f713abd4e66bae224a8e27755767933fc08374748410",
+      "matches": {
+        "JS_3103_DV_V209_No_Key": {
+          "count": 1,
+          "offset": "0x18d8"
+        },
+        "JS_3103_U_DV_V515_No_Key": {
+          "count": 1,
+          "offset": "0x18d8"
+        },
+        "JS_3103_U_DV_V608_No_Key": {
+          "count": 1,
+          "offset": "0x18d8"
+        }
+      }
+    },
+    {
+      "label": "storage_complete",
+      "size": 60,
+      "sha256": "3b625fcaca346c255ff26b66977d2f2e5af087ec22852238d9818b1e4783f91c",
+      "matches": {
+        "JS_3103_DV_V209_No_Key": {
+          "count": 1,
+          "offset": "0x10954"
+        },
+        "JS_3103_U_DV_V515_No_Key": {
+          "count": 1,
+          "offset": "0x1095c"
+        },
+        "JS_3103_U_DV_V608_No_Key": {
+          "count": 1,
+          "offset": "0x1095c"
+        }
+      }
+    },
+    {
+      "label": "bus_end_status",
+      "size": 10,
+      "sha256": "99d48db38205b248924d2ae19b3ace6d9fd0c204c4d2f7dd0c9521e17bf96d69",
+      "matches": {
+        "JS_3103_DV_V209_No_Key": {
+          "count": 1,
+          "offset": "0x58880"
+        },
+        "JS_3103_U_DV_V515_No_Key": {
+          "count": 1,
+          "offset": "0x58960"
+        },
+        "JS_3103_U_DV_V608_No_Key": {
+          "count": 1,
+          "offset": "0x58960"
+        }
+      }
+    }
+  ],
+  "completion": {
+    "job_operation_write": 1,
+    "chunk_size_limit": 32,
+    "requested_length": 30,
+    "page_addresses": [
+      "0x1700",
+      "0x1720"
+    ],
+    "progress_count": "halfword[0xf0ec] advanced when chunk submitted",
+    "chunk_pending": "byte[B+0x824]",
+    "bus_finished": "byte[B+0x528]",
+    "job_busy": "byte[B+0x81c]",
+    "callback": "word[B+0xa60]; zero in reviewed stick job",
+    "registered_handler": {
+      "runtime": "0x8f48",
+      "file": "0x58660",
+      "registration_call": "0x72e6",
+      "helper": "0x44ff4"
+    },
+    "normal_stop": "0x5882e -> 0x58880",
+    "status_rejection_stop": "0x58752 -> 0x5887c -> 0x58880",
+    "shared_bus_finished_store": "0x58886",
+    "job_log": "0x1098a -> 0x1075e -> eeprom write over"
+  },
+  "limits": [
+    "EE53 signed9-store geometry is not an independent ISA proof; no shared SLEIGH decoder was patched.",
+    "Existing conditional/parallel decoder limits remain; no exact timing unit or unconditional scheduler reachability is asserted.",
+    "Bus status bit7 is rejected by selected branches; external NACK register semantics not independently verified here.",
+    "Internal finished flag and write-over log do not distinguish every reviewed stop path or prove nonvolatile readback.",
+    "A distinct clean/verification path performs readback; it is not automatically the calibration queue path.",
+    "No complete host-visible saved/error response, per-device session ownership, atomicity, or power-loss recovery established.",
+    "No hardware defect or false-success event has been reproduced."
+  ],
+  "hardware_access": false,
+  "network_access": false,
+  "driver_changed": false
+}

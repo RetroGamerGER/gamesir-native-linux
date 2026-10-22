@@ -30,6 +30,7 @@ if (Path(__file__).resolve().parent.parent / 'sdl/input_pair_readiness.py').is_f
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'sdl'))
 from input_pair_readiness import Action, Binding, PublicationGate
 from input_readiness import ProcessedInputs, ReadinessError
+from tmr_maintenance import Maintenance, TmrError
 
 PORT = re.compile(r"[1-9][0-9]*-[1-9][0-9]*(?:\.[1-9][0-9]*)*")
 INFO = re.compile(r"pid=(100a|109c|105e) state=(\d+) error=(-?\d+) OUT=([01]) session=([01])\b")
@@ -37,6 +38,12 @@ PAD = re.compile(r"\bpad=(\d+)\b")
 BOOT = re.compile(r"^bootstrap state=(\d+) error=(-?\d+) failed_stage=(\d+) pad=([01]) imu=([01]) handover=([01]) port_token=(\d+) instance_token=(\d+)$", re.M)
 RETURN_SECONDS = 30
 HANDOFF_SECONDS = 5
+START_LIMIT = 3
+START_WINDOW_SECONDS = 600
+HEALTHY_RUN_SECONDS = 60
+# Normal status cadence is 2 s, with a 3 s getter deadline. Longer gaps
+# cannot establish continuously observed health, even if the next read passes.
+HEALTHY_MAX_GAP_SECONDS = 6
 JOB_SECONDS = {"bootstrap": 40, "boot-info": 3, "info": 3, "end": 5, "resume": 10,
                "input-info": 3, "publish-input": 3}
 READ_ONLY = frozenset(("info", "boot-info", "input-info"))
@@ -250,6 +257,8 @@ class Entry:
     publication_reason: str = ''
     publication_failure: str = ''
     acquisition_failure: str = ''
+    healthy_since: float | None = None
+    healthy_last: float | None = None
 
 
 class Manager:
@@ -261,6 +270,7 @@ class Manager:
     """
     def __init__(self, host, clock=time.monotonic):
         self.host, self.clock = host, clock
+        self.tmr = Maintenance(self)  # Inert; only explicit root requests can open it.
         saved = host.load()
         self.paused = bool(saved.get("paused", False))
         self.entries = {}
@@ -378,6 +388,7 @@ class Manager:
         entry.timed_out = False
 
     def fail(self, entry, message, phase="failed"):
+        self.reset_health(entry)
         if entry.phase in ('input_check', 'awaiting_sensor', 'publishing_input') and not entry.publication_failure:
             entry.publication_failure = message.encode('utf-8', 'replace')[:1024].decode('utf-8', 'ignore')
         entry.status_conflict = ""
@@ -410,6 +421,7 @@ class Manager:
         self.recent_failures = self.recent_failures[-RECENT_FAILURES:]
 
     def defer_status(self, entry, message):
+        self.reset_health(entry)
         # These are bounded-frequency getter checks, never USB/start retries.
         # Preserve the active/waiting/attesting phase and all ownership proofs.
         if entry.status_conflict != message:
@@ -431,8 +443,10 @@ class Manager:
             self.scan_error = str(message)
             for known in self.entries.values():
                 known.absent_since = None
+                self.reset_health(known)
         else:
             entry.absent_since = None
+            self.reset_health(entry)
             self.port_errors[entry.device.port] = str(message)
 
     def merge_scan_errors(self, fresh):
@@ -449,6 +463,7 @@ class Manager:
         for port in errors:
             if port in self.entries:
                 self.entries[port].absent_since = None
+                self.reset_health(self.entries[port])
         if any(port in self.entries or port in self.leases for port in errors):
             self.normal_since = None
 
@@ -478,9 +493,58 @@ class Manager:
     def budget_available(self, port):
         now = self.clock()
         history = self.budgets.setdefault(port, deque())
-        while history and history[0] < now - 600:
+        while history and history[0] <= now - START_WINDOW_SECONDS:
             history.popleft()
-        return len(history) < 3
+        return len(history) < START_LIMIT
+
+    def start_retry_in(self, port):
+        # Status is read-only. Expiration/discovery happens only on a tick.
+        history = self.budgets.get(port, ())
+        return (max(0, history[-START_LIMIT] + START_WINDOW_SECONDS - self.clock())
+                if len(history) >= START_LIMIT else 0)
+
+    @staticmethod
+    def reset_health(entry):
+        entry.healthy_since = entry.healthy_last = None
+
+    def record_healthy_runtime(self, entry):
+        """Forgive recent starts only after sustained, exact-instance status.
+
+        READY alone, receiver standby and elapsed wall time are insufficient.
+        These transient observations deliberately do not survive daemon restart.
+        """
+        if (entry.phase != 'active' or entry.error or self.inhibited or
+                not entry.bootstrap_started or not entry.kernel_tokens or
+                getattr(self.host, 'input_error', '')):
+            self.reset_health(entry)
+            return
+        now = self.clock()
+        if (entry.healthy_last is None or
+                not 0 <= now - entry.healthy_last <= HEALTHY_MAX_GAP_SECONDS):
+            entry.healthy_since = now
+        entry.healthy_last = now
+        history = self.budgets.get(entry.device.port)
+        if history and now - entry.healthy_since >= HEALTHY_RUN_SECONDS:
+            history.clear()
+            self.save()  # Preserve attempts, ownership and failure history.
+            self.notice('start_budget_recovered', entry.device,
+                        '60 seconds of healthy native status; recent start budget cleared')
+
+    def expire_cooldown(self, entry):
+        port = entry.device.port
+        # Only pre-acquisition rate limiting can expire automatically. Neither
+        # elapsed time nor a matching error string grants recovery authority.
+        if (port in self.leases or entry.error or entry.kernel_tokens or
+                entry.bootstrap_started or entry.candidate is not None or
+                entry.end_attempted or entry.cleanup_attempted):
+            self.fail(entry, entry.error or
+                      'Cooldown has ownership or fault state; manual attention required', 'blocked')
+        elif not self.inhibited and self.budget_available(port):
+            self.entries.pop(port)
+            self.discovery_deferred.add(port)
+            self.save()
+            self.notice('start_cooldown_expired', entry.device,
+                        'Start budget available; fresh discovery required')
 
     def begin_bootstrap(self, entry):
         if not self.budget_available(entry.device.port):
@@ -496,11 +560,21 @@ class Manager:
         self.start(entry, "bootstrap")
 
     def command(self, command):
+        if type(command) is dict:
+            try:
+                return self.tmr.request(command)
+            except (TmrError, OSError, ValueError, AttributeError) as error:
+                raise Unsafe(str(error)) from error
         if command == "release":
             self.paused = True
             self.save()  # Inhibit takeover before the first END/cancel.
+            self.tmr.close()
+            if self.tmr.runs:
+                raise Unsafe('Calibration handle return unresolved; no END attempted')
             self.scan_error = "Release verification pending"
         elif command == "resume":
+            if self.tmr.runs:
+                raise Unsafe('Calibration maintenance is in progress')
             if any(e.job or e.phase == "returning" for e in self.entries.values()):
                 raise Unsafe("Release/operation is still in progress")
             if any(port not in self.entries or self.entries[port].phase not in ("active", "receiver_wait")
@@ -517,6 +591,7 @@ class Manager:
 
     def status(self):
         return {"paused": self.paused, "scan_error": self.scan_error,
+                "tmr": {"busy_ports": sorted(self.tmr.runs), "last": self.tmr.last},
                 "input_readiness": {"enabled": getattr(self.host, 'readiness_enabled', False),
                                     "monitor_error": getattr(self.host, 'input_error', '')},
                 "recent_failures": self.recent_failures,
@@ -533,6 +608,7 @@ class Manager:
                                 "input_publication": e.publication_reason,
                                 "input_publication_failure": e.publication_failure,
                                 "acquisition_failure": e.acquisition_failure,
+                                "start_retry_in": self.start_retry_in(p) if e.phase == 'cooldown' else 0,
                                 "status_retry_in": max(0, e.next_check - self.clock())
                                 if e.status_conflict else 0}
                             for p, e in self.entries.items()}}
@@ -783,7 +859,9 @@ class Manager:
             entry.next_check = self.clock() + (2 if entry.phase == 'receiver_wait' else 0)
             self.remember(entry)
             if entry.phase == "active":
-                if getattr(self.host, 'readiness_enabled', False) and current.pid == '109c':
+                if (getattr(self.host, 'readiness_enabled', False) and
+                        (current.pid == '109c' or current.pid == '105e' and
+                         getattr(self.host, 'readiness_105e_enabled', False))):
                     entry.phase = 'input_check'
                     if not entry.publication_deadline:
                         entry.publication_deadline = self.clock() + INPUT_READY_SECONDS
@@ -849,6 +927,7 @@ class Manager:
                     entry.next_check = self.clock() + 1
                 return
             if state == 3 and not self.inhibited:
+                self.reset_health(entry)
                 self.status_available(entry)
                 entry.phase = "resuming"
                 entry.resume_deadline = self.clock() + 15
@@ -858,6 +937,7 @@ class Manager:
             else:
                 self.status_available(entry)
                 entry.next_check = self.clock() + 2
+                self.record_healthy_runtime(entry)
         elif operation == "resume":
             if entry.timed_out:
                 self.fail(entry, "PM resume client exceeded deadline")
@@ -1063,7 +1143,9 @@ class Manager:
             self.normal_since = None
             for entry in self.entries.values():
                 entry.absent_since = None  # Unknown is not continuous physical absence.
+                self.reset_health(entry)
             self.host.log("scan_failed", message=str(error))
+            self.tmr.tick()
             return
         self.observed = devices
         live_boot = getattr(self.host, "boot_id", None)
@@ -1080,6 +1162,7 @@ class Manager:
             self.save()
         self.port_errors = getattr(devices, "errors", {})
         self.merge_scan_errors(devices)
+        self.tmr.tick()
         now = self.clock()
         if self.managed_returned(devices):
             if self.normal_since is None:
@@ -1088,7 +1171,13 @@ class Manager:
             self.normal_since = None
         for port, entry in list(self.entries.items()):
             try:
+                if self.tmr.busy(port):
+                    continue  # This owner pins the existing exclusive FD; no status job/END.
                 current = devices.get(port)
+                if (current != entry.device or port in self.port_errors or
+                        entry.phase != 'active' or entry.error or self.inhibited or
+                        getattr(self.host, 'input_error', '')):
+                    self.reset_health(entry)
                 if entry.job is not None:
                     if self.inhibited and entry.operation in ("bootstrap", "resume", 'publish-input') and not entry.cancel_requested:
                         self.host.cancel(entry.job)
@@ -1106,6 +1195,9 @@ class Manager:
                     # It must not replace an earlier protocol/runtime error or
                     # linger in entry.error after a complete scan succeeds.
                     entry.absent_since = None
+                    continue
+                if entry.phase == 'cooldown':
+                    self.expire_cooldown(entry)
                     continue
                 if entry.phase == "locating":
                     self.locate_handoff(entry, devices)
@@ -1216,8 +1308,7 @@ class Manager:
             if device.driver not in START_OWNERS:
                 continue  # No adoption of foreign or unexplained native bindings.
             if not self.budget_available(port):
-                self.entries[port] = Entry(device, "blocked",
-                    error="Three starts in 10 minutes; explicit resume required", origin_pid=device.pid)
+                self.entries[port] = Entry(device, "cooldown", origin_pid=device.pid)
                 continue  # Budget checked before acquisition, including free IF0.
             entry = self.entries[port] = Entry(device, "checking_start", origin_pid=device.pid)
             try:
@@ -1276,8 +1367,25 @@ class Host:
         self.client, self.state, self.sysfs, self.proc = str(client), Path(state), Path(sysfs), Path(proc)
         self.boot_id = None
         self.readiness_enabled = False
+        self.readiness_105e_enabled = False
         self.inputs = None
         self.input_error = ''
+
+    def open_tmr(self, device):
+        from tmr_native import NativeTmr
+        # Explicit root command only; do not probe an older module's unknown
+        # ioctl and risk its legacy close semantics. No automatic enablement.
+        path = self.sysfs / 'module/gs_native/parameters/experimental_tmr'
+        if not path.is_file() or path.read_text().strip() != 'Y':
+            raise Unsafe('Experimental TMR interface is disabled')
+        self.guard(device)
+        backend = NativeTmr(device.node)
+        try:
+            self.guard(device)
+        except Exception:
+            backend.close()
+            raise
+        return backend
 
     def configure_inputs(self):
         parameters = self.sysfs / 'module/gs_native/parameters'
@@ -1285,6 +1393,11 @@ class Host:
             return  # Legacy, nondeferred kernel; no new operation required.
         self.readiness_enabled = all((parameters / name).read_text().strip() == 'Y'
                                     for name in ('defer_input', 'experimental_gyro', 'experimental_accel'))
+        # Optional in older modules. Never infer ZZZ sensor support from PID
+        # or the standard controller's opt-in; use the loaded module's flag.
+        zzz = parameters / 'experimental_gyro_105e'
+        self.readiness_105e_enabled = (self.readiness_enabled and zzz.is_file()
+                                      and zzz.read_text().strip() == 'Y')
         if self.readiness_enabled:
             self.inputs = ProcessedInputs()  # Before any claim or bootstrap.
 
@@ -1421,6 +1534,18 @@ class Host:
 
     def observe_guard(self, expected):
         self.check_access(expected, observation=True)
+
+    def tmr_guard(self, expected):
+        """Continuity check for an already pinned TMR FD, never USB authority.
+
+        The exclusive FD plus kernel tokens/epoch are checked by Maintenance.
+        Acquiring a lease and sending Start/Finish/Exit still use guard().
+        No cached process audit or receiver-presence shortcut is used here.
+        """
+        observed = self.scan()
+        if (expected.driver != 'gs_native' or expected.port in observed.errors
+                or observed.get(expected.port) != expected):
+            raise Unsafe('Native TMR device identity/binding changed')
 
     def acquisition_guard(self, expected):
         try:
@@ -1651,9 +1776,27 @@ def serve_connection(conn, manager):
         _pid, uid, _gid = struct.unpack("3i", conn.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
         if uid:
             raise Unsafe("Root control only")
-        command = conn.recv(32).decode("ascii").strip()
+        data = conn.recv(2049)
+        if data.startswith(b'{'):
+            deadline = time.monotonic() + 1
+            while b'\n' not in data and len(data) <= 2048:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise Unsafe('TMR request deadline exceeded')
+                conn.settimeout(remaining)
+                part = conn.recv(2049 - len(data))
+                if not part:
+                    break
+                data += part
+            if len(data) > 2048 or not data.endswith(b'\n') or data.count(b'\n') != 1:
+                raise Unsafe('One bounded newline-terminated TMR request required')
+            command = json.loads(data)
+        else:
+            if len(data) > 32:
+                raise Unsafe('Oversized control command')
+            command = data.decode("ascii").strip()
         answer = {"ok": True, **manager.command(command)}
-    except (OSError, UnicodeError, Unsafe) as error:
+    except (OSError, UnicodeError, ValueError, Unsafe) as error:
         answer = {"ok": False, "error": str(error)}
     try:
         conn.sendall(json.dumps(answer).encode() + b"\n")
@@ -1684,7 +1827,7 @@ class HapticBackend:
 
     def devices(self):
         return {identity: {"name": "GameSir G7 Pro", "port": entry.device.port,
-                           "busy": entry.job is not None}
+                           "busy": entry.job is not None or self.manager.tmr.busy(entry.device.port)}
                 for identity, entry in self.selections().items()}
 
     def apply(self, identity, commands):
@@ -1692,7 +1835,7 @@ class HapticBackend:
         entry = self.selections().get(identity)
         if entry is None:
             raise Unsafe("Haptic instance is no longer owned and active")
-        if entry.job is not None:
+        if entry.job is not None or self.manager.tmr.busy(entry.device.port):
             raise Busy("Native control FD is in use by manager operation")
         self.manager.host.haptics(entry.device, commands)
 
@@ -1756,6 +1899,7 @@ def daemon(args):
                 with conn:
                     serve_connection(conn, manager)
     finally:
+        manager.tmr.close()
         if host.inputs:
             host.inputs.close()
         if haptic_server:

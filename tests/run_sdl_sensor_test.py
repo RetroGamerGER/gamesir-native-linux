@@ -8,6 +8,7 @@ The LD_PRELOAD fixture is private to each test child. Never run probes directly.
 from pathlib import Path
 import argparse
 import hashlib
+import itertools
 import json
 import os
 import shlex
@@ -107,9 +108,9 @@ def main():
         _fields_ = [("verified", c.c_uint32), ("resolution", c.c_uint32), ("axis", Axis * 3)]
     lib = c.CDLL(str(build / "sensor.so"))
     lib.gs_sensor_convert.argtypes = [c.POINTER(Calibration), c.c_void_p, c.c_void_p]
-    lib.gs_gyro_convert_observed.argtypes = [c.c_uint16, c.c_int, c.c_void_p, c.c_void_p]
+    lib.gs_gyro_convert_observed.argtypes = [c.c_uint16, c.c_int, c.c_int, c.c_void_p, c.c_void_p]
     gyro = (c.c_int32 * 3)()
-    assert lib.gs_gyro_convert_observed(0x109c, 1, (c.c_int16 * 3)(*axes[:3]), gyro) == 1
+    assert lib.gs_gyro_convert_observed(0x109c, 1, 0, (c.c_int16 * 3)(*axes[:3]), gyro) == 1
     assert list(gyro) == [value * 7 for value in axes[:3]]
     observed = [0, 0, 0, *gyro]
     class AccelScale(c.Structure):
@@ -131,7 +132,11 @@ def main():
         converted.extend(out)
     assert converted == [10000, 0, -10000, 9000, -9000, 0]
     results = []
-    for version in ([3] if library is not None else [3, 2]):
+    for version, variant in itertools.product(([3] if library is not None else [3, 2]), ("109c", "105e")):
+        candidate = (c.c_int32 * 3)()
+        assert lib.gs_gyro_convert_observed(int(variant, 16), 1, variant == "105e",
+                                           (c.c_int16 * 3)(*axes[:3]), candidate) == 1
+        assert list(candidate) == list(gyro)
         for scenario in ["iio-only", "matching-uniq", "wrong-uniq", "missing-rz", "zero-resolution", "synthetic-converted", "observed-gyro", "experimental-six-axis"]:
             sample_raw = converted if scenario == "synthetic-converted" else raw
             accel_resolution, gyro_resolution = (10000, 100) if scenario == "synthetic-converted" else (8192, 16)
@@ -146,7 +151,7 @@ def main():
             args = ["bwrap", "--unshare-all", "--die-with-parent", "--new-session", "--cap-drop", "ALL",
                 "--clearenv", "--setenv", "PATH", "/usr/bin", "--setenv", "HOME", "/tmp",
                 "--setenv", "GS_HOST_NS", json.dumps(host_ns),
-                "--setenv", "GS_SCENARIO", scenario, "--setenv", "GS_RAW", ",".join(map(str, sample_raw)),
+                "--setenv", "GS_VARIANT", variant, "--setenv", "GS_SCENARIO", scenario, "--setenv", "GS_RAW", ",".join(map(str, sample_raw)),
                 "--setenv", "GS_ACCEL_RES", str(accel_resolution), "--setenv", "GS_GYRO_RES", str(gyro_resolution),
                 "--ro-bind", "/usr", "/usr", "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib", "/lib64",
                 "--proc", "/proc", "--dev", "/dev", "--ro-bind", str(fixture / "sys"), "/sys",
@@ -161,9 +166,9 @@ def main():
                 args.extend(["--setenv", "GS_CHECK_STEAM_LAYOUT", "1"])
             args.extend(["/usr/bin/python", "/tests/audit_sdl_sandbox.py", f"/tests/probe{version}"])
             output = run(args)
-            filename = f"sdl{version}-{scenario}.log"
+            filename = f"sdl{version}-{variant}-{scenario}.log"
             (report / filename).write_text(output)
-            results.append({"api": f"SDL{version}", "scenario": scenario,
+            results.append({"api": f"SDL{version}", "variant": variant, "scenario": scenario,
                 "passed": "result=PASS" in output and "iio opens=0;" in output and '"all_six_separate": true' in output
                     and (version != 3 or scenario != "experimental-six-axis"
                          or "guide_independent_sensor_events_and_cache=PASS" in output),

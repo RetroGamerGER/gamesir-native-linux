@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-21",
+  "scope": "One approved activation and qualitative ZZZ Steam/Gamescope motion/input test",
+  "package": "gamesir-native-dkms 0.1.0.alpha3-17",
+  "kernel": "7.2.11-1-cachyos-deckify",
+  "source_commit": "b1f68f1939d95ef225014a0cef43e08a16728814",
+  "service_start_calls": 1,
+  "resume_calls": 1,
+  "automatic_retry": false,
+  "release_calls": 0,
+  "configuration_changes": false,
+  "main_host_modified": false,
+  "steam_configuration_changed": false,
+  "steam_already_running_before_controller_power_on": true,
+  "service_active_and_enabled": true,
+  "loaded_module_srcversion": "2C3CD9E0768198E709B871B",
+  "loaded_parameters": {
+    "accel_axis_map": "1,2,3",
+    "accel_counts_per_g_den": "1",
+    "test_interface": "(null)",
+    "defer_input": "Y",
+    "receiver_wait": "Y",
+    "accel_counts_per_g_num": "8192",
+    "session_ms": "30000",
+    "enable_output": "Y",
+    "experimental_accel": "Y",
+    "persistent_mode": "Y",
+    "experimental_gyro": "Y",
+    "test_pid": "0",
+    "experimental_gyro_105e": "Y",
+    "bootstrap_mode": "Y"
+  },
+  "observed_device": {
+    "vendor": "3537",
+    "product": "105e",
+    "version": "0607",
+    "driver": "gs_native",
+    "manager_phase": "active",
+    "publication": "Exact input publication confirmed",
+    "bootstrap_returncode": 0,
+    "bootstrap_kernel_status": {
+      "state": 7,
+      "error": 0,
+      "failed_stage": 0,
+      "pad": 1,
+      "imu": 1,
+      "handover": 0
+    },
+    "new_manager_errors": false,
+    "pair_identity_matches": true,
+    "gamepad_event_present": true,
+    "motion_event_present": true
+  },
+  "publication_timing": {
+    "source": "same-boot kernel journal monotonic timestamps",
+    "sensor_registered_seconds": 2392.496012,
+    "gamepad_registered_seconds": 2393.645484,
+    "sensor_before_gamepad_seconds": 1.149472,
+    "interpretation": "Consistent with deferred publication after sensor readiness; sole cause of Steam success is not established"
+  },
+  "maintainer_observation": {
+    "steam_gyro_all_three_axes_respond_appropriately": true,
+    "guide_not_held": true,
+    "all_four_paddles_independent": true,
+    "ordinary_buttons_sticks_triggers_work": true,
+    "simultaneous_input_and_release_normal": true,
+    "desktop_responsive": true,
+    "eden_gyro_display_matches_physical_motion": true,
+    "steam_gyro_display_matches_physical_motion": true
+  },
+  "not_established": [
+    "Precise ZZZ gyro/accelerometer physical calibration",
+    "Long-off reconnection reliability",
+    "Whether direct PID identity or readiness order alone explains the contrast with previous standard-model cases",
+    "ZZZ motor/trigger-vibration acceptance"
+  ],
+  "publication": false,
+  "maintainer_next_step": "Keep functioning state and gather ordinary-use observations; defer investigation of the standard-model/ZZZ Steam startup difference. A timing/session coincidence is not excluded.",
+  "follow_up_evidence": "Maintainer subsequently reports ZZZ gyro works in Eden and Steam, with displays matching physical controller movements. No additional agent-run hardware observation or system change."
+}

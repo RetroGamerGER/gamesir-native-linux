@@ -1,4 +1,688 @@
-# Current: approved public README refresh — 21 October 2026
+# Current: PRE-ALPHA.4 publication authorized — 22 October 2026
+
+The maintainer accepted the simpler alpha2 interface with real status data,
+then requested source/license release preparation and explicitly authorized the
+new packages, push and tag/release. See [the ordered review/publication plan](CONTROL_CENTER_ALPHA2_RELEASE.md).
+Versions: AppImage alpha2, core alpha3-20, optional TMR helper alpha1-2.
+Use the exact already reviewed alpha1 dependency/source baseline for the public
+AppImage, preserve old assets and sign a monotonic revision2 catalog with the
+same key. Publish the new metadata only after its downloads verify.
+No installed driver, service, Steam or hardware changes belong to publication.
+
+# Earlier: normal Control Center calibration prepared offline — 22 October 2026
+
+Local alpha2 now offers the tested TMR path in the normal reviewed AppImage,
+alongside existing package management. Loading pins never authenticates; an
+explicit dialog click, controller selection and Start/Finish remain necessary.
+Missing/invalid pins leave calibration disabled. Package planning/setup/update
+and calibration exclude each other, including direct API calls and delayed
+worker return. Uncertain results stay blocked. Demo/rehearsals remain isolated.
+
+The main page is shorter: three status items, System details for technical
+facts, a separate calibration card and collapsed planned firmware features.
+The calibration dialog shows three guided steps and hides stale plots after
+completion. Current driver/helper requirements remain; no automatic helper
+installation, module opt-in, signed catalog change or broader hardware claim.
+See [scope and build/testing method](CONTROL_CENTER_NORMAL_CALIBRATION.md).
+This step is offline build/testing/local commit only. No installation,
+hardware, service/Steam/driver changes, release or push.
+Validation passed: 603 cases (456 Python, 112 Qt/QML and 35 document/license
+checks), plus all five synthetic smoke lanes of the final alpha2 AppImage.
+The integration document records the exact artifact SHA256 and remaining
+distribution boundary; the final bundled application files match this source.
+
+# Earlier: ZZZ TMR calibration retained after off/on — 22 October 2026
+
+The maintainer completed a guided calibration on ZZZ105e after explicitly
+selecting it beside the standard controller. Both sticks reported ready;
+Finish completed with manager state finished, empty errors and lease returned.
+Three passive ten-second left-stick measurements (200 snapshots each) show:
+before, mean X/Y -0.9743%/+1.1025%; after calibration and after ordinary off/on,
+0%/-0.0031% with no observed variation (raw 0/-1). The maintainer confirmed
+live movement after reconnect and reports centered sticks without jitter.
+[Quantitative receipt](evidence/TMR_ZZZ_CALIBRATION_20261022.json) and
+[method/scope](CONTROL_CENTER_TMR_PERMISSION.md) distinguish processed evdev
+positions from the calibration dialog's raw display.
+
+The improvement survived a user-confirmed off/on with a ten-second off wait,
+receiver left inserted and no new calibration/manual Resume. USB/input
+reenumerated; each measurement kept its own stable instance. This establishes
+observed retention for this ZZZ, without direct coefficient/NVM readback or
+proof of complete RAM power loss. Normal109c persistence, quantitative
+right-stick/range checks, other firmware/platforms and live abort/loss remain
+open. Installed core alpha3-20/helper alpha1-2/GUI are unchanged by this test.
+No further hardware run, installation or push; local documentation commit only.
+
+# Earlier: TMR preview CPU/blinking correction — 22 October 2026
+
+**First calibration completed:** After a new explicit Go, the maintainer
+performed the guided Start/movement/release/Finish flow on standard109c.
+Both sticks reported ready; the GUI reported Finish submitted. Read-only
+status confirmed finished, no error or cleanup error, lease released and
+the same native USB instance/input publication. The helper exited normally.
+An independent KDE check confirms centered sticks, full travel and normal
+buttons, triggers and all four paddles. [Calibration receipt](evidence/TMR_FIRST_LIVE_CALIBRATION_20261022.json).
+This accepts one session's workflow and same-connection function. Power-cycle
+persistence, quantified centering/range and ZZZ/CachyOS calibration remain
+untested. No additional ACK is required. No replay, new calibration, power
+cycle, installation or push follows automatically. Earlier checkpoints below
+retain their own scope; the preview Go gate was subsequently satisfied.
+
+**Later deployment/preview:** The maintainer approved updating the Mainrig.
+Core alpha3-20 and TMR helper alpha1-2 are installed and verified; the corrected
+GUI has matching helper pins. Kernel/shared sources are unchanged from 19.
+Temporary TMR opt-in and previous sensor settings were restored, service is
+active/enabled and one Resume completed native startup. An earlier read-only
+journal precondition stopped before Resume; no repeated Resume was issued.
+The maintainer confirms a steady Start button and both stick plots without
+perceived delay. Ten seconds of live preview measured manager 6.3%, GUI 5.1% and
+helper 0.9% CPU, with 100% meaning one core. This is a current mean, whereas the
+old 49% was a screenshot. [Deployment evidence](evidence/TMR_DISPLAY_UPDATE_20261022.json).
+The preview is open; calibration has not started and requires a new Go.
+No firmware storage/calibration acceptance, further system changes or push.
+The paragraphs below retain the preceding offline checkpoint.
+
+The separately approved real GUI showed moving sticks, but the maintainer
+reported a blinking Start button, lag and approximately 49% manager CPU in
+their screenshot. They confirmed Start was not pressed. Closing only the
+calibration dialog left the main window open and removed the reported CPU
+load. No successful calibration or persistent save has been established.
+
+The [offline polling correction](TMR_DISPLAY_POLLING_FIX.md) separates display
+activity from action busy, removes duplicate helper reads and avoids global
+process-FD scans for an already pinned lease's display/watchdog checks.
+Admission and each actual calibration command retain full ownership audits;
+fresh data, exact instance/epoch and one-shot submission remain required.
+All regression and 98 Qt cases pass; 16 regressions were added. A synthetic
+process-tree comparison shows a large CPU reduction, not live acceptance.
+Installed manager/helper/driver and the running GUI snapshot remain unchanged.
+Next: approve a matching manager/helper/GUI update, then validate the preview
+before any Start/Finish. No automatic live retry, installation or push.
+Earlier checkpoints below retain their historical scope.
+
+# Earlier: TMR GUI and permission integration prepared offline — 22 October 2026
+
+**Activation checkpoint (22 October):** The maintainer then authorized temporary
+TMR module enablement, paused service start and one Resume after reconnecting
+the receiver/controller. Native startup completed successfully (gamepad + IMU,
+input publication confirmed). TMR is enabled for this module lifetime only;
+no persistent option was written. No calibration helper/session/Start/Finish/Exit
+has run. [Activation receipt](evidence/TMR_MAINRIG_ACTIVATION_20261022.json).
+Wait for the maintainer's explicit Go before the real calibration GUI/test.
+The initial monitor stopped on transient empty USB configuration metadata during
+handover; a read-only follow-up confirmed the original bootstrap succeeded.
+No second Resume or driver restart was needed. Earlier checkpoints below retain
+their own historical scope.
+
+**Deployment checkpoint (22 October):** The maintainer subsequently authorized
+installation on the Garuda main system. Local test core alpha3-19 and optional
+TMR helper alpha1-1 are installed and verified; module/service remain stopped,
+the receiver remains removed and no calibration command ran. Gyro configuration,
+Steam/bridge versions and the service's enabled preference are preserved.
+[Installation receipt](evidence/TMR_MAINRIG_INSTALL_20261022.json). Activation
+and hardware acceptance still need separate approval; no public release/push.
+
+The [scoped GUI/permission path](CONTROL_CENTER_TMR_PERMISSION.md) now connects
+the accepted stick dialog to a separate fixed Polkit helper and the native
+manager API. One permission session, explicit controller selection, serial
+background work, genuine E0 snapshots, one-shot Start/Finish/Exit and local
+lease return are covered offline. Ordinary input, gyro, haptics and package
+flows remain unchanged. No root GUI or elevated AppImage script is introduced.
+
+The experimental helper explicitly uses the weaker fresh-E0 continuity contract;
+it never claims proven RF identity or a lossless stream. Repeated snapshots
+cannot refresh liveness. Firmware storage remains firmware-owned; no extra ACK.
+The default application and existing first-run helper remain unchanged. Optional
+staging prepares eight own helper/policy files and a hash-pinned AppDir companion;
+there is no automatic installation or enablement.
+
+43 new pipe/permission/native-manager cases and 12 new real-QML worker cases
+pass offline alongside the existing regression. See the linked receipt.
+Next: separately approved helper/driver setup and controlled hardware acceptance
+of framing, report freshness, display orientation, cancel and explicit Finish.
+No installation, activation, hardware, system changes, network or push here.
+Precision gyro remains paused and lower RF analysis deferred.
+
+# Earlier: TMR USB framing traced offline — 22 October 2026
+
+The [USB framing follow-up](TMR_USB_FRAMING.md) closes the native dongle callback,
+endpoint2/64-byte configuration, actual USB receive length and unchanged queue
+copy. Nexus' three payload bytes and the controller's option/selector/operation
+checks support the existing fully specified OUT64 Linux candidate. Standard,
+WFF and ZZZ bundled firmware branches agree; private RAM layout differs.
+
+This is receiver-side reconstruction, not a capture of the external Windows
+provider: original Windows transfer length, padding and sequence choice remain
+unobserved. No new host checksum, RF sequence or persistence ACK is needed in
+the reviewed path. Actual queue/link/runtime conditions and hardware calibration
+still require acceptance. Never equate a completed USB transfer with storage.
+
+39 bounded ranges / 515 records, 88 firmware and 11 Nexus anchors, 13 independent
+call/mutation and three pointer/mutation checks passed. Own C frame tests cover
+256 sequences × three commands against independent vectors/provider codec and
+reject unsupported operations. All vendor files/decoder remain unchanged.
+The locally cached pinned xone encoder corroborates byte3=03, four-byte short
+header, positive sequence and ACK flag off; it does not establish Windows'
+padding choice. 455 alpha/package tests and 26 license/README/flow cases passed.
+Kernel/manager/GUI and installed state remain unchanged; no live access,
+activation, AppImage rebuild or push. Gyro precision work stays paused.
+Next: reviewed scoped GUI/permission integration and a separately approved test.
+
+# Earlier: TMR kernel/manager interface prepared offline — 22 October 2026
+
+The [narrow native interface](TMR_NATIVE_INTERFACE.md) is implemented in kernel,
+additive ABI1 and manager. Existing output ownership/sequence is retained;
+only Start/Finish/Exit can produce calibration output. Exact native tokens,
+continuity epoch, run generation and renewable exclusive lease are enforced.
+Full E0 snapshots retain RX timestamps/counts and raw/processed bytes separately.
+Lost/stale runs stop without replay. Maintenance close preserves normal inputs;
+first failure and uncertain cleanup are kept separate.
+
+This is not live acceptance: experimental_tmr defaults off and no installed
+file, module, service, Steam setting, GUI helper or AppImage is changed. The
+complete OUT64 framing remains an explicitly unvalidated GIP candidate. E0
+freshness proves continuity only, not an actual RF lifetime; the earlier GUI
+Channel therefore remains unavailable by default. No speculative storage ACK,
+firmware flash, hardware test or push. Precision gyro remains paused.
+
+See the linked receipt for regression and module-build results. Packaging now
+ships the shared header/both modules without enabling them, and restores two
+existing ZZZ evidence links previously omitted from the document package.
+Next: separately approved transport/stream validation and scoped GUI wiring.
+The maintainer proposes a deliberately imperfect first calibration, comparing
+the current reported 0.0 baseline after power cycling; this test has not run.
+Validation: make test passed 1,813 Python cases and its compiled C/fake-kernel
+checks, including 27 new maintenance cases and 323 total actual-adapter scenarios
+(20 added here). All 79 Qt/lifecycle cases passed. Local module build for
+Garuda 7.3.0-2 passed W=1/-Werror with zero warnings; not loaded or installed.
+
+# Earlier: controller calibration adapter prepared offline — 22 October 2026
+
+The [controller adapter](CONTROL_CENTER_CALIBRATION_ADAPTER.md) now feeds strict
+full E0 report/status layouts into the accepted calibration coordinator and
+passes only the known internal Start/Finish/Exit contents to an injected owner.
+An exclusive expiring lease and exact device/USB/RF/run identity are checked
+before/after one-shot submissions. First errors survive cleanup failures; stale
+reports, changed ownership/lifetime and uncertain sends cannot cause replay.
+Raw/processed position selection and signs are explicit display policies.
+
+The current kernel ABI and manager have no native TMR command/full E0 stream API.
+A real transport cannot be enabled just by updating this GUI. The production
+default is unavailable without opening devices; no live flag/factory is added.
+The next separately authorized step is a narrow native owner/stream interface,
+not raw USB passthrough or reuse of haptics/Release/Resume. E0 stream intervals
+and RF-lifetime proof still need review before hardware acceptance.
+
+Validation: 411 Control Center and 79 Qt/lifecycle cases passed, including
+35 new codec/adapter tests; license/README/Nexus checks passed. Existing GUI
+simulation remains independent;
+no live source was injected into the visible preview. Kernel, manager, UAPI,
+helpers, installed drivers and AppImage bytes are unchanged. No firmware
+execution, network, hardware, installation or push; precision gyro paused.
+
+# Earlier: Control Center TMR offline preview — 22 October 2026
+
+The [calibration dialog](CONTROL_CENTER_STICK_CALIBRATION.md) is implemented
+against a simulated controller: independent XY plots and colored edge coverage,
+three-second preparation, explicit Finish after both current firmware-ready
+flags, cancel/close and terminal connection loss. No full-ring success guess,
+storage ACK requirement or automatic command replay. The pure coordinator binds
+all samples/actions to one device, connection instance and local generation.
+Old/foreign reports, stale callbacks, missing heartbeat, malformed input and
+simulated transfer errors are covered. An old dialog cannot finish a new run.
+
+--rehearse-calibration enables only this isolated preview; normal demo/status/
+package startup and the published AppImage retain unavailable calibration.
+No device transport, kernel/manager/helper modification or installed operation.
+An actual Linux adapter, device ownership/status integration and separately
+approved hardware acceptance remain future work. No binary/version/release
+change or push. Both installed drivers and paused precision gyro preserved.
+
+Validation: 376 Control Center and 79 Qt/lifecycle cases passed (36 new cases),
+plus existing license/README/Nexus checks. Software-rendered DE/EN and compact
+views reviewed. The supplemental core-package audit retains its pre-existing
+missing ZZZ acceptance-document link; confirmed with the unchanged HEAD
+allowlist, separate from the new GUI. See the linked feature receipt.
+
+# Earlier: TMR off/wake path bounded — 22 October 2026
+
+The [wake/retention report](NEXUS_STICK_WAKE_RETENTION.md) follows the controller
+RAM entry 0xc7a through its outer off loop and P33 reset fallback. This loop
+retries shutdown, not calibration commands. Normal completed startup clears
+the identified sequence/calibration RAM, but exact physical SRAM retention and
+the Boot-ROM choice on every wake remain open. Boot-argument copies outside
+the BSS range are not a demonstrated restoration of old calibration work.
+
+The stick Finish path requires the corresponding done bits. With those flags
+still zero after completed startup, a lone old Finish sets no stick-finish
+request. Controller reset still cannot cancel receiver pending data, and this
+state guard is not proof against delivery during a later ready session. No
+actual late Finish, endless command retry or calibration-induced brick observed.
+
+Practical plan: end the UI run on loss, never automatically replay an uncertain
+Finish/Start/Exit, and require a deliberate new user start. No extra persistence
+ACK is required. Failure followed by recalibration is plausible; incorrect
+persisted stick values are a plausible worse outcome, not an observed one.
+The bounded offline follow-up is complete with these limits; no automatic
+continuation into unlimited wake/ROM research or writable implementation.
+
+Validation: 22 ranges/539 records; 106 transfer checks and changed controls;
+cached official operand forms, 17 exact P33 witnesses, bounded memory intervals,
+1,024 own conditional consistency cases and 16 existing dialog tests passed.
+No target execution/emulation, network/hardware, driver/system changes or push.
+Both installations and deferred diagnosis unchanged; precision gyro paused.
+
+# Earlier: TMR reconnect reset selection — 22 October 2026
+
+The [reconnect-route report](NEXUS_STICK_RECONNECT_ROUTES.md) separates actual
+reset requests from link-only and sleep paths. DG event/state predicates now
+identify the route to the established reset primitive; the alternative scan
+branch changes output readiness without proving cancellation of pending data.
+The 18-entry mode dispatcher converges to reset after its preceding helpers.
+
+The previously deferred controller tasks are resolved: 0x400008 processes
+pairing records then reaches conditional reset helper 0x8582; 0x40000b posts
+sleep message 0x40000c and may request HCI Disconnect. The helper's reset branch
+reaches RAM 0x10a, while its returning branch directly changes only three other
+state fields. Sleep tail RAM 0xc7a is a distinct entry; full wake/retention
+remains open, and its local post-call loops are not radio retries.
+
+Completed normal startup clears the previously identified RAM, but a reset
+request is not observed successful reboot. Controller-only reset cannot cancel
+a retained dongle command. Neither guaranteed purge on every reconnect nor an
+actual late Finish or endless retransmission is proven. Do not confuse passing
+a sequence check with effective calibration or storage. No new persistence ACK
+or blind Start/Finish/Exit replay is introduced.
+
+Validation: 44 bounded ranges/669 records; 147 transfer and 43 table checks with
+mutated controls; 171 literal/179 short/293 long official-reference checks,
+20 direct-write interval comparisons, eight own boolean cases and 16 existing
+dialog tests. Known decoder limits remain, including excluded DV 0xe976.
+Next: sleep/wake RAM lifetime; the generic reset and task targets are resolved.
+Offline docs/local commit only; no target execution/emulation, network/hardware,
+system/driver changes or push. Both installations/deferred diagnosis unchanged;
+precision gyro remains paused.
+
+# Earlier: TMR soft reset and sequence lifetime — 22 October 2026
+
+The [reset-lifetime report](NEXUS_STICK_RESET_LIFETIME.md) resolves the earlier
+DG external target into the existing RAM suffix. Matching P33 helpers in DG144
+and DV209 set register 0xa0 bit 4; cached official Jieli code independently
+supports the chip-reset interpretation. Physical reset/boot success was not run.
+
+Completed normal startup clears the identified DG pending copy, pending flag,
+sequence and queue pointer; DV startup clears its last sequence and calibration
+RAM. This does not erase stored calibration and does not prove every radio
+reconnect reaches startup. A controller-only reset can change duplicate-filter
+behavior while the dongle might retain a pending command. Passing the sequence
+filter is not proof of effective Finish or storage. Actual late delivery and
+full reconnect cancellation remain unproven; no endless-retry claim follows.
+
+Validation: 22 bounded ranges/224 records with hashed anchors, 171 literal and
+179 short-transfer reference checks, 11 concrete transfer targets/mutations,
+13 RAM intervals/26 changed bounds, and 16 existing dialog tests. Independent
+official bytes resolve a wrong NOT-to-AND decode in the P33 helper; unsupported
+REP is verified separately. Decoder unchanged; successful decoding alone is
+not semantic validation. Own sequence truth table is not firmware emulation.
+
+Next: determine which loss/reconnect routes select startup versus link-only
+state changes, particularly deferred joypadtask consumers. DV 0xe976 remains
+excluded. Preserve simple firmware-owned Finish without an added persistence
+ACK; no blind reconnect commands. Offline docs/local commit only, no target
+execution/emulation, network/hardware, driver/system changes or push. Both
+installations and deferred diagnosis unchanged; precision gyro paused.
+
+# Earlier: TMR loss/reset paths narrowed — 21 October 2026
+
+The [reset-path follow-up](NEXUS_STICK_RESET_PATHS.md) identifies matching
+internal HCI event 5 handlers in DG144 and DV209. Selected connection fields
+are reset; their direct writes are separate from retained pending payload,
+controller sequence and calibration flags/backups. No complete purge/replay or
+automatic RAM-restore conclusion follows across all indirect handlers.
+
+DG state 6 has a branch clearing output prerequisite D+0x1bc and requesting
+page scan. An old command can be retained while that output path is skipped;
+this is not evidence of endless over-air transmission. Other branches lead
+to a mode-specific soft-reset candidate with unresolved external/startup
+memory effects. DV can post joypadtask 0x400008/0x40000b; their downstream reset
+effects remain open. The earlier 0x53f8 candidate is USB-resume/SOF-related.
+Working-area clearing at 0x82f4 is not backup restoration; reachability from
+radio loss is unproven. Explicit Exit remains the established active-session
+RAM return. No additional persistence ACK requirement is introduced.
+
+Validation: 40 bounded ranges/542 records, 135 hashed anchors, 24 relative-transfer
+checks/24 mutations, 4 event-table targets/4 mutations, 60 memory-range checks
+and 16 existing dialog tests. Local HCI header used offline. Sources/decoder
+unchanged; decoder boundaries remain, including unresolved DV 0xe976 operands.
+Next: external reset/startup RAM initialization, deferred task consumers and
+sequence lifetime on reconnect. Do not blindly replay Finish, Start or Exit.
+Research/docs/local commit only; no target execution/emulation, network,
+hardware, installed-system/driver change or push. Both installations and
+postponed driver diagnosis preserved; precision gyro paused.
+
+# Earlier: TMR pending commands at reconnect — 21 October 2026
+
+The [pending-command follow-up](NEXUS_STICK_RECONNECT.md) identifies transport
+status 0x14, the receiver's conditional pending-flag clear and the controller's
+sequence-based duplicate filter. Same-sequence data skips the reviewed GIP
+redispatch but still builds a response. This is not a storage acknowledgement
+or a guarantee that the calibration operation succeeded. Runtime header/mode
+matching and full response association remain conditional.
+
+Queue, pending copy and per-cycle send gate are separate. The reviewed queue
+flush resets only queue metadata; retry uses the retained payload and sequence.
+A surviving pending copy can be formatted again after sending is re-enabled,
+but actual replay or guaranteed purge across a full reconnect is not proven.
+Do not invent a retry timeout from counter 0x64. Sequence reset/wrap and complete
+loss/reset call graphs remain open. No automatic live-RAM restore was found
+in the bounded loss candidates; explicit Exit is still the supported active-
+session restore path. No Finish means no new save in the reviewed finalizer,
+not rollback of all working state. Keep the simple firmware-owned workflow;
+no extra storage ACK or blind replay after uncertainty.
+
+Validation: 22 bounded ranges/331 records, 95 anchors, 15 independently decoded
+relative transfers with mutations, two conditional-block field checks/four
+mutations, 256 own status layouts and 16 existing dialog tests. Sources and
+decoder unchanged. Offline static research/documentation/local commit only;
+no firmware/app execution/emulation, network, hardware, runtime changes or push.
+Both driver installations and deferred diagnosis remain untouched; precision
+gyro paused. Next: complete pending/sequence lifetime across the actual loss
+and reconnect events, then the loss-to-calibration RAM relationship. Earlier
+provider framing and USB mode-selection gaps remain explicit.
+
+# Earlier: TMR receiver/controller transport — 21 October 2026
+
+The [wire-path follow-up](NEXUS_STICK_WIRE_PATH.md) connects the reviewed DG144
+ordinary-GIP queue to the second radio block, its A0/sequence prefix, matching
+DV209 header fields and the shared calibration dispatcher. USB cable reaches
+the same wrapper through its own endpoint 2 callback. These are conditional
+static paths; full Windows framing, DG USB mode selection and lower radio
+delivery are not established. No sendable packet or hardware acceptance claimed.
+
+The pending DG144 copy can be formatted again, so the direct Nexus send path
+does not imply absence of lower-level retries. Its ACK/flush/lifetime across
+link loss remains open. Explicit Exit has the known active-session RAM restore;
+automatic loss-triggered restoration is still unproven. One bounded state
+helper changes other fields without a restore call. No Finish still means no
+new save in the reviewed finalizer, not automatic recovery of modified RAM.
+No extra persistence ACK is imposed; no blind Finish replay after uncertainty.
+
+Validation: 23 bounded static ranges/494 records, 84 anchors, 11 independent
+relative-call checks with changed-operand controls, 195 synthetic layouts and
+all 65536 values of the first-block length predicate. The 16 own dialog tests
+remain separate from firmware evidence. Sources/decoder unchanged. Offline
+research, documentation and local commit only; no target execution/emulation,
+network, hardware, installed driver/system changes or push. Both installations
+and deferred driver diagnosis preserved; precise gyro calibration paused.
+Next: pending second-block ACK/flush/reconnect lifecycle, actual loss handler
+to calibration state, and remaining provider/USB-root boundaries.
+
+# Earlier: TMR transport and interruption — 21 October 2026
+
+The [offline transport follow-up](NEXUS_STICK_TRANSPORT.md) identifies the typed
+Windows GIP provider through D4X object construction, RTTI and field flow. Start,
+Finish and Exit use the direct send path, bypassing the other Nexus queue.
+The native projection tests immediate provider HRESULT failures; propagation
+to a calibration-specific UI result is still open. The provider ABI is now
+bounded, but complete USB/radio framing and runtime variant selection are not.
+
+The maintainer's intended contract remains: Nexus requests Finish; firmware
+owns storage. No separate persistence ACK is a new requirement. Without Finish,
+the reviewed finalization path does not initiate new storage. This preserves
+old stored values in that path, not necessarily the live RAM state changed by
+Start. Exit has the active-session RAM restore; link-loss-triggered restoration
+is not established. Two additional restore call sites use table-value checks.
+Finish whose delivery became uncertain must not be treated as never delivered.
+
+Validation: four Nexus hashes, 28 native anchors, 11 JavaScript landmarks,
+RTTI/VTable/IID chains, eight firmware anchors and 20 mutation controls;
+two bounded firmware ranges/128 records, decoder unchanged. Three new
+missing-selection cases bring the existing own dialog model to 16 passing tests.
+No manufacturer code execution/emulation or new hardware observation.
+Next: provider-to-wire/receiver path, radio-loss handling and live positions
+during calibration. Both driver installations remain unchanged; primary-host
+diagnosis is deferred, precise gyro paused. Documentation/research tests and
+local commit only; no network, installation, system changes or push.
+
+# Earlier: TMR calibration resumed; driver issue deferred — 21 October 2026
+
+The maintainer later reports that the primary host still has a problem and
+suggests the different controller firmware as a possibility. The exact symptom
+was not clarified in that follow-up. Older ZZZ firmware is user-reported;
+no firmware comparison or cause has been established. At the maintainer's
+request, defer driver investigation and preserve both installations.
+
+Offline Nexus work resumes from `50e8c13`. The
+[readback/status follow-up](NEXUS_STICK_READBACK.md) connects the firmware's
+active/ready masks with matching native status fields and explains the saved
+record loader. Both stick records contain fourteen halfwords and two markers;
+marker acceptance alone does not compare a fresh save with its requested data.
+
+The clarified contract is **Nexus sends Finish; firmware owns the storage**.
+A separate persistence acknowledgement is not mandatory for reproducing that
+contract. The UI may report completion of the normal flow, but cannot claim a
+verified readback that did not occur. No hardware fault was reproduced.
+The maintainer proposes visible left/right stick movement during calibration:
+Start, firmware readiness for both sticks, then Finish; Exit is the cancel
+alternative. This is a documented UI target, not an implemented writable tool.
+The final UI addition is a blue trace of the visited rim and a fully green
+circle plus text when that stick's firmware reports ready. Movement coverage
+is not a calibration percentage and must not trigger Finish by itself.
+
+Validation: nine bounded static ranges/224 instruction records, 40 firmware
+anchors, five calls and 14 native anchors; 510 marker mutations and 224 body
+mutations distinguish marker recognition from integrity. Selected fragments
+match DV209/515/608. Thirteen existing dialog-model cases pass. Decoder and
+target originals unchanged. Full transport/model selection and some ISA/bus
+semantics remain open. No device/network access, target execution/emulation,
+installed changes or push; precision gyro calibration stays paused.
+
+# Earlier: revision 18 accepted for current use — 21 October 2026
+
+Following activation, the maintainer reports **both hosts working**. On the
+secondary host, Steam Gaming Mode now also recognizes gyro when the controller
+is switched on later, instead of being on at system startup. This positive
+user observation is recorded in the [Gamescope notes](STEAM_GYRO_HOTPLUG.md).
+No new trace or live inspection was performed, and the cause is not attributed
+to a particular change.
+
+The maintainer explicitly accepts the functioning state: **no further search,
+tests or runtime changes**. Preserve the installations and wait for a new task
+or actual problem report. Older failures remain historical evidence; the new
+report does not identify their cause or promise universal reconnect reliability.
+Documentation-only follow-up, local commit, no push. Nexus and precision
+calibration remain paused.
+
+# Earlier: revision 18 active on both hosts — 21 October 2026
+
+The approved single service start and Resume succeeded on each host after a
+brief state check. Both services are active/running and remain enabled; both
+managers are unpaused with the expected module and existing motion settings.
+No new failure was reported during activation. See the
+[activation receipt](evidence/START_BUDGET_ACTIVATION_20261021.json).
+
+After the primary receiver was reinserted with its controller still off,
+read-only observation confirmed `109c`, native binding and `receiver_wait`,
+including the corresponding saved lease. This proves receiver standby, not a
+wireless connection or functioning inputs. No receiver was observed on the
+secondary host during activation. No input, gyro, motor or reconnect test was
+started; missing X/Y/RT and earlier ownership-loss causes remain open.
+No source/configuration change or push. Nexus50e8c13 and precision calibration
+remain paused.
+
+# Earlier: revision 18 installed, activation pending — 21 October 2026
+
+Both approved updates succeeded: primary revision16→18, secondary17→18.
+[Installation receipt](evidence/START_BUDGET_INSTALLATION_20261021.json) records
+matching target-kernel builds, 30 installer-guard tests and all166 payload files
+verified per host. Existing motion settings, optional integrations, service
+enablement and failure history remain intact. Rollback packages are retained.
+
+Both services are inactive, manager state paused, modules unloaded and leases
+empty after the checked package hooks. The primary receiver remains removed;
+the secondary had no enumerated receiver during the update. No activation,
+Resume, input/reconnect test, publication or signed-catalog change occurred.
+Missing X/Y/RT and original ownership-loss causes remain open. Prepare fresh
+activation/acceptance separately. Nexus50e8c13 and precise calibration paused.
+
+# Earlier: manager start-budget correction prepared offline — 21 October 2026
+
+[Policy and regression report](MANAGER_RECONNECT_FIX.md) fixes the reproduced
+sticky start-budget entry without changing the kernel or installed systems.
+Unowned `cooldown` expires at the 600-second boundary, then requires another
+complete discovery scan. Real protocol/ownership faults remain latched.
+Sixty seconds of continuously confirmed active native runtime clears recent
+charges for that port; brief successful flaps remain bounded. Receiver standby,
+missing observations and a daemon restart do not establish healthy runtime.
+Existing attempted-instance protection, failure history and cleanup remain.
+
+The final 19 new regression tests and all 328 related manager/client/haptics/
+readiness tests pass. No hardware acceptance is claimed. No installation,
+Release/Resume, real status query, SSH, kernel/Steam or system change, package
+revision, network or push. Installed versions and the last observed fault state
+were not touched. Missing X/Y/RT and earlier binding loss remain unresolved.
+The maintainer asked whether xpad failed to load. The earlier binding and
+partial input evidence do not establish a module-loading failure. Incomplete
+return/initialization or unexpected controller reports remain hypotheses;
+compare passive X/Y/RT reports only under a separately agreed next step.
+Nexus checkpoint `50e8c13` stays paused; precision gyro calibration stays paused.
+
+# Earlier: reconnect incident; Nexus research saved and paused — 21 October 2026
+
+The maintenance-research checkpoint is local commit **50e8c13** and
+[the copy/storage report](NEXUS_STICK_STORAGE.md). Resume later at the exact
+independent EE53 reference, bus status semantics and host-visible verified
+save/error result. No research data or original firmware was discarded.
+
+The maintainer reports missing native binding and **X, Y and the right trigger**
+not working, also in KDE, on the primary host. Similar symptoms occurred earlier
+on the secondary host; no fresh secondary-host inspection was performed.
+
+Read-only primary findings:
+
+- Core revision16, Steam integration alpha2-1 and trigger bridge alpha1-2 remain
+  installed. The manager is active/enabled in the same boot; the observed
+  standard-model receiver is `3537:100a`, IF0 on xpad, with a Generic X-Box pad.
+- The one approved protected status request reports `paused=false`, no scan or
+  port error, and phase `blocked`: **Three starts in 10 minutes; explicit resume
+  required**. This directly explains the current lack of automatic takeover.
+- Journals show successful native runtime, then receiver waiting, binding loss,
+  an owner-conflict stop and a later initialization cancellation (`-125`, stage4,
+  pad0/imu1), followed by return observations. The budget-blocked entry itself
+  contains no bootstrap diagnostic; earlier faults remain in separate history.
+  Do not present old retained failures as new current-boot events.
+- The maintainer briefly opened Deadband on the primary host. Cached reference
+  code can detach a kernel owner when claiming USB; that is a possible local
+  contributor, not proof it caused this event or the secondary-host symptoms.
+
+Offline reproduction with the existing in-memory manager fixture confirms in
+both installed revision16 and worktree revision17: all starts count, including
+successful ones; after the fourth candidate is blocked, advancing time by601
+seconds and presenting a new instance leaves the entry blocked. The underlying
+budget is available again, but the existing entry bypasses fresh discovery.
+A control with expired budget and no blocked entry permits discovery. No real
+Host, service, input device or USB operation was invoked by this reproduction.
+
+This is a confirmed policy limitation and a candidate common cause of binding
+symptoms. It does **not** explain the missing X/Y/RT, prove the initial ownership
+loss, or establish the secondary-host cause. No raw input capture was performed.
+Next: design a bounded budget-expiry policy distinct from ownership/protocol
+faults, preserving no-steal/no-reinitialization protections; investigate the
+missing inputs separately. No fix or runtime action is authorized by this note.
+
+Private journals, metadata, single status receipt and synthetic results are
+retained locally. Documentation checkpoint only; no driver/manager source,
+installed system, Steam, service, binding, hardware or remote-host change;
+no Release/Resume, push or new calibration. Precise gyro calibration paused.
+
+# Earlier: calibration copy geometry and storage completion — 21 October 2026
+
+[Storage follow-up](NEXUS_STICK_STORAGE.md),
+[hashed evidence](evidence/NEXUS_STICK_STORAGE_20261021.json).
+The four EE53 sites fit fixed negative signed9 byte stores and both record/
+restore layouts; the earlier postincrement classification is withdrawn.
+This is strong internal consistency, not an exact independent ISA oracle.
+No shared decoder or runtime source changed.
+
+The asynchronous write now connects to the registered RAM handler and internal
+`eeprom write over` log. Selected status-bit7 rejection and normal stop paths
+share the finished flag; the upper progress count advances at submission.
+That chain alone cannot certify durable success or a host-visible result.
+Explicit readback exists in another maintenance path, without a proven link
+to the calibration queue. No hardware false-success bug is claimed. Exit's
+previously identified limit for finalized/queued writes remains in force.
+
+28 bounded static ranges / 745 records, 41 anchors, 16 call edges, four EE53
+operand sites, 46 sibling SDK examples and four matching cross-image fragments
+were checked; 13 mutation/refusal controls pass. Existing 13 dialog-model tests
+and the reproducible source archive test pass. Links, private identifiers and
+project checksums checked. Firmware, decoder and installed system unchanged;
+no hardware/network access, installation or push. Precise gyro calibration paused.
+
+# Earlier: firmware stick calibration and save boundary — 21 October 2026
+
+[Start/Finish/Exit firmware trace](NEXUS_STICK_FIRMWARE.md),
+[hashed evidence](evidence/NEXUS_STICK_FIRMWARE_20261021.json).
+DV209 now connects operation dispatch, RAM backup/restore, delayed finalization
+and asynchronous write requests. Finish sets request bits; a later worker
+prepares separate 30-byte left/right records
+at logical offsets 0x1700/0x1720 and arms the storage state machine. A matching load
+path checks markers and restores calibration fields.
+
+Exit restores saved RAM fields only while calibration remains active; already
+finalized/queued work has no proved cancellation. For a completed Exit with no
+new session/flag writer, the later Finish from the known UI conflict cannot set
+the cleared completion bits. This narrows that risk; it is not hardware proof.
+Full backup equivalence still has an EE53 decoder gap. Physical write completion,
+atomicity, transport framing and recovery remain unresolved.
+
+28 bounded static ranges / 692 records, 30 anchors, 15 call edges, three byte-identical
+cross-image regions and five mutation controls were checked. Firmware/decoder
+unchanged. The 13 existing dialog-model tests and reproducible archive test pass;
+new links, private identifiers and the project manifest were checked.
+Documentation/local commit only; no live command, network, hardware,
+installation, driver/system change or push. Precision gyro calibration paused.
+
+# Earlier: Nexus stick-calibration completion and abort — 21 October 2026
+
+[Full static dialog trace](NEXUS_STICK_CALIBRATION_FLOW.md) and
+[source evidence](evidence/NEXUS_STICK_FLOW_20261021.json) distinguish Finish
+request, UI success and persistent storage. Native metadata now identifies
+G7Pro.Proxy's shared Calibrate implementation. The actual USB/provider framing,
+firmware write point and restoration of old calibration remain unresolved.
+
+A pending 510-ms completion is not cancelled on close; a retained component
+can request Exit then Finish. Thirteen own offline model cases pass, including
+hidden preparation and changed/missing device counterexamples. These are static
+boundary findings, not execution of Nexus/Vue or reproduced hardware faults.
+Four source hashes,19 JS landmarks,seven native anchors,three named proxy
+mappings and one isolated REA function were checked. No proprietary code added.
+
+Local documentation/test commit only. No target execution, network, hardware,
+installed driver/system/AppImage changes, calibration command, installation or
+push. Ordinary-use driver observation continues; precise gyro calibration paused.
+
+# Earlier: Nexus maintenance research resumed offline — 21 October 2026
+
+Installed drivers remain unchanged for the maintainer's ordinary-use observation.
+The current task is TMR-stick calibration plus controller/dongle firmware update
+research. [Findings and next steps](NEXUS_MAINTENANCE_RESEARCH.md),
+[source/REA/byte evidence](evidence/NEXUS_MAINTENANCE_20261021.json).
+
+The shared calibration UI waits for LS/RS flags after preparation and guided
+stick rotations, then sends Finish; persistent save and rollback are not proved.
+Six native updater functions were examined with isolated local REA and critical
+branches checked against assembly. The default path has erase/write/CRC checks,
+but an inner ACK resend loop lacks a visible local bound; distinct transport,
+device and payload results require further study. No hardware-reproduced firmware
+bug is claimed. Edition authentication, alternate-path selection and recovery
+remain incomplete. A no-brick guarantee cannot be given. Both features remain
+planned optional userspace maintenance; no live command/app/driver changes.
+
+No network, SSH, target execution, hardware, installation, firmware write,
+new package/release or push. Precision gyro calibration remains paused.
+
+# Earlier: approved public README refresh — 21 October 2026
 
 The README now introduces the project in plain language, with the maintainer's
 motivation, a real Control Center screenshot, visible credits, user-oriented
@@ -8,6 +692,101 @@ versions stay PRE-ALPHA.3/core revision16/Control Center alpha1. ZZZ motion and 
 app shutdown correction remain unpublished. Old source-only/unpublished wording
 in the linked installation/first-run guides is corrected. Existing technical
 documents and release approval rules remain in place. No installed system change.
+Public documentation commit: `8ad2cca3d648a2fc874b7545934cc9dc0b26195d`.
+Seven README, 25 packaging and three licensing checks passed on the isolated
+published revision16 tree; GitHub rendering and remote README/image bytes match.
+The development revision17 packaging suite separately exposes a pre-existing
+missing acceptance-document link in its source allowlist. That unrelated local
+packaging gap was not included or changed in this publication.
+
+# Earlier: Control Center shutdown correction, offline — 21 October 2026
+
+The reported usable alpha1 AppImage is the published binary, despite its local
+`publish-candidate` path. Actual main-loop tests prove its model was destroyed
+before QML. The entry point now finishes workers and explicitly destroys QML
+while keeping the model/settings alive. 419 app tests, seven extracted-runtime
+lifecycle scenarios and four packaged synthetic lanes pass. The exact user's
+warning flood was not reproduced headlessly; desktop confirmation remains open.
+[Correction and evidence limits](CONTROL_CENTER_SHUTDOWN.md).
+
+A separate corrected local image is built; the published binary/source lock,
+installed helper/driver and hardware are unchanged. No push or release. Future
+publication requires updated matching source/lock companions. ZZZ acceptance
+below remains valid within its recorded scope; long-off/reconnect reports stay
+unresolved and precise gyro calibration remains paused.
+
+# Earlier: ZZZ Steam/Gamescope motion and input accepted — 21 October 2026
+
+Following explicit approval, the secondary CachyOS host started its revision 17
+service once and ran Resume once. The loaded module includes the separate 105e
+motion opt-in. Steam/Gamescope was already running when the maintainer switched
+the ZZZ on. It bound directly as105e, completed bootstrap successfully and
+published the paired motion/gamepad devices through the readiness gate.
+
+The maintainer confirms all three Steam gyro axes respond appropriately without
+Guide, all four paddles work independently, ordinary buttons/sticks/triggers
+work including combined presses/releases, and the desktop remains responsive.
+The maintainer subsequently confirms gyro also works in Eden, with both Eden
+and Steam displays matching physical movements. This follow-up is user-reported;
+no additional capture, hardware access or system change was performed.
+This is qualitative motion/input acceptance for this one start case, not a
+precise scale/accelerometer calibration or long-off/reconnect certification.
+[Acceptance evidence](evidence/ZZZ_GYRO_ACCEPTANCE_20261021.json).
+
+The same-boot kernel log places sensor registration about 1.15 seconds before
+gamepad publication. No 100a-to109c handover occurred in this direct 105e run.
+This supports the intended discovery order; it does not prove which factor
+caused Steam to succeed compared with earlier standard-model failures.
+No universal controller-before-Steam requirement follows from the old reports.
+
+Service remains active/enabled. No configuration changes, retry, Release,
+main-host modification or publication occurred during activation/testing.
+The maintainer chooses ordinary-use observation before further investigation
+of the standard-model/ZZZ Steam startup difference; timing/session coincidence
+is not excluded by this one run. No background monitor or additional test was
+started. Long-off binding and partial ordinary-input failures remain unresolved;
+do not clear the retained failure history. Precise calibration stays paused.
+
+# Earlier: revision 17 installed on secondary CachyOS host — 21 October 2026
+
+The approved one-time update from alpha3-16 to alpha3-17 completed successfully.
+The module was first built without warnings against the running
+7.2.11-1-cachyos-deckify kernel and matching headers, then DKMS rebuilt/installed
+it through the normal package hooks. All157 package payload files match.
+Snapshot and initramfs hooks completed; DKMS emitted only the existing CLEAN
+deprecation notice. [Installation evidence](evidence/ZZZ_GYRO_INSTALLATION_20261021.json).
+
+The additional root-owned0644 `92-gamesir-native-zzz-gyro.conf` opts into105e
+on the next module load. Existing standard sensor/receiver-wait settings and
+Steam/Gamescope packages were preserved. The service is inactive/dead, enabled
+as before; the module is unloaded, the manager paused with no leases. Previous
+failure history is retained. Independent read-only postchecks pass. Revision16
+and the previous configuration state are retained for a controlled rollback.
+
+No service start/Resume, controller test, main-host change or publication.
+ZZZ physical motion/input acceptance remains pending; this is installation
+acceptance only. Long-off binding/partial-input reports remain unresolved.
+Precise gyro calibration stays paused; public signed catalog remains revision1.
+
+# Earlier: experimental ZZZ gyro candidate — 21 October 2026
+
+Core alpha3-17 prepared offline with a separate default-off `105e` opt-in,
+shared sensor conversion/pairing and matching manager readiness dispatch.
+[Implementation, evidence limits, package and rollback](ZZZ_GYRO_EXTENSION.md).
+Local build/testing only; installed core remains alpha3-16. No SSH, hardware
+capture, module/service/Steam change, installation or publication in this step.
+The signed public catalog and released AppImage stay unchanged.
+
+The previous read-only diagnosis found successful `105e` native startup in saved
+host logs, but the old code excluded105e from the motion profile. The new
+candidate reuses 0.07 dps/raw and explicit standard accel settings experimentally;
+ZZZ physical axes/scale/SDL/game acceptance remain to be tested separately.
+Precise known-angle calibration remains paused.
+
+New unresolved user report: after longer controller-off time, binding can fail;
+a reconnect can leave some ordinary buttons unavailable until reboot. This
+change does not diagnose/fix that report. Keep original error/ownership evidence
+and investigate it separately after the requested sensor preparation.
 
 # Earlier: Control Center alpha1 published — 21 October 2026
 

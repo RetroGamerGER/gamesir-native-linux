@@ -1,0 +1,238 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "package": "GameSir Nexus 2.1.23.0",
+  "scope": {
+    "static_only": true,
+    "vendor_code_execution": false,
+    "network_access": false,
+    "hardware_access": false,
+    "installed_driver_changes": false
+  },
+  "sources": [
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "bytes": 1975162,
+      "sha256": "5402b15f22c2a95a4ead965d707bef72217b6bc69a2f10e5f126133083868f0f"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "bytes": 33306624,
+      "sha256": "36cb48433ca270994ada6625348af7f1c51a1a50f7dc6d63b7d0fff372c0a040"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "bytes": 101376,
+      "sha256": "1e2184a8e30d6aa48ce39d522856215ee24e953093735f2eab96e08ab4be16a8"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "bytes": 5632,
+      "sha256": "3f5aa477951b7274eb9897975d3ee7bbd74ef545116c7a9b191ea4f118628765"
+    }
+  ],
+  "javascript_landmarks": [
+    {
+      "id": "completion_requires_both_sticks",
+      "file_byte_offset": 1572418,
+      "length": 52,
+      "sha256": "2778ac9ebe88bd7ceb9319ec950f3b82e5deba271272941b80167194bb9ed81c"
+    },
+    {
+      "id": "completion_delay_unretained_unguarded",
+      "file_byte_offset": 1573295,
+      "length": 33,
+      "sha256": "19f34d248cb5a7813e279ab59352dc0bf56fd2760040d7534ec8eb4e65d31e14"
+    },
+    {
+      "id": "visible_close_only_exits_step3",
+      "file_byte_offset": 1573015,
+      "length": 109,
+      "sha256": "1ffaee591a13e785755342975491f1682c0885182743fe61b03fb06fd2657c42"
+    },
+    {
+      "id": "backward_step_exits_step3",
+      "file_byte_offset": 1573413,
+      "length": 26,
+      "sha256": "c79dad3249c10663518888578490bcd224427c2efc23d31175f6ae70357b88f0"
+    },
+    {
+      "id": "preparation_starts_then_advances",
+      "file_byte_offset": 1573894,
+      "length": 137,
+      "sha256": "5de0c4f96b1bee4227239c1834165460438d9e1ae479d91aa2a627a9baa1b9fe"
+    },
+    {
+      "id": "step4_automatically_finishes",
+      "file_byte_offset": 1574051,
+      "length": 81,
+      "sha256": "6a6b5dcba43325b84ab7dc8e78c4cd1bf3f84f81d1896ffecf8bb6705c9bca6d"
+    },
+    {
+      "id": "status_listener_only_gates_on_active_mode",
+      "file_byte_offset": 1574413,
+      "length": 90,
+      "sha256": "a2f00341f2e1ee37937c108151d0a9a5678242badb27e04cf7edca199da60d21"
+    },
+    {
+      "id": "destroy_clears_interval_not_delayed_completion",
+      "file_byte_offset": 1574512,
+      "length": 133,
+      "sha256": "4ebc983eb3b0a6eb3f902a45b44e9d140fa1bab5f102e4369b336736f23ab4b1"
+    },
+    {
+      "id": "start",
+      "file_byte_offset": 1574708,
+      "length": 55,
+      "sha256": "124629440de605cde77bfca02086831637d2fe51b5ab6fd2a20084fbeb60f80e"
+    },
+    {
+      "id": "finish_without_part",
+      "file_byte_offset": 1574820,
+      "length": 34,
+      "sha256": "dc5f3599b484c62a71e635082371232ed8d8800c61688af5c8e2a78bcd4acec3"
+    },
+    {
+      "id": "exit_without_part",
+      "file_byte_offset": 1574907,
+      "length": 34,
+      "sha256": "f46cf81d1781cfc2c545e90977874b709229b9d49503ef98a83f47213aa2b090"
+    },
+    {
+      "id": "finish_button_only_hides",
+      "file_byte_offset": 1575425,
+      "length": 66,
+      "sha256": "1532c7ce3a106b62443305650f75f6df9f828404b1ac6c375ebd8da9cda0283b"
+    },
+    {
+      "id": "base_dialog_gamepad_cancel_independent_of_close_button",
+      "file_byte_offset": 444028,
+      "length": 49,
+      "sha256": "e4bbf91c9f0ef641a24c72878e53acf8737be12644a4a691224b3d2df6f56489"
+    },
+    {
+      "id": "base_dialog_disconnect_default_off",
+      "file_byte_offset": 443131,
+      "length": 65,
+      "sha256": "771ada96d70b8aa6b62d8f77b798741138087c17851b4bcf49b9402c49326db2"
+    },
+    {
+      "id": "calibration_base_dialog_bindings",
+      "file_byte_offset": 1563016,
+      "length": 106,
+      "sha256": "df89dd5e81e35c0bb31a287bbefac28b989452af2cdbfe77633c6490014271d1"
+    },
+    {
+      "id": "request_uses_current_selected_device",
+      "file_byte_offset": 599588,
+      "length": 86,
+      "sha256": "9972fca724e9092702d39449384b08432a0f62725360782e5ba464aeccdf4a50"
+    },
+    {
+      "id": "parent_retains_calibration_component",
+      "file_byte_offset": 1186102,
+      "length": 76,
+      "sha256": "dc13f1395b06cbb35e14b025d603a363db984fc6cfcc6628bf95ae51d3634db4"
+    },
+    {
+      "id": "ipc_ordinary_events_forwarded",
+      "file_byte_offset": 595327,
+      "length": 71,
+      "sha256": "aa8007be0aeccbb12786316981077b509ebd366a79c164bb496f3f52e8c26786"
+    },
+    {
+      "id": "profile_save_is_separate",
+      "file_byte_offset": 597508,
+      "length": 98,
+      "sha256": "46022754a9750551553c411a2dbac3cb5610e755a861ba96094d7a9a9f29fd48"
+    }
+  ],
+  "native_crosschecks": [
+    {
+      "id": "stick_mask",
+      "rva": "0x198b51a",
+      "file_byte_offset": 26773786,
+      "length": 5,
+      "sha256": "e0f59d3f6d06e1e36bb1d7b96a40ea7e167c2d54db8eb4500cd7edc694004f63"
+    },
+    {
+      "id": "marker",
+      "rva": "0x198b578",
+      "file_byte_offset": 26773880,
+      "length": 4,
+      "sha256": "33c04b8ddba402d59c3e16b7ac4387974a0e5f767786f73bd1f938bc101afb5e"
+    },
+    {
+      "id": "direct_packet_flag",
+      "rva": "0x198b5be",
+      "file_byte_offset": 26773950,
+      "length": 8,
+      "sha256": "bf78c756b9e869d5f2bf79664d9c3460c512cbd4d410f8243bd0f035f5a630af"
+    },
+    {
+      "id": "call_send_service",
+      "rva": "0x198b5d2",
+      "file_byte_offset": 26773970,
+      "length": 5,
+      "sha256": "13132d1d75ddde297139704dc5e51f60551a5e0a9b01ea1bbdab8953eff046ce"
+    },
+    {
+      "id": "status_change_filter",
+      "rva": "0x198a9e7",
+      "file_byte_offset": 26770919,
+      "length": 11,
+      "sha256": "0b365c33364b67cef9b3a42bfac8530e778e57d0c8ba611d8720d0140b6a6e18"
+    },
+    {
+      "id": "status_not_equal_one",
+      "rva": "0x198aa59",
+      "file_byte_offset": 26771033,
+      "length": 9,
+      "sha256": "388feefbf09978c2b45fadc9540846d59f566d2cd7616a29a8bad81a3460f69e"
+    },
+    {
+      "id": "g7pro_proxy_descriptor",
+      "rva": "0x118c15b",
+      "file_byte_offset": 18388315,
+      "length": 7,
+      "sha256": "4175766cc638f08d9aa43dfdd48d4a12c1a516443669d0fd2c4b921e7f29635a"
+    }
+  ],
+  "native_method_mapping": [
+    {
+      "type": "HJC.GameSir.Nexus2_0.Core.Devices.T3Pro.Proxy",
+      "external_index": "0x8cc",
+      "eetype_rva": "0xad160",
+      "method_record_file_offset": "0x99882d",
+      "method_rva": "0x198b490"
+    },
+    {
+      "type": "HJC.GameSir.Nexus2_0.Core.Devices.T7ProW.Proxy",
+      "external_index": "0x8dc",
+      "eetype_rva": "0xacf60",
+      "method_record_file_offset": "0x99882d",
+      "method_rva": "0x198b490"
+    },
+    {
+      "type": "HJC.GameSir.Nexus2_0.Core.Devices.G7Pro.Proxy",
+      "external_index": "0x903",
+      "eetype_rva": "0xad4b0",
+      "method_record_file_offset": "0x99882d",
+      "method_rva": "0x198b490"
+    }
+  ],
+  "rea": {
+    "provider": "REA 6.5.0 / Ghidra 12.1.4",
+    "function_va": "0x180001be0",
+    "report_sha256": "e016cb660bb98d65fe69d7ea31f481aacbe4ac8923f69566f5a04e6f5a89fcb6",
+    "original_unchanged": true,
+    "staged_input_unchanged": true,
+    "indirect_callee_unresolved": true
+  },
+  "limits": [
+    "UI and native control flow, not observed target behavior.",
+    "Own synthetic transition model does not execute vendor JavaScript or reproduce the Vue runtime.",
+    "G7Pro.Proxy method mapping is proved; complete runtime device/variant selection remains open.",
+    "No persistence, rollback, firmware storage algorithm or physical USB command validated."
+  ]
+}

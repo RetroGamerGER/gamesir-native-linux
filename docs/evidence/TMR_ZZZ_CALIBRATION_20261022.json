@@ -1,0 +1,218 @@
+{
+  "acceptance": {
+    "cachyos_calibration": "not tested",
+    "complete_ram_power_loss_proven": false,
+    "improvement_retained_after_ordinary_off_on": true,
+    "independent_nvm_readback": false,
+    "left_stick_center_improved": true,
+    "live_cancellation_or_connection_loss": "not tested",
+    "no_observed_left_stick_variation_in_both_post_calibration_windows": true,
+    "other_firmware_or_models": "not established",
+    "quantitative_right_stick_or_full_range_quality": "not measured",
+    "standard_109c_retention": "not tested",
+    "zzz_single_guided_workflow": true
+  },
+  "controller": {
+    "firmware_version": "not independently established",
+    "model": "GameSir G7 Pro ZZZ",
+    "product": "105e",
+    "vendor": "3537"
+  },
+  "controller_off_on": {
+    "additional_off_wait_seconds": 10.0016,
+    "live_movement_then_release_confirmed_by_maintainer": true,
+    "maintainer_reports_centered_without_jitter": true,
+    "manual_resume": false,
+    "measurement_instances_kept_separate": true,
+    "new_calibration": false,
+    "off_and_light_out_confirmed_by_maintainer": true,
+    "on_and_connection_confirmed_by_maintainer": true,
+    "receiver_left_inserted": true,
+    "usb_input_reenumerated": true
+  },
+  "date": "2026-10-22",
+  "documentation_checks": {
+    "groups": 3,
+    "passed": true,
+    "scope": "packaging, licensing, public README",
+    "unittest_cases": 35
+  },
+  "driver_or_system_installation_changed_by_this_test": false,
+  "explicit_target_selection_confirmed_by_maintainer": true,
+  "firmware_image_updated": false,
+  "guided_workflow": {
+    "both_sticks_ready_confirmed_by_maintainer": true,
+    "calibration_retried": false,
+    "finish_clicked_by_maintainer": true,
+    "outer_edge_circles_per_stick_instructed": 3,
+    "release_before_start": true,
+    "start_preparation_seconds": 3
+  },
+  "installed_core": "0.1.0.alpha3-20",
+  "installed_tmr_helper": "0.1.0.alpha1-2",
+  "kernel": "7.3.0-2-garuda",
+  "measurement_method": {
+    "axes": [
+      "ABS_X",
+      "ABS_Y"
+    ],
+    "commands_sent_by_readers": false,
+    "exclusive_grab": false,
+    "not_proven_by_snapshots": [
+      "new RF packet for each poll",
+      "lossless event stream",
+      "device packet timing",
+      "stored calibration coefficients",
+      "physical sensor accuracy"
+    ],
+    "percent_normalization": "100 * (value - center) / directional half-range; center=(minimum+maximum+1)//2",
+    "source": "processed gamepad evdev EVIOCGABS current-state getters",
+    "timestamps": "host monotonic poll timestamps"
+  },
+  "measurements": [
+    {
+      "axes": {
+        "left_x": {
+          "flat": 0,
+          "fuzz": 0,
+          "maximum_raw": -302,
+          "mean_percent": -0.9742584228515625,
+          "mean_raw": -319.245,
+          "minimum_raw": -334,
+          "peak_to_peak_percent": 0.09765625,
+          "range": [
+            -32768,
+            32767
+          ],
+          "resolution": 0,
+          "standard_deviation_raw": 6.836298340476372
+        },
+        "left_y": {
+          "flat": 0,
+          "fuzz": 0,
+          "maximum_raw": 379,
+          "mean_percent": 1.1025269325846125,
+          "mean_raw": 361.265,
+          "minimum_raw": 343,
+          "peak_to_peak_percent": 0.10986663411358988,
+          "range": [
+            -32768,
+            32767
+          ],
+          "resolution": 0,
+          "standard_deviation_raw": 7.0777662436675595
+        }
+      },
+      "duration_seconds": 10.000519686999723,
+      "instance_stable_within_window": true,
+      "private_measurement_sha256": "a3d5fd270078ef794489c35b650ce96277d9354dc703a3156edac9f13f99e6ba",
+      "sample_count": 200,
+      "sample_interval_target_seconds": 0.05,
+      "stage": "before_calibration",
+      "usb_input_instance_group": "before_and_after_calibration"
+    },
+    {
+      "axes": {
+        "left_x": {
+          "flat": 0,
+          "fuzz": 0,
+          "maximum_raw": 0,
+          "mean_percent": 0.0,
+          "mean_raw": 0,
+          "minimum_raw": 0,
+          "peak_to_peak_percent": 0.0,
+          "range": [
+            -32768,
+            32767
+          ],
+          "resolution": 0,
+          "standard_deviation_raw": 0.0
+        },
+        "left_y": {
+          "flat": 0,
+          "fuzz": 0,
+          "maximum_raw": -1,
+          "mean_percent": -0.0030517578125,
+          "mean_raw": -1,
+          "minimum_raw": -1,
+          "peak_to_peak_percent": 0.0,
+          "range": [
+            -32768,
+            32767
+          ],
+          "resolution": 0,
+          "standard_deviation_raw": 0.0
+        }
+      },
+      "duration_seconds": 10.000747233000766,
+      "instance_stable_within_window": true,
+      "private_measurement_sha256": "1f99d9a9ab4c06f2b5af48e438114112411668b0e4a2d0374b546534aef527c6",
+      "sample_count": 200,
+      "sample_interval_target_seconds": 0.05,
+      "stage": "after_calibration",
+      "usb_input_instance_group": "before_and_after_calibration"
+    },
+    {
+      "axes": {
+        "left_x": {
+          "flat": 0,
+          "fuzz": 0,
+          "maximum_raw": 0,
+          "mean_percent": 0.0,
+          "mean_raw": 0,
+          "minimum_raw": 0,
+          "peak_to_peak_percent": 0.0,
+          "range": [
+            -32768,
+            32767
+          ],
+          "resolution": 0,
+          "standard_deviation_raw": 0.0
+        },
+        "left_y": {
+          "flat": 0,
+          "fuzz": 0,
+          "maximum_raw": -1,
+          "mean_percent": -0.0030517578125,
+          "mean_raw": -1,
+          "minimum_raw": -1,
+          "peak_to_peak_percent": 0.0,
+          "range": [
+            -32768,
+            32767
+          ],
+          "resolution": 0,
+          "standard_deviation_raw": 0.0
+        }
+      },
+      "duration_seconds": 10.000472768999316,
+      "instance_stable_within_window": true,
+      "private_measurement_sha256": "bf45982261fcc529c67dc1ffbfbead3cfb430824e35d2699c628cb8b68bc8a3c",
+      "sample_count": 200,
+      "sample_interval_target_seconds": 0.05,
+      "stage": "after_power_cycle",
+      "usb_input_instance_group": "after_controller_off_on"
+    }
+  ],
+  "network_access": false,
+  "next": "Preserve successful run; documentation/local commit only. No automatic calibration, reconnect, Resume or installation.",
+  "other_controller_recalibrated_in_this_run": false,
+  "other_standard_109c_receiver_present": true,
+  "platform": "Garuda Linux",
+  "precision_gyro_calibration": "paused",
+  "push": false,
+  "readonly_after_finish": {
+    "busy_ports": [],
+    "manager_phase": "active",
+    "native_driver": "gs_native",
+    "same_usb_instance_as_baseline": true,
+    "tmr_last": {
+      "cleanup_error": "",
+      "error": "",
+      "state": "finished"
+    }
+  },
+  "schema": 1,
+  "scope": "selected ZZZ TMR calibration, quantitative left-stick centering and observed retention after ordinary controller off/on",
+  "source_commit": "5ee3199"
+}

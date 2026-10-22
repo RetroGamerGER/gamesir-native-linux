@@ -35,7 +35,7 @@ def build(label, text):
                "-Wno-unused-parameter", "-fsanitize=address,undefined",
                "-fno-sanitize-recover=all", "-g", "-I", str(directory),
                str(PROJECT / "tests/kernel_ff_lifetime_fake.c"),
-               str(PROJECT / "src/gs_runtime.c"), str(PROJECT / "src/gs_protocol.c"),
+               str(PROJECT / "src/gs_sensor.c"), str(PROJECT / "src/gs_runtime.c"), str(PROJECT / "src/gs_protocol.c"),
                "-o", str(exe)]
     result = subprocess.run(command, capture_output=True, text=True, timeout=40)
     (RESULTS / f"kernel-ff-lifetime-{label}-build.log").write_text(result.stdout + result.stderr)

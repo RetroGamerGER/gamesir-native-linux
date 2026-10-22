@@ -86,6 +86,15 @@ verbucht. Eine noch nicht mögliche Statusprüfung verbraucht keinen Startversuc
 eine fehlende Tastenänderung verhindert den Start nach gültiger Prüfung nicht.
 Die Startberechtigung ist von der Bereinigung eigener Instanzen getrennt.
 
+Korrektur vom 21. Oktober in Revision18 (auf beiden Testrechnern installiert
+und aktiviert; Funktions-/Reconnect-Abnahme noch offen): Eine vor der Übernahme
+abgelehnte Instanz wartet in `cooldown`; `start_retry_in` zeigt die Restzeit.
+Nach Ablauf folgt eine frische Geräteprüfung. 60 Sekunden durchgehend bestätigter,
+fehlerfreier aktiver Betrieb geben das Anschlussbudget wieder frei. Kurze
+Startfolgen bleiben begrenzt; bloßes Warten auf den Controller genügt nicht.
+Echte Fehler und ungeklärter Besitz werden nicht durch Zeitablauf aufgehoben.
+[Regeln und Tests](MANAGER_RECONNECT_FIX.md).
+
 Im Dauerbetrieb lehnt der Kernel jeden gewöhnlichen Start-Probe ohne passenden
 Übernahmeauftrag ab; für den korrelierten Übergang gilt dessen Besitznachweis. Fehlende
 Autoload-Aliase allein würden dies bei bereits geladenem Modul nicht verhindern.

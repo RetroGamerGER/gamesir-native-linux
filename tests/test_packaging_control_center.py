@@ -58,7 +58,7 @@ class Packaging(unittest.TestCase):
                              for p in entry.loaded_runtime_paths(maps)))
 
     def test_assets_are_separate_from_driver_and_desktop_is_read_only(self):
-        self.assertEqual(package.version(), '0.1.0.alpha1')
+        self.assertEqual(package.version(), '0.1.0.alpha2')
         source = (package.ASSETS / 'gamesir-control-center.desktop').read_text()
         for expected in ('Type=Application', 'Exec=gamesir-control-center',
                          'Icon=gamesir-control-center', 'Terminal=false', 'nur lesend'):

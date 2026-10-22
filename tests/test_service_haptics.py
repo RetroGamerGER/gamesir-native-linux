@@ -225,7 +225,8 @@ class BackendContract(unittest.TestCase):
         device = service.Device("4-3", "generation", "parent", "109c", 4, 9, "gs_native")
         entry = service.Entry(device, "active")
         manager = SimpleNamespace(inhibited=False, scan_error="", port_errors={},
-                                  entries={device.port: entry}, observed={device.port: device}, host=Mock())
+                                  entries={device.port: entry}, observed={device.port: device}, host=Mock(),
+                                  tmr=SimpleNamespace(busy=lambda port: False))
         backend = service.HapticBackend(manager)
         identity = next(iter(backend.devices()))
         entry.job = object()

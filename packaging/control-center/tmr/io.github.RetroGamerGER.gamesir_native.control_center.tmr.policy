@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-2.0-only -->
+<policyconfig>
+  <vendor>GameSir Native Linux community project</vendor>
+  <vendor_url>https://github.com/RetroGamerGER/gamesir-native-linux</vendor_url>
+  <action id="io.github.RetroGamerGER.gamesir_native.control_center.tmr">
+    <description>Calibrate the sticks of one GameSir controller</description>
+    <description xml:lang="de">Sticks eines GameSir-Controllers kalibrieren</description>
+    <message>Allow one experimental GameSir stick-calibration session. Finish may save new stick calibration values.</message>
+    <message xml:lang="de">Eine experimentelle GameSir-Stickkalibrierung erlauben. Abschließen kann neue Stickwerte speichern.</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/gamesir-control-center/tmr-maintenance/execute</annotate>
+  </action>
+</policyconfig>

@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-22",
+  "scope": "offline publication preparation",
+  "target_tag": "v0.1.0-pre-alpha.4",
+  "app_version": "0.1.0.alpha2",
+  "core_package": "0.1.0.alpha3-20",
+  "tmr_helper_package": "0.1.0.alpha1-2",
+  "offline_python_tests": 1877,
+  "qml_tests": 112,
+  "packaged_smokes": [
+    {
+      "lane": "self",
+      "seconds": 0.82,
+      "result": {
+        "synthetic_release_download": false,
+        "synthetic_first_run": false,
+        "synthetic_package_flow": false,
+        "privileged_calls": 0,
+        "ok": true,
+        "python": "3.14.8",
+        "pyside": "6.12.0",
+        "bundled_runtime_only": true,
+        "read_only": true,
+        "synthetic_status": true,
+        "languages": [
+          "de",
+          "en"
+        ],
+        "system_details": true,
+        "software_render": true
+      }
+    },
+    {
+      "lane": "package",
+      "seconds": 0.59,
+      "result": {
+        "synthetic_release_download": false,
+        "synthetic_first_run": false,
+        "synthetic_package_flow": true,
+        "privileged_calls": 0,
+        "ok": true,
+        "python": "3.14.8",
+        "pyside": "6.12.0",
+        "bundled_runtime_only": true,
+        "read_only": true,
+        "synthetic_status": true,
+        "languages": [
+          "de",
+          "en"
+        ],
+        "system_details": true,
+        "software_render": true
+      }
+    },
+    {
+      "lane": "first-run",
+      "seconds": 0.51,
+      "result": {
+        "synthetic_release_download": false,
+        "synthetic_first_run": true,
+        "synthetic_package_flow": false,
+        "privileged_calls": 0,
+        "ok": true,
+        "python": "3.14.8",
+        "pyside": "6.12.0",
+        "bundled_runtime_only": true,
+        "read_only": true,
+        "synthetic_status": true,
+        "languages": [
+          "de",
+          "en"
+        ],
+        "system_details": true,
+        "software_render": true
+      }
+    },
+    {
+      "lane": "release",
+      "seconds": 0.57,
+      "result": {
+        "synthetic_release_download": true,
+        "synthetic_first_run": false,
+        "synthetic_package_flow": false,
+        "privileged_calls": 0,
+        "ok": true,
+        "python": "3.14.8",
+        "pyside": "6.12.0",
+        "bundled_runtime_only": true,
+        "read_only": true,
+        "synthetic_status": true,
+        "languages": [
+          "de",
+          "en"
+        ],
+        "system_details": true,
+        "software_render": true
+      }
+    },
+    {
+      "lane": "calibration",
+      "seconds": 0.45,
+      "result": {
+        "ok": true,
+        "synthetic_calibration": true,
+        "privileged_calls": 0,
+        "controller_access": false,
+        "normal_window": true
+      }
+    }
+  ],
+  "distribution_gate": {
+    "technical_source_closure_verified": true,
+    "appdir_files": 1882,
+    "source_files": 1527,
+    "components": 77,
+    "legal_guarantee": false,
+    "publication_authorized": false,
+    "installed": false,
+    "image_sha256": "dba3419349b4a7efb6ed3969f062a8d7ba97c13ec47a78bfe06f17ea4f0a9214",
+    "source_archive_sha256": "dfa33a22477bcd5cd765c273ee03d68cc05368741db6c3855310975191194b2b"
+  },
+  "privacy": {
+    "source_files_checked": 581,
+    "actionable_findings": 0,
+    "allowed_test_literal": "tests/test_public_readme.py rejects private username/address patterns; no actual address"
+  },
+  "source_snapshot_note": "Companion source kit freezes staged project sources before adding its own generated lock and this receipt, avoiding recursive self-hashes. Exact application sources and immutable dependency sources are present.",
+  "runtime_changes": false,
+  "new_hardware_tests": false,
+  "published": false
+}

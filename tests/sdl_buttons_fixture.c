@@ -39,12 +39,13 @@ int ioctl(int fd, unsigned long req, ...)
     va_list ap; va_start(ap, req); void *arg = va_arg(ap, void *); va_end(ap);
     int k = fd >= 0 && fd < FD_LIMIT ? kinds[fd] : 0;
     unsigned n = _IOC_NR(req), size = _IOC_SIZE(req);
+    if ((k == 1 || k == 2) && _IOC_TYPE(req) == 'E' && n == 0x02) {
+        /* Both halves of a synthetic pair keep the real variant identity. */
+        *(struct input_id *)arg = (struct input_id){BUS_USB, 0x3537,
+            zzz() ? 0x105e : 0x109c, zzz() ? 0x0607 : 1};
+        return 0;
+    }
     if (k == 1 && _IOC_TYPE(req) == 'E') {
-        if (n == 0x02) {
-            *(struct input_id *)arg = (struct input_id){BUS_USB, 0x3537,
-                zzz() ? 0x105e : 0x109c, zzz() ? 0x0607 : 1};
-            return 0;
-        }
         if (n == 0x06) { snprintf(arg, size, "%s", xpad() ? "Generic X-Box pad" : "GameSir G7 Pro"); return (int)strlen(arg) + 1; }
         if (n == 0x18) { memset(arg, 0, size); memcpy(arg, pressed, size < sizeof(pressed) ? size : sizeof(pressed)); return (int)size; }
         if (n == 0x20 + EV_FF) {

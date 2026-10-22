@@ -72,6 +72,10 @@ class Fake:
         if d.port in self.control_busy:
             raise service.StatusBusy("Synthetic native control conflict")
 
+    def tmr_guard(self, d):
+        if self.scan_failure or self.devices.get(d.port) != d or d.driver != 'gs_native':
+            raise service.Unsafe('Native TMR device identity/binding changed')
+
     def claim(self, d):
         self.guard(d)
         self.calls.append(("claim", d.port))
@@ -1289,7 +1293,7 @@ class Policy(unittest.TestCase):
         self.assertEqual([c[0] for c in self.host.calls].count("bootstrap"), 3)
         self.assertEqual([c[0] for c in self.host.calls].count("claim"), 3)
         self.assertEqual(self.host.devices["2-3.4"].driver, "xpad")
-        self.assertEqual(self.manager.entries["2-3.4"].phase, "blocked")
+        self.assertEqual(self.manager.entries["2-3.4"].phase, "cooldown")
 
     def test_release_cancels_bootstrap_and_does_not_repeat(self):
         self.setup_manager()
@@ -1591,7 +1595,7 @@ class Policy(unittest.TestCase):
             self.manager.tick()
         self.assertEqual(len(self.host.calls), before)
         self.assertEqual(self.host.devices["2-3.4"].driver, "xpad")
-        self.assertEqual(self.manager.entries["2-3.4"].phase, "blocked")
+        self.assertEqual(self.manager.entries["2-3.4"].phase, "cooldown")
 
     def test_blocked_known_100a_retains_one_cleanup_right(self):
         self.setup_manager()
@@ -2317,6 +2321,27 @@ class Adapter(unittest.TestCase):
         (p / "devnum").write_text("10")
         with self.assertRaises(service.Unsafe):
             self.host.guard(d)
+
+    def test_pinned_tmr_observation_reads_metadata_without_process_enumeration(self):
+        p,d=self.native_fixture()
+        original=Path.iterdir
+        def no_proc(path):
+            if path==self.proc:raise AssertionError('Display must not scan process FDs')
+            return original(path)
+        with patch.object(Path,'iterdir',no_proc):
+            self.host.tmr_guard(d)
+            for replacement in (replace(d,token='replacement'),replace(d,driver='xpad')):
+                with self.subTest(replacement=replacement),self.assertRaises(service.Unsafe):
+                    self.host.tmr_guard(replacement)
+            (p/'bConfigurationValue').write_text('')
+            with self.assertRaises(service.Unsafe):self.host.tmr_guard(d)
+
+    def test_tmr_read_check_never_replaces_full_usb_command_guard(self):
+        _,d=self.native_fixture()
+        fds=self.proc/'999999/fd';fds.mkdir(parents=True)
+        (fds/'10').symlink_to('/dev/bus/usb/006/009')
+        self.host.tmr_guard(d)
+        with self.assertRaises(service.Unsafe):self.host.guard(d)
 
     def test_claim_handover_order_and_restore(self):
         self.fixture()

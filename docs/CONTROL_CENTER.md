@@ -1,5 +1,18 @@
 # Control Center — status and reviewed package operations
 
+Latest offline addition: the [native TMR interface](TMR_NATIVE_INTERFACE.md)
+adds narrowly scoped kernel/manager commands and E0 snapshots, default disabled.
+The full USB frame is an unvalidated candidate and E0 continuity is not proof
+of physical RF identity. The [controller adapter](CONTROL_CENTER_CALIBRATION_ADAPTER.md)
+and normal GUI therefore remain unavailable for hardware calibration; their
+strict capability contract is not bypassed. No installed driver or app change.
+
+Latest offline addition, 22 October: the [TMR calibration preview](CONTROL_CENTER_STICK_CALIBRATION.md)
+adds two stick plots, colored edge coverage, explicit Finish and terminal loss/
+cancel handling in a separate simulated-controller mode. Normal status/package
+launch and the published AppImage do not enable hardware calibration. No device
+transport, driver/helper change, installation or hardware test is included.
+
 Latest offline work: [GitHub release packages](CONTROL_CENTER_GITHUB_PACKAGES.md)
 can be selected through build-reviewed metadata, downloaded/verified only after
 an explicit click and passed to the separate fresh plan/permission flow. No
@@ -441,9 +454,10 @@ local test build is described in the linked packaging guide above.
   and the already documented official [Deadband repository](https://github.com/broroeror/gamesir-linux-tools).
   Browser launch occurs only on selection; there is no startup network request.
   Deadband remains an independent project, with no implied collaboration.
-- Visible, disabled roadmap cards for software updates, TMR-stick calibration,
-  controller firmware and receiver firmware. They are informational cards,
-  never functional hardware controls.
+- Visible roadmap cards for software updates, TMR-stick calibration, controller
+  firmware and receiver firmware. They remain disabled in the ordinary demo
+  and real status/package modes. Only the separately selected offline TMR mode
+  offers its simulated calibration dialog; it has no hardware transport.
 
 The always-visible demo banner separates examples from real host state.
 The driver, loaded module, receiver presence and controller connection are

@@ -33,6 +33,7 @@ struct gsn_boot { int lock, core; };
 #define spin_unlock(lock) do { (void)(lock); assert(0 && "unexpected bootstrap unlock"); } while (0)
 struct gsn_device {
     struct gs_runtime rt;
+    struct gs_tmr tmr;
     struct fake_usb_device *udev;
     struct fake_interface *intf;
     u8 *tx_buf;
@@ -50,6 +51,8 @@ static void gs_boot_abort(int *core, int error)
 
 static int spin_depth, io_depth, scheduled, warnings;
 static unsigned int native_pid;
+static const bool experimental_tmr = false;
+#define ktime_get_ns() 0ULL /* TMR OUT branch is not used by motor-only cases. */
 static int usb_calls, usb_return, usb_actual = 13;
 static unsigned int clock_reads;
 static u64 clock_values[2];

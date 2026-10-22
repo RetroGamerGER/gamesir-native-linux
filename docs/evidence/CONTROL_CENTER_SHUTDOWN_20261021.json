@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-21",
+  "scope": "offline application shutdown correction",
+  "published_image_sha256": "2fab3e69a6702b2fb7589f950ab2bcd7596f2bb7edb1d850f236b53a23fddbbc",
+  "published_image_unchanged": true,
+  "candidate_image_sha256": "b942b7df4de27728edc40c9441add51d8fdccd0b5bd208beea94b5e26c330b3c",
+  "candidate_bytes": 70416888,
+  "candidate_published": false,
+  "old_order": [
+    "model",
+    "window",
+    "engine"
+  ],
+  "corrected_order": [
+    "window",
+    "engine",
+    "model"
+  ],
+  "negative_control_old_main_violates_lifetime_assertion": true,
+  "exact_reported_warning_flood_reproduced": false,
+  "new_interactive_desktop_acceptance": false,
+  "tests": {
+    "app_cases": 419,
+    "groups": 26,
+    "new_lifecycle_cases": 7,
+    "bundled_runtime_lifecycle_cases": 7,
+    "packaged_synthetic_lanes": 4,
+    "passed": true
+  },
+  "payload_diff": {
+    "changed": [
+      "usr/share/gamesir-control-center/app/main.py"
+    ],
+    "unchanged_file_count": 1858,
+    "base_appimage_sha256": "2fab3e69a6702b2fb7589f950ab2bcd7596f2bb7edb1d850f236b53a23fddbbc"
+  },
+  "changed_source_sha256": "7f10ebb6258f2d72c46a02b2c64bf25df0966ba854985436f0cda5917db350d5",
+  "published_source_lock_applies_to_candidate": false,
+  "future_publication_requires": [
+    "approval",
+    "matching project sources",
+    "updated distribution lock",
+    "manifest",
+    "checksums"
+  ],
+  "installed_helper_changed": false,
+  "driver_or_system_changes": false,
+  "hardware_access": false,
+  "network_access": false,
+  "signing_key_access": false,
+  "push": false,
+  "gyro_calibration": "paused"
+}

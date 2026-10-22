@@ -185,6 +185,10 @@ class PreviewFlow(unittest.TestCase):
                         # Sole explicit, user-side release downloader. Parsing
                         # and construction are inert; no root/network on launch.
                         'release_download.py': {'http', 'urllib'},
+                        # Explicit calibration-only mode. Fixed installed
+                        # Polkit entry and root-private manager endpoint only.
+                        'tmr_client.py': {'subprocess'},
+                        'tmr_channel.py': {'socket'},
                     }.get(source.relative_to(UI).as_posix(), set())
                     self.assertFalse((forbidden - allowed).intersection(name.split('.')), (source.name, name))
 

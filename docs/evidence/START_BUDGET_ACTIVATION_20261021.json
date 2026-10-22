@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-21",
+  "scope": "Approved single service start and Resume on both revision18 hosts; primary receiver reinsertion and read-only standby observation",
+  "package": "gamesir-native-dkms 0.1.0.alpha3-18",
+  "installation_receipt": "START_BUDGET_INSTALLATION_20261021.json",
+  "module_srcversion": "2C3CD9E0768198E709B871B",
+  "hosts": {
+    "primary": {
+      "kernel": "7.2.11-1-garuda",
+      "service_start_calls": 1,
+      "resume_calls": 1,
+      "service": "active/running",
+      "autostart": "enabled (preserved)",
+      "manager_paused": false,
+      "loaded_parameters": {
+        "accel_axis_map": "1,2,3",
+        "accel_counts_per_g_den": "1",
+        "test_interface": "(null)",
+        "defer_input": "Y",
+        "receiver_wait": "Y",
+        "accel_counts_per_g_num": "8192",
+        "session_ms": "30000",
+        "enable_output": "Y",
+        "experimental_accel": "Y",
+        "persistent_mode": "Y",
+        "experimental_gyro": "Y",
+        "test_pid": "0",
+        "experimental_gyro_105e": "N",
+        "bootstrap_mode": "Y"
+      },
+      "module_loaded": true,
+      "new_reported_failures": false,
+      "receiver_observed_at_activation": false,
+      "configuration_unchanged": true,
+      "post_insertion": {
+        "controller_state_reported_by_user": "off",
+        "vid": "3537",
+        "pid": "109c",
+        "driver": "gs_native",
+        "manager_phase": "receiver_wait",
+        "matching_saved_lease": true,
+        "stable_observation_seconds": 4.22,
+        "new_reported_failures": false,
+        "radio_connection_proven": false
+      }
+    },
+    "secondary": {
+      "kernel": "7.2.11-1-cachyos-deckify",
+      "service_start_calls": 1,
+      "resume_calls": 1,
+      "service": "active/running",
+      "autostart": "enabled (preserved)",
+      "manager_paused": false,
+      "loaded_parameters": {
+        "accel_axis_map": "1,2,3",
+        "accel_counts_per_g_den": "1",
+        "test_interface": "(null)",
+        "defer_input": "Y",
+        "receiver_wait": "Y",
+        "accel_counts_per_g_num": "8192",
+        "session_ms": "30000",
+        "enable_output": "Y",
+        "experimental_accel": "Y",
+        "persistent_mode": "Y",
+        "experimental_gyro": "Y",
+        "test_pid": "0",
+        "experimental_gyro_105e": "Y",
+        "bootstrap_mode": "Y"
+      },
+      "module_loaded": true,
+      "new_reported_failures": false,
+      "receiver_observed_at_activation": false,
+      "configuration_unchanged": true
+    }
+  },
+  "functional_input_test": false,
+  "reconnect_test": false,
+  "gyro_or_motor_test": false,
+  "driver_or_manager_source_change": false,
+  "steam_configuration_change": false,
+  "recovery_retry": false,
+  "published": false,
+  "remaining": [
+    "Missing X/Y/right-trigger cause remains unresolved",
+    "Reconnect reliability still needs ordinary-use observations or separate acceptance",
+    "Secondary receiver binding not observed during activation",
+    "Nexus research saved at50e8c13; precision gyro calibration paused"
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "activated": false,
+  "baseline_commit": "f0565bd",
+  "date": "2026-10-22",
+  "implementation": {
+    "automatic_helper_installation": false,
+    "automatic_module_enablement": false,
+    "default_hardware_calibration": false,
+    "experimental_mode": "--experimental-tmr",
+    "explicit_controller_selection": true,
+    "helper_files": 8,
+    "kernel_source_changed": false,
+    "link_basis": "fresh_e0_continuity_only",
+    "lossless_stream_claimed": false,
+    "one_authorization_per_session": true,
+    "polkit_cache": false,
+    "rf_identity_attested": false,
+    "snapshot_heartbeat": false,
+    "unvalidated_display_signs": [
+      1,
+      -1,
+      1,
+      -1
+    ]
+  },
+  "installed": false,
+  "limits": [
+    "OUT64 candidate remains hardware-unvalidated",
+    "E0 continuity cannot prove physical RF lifetime",
+    "unchanged E0 reports may be suppressed; silence stops the run",
+    "raw stick display orientation requires live acceptance",
+    "Finish transfer is not independently verified nonvolatile storage",
+    "already dispatched commands cannot be recalled by closing the GUI"
+  ],
+  "network_access": false,
+  "precision_gyro_calibration": "paused",
+  "project_license": "GPL-2.0-only",
+  "push": false,
+  "schema": 1,
+  "scope": "offline-tmr-gui-permission-integration",
+  "source_sha256": {
+    "packaging/control-center/tmr/execute": "7c1e41630ccf76643395973b2735d62965683be39d5a53bb25742547e3a86a26",
+    "packaging/control-center/tmr/io.github.RetroGamerGER.gamesir_native.control_center.tmr.policy": "9b9684c68e56214398147f88b6658bb3b137e8e1440d05a0668aa813e8029341",
+    "scripts/package_control_center.py": "f9fef2e984abee2500a472ef363e7bfd484e1e55ef9fb10f9853626db2eeac51",
+    "scripts/stage_tmr_helper.py": "d4853d791cc819de67edfb8b31b1fba9303144f39647cab00aa3e107132385c6",
+    "tests/test_tmr_gui_path.py": "445c853607d7c1d35891d266db938f7d7226b1ebf4b5308d93e39edd58a5816e",
+    "tests/test_tmr_gui_ui.py": "9c6de133fd5f35680d147a33d1fc31941a5b9d01d59edc55cb44c4e7074ba670",
+    "tools/control_center/calibration_controller.py": "d40aebf60c9425e3bd77bf93eeab2ed26ed0379213015aaeb3cbad9276a0e50d",
+    "tools/control_center/main.py": "2f1e4669023a2236e437e1528afb2c546abefa6803c9d51d02ce4dc4e1f00402",
+    "tools/control_center/qml/CalibrationDialog.qml": "33a26093f6cc559c487b39760a07e1d218c7321471ef9eab2a382977038aaf9e",
+    "tools/control_center/qml/Main.qml": "259ed8681009d0c16d4997b5c5c6661d5da26e7e0d3c16a7809426290b84a4f6",
+    "tools/control_center/qml/StickView.qml": "8b61772b9118e830339ed2d5566708fa1a9cca1ef5a68bf8b46703c0f6caeeb0",
+    "tools/control_center/qt_bridge.py": "8d058270c00ffb1e8ef3b8ab35b7ffca8ff114861201e98e1fdc163d06d89fe8",
+    "tools/control_center/tmr_bridge.py": "31525bd1190af154351ed10c5e232f5e7869f989cc945048189122f555aa7019",
+    "tools/control_center/tmr_channel.py": "26cb984935abeb7aac0f09f4d9eef2a4408dc7b614c9af1c168c9b9594663c82",
+    "tools/control_center/tmr_client.py": "3de8a78dee12e3cc375ab8760b8b428995be729dd87d476f9b305bb24ea5fb42",
+    "tools/control_center/tmr_helper.py": "2d66fb85598f1fa976e06210214b57dd36a34699a0f2a4d62eb84587f4cb7877",
+    "tools/control_center/tmr_wire.py": "7c8b92658ad5e2a005475bc29ff424ee0d90db09f4045bad3e3dba57290d098f",
+    "tools/service/tmr_maintenance.py": "90fbcf8e61d56a2e6c7cb4514c3e8fd902f35c742e1cbc9184a5bfa7d41e7208"
+  },
+  "system_changes": false,
+  "validation": {
+    "device_access": false,
+    "final_socket_guard_tests": {
+      "additional_cases_after_full_run": 3,
+      "cases": 43,
+      "command": "python -B tests/test_tmr_gui_path.py",
+      "passed": true,
+      "runtime_source_changed_after_full_run": false
+    },
+    "firmware_executed": false,
+    "full_regression": {
+      "actual_kernel_adapter_scenarios": 323,
+      "actual_kernel_claim_scenarios": 98,
+      "command": "make test test-control-center-ui",
+      "passed": true,
+      "python_cases": 1947,
+      "python_test_groups": 79,
+      "shared_c_and_sanitizer_checks": true
+    },
+    "hardware_acceptance": false,
+    "local_companion_staged": true,
+    "new_protocol_manager_pipe_tests": 43,
+    "new_qml_worker_tests": 12,
+    "real_authorization_prompt": false,
+    "real_manager_socket_accessed": false,
+    "root_helper_executed": false,
+    "staged_source_audits": {
+      "app_packaging_cases": 19,
+      "license_cases": 3,
+      "passed": true,
+      "readme_cases": 7
+    },
+    "ui_rendered_languages": [
+      "de",
+      "en"
+    ]
+  }
+}

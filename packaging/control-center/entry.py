@@ -266,9 +266,74 @@ def first_run_flow_test(app, temporary):
     window.close(); engine.deleteLater()
     QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
 
+def calibration_flow_test():
+    """Bundled Qt/worker/normal window, with only in-memory controller replies."""
+    from PySide6.QtCore import QCoreApplication, QEvent
+    from PySide6.QtGui import QGuiApplication
+    import time
+    from main import create_engine, calibration_factory
+    from stick_calibration import Calibration
+    if calibration_factory(BASE) is None:
+        raise RuntimeError('Reviewed calibration pins are not bundled')
+    app = QGuiApplication.instance() or QGuiApplication([])
+    app.setQuitOnLastWindowClosed(False)
+    calls = []
+    view = Calibration().snapshot()
+    class Client:
+        def call(self, action, **fields):
+            calls.append(action)
+            if action == 'list':
+                return {'targets': [{'pid': 0x105e, 'port': '1-2'}]}
+            if action == 'select':
+                view.update(phase='ready', running=True, canStart=True)
+            elif action == 'prepare':
+                view.update(phase='measuring', canStart=False)
+            elif action == 'poll' and view['phase'] == 'measuring':
+                view.update(phase='ready_to_finish', canFinish=True)
+            elif action == 'finish':
+                view.update(phase='completed', canFinish=False, running=False)
+            else:
+                raise RuntimeError('Unexpected synthetic calibration action')
+            return {'view': dict(view)}
+        def close(self): pass
+    class Collector:
+        def collect(self): return None
+    def wait_for(predicate):
+        end = time.monotonic() + 5
+        while not predicate() and time.monotonic() < end:
+            app.processEvents(); time.sleep(.005)
+        if not predicate(): raise RuntimeError('Bundled calibration fixture timed out')
+    with tempfile.TemporaryDirectory() as temporary:
+        engine = create_engine(Path(temporary) / 'prefs.ini', demo=False, collector=Collector(),
+                               calibration_factory=lambda cancelled: Client())
+        model = engine.center_model; bridge = model.stickCalibration
+        try:
+            if calls or not model.canCalibrate:
+                raise RuntimeError('Calibration started without a click or is unavailable')
+            if not bridge.open(): raise RuntimeError('Cannot open synthetic calibration')
+            wait_for(lambda: bridge.view['phase'] == 'selecting')
+            bridge.select(0); wait_for(lambda: bridge.view['canStart'])
+            bridge.start(); wait_for(lambda: bridge.view['canFinish'])
+            bridge.finish(); wait_for(lambda: bridge.view['phase'] == 'completed' and not bridge.inUse)
+            for language in ('de', 'en'):
+                model.setLanguage(language); app.processEvents()
+                if engine.rootObjects()[0].grabWindow().isNull():
+                    raise RuntimeError('Bundled calibration render failed')
+            if calls.count('prepare') != 1 or calls.count('finish') != 1:
+                raise RuntimeError('Synthetic calibration action repeated')
+        finally:
+            bridge.shutdown(); engine.rootObjects()[0].close(); engine.deleteLater()
+            QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    print(json.dumps({'ok': True, 'synthetic_calibration': True, 'privileged_calls': 0,
+                      'controller_access': False, 'normal_window': True}))
+    return 0
+
+
 if __name__ == '__main__':
     if os.geteuid() == 0:
         raise SystemExit('Run Control Center as the desktop user, never as root.')
+    if sys.argv[1:] == ['--bundle-calibration-self-test']:
+        raise SystemExit(calibration_flow_test())
     if sys.argv[1:] in (['--bundle-self-test'], ['--bundle-package-self-test'], ['--bundle-first-run-self-test'], ['--bundle-release-self-test']):
         raise SystemExit(self_test(package_flow=sys.argv[1:] == ['--bundle-package-self-test'],
                                   first_run=sys.argv[1:] == ['--bundle-first-run-self-test'],

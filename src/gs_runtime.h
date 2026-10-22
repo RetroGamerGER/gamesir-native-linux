@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 #ifndef GS_RUNTIME_H
 #define GS_RUNTIME_H
+#include "gs_tmr.h"
 #include "gs_protocol.h"
 #include "../include/uapi/gs_native.h"
 

@@ -285,7 +285,7 @@ static void usb_unlock_device(struct usb_device *d)
 }
 static void usb_free_urb(struct urb *u) { free(u); }
 static void usb_kill_urb(struct urb *u);
-static bool bootstrap_mode = true, enable_output = true, admin = true, persistent_mode;
+static bool bootstrap_mode = true, enable_output = true, admin = true, persistent_mode, experimental_tmr;
 static bool receiver_wait;
 static unsigned session_ms = 30000;
 static struct mutex boot_list_lock;
@@ -1672,6 +1672,130 @@ static unsigned receiver_wait_adapter_cases(void)
 	return cases;
 }
 
+static void tmr_receive(unsigned active, unsigned done)
+{
+	memset(old_g->rx_buf, 0, 64);
+	old_g->rx_buf[0] = 0x10;
+	old_g->rx_buf[3] = 0x3c;
+	old_g->rx_buf[4] = 0xe0;
+	old_g->rx_buf[30] = active;
+	old_g->rx_buf[31] = done;
+	old_g->rx_urb->actual_length = 64;
+	old_g->rx_urb->status = 0;
+	gsn_rx(old_g->rx_urb);
+}
+
+static unsigned tmr_adapter_cases(void)
+{
+	struct gsn_tmr_status s;
+	struct gsn_tmr_request q;
+	unsigned cases = 0;
+	assert(sizeof(q) == 48 && sizeof(s) == 144);
+	for (unsigned model = 0; model < 2; model++) {
+		for (unsigned scenario_tmr = 0; scenario_tmr < 10; scenario_tmr++) {
+			setup_native(model ? 0x105e : 0x109c, true);
+			assert(!run(0));
+			unsigned before = tx_count;
+			experimental_tmr = false;
+			assert(gsn_ioctl(&old_fd, GSN_TMR_GET, (unsigned long)&s) == -EOPNOTSUPP);
+			assert(tx_count == before && old_g->rt.session_active);
+			experimental_tmr = true;
+			admin = false;
+			assert(gsn_ioctl(&old_fd, GSN_TMR_GET, (unsigned long)&s) == -EPERM);
+			admin = true;
+			tmr_receive(0, 0);
+			assert(!gsn_ioctl(&old_fd, GSN_TMR_GET, (unsigned long)&s));
+			assert(s.flags == 3 && s.report_number == 1 && s.report[4] == 0xe0);
+			q = (struct gsn_tmr_request){.abi_version=1, .operation=GSN_TMR_ACQUIRE,
+				.port_token=s.port_token, .instance_token=s.instance_token,
+				.stream_epoch=s.stream_epoch, .generation=77};
+			q.reserved[1] = 1;
+			assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -EINVAL);
+			q.reserved[1] = 0;
+			q.instance_token++;
+			assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -ESTALE);
+			q.instance_token--;
+			assert(!gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q));
+			assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -EBUSY);
+			assert(gsn_ioctl(&old_fd, GSN_END_SESSION, 0) == -EBUSY);
+			assert(gsn_ioctl(&old_fd, GSN_RESUME, 0) == -EBUSY);
+			assert(gsn_ioctl(&old_fd, GSN_START_SESSION, 0) == -EBUSY);
+			assert(gsn_ioctl(&old_fd, GSN_STOP, 0) == -EBUSY);
+			assert(tx_count == before);
+			q.operation = GSN_TMR_START;
+			if (scenario_tmr == 1) fault_tx = (int)tx_count + 1;
+			int ret = gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q);
+			assert(ret == (scenario_tmr == 1 ? -EPIPE : 0));
+			assert(tx_count == before + 1);
+			u8 expected[64];
+			assert(gs_tmr_packet(expected, old_g->sequence, q.operation) == 64);
+			assert(!memcmp(old_g->tx_buf, expected, 64));
+			assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) < 0);
+			assert(tx_count == before + 1); /* No replay even after partial/error. */
+			if (scenario_tmr != 1) {
+				q.operation = GSN_TMR_FINISH;
+				assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -EAGAIN);
+				if (scenario_tmr == 2) {
+					clock_us += 1500001;
+					tmr_receive(3, 3);
+					assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -ESTALE);
+				} else if (scenario_tmr == 3) {
+					tmr_receive(4, 4); /* Other calibration parts are forbidden. */
+					assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -EPROTO);
+				} else if (scenario_tmr == 4) {
+					clock_us += 2000000;
+					assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -ESTALE);
+				} else if (scenario_tmr == 5) {
+					gsn_quiesce(old_g, GS_QUIESCED, -ESHUTDOWN);
+					assert(old_g->tmr.phase == 5 && !old_g->tmr.number);
+					assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -ENODEV);
+				} else if (scenario_tmr == 6) {
+					q.generation++;
+					assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) == -ESTALE);
+					q.generation--;
+				} else {
+					tmr_receive(3, 3);
+					if (scenario_tmr == 7) q.operation = GSN_TMR_EXIT;
+					if (scenario_tmr == 8) { fault_tx = (int)tx_count + 1; short_tx = true; }
+					ret = gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q);
+					assert(ret == (scenario_tmr == 8 ? -EREMOTEIO : 0));
+					before = tx_count;
+					assert(gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q) < 0);
+					assert(before == tx_count);
+				}
+			}
+			q.operation = GSN_TMR_RELEASE;
+			if (!scenario_tmr) {
+				/* Lost maintenance proof after prepare, before final USB gate. */
+				u8 p[64];
+				gs_tmr_fail(&old_g->tmr, -ENOLINK);
+				assert(gs_tmr_packet(p, 77, GSN_TMR_START) == 64);
+				before = tx_count;
+				mutex_lock(&old_g->io_lock);
+				assert(gsn_send(old_g, p, 64, false) == -EPERM);
+				mutex_unlock(&old_g->io_lock);
+				assert(tx_count == before);
+			}
+			(void)gsn_ioctl(&old_fd, GSN_TMR_COMMAND, (unsigned long)&q);
+			/* The actual release path must not stop inputs or send motor zeros.
+			 * Pin the object while exercising close, then reopen for cleanup.
+			 */
+			before = tx_count;
+			int running = old_g->rt.session_active;
+			kref_get(&old_g->ref);
+			gsn_release(NULL, &old_fd);
+			assert(tx_count == before && old_g->rt.session_active == (unsigned)running);
+			old_fd.private_data = &old_g->misc;
+			assert(!gsn_open(NULL, &old_fd));
+			kref_put(&old_g->ref, gsn_delete);
+			cleanup();
+			cases++;
+		}
+	}
+	experimental_tmr = false;
+	return cases;
+}
+
 int main(int argc, char **argv)
 {
 	struct gsn_boot_status status;
@@ -1681,6 +1805,7 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	cases += xinput_query_cases();
+	cases += tmr_adapter_cases();
 	cases += receiver_wait_adapter_cases();
 	cases += removal_order_cases(0);
 	cases += removal_safety_cases();

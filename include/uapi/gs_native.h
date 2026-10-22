@@ -112,4 +112,47 @@ struct gsn_input_publish {
 
 #define GSN_GET_INPUT_STATUS _IOR('G', 0x79, struct gsn_input_status)
 #define GSN_PUBLISH_INPUT _IOW('G', 0x7a, struct gsn_input_publish)
+
+/* Experimental TMR-only maintenance. Default disabled; CAP_SYS_ADMIN required.
+ * No raw packet, endpoint, calibration value or arbitrary register access.
+ * GET does not renew the lease. Monotonic ns/count are captured by RX; report
+ * is the latest complete E0, not a lossless queue. epoch is a continuity
+ * guard (including silence/PM), NOT proof of physical RF identity.
+ */
+#define GSN_TMR_ENABLED 1
+#define GSN_TMR_FRESH 2
+#define GSN_TMR_LEASED 4
+#define GSN_TMR_ACQUIRE 1
+#define GSN_TMR_START 2
+#define GSN_TMR_FINISH 3
+#define GSN_TMR_EXIT 4
+#define GSN_TMR_RELEASE 5
+#define GSN_TMR_RENEW 6
+struct gsn_tmr_request {
+	__u32 abi_version;
+	__u32 operation;
+	__aligned_u64 port_token;
+	__aligned_u64 instance_token;
+	__aligned_u64 stream_epoch;
+	__aligned_u64 generation; /* Nonzero client nonce; fixed for this FD. */
+	__u32 reserved[2];
+};
+struct gsn_tmr_status {
+	__u32 abi_version;
+	__u32 flags;
+	__u32 pid;
+	__u32 phase; /* 0 idle, 1 leased, 2 started, 3 finished, 4 exited, 5 failed */
+	__s32 error; /* First failure survives cleanup. No storage ACK implied. */
+	__u32 reserved;
+	__aligned_u64 port_token;
+	__aligned_u64 instance_token;
+	__aligned_u64 stream_epoch;
+	__aligned_u64 generation;
+	__aligned_u64 report_number;
+	__aligned_u64 host_monotonic_ns;
+	__aligned_u64 lease_deadline_ns;
+	__u8 report[64];
+};
+#define GSN_TMR_GET _IOR('G', 0x7b, struct gsn_tmr_status)
+#define GSN_TMR_COMMAND _IOW('G', 0x7c, struct gsn_tmr_request)
 #endif

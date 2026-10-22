@@ -1,0 +1,35 @@
+#!/usr/bin/python3 -IBS
+# SPDX-License-Identifier: GPL-2.0-only
+"""Fixed root-owned calibration entry. Never elevate an AppImage script."""
+import os
+from pathlib import Path
+import stat
+import sys
+
+BASE = Path('/usr/lib/gamesir-control-center/tmr-maintenance')
+MODULES = ('tmr_wire.py','tmr_channel.py','tmr_helper.py','calibration_controller.py',
+           'calibration_protocol.py','stick_calibration.py')
+
+
+def main():
+    if (os.geteuid() != 0 or len(sys.argv) != 1 or not sys.flags.isolated
+            or not sys.flags.no_site or not sys.flags.dont_write_bytecode
+            or Path(__file__).absolute() != BASE / 'execute'):
+        return 2
+    try:
+        for path in (BASE / 'execute', *(BASE / name for name in MODULES)):
+            for node in (path, *path.parents):
+                info = node.lstat()
+                if (info.st_uid or info.st_mode & 0o022 or stat.S_ISLNK(info.st_mode)
+                        or (node == path and not stat.S_ISREG(info.st_mode))
+                        or (node != path and not stat.S_ISDIR(info.st_mode))):
+                    return 2
+    except OSError:
+        return 2
+    sys.path.insert(0, str(BASE))
+    from tmr_helper import main as run
+    return run()
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

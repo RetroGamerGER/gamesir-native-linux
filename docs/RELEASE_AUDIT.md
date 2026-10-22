@@ -1,3 +1,33 @@
+# Revision 17 ZZZ motion candidate — 21 October 2026
+
+Offline-only extension, no publication or installation. Core recipe alpha3-17
+adds a default-off105e gyro opt-in and its manager readiness path in the same
+module/package. Standard109c behavior, raw IIO, startup/receiver waiting,
+paddles and motor ownership are preserved. No live actions or new physical
+sensor calibration; the reported long-off/reconnect failures remain unresolved.
+[Scope and deployment plan](ZZZ_GYRO_EXTENSION.md),
+[exact validation receipt](evidence/ZZZ_GYRO_OFFLINE_20261021.json).
+
+Validation: complete `make test` passes (1,707 Python cases in64 groups plus
+shared-C/actual-adapter ASan/UBSan checks);25 packaging cases also rerun after
+the final staged-profile assertions. `make test-sdl` passes, including32
+sensor cases across both model identities and SDL2/SDL3, existing buttons/FF
+and five hotplug cases. The new manager path passes42 readiness tests; a
+negative control restoring its old gate fails13 ZZZ cases as expected.
+
+Local Garuda7.2.11-1 module build passes W=1/-Werror with zero code warnings.
+Kbuild records one environment advisory: kernel Clang23.1.1 versus local
+Clang23.1.3. Checkpatch and five Clang analyzer translation units pass with
+zero findings. No loaded-module compatibility claim follows. CachyOS target
+headers/build are not locally available and were not accessed over SSH in this
+offline step; verify/build there before an approved installation. The DKMS
+package contains matching sources and manager, not the Garuda `.ko`.
+
+The package documentation allowlist also retains the existing README's
+Control Center distribution link, which was missing after app publication.
+No app/helper/signed-catalog bytes are changed. Artifacts and checksums are
+retained locally; no tag, release, upload or Git push.
+
 # Public pre-alpha release audit
 
 ## PRE-ALPHA.3 package/default and function audit — 20 October 2026

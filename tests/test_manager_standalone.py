@@ -760,15 +760,15 @@ class ReturnedNativeTimeout(unittest.TestCase):
                 self.assertEqual(self.manager.entries[fresh.port].phase, 'released')
                 self.assertEqual(self.host.devices[fresh.port].driver, 'xpad')
 
-    def test_exhausted_budget_still_allows_cleanup_but_never_acquires(self):
+    def test_exhausted_budget_allows_cleanup_but_defers_new_acquisition(self):
         entry = self.failed_and_ended()
         self.manager.budgets[entry.device.port] = service.deque([0, 0, 0])
         fresh = self.replacement()
         before = list(self.host.calls)
         self.tick(5)
         self.assertEqual(self.host.calls, before)
-        self.assertEqual(self.manager.entries[fresh.port].phase, 'blocked')
-        self.assertIn('Three starts', self.manager.entries[fresh.port].error)
+        self.assertEqual(self.manager.entries[fresh.port].phase, 'cooldown')
+        self.assertGreater(self.manager.status()['devices'][fresh.port]['start_retry_in'], 0)
         self.assertNotIn(fresh.port, self.manager.leases)
 
     def test_old_or_already_attempted_instance_is_never_retried(self):

@@ -2,6 +2,16 @@
 
 # Ein gemeinsamer Treiber: Varianten und experimenteller ZZZ-Start
 
+## ZZZ-Gyroprofil: Revision17 offline vorbereitet
+
+Der ZZZ kann das experimentelle SDL-/evdev-Profil jetzt zusätzlich mit
+`experimental_gyro_105e=1` verwenden; `experimental_gyro=1` bleibt erforderlich.
+Gerätezuordnung, Umrechnung und Bereitschaftsprüfung sind gemeinsam erweitert.
+0,07 °/s/Rohwert und die Standard-Achsenzuordnung sind für diese Edition noch
+unbestätigte Testwerte. Keine Installation oder neue Hardwareabnahme.
+[Umfang, Regressionen und nächster Schritt](ZZZ_GYRO_EXTENSION.md).
+Die folgenden Alpha3-Ergebnisse bleiben historische Rohdaten-/Startnachweise.
+
 ## Aktueller Auftrag und Implementierung: Alpha3
 
 Nach der Quellenprüfung und dem lesenden Vergleich beauftragte [tester] ausdrücklich

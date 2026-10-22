@@ -1,0 +1,325 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "Static controller firmware calibration dispatch and asynchronous save request; no target execution, emulation, hardware or network.",
+  "sources": [
+    {
+      "name": "JS_3103_DV_V209_No_Key.app.bin",
+      "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6",
+      "size": 379140
+    },
+    {
+      "name": "JS_3103_U_DV_V515_No_Key.app.bin",
+      "sha256": "77e77be00ccd03d4c7dc6e469875c977988ffcbecac78a66cfe337c633308673",
+      "size": 379364
+    },
+    {
+      "name": "JS_3103_U_DV_V608_No_Key.app.bin",
+      "sha256": "6c2155168aae2bfa01b8b391ec2295c4cbf0c27696a49a7d5a063eefdb22147b",
+      "size": 379364
+    }
+  ],
+  "static_decode": {
+    "rows": 28,
+    "instructions": 692,
+    "failed_rows": 0,
+    "source_unchanged": true,
+    "sandbox_passed": true,
+    "target_execution": false,
+    "helper_sha256": "fb73ad722172fa936450df32223f0ce382311092f4ac767fec157bc9114da876",
+    "request_sha256": "e187be21b5510d391e6a72f5be4c34f3a62a2e977113776a2d9d120ee02dc312",
+    "output_sha256": "502150ea66d060aae50323598e65b2911f63c16fbc1bbec3ba19cedc9db4aa4d"
+  },
+  "anchors": [
+    {
+      "label": "command_header",
+      "file_offset": "0x1c9c",
+      "instruction_sha256": "b5a3f98a77b73ab6883b851c28faeaa46dce20fbf9ade997e280c1bc3b13c446"
+    },
+    {
+      "label": "command_header",
+      "file_offset": "0x1cbc",
+      "instruction_sha256": "11360b25e8e8767fbb68761e39d7ef31bdae726426358326f0cba0a8edea6d1b"
+    },
+    {
+      "label": "fe_selector",
+      "file_offset": "0x1d32",
+      "instruction_sha256": "6e38ee3cb9c4162fd7b4d61013345cd1d1479136cb815b342fa75e202df29fde"
+    },
+    {
+      "label": "operations",
+      "file_offset": "0x1fa8",
+      "instruction_sha256": "72337057851d4293479911945ddbc988eebc79d4c197d6529d8c82db868ca789"
+    },
+    {
+      "label": "operations",
+      "file_offset": "0x1faa",
+      "instruction_sha256": "b509fd5ae188a157a0f5ad0b0b88e0087ea7156c541ff190a60d9618983914fe"
+    },
+    {
+      "label": "operations",
+      "file_offset": "0x1fba",
+      "instruction_sha256": "92bd463ee892f03818b2f1118018558705f3d19e953c7ec8cd4e50a5ebc8338d"
+    },
+    {
+      "label": "operations",
+      "file_offset": "0x1fc0",
+      "instruction_sha256": "b77c3a001ea7e51a5ac2c7ddfcfd1eab767eb772156ae17fe7c8a437e07b8964"
+    },
+    {
+      "label": "operations",
+      "file_offset": "0x1fc6",
+      "instruction_sha256": "7b69397838f1855d4665b622c8751dbd17f584c02687bcdadddc0908a0f39530"
+    },
+    {
+      "label": "finish",
+      "file_offset": "0x2268",
+      "instruction_sha256": "c29909c1f215bae1b17615f913192c4f930374b2bcfc64e7f33f4bc957066531"
+    },
+    {
+      "label": "finish",
+      "file_offset": "0x2270",
+      "instruction_sha256": "f0f5d6f1d1f8cc6704844e4eff8a82ead890c2128d699662ff669d520e561601"
+    },
+    {
+      "label": "finish",
+      "file_offset": "0x2274",
+      "instruction_sha256": "05a294fd3c3b29b8892d29d893dc6023a9165d45051b37ce09f7f81703d171f1"
+    },
+    {
+      "label": "finish",
+      "file_offset": "0x227e",
+      "instruction_sha256": "be384cd9d560efc830c27b58d278a874be1751ecb0a7b09fd30dafa4b955ac61"
+    },
+    {
+      "label": "finish",
+      "file_offset": "0x2282",
+      "instruction_sha256": "3a8aaca990c3114e812958eba3cf02eb100501a6efeb69f6a87c6581721877ba"
+    },
+    {
+      "label": "finish",
+      "file_offset": "0x2290",
+      "instruction_sha256": "be384cd9d560efc830c27b58d278a874be1751ecb0a7b09fd30dafa4b955ac61"
+    },
+    {
+      "label": "exit",
+      "file_offset": "0x21e8",
+      "instruction_sha256": "de88837ad3e2f5ee307632c34d9922cd56fc76a6a6f989c544c3001d2909115d"
+    },
+    {
+      "label": "exit",
+      "file_offset": "0x2206",
+      "instruction_sha256": "cb27a4e93dc6ec4eb88bac69f35b90881c9ba233e75aaa75ab9af31680edcf17"
+    },
+    {
+      "label": "exit",
+      "file_offset": "0x2224",
+      "instruction_sha256": "cb27a4e93dc6ec4eb88bac69f35b90881c9ba233e75aaa75ab9af31680edcf17"
+    },
+    {
+      "label": "write_descriptors",
+      "file_offset": "0x5440a",
+      "instruction_sha256": "5d31b96fe0d97596255e32374fa722553eceddaaa0f04a2f590a5dc82356f05e"
+    },
+    {
+      "label": "write_descriptors",
+      "file_offset": "0x5442c",
+      "instruction_sha256": "e5b0797dfa4e0a26875384d02f9a1d77d13da983fa4c323099cd984ff306f7c2"
+    },
+    {
+      "label": "write_descriptors",
+      "file_offset": "0x5440e",
+      "instruction_sha256": "b710409ccb4e8b2ded6b30d13cf99af15dfc9589a7b6872c0655e95abc5e5f7d"
+    },
+    {
+      "label": "write_descriptors",
+      "file_offset": "0x54430",
+      "instruction_sha256": "b710409ccb4e8b2ded6b30d13cf99af15dfc9589a7b6872c0655e95abc5e5f7d"
+    },
+    {
+      "label": "write_descriptors",
+      "file_offset": "0x54402",
+      "instruction_sha256": "c227d8c82c0750f7659162a2acdd5eef2175edac4595096d31f63bb218f86246"
+    },
+    {
+      "label": "write_descriptors",
+      "file_offset": "0x54424",
+      "instruction_sha256": "a3086a8a398a17116cf534db7e64ef07eccf0ce9df501ebca3c4fb3ac2948a3b"
+    },
+    {
+      "label": "queue_worker_op",
+      "file_offset": "0x169ea",
+      "instruction_sha256": "cb3c916a701e33dc910b6db97163c0245478112dbdbe155a787204a9f4704ea4"
+    },
+    {
+      "label": "queue_worker_start",
+      "file_offset": "0x16a66",
+      "instruction_sha256": "3a060c65081b081da9689f089bfeed60010d361d02ec84d86c5c099824fde257"
+    },
+    {
+      "label": "async_storage",
+      "file_offset": "0x1154e",
+      "instruction_sha256": "260de7e1951823111416d8b39caaf52b4e7fdceb21510657dd964e40de4b8040"
+    },
+    {
+      "label": "readback_requests",
+      "file_offset": "0xb268",
+      "instruction_sha256": "544f818e3195501663d794a3d053b96b8deec357c5d87f8851e1c50cee8bcfa4"
+    },
+    {
+      "label": "readback_requests",
+      "file_offset": "0xb28e",
+      "instruction_sha256": "02bd5aadce7cf11a770f35c7c5f043952c084d235c61b66e1736f1dcae4cee9d"
+    },
+    {
+      "label": "readback_validate",
+      "file_offset": "0xb300",
+      "instruction_sha256": "312d9d08682609442d0434085f3080654322fd7f9a3fe1fbde2348d97a628503"
+    },
+    {
+      "label": "readback_validate",
+      "file_offset": "0xb30c",
+      "instruction_sha256": "9b4ec5dfc4b9e970eab6d67b9167d806e80dc4bd384febaa69b16a3d6c378b80"
+    }
+  ],
+  "calls": [
+    {
+      "offset": "0x1ff4",
+      "target": "0x1856",
+      "address_space": "flash-prefix"
+    },
+    {
+      "offset": "0x2050",
+      "target": "0x18d8",
+      "address_space": "flash-prefix"
+    },
+    {
+      "offset": "0x2208",
+      "target": "0x19b6",
+      "address_space": "flash-prefix"
+    },
+    {
+      "offset": "0x2226",
+      "target": "0x1a80",
+      "address_space": "flash-prefix"
+    },
+    {
+      "offset": "0xb270",
+      "target": "0x87f2",
+      "address_space": "flash-prefix"
+    },
+    {
+      "offset": "0xb294",
+      "target": "0x87f2",
+      "address_space": "flash-prefix"
+    },
+    {
+      "offset": "0x169d6",
+      "target": "0x114b6",
+      "address_space": "flash-prefix"
+    },
+    {
+      "offset": "0x16a66",
+      "target": "0x11500",
+      "address_space": "flash-prefix"
+    },
+    {
+      "offset": "0x54334",
+      "target": "0x1856",
+      "address_space": "RAM-suffix-to-flash-prefix"
+    },
+    {
+      "offset": "0x54338",
+      "target": "0x8e3c",
+      "address_space": "RAM-suffix-to-flash-prefix"
+    },
+    {
+      "offset": "0x543ec",
+      "target": "0x856c",
+      "address_space": "RAM-suffix-to-flash-prefix"
+    },
+    {
+      "offset": "0x54410",
+      "target": "0x33e",
+      "address_space": "RAM-suffix-to-flash-prefix"
+    },
+    {
+      "offset": "0x54432",
+      "target": "0x33e",
+      "address_space": "RAM-suffix-to-flash-prefix"
+    },
+    {
+      "offset": "0x5466e",
+      "target": "0x18d8",
+      "address_space": "RAM-suffix-to-flash-prefix"
+    },
+    {
+      "offset": "0x54672",
+      "target": "0x8e3c",
+      "address_space": "RAM-suffix-to-flash-prefix"
+    }
+  ],
+  "identical_regions": [
+    {
+      "name": "exit",
+      "size": 128,
+      "sha256": "4bc3a6e42c0f034d64803b503cf262c7f43763a172d75dcd66923ee58f4c4f6a",
+      "exact_match_offsets": {
+        "JS_3103_DV_V209_No_Key": "0x21e8",
+        "JS_3103_U_DV_V515_No_Key": "0x21e8",
+        "JS_3103_U_DV_V608_No_Key": "0x21e8"
+      }
+    },
+    {
+      "name": "finish",
+      "size": 102,
+      "sha256": "4ae696acec282a42afcbf2b466c475d04711b56cbf5328ac659f097b5a402bd3",
+      "exact_match_offsets": {
+        "JS_3103_DV_V209_No_Key": "0x2268",
+        "JS_3103_U_DV_V515_No_Key": "0x2268",
+        "JS_3103_U_DV_V608_No_Key": "0x2268"
+      }
+    },
+    {
+      "name": "stick_write_descriptors",
+      "size": 52,
+      "sha256": "03cc7343d21529515dd73afb6eeb9be3bfcbd025fd9cd53ade36626fd5424174",
+      "exact_match_offsets": {
+        "JS_3103_DV_V209_No_Key": "0x54402",
+        "JS_3103_U_DV_V515_No_Key": "0x544e2",
+        "JS_3103_U_DV_V608_No_Key": "0x544e2"
+      }
+    }
+  ],
+  "mutation_controls": 5,
+  "firmware_map": {
+    "primary": "DV209",
+    "ram_base": "0xf140",
+    "ram_suffix_file_offset": "0x4f718",
+    "ram_suffix_run_base": 0,
+    "active_mask": "B+0x1b3a",
+    "complete_mask": "B+0x1b3b",
+    "finish_request_mask": "B+0x1b3c",
+    "left_dirty": "B+0x1b3d",
+    "right_dirty": "B+0x1b5c",
+    "left_record": "B+0x1b3e",
+    "right_record": "B+0x1b5d",
+    "record_bytes": 30,
+    "left_storage_offset": "0x1700",
+    "right_storage_offset": "0x1720",
+    "request_queue_pointer": "word[B+0x538]",
+    "storage_busy": "byte[B+0x81c]"
+  },
+  "limits": [
+    "The full PC-provider/USB/radio route remains unresolved.",
+    "EE53 postincrement store in eight-entry backup loop is not decoded by current reference; full rollback equivalence is not certified.",
+    "Exploratory ranges stop on unknown instructions or embedded tables; final bounded ranges exclude these and do not resolve them.",
+    "Request queued and asynchronous worker armed do not prove nonvolatile completion, atomicity or recovery.",
+    "Exit clears active/completed/finish flags for active sticks; no cancellation of already queued storage work established.",
+    "Matching fragments in DV515/DV608 are not whole-firmware/edition equivalence.",
+    "No session has run on hardware and no real-device calibration values were read."
+  ],
+  "driver_changed": false,
+  "hardware_access": false,
+  "network_access": false
+}

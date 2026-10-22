@@ -1,5 +1,14 @@
 # Control Center alpha1 distribution review — 21 October 2026
 
+For the authorized alpha2/PRE-ALPHA.4 preparation, see
+[the new source/license and publication review](CONTROL_CENTER_ALPHA2_RELEASE.md).
+The exact old dependency/source baseline is reused; the records below remain
+the historical alpha1 release evidence, not a claim for changed binary files.
+
+A subsequent [shutdown correction](CONTROL_CENTER_SHUTDOWN.md) is prepared
+locally. The publication evidence and lock below still describe the original
+alpha1 image; the corrected candidate has not replaced the GitHub asset.
+
 The PRE-ALPHA AppImage is a Garuda x86_64 application profile requiring host
 glibc **2.44 or newer** and a working graphical session. Driver support on
 CachyOS does not establish GUI installer compatibility there. A separate

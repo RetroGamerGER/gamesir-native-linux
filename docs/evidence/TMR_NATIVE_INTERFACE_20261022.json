@@ -1,0 +1,121 @@
+{
+  "date": "2026-10-22",
+  "scope": "offline TMR kernel/UAPI/manager implementation",
+  "base_commit": "33d8fcb",
+  "hardware_access": false,
+  "network_access": false,
+  "installed_or_activated": false,
+  "push": false,
+  "gui_live_calibration_enabled": false,
+  "experimental_tmr_default": false,
+  "wire_candidate_validated_on_hardware": false,
+  "physical_rf_identity_proven": false,
+  "license": "GPL-2.0-only; UAPI Linux-syscall-note retained",
+  "native_pids": [
+    "109c",
+    "105e"
+  ],
+  "new_manager_abi_policy_tests": 27,
+  "actual_kernel_adapter_scenarios": {
+    "total": 323,
+    "added_tmr": 20,
+    "asan_ubsan": true,
+    "functions": "actual extracted ioctl/RX/send/close plus existing startup/PM/FF adapters",
+    "source": "tests/kernel_startup_fake.c; tests/check_kernel_startup.py",
+    "log_sha256": "93abff663505ad35bb769990ea8f9582d90132c4096ce834bc677e6aa93c5101"
+  },
+  "validation": {
+    "tmr-regression.log": {
+      "python_unittest_cases": 1813,
+      "sha256": "d6a53471119e7599ebdea421ba87b384a94f6968d8836848bec199dbfe90139b",
+      "passed": true
+    },
+    "tmr-qt.log": {
+      "python_unittest_cases": 79,
+      "sha256": "59571b603e52c2f9c3187cc9f769c505fe5251227d03bf8e38783e13e32d1649",
+      "passed": true
+    },
+    "tmr-manager.log": {
+      "passed": true,
+      "python_unittest_cases": 27,
+      "sha256": "480e505a4f38111696131dc5185fc6d7f98eceecd15258a2be71a6637af3d636"
+    },
+    "tmr-packaging.log": {
+      "passed": true,
+      "python_unittest_cases": 25,
+      "sha256": "068b248527dc818fb034487eda7d433ab517330d59a6554e4f8401b58349e72e"
+    }
+  },
+  "module_build": {
+    "built": true,
+    "kernel_release": "7.3.0-2-garuda",
+    "module_sha256": "11c01259beda706c075f895a23e1f991575734737db75b6d64d0353fc378acf9",
+    "vermagic": "7.3.0-2-garuda SMP preempt mod_unload",
+    "warnings": 0,
+    "code_warnings": 0,
+    "build_status": "passed",
+    "flags": [
+      "LLVM=1",
+      "LLVM_IAS=1",
+      "CC=/usr/bin/clang",
+      "LD=/usr/bin/ld.lld",
+      "AR=/usr/bin/llvm-ar",
+      "NM=/usr/bin/llvm-nm",
+      "STRIP=/usr/bin/llvm-strip",
+      "OBJCOPY=/usr/bin/llvm-objcopy",
+      "OBJDUMP=/usr/bin/llvm-objdump",
+      "READELF=/usr/bin/llvm-readelf",
+      "HOSTCC=/usr/bin/clang",
+      "HOSTCXX=/usr/bin/clang++",
+      "HOSTAR=/usr/bin/llvm-ar",
+      "HOSTLD=/usr/bin/ld.lld",
+      "AS=/usr/bin/as",
+      "W=1",
+      "KCFLAGS=-Werror"
+    ],
+    "autoload_aliases": [],
+    "loaded_or_installed": false,
+    "hardware_access": false
+  },
+  "properties": [
+    "Only Start/Finish/Exit may emit calibration USB through existing output/sequence owner",
+    "Exact native port/instance, stream epoch and per-FD generation required",
+    "Root credential check and CAP_SYS_ADMIN; no GUI/helper/haptics permission expansion",
+    "Fresh full E0, genuine RX monotonic timestamp/count; latest snapshot, not lossless queue",
+    "Lease expiry, loss, PM, invalid status and uncertain sends are terminal; no command replay",
+    "Maintenance close does not END inputs; first cause and cleanup error remain distinct",
+    "No normal-service, installer or modprobe enablement; existing runtime paths regression-tested"
+  ],
+  "limits": [
+    "Full USB OUT64/short-GIP framing is an unvalidated candidate, not a captured Nexus calibration message",
+    "E0 gap epoch is continuity only; short RF reconnections can be invisible and unchanged reports may be suppressed",
+    "No real locks, scheduler, firmware, radio, physical stick calibration or nonvolatile write exercised",
+    "Strict existing GUI Channel capability contract is not yet satisfied; normal app stays unavailable",
+    "Unsafe unfinished run can require deliberate binding recovery; no automatic Resume/Exit recovery"
+  ],
+  "packaging_doc_repair": [
+    "docs/evidence/ZZZ_GYRO_ACCEPTANCE_20261021.json",
+    "docs/evidence/ZZZ_GYRO_INSTALLATION_20261021.json"
+  ],
+  "later_hardware_test_proposal": {
+    "deliberately_imperfect_calibration": true,
+    "reported_current_display": "0.0",
+    "performed": false,
+    "durability_check": "compare after controller power-off/on; display baseline is not a precise physical center proof"
+  },
+  "source_sha256": {
+    "include/uapi/gs_native.h": "32f735d47bd48c5ceda4594ecb50f4576a6199c4444006255058f57550d43e25",
+    "src/gs_tmr.h": "cb883de65f8f3e157bbd20d7efa7be12fc1520930f3a8a15d44fe5b521cd8379",
+    "src/gs_runtime.h": "86e5d09761ff254e5e5434c3493a1a40e704893b775aca8c9e7852551d58d901",
+    "kernel/gs_native_usb.c": "440bbd74ce9fd0a5da77347f1ec29566756dcdda8195e8165b909ad884c1152d",
+    "tools/service/tmr_native.py": "7da534ece90fe0113de4df96c1f8b7f333f05849fe5e3ef5598de57431de7214",
+    "tools/service/tmr_maintenance.py": "05841a30f6c74d62ee960ee3d514232a8b24cceccb300c9313c41e561ed0388a",
+    "tools/service/gamesir_native.py": "16e09610a412aa41e1fb49d83e4099ce54be58df793ff7f9d0771a2ceea982b7",
+    "tests/test_tmr_maintenance.py": "6c24aa5e132cc763bc331e764ed2fd96e98323f858a7efdf09fe7042e4751fec",
+    "tests/kernel_startup_fake.c": "07dbee1ec67ef6a9453c1f30f275814fe333361d48f389fa451a13f14b4826b1",
+    "tests/check_kernel_startup.py": "a8514f17b021fedd6f4e7ecbdfa0ca77a837739d3f19c068873b54ff1eec1b9d",
+    "scripts/package_alpha.py": "b969578c45f9fbf443a011a913f7fb1d64aaeb8fd59cdf13893bb68a33a30206",
+    "tests/test_packaging_alpha.py": "1600805d5d12859c28580e4001ed57bb4198594d700b2f7fb688f196b23c2cda",
+    "tests/test_service_haptics.py": "02a1fa50fc76d225fbedcbc658d935d2ec26e85747e6c4ad25d24a18ffe97774"
+  }
+}

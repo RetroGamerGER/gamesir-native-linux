@@ -6,9 +6,12 @@ PYTHON ?= python
 test: test-licensing test-public-readme test-parser test-sensor test-imu-diagnostic test-imu-stream test-iio-buffer test-protocol test-runtime test-startup test-fixtures test-tools test-hardware-helper test-alpha test-steam test-trigger-bridge test-control-center
 
 # Optional desktop UI: isolated demo or unprivileged local metadata (no actions).
-.PHONY: test-control-center test-control-center-ui test-control-center-package test-control-center-auth control-center-demo control-center-status control-center-rehearsal
+.PHONY: test-control-center test-control-center-ui test-control-center-package test-control-center-auth control-center-demo control-center-status control-center-rehearsal control-center-calibration
 test-control-center:
 	$(PYTHON) -B tests/test_control_center.py
+	$(PYTHON) -B tests/test_control_center_calibration.py
+	$(PYTHON) -B tests/test_calibration_controller.py
+	$(PYTHON) -B tests/test_tmr_gui_path.py
 	$(PYTHON) -B tests/test_control_center_status.py
 	$(PYTHON) -B tests/test_control_center_backend.py
 	$(PYTHON) -B tests/test_control_center_transactions.py
@@ -26,6 +29,8 @@ test-control-center:
 	$(PYTHON) -B tests/test_control_center_release_reinstall.py
 	$(PYTHON) -B tests/test_packaging_control_center.py
 	$(PYTHON) -B tests/test_control_center_distribution.py
+	$(PYTHON) -B tests/test_control_center_distribution_rebase.py
+	$(PYTHON) -B tests/test_packaging_tmr_helper.py
 
 test-control-center-package:
 	$(PYTHON) -B tests/test_packaging_control_center.py
@@ -35,12 +40,16 @@ test-control-center-auth:
 
 test-control-center-ui:
 	$(PYTHON) -B tests/test_control_center_ui.py
+	$(PYTHON) -B tests/test_control_center_calibration_ui.py
+	$(PYTHON) -B tests/test_tmr_gui_ui.py
+	$(PYTHON) -B tests/test_control_center_normal_calibration_ui.py
 	$(PYTHON) -B tests/test_control_center_transactions_ui.py
 	$(PYTHON) -B tests/test_control_center_execution_ui.py
 	$(PYTHON) -B tests/test_control_center_app_packages_ui.py
 	$(PYTHON) -B tests/test_control_center_first_run_ui.py
 	$(PYTHON) -B tests/test_control_center_release_ui.py
 	$(PYTHON) -B tests/test_control_center_signed_updates_ui.py
+	$(PYTHON) -B tests/test_control_center_lifecycle.py
 
 control-center-demo:
 	$(PYTHON) -B tools/control_center/main.py --demo
@@ -50,6 +59,9 @@ control-center-status:
 
 control-center-rehearsal:
 	$(PYTHON) -B tools/control_center/main.py --rehearse-backend
+
+control-center-calibration:
+	$(PYTHON) -B tools/control_center/main.py --rehearse-calibration
 
 # Optional research-helper tests: synthetic metadata/mocks only, no REA launch.
 .PHONY: test-rea-local
@@ -79,6 +91,8 @@ test-public-readme:
 	$(PYTHON) -B tests/test_public_readme.py
 
 test-alpha:
+	$(PYTHON) -B tests/test_tmr_maintenance.py
+	$(PYTHON) -B tests/test_tmr_usb_framing.py
 	$(PYTHON) -B tests/test_manager_standalone.py
 	$(PYTHON) -B tests/test_receiver_wait.py
 	$(PYTHON) -B tests/test_input_publication.py

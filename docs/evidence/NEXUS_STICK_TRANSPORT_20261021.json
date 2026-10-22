@@ -1,0 +1,448 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "Static files and own synthetic UI model only; no vendor execution, emulation, network or hardware.",
+  "sources": [
+    {
+      "file": "Web/js/app.4b7a6fef.js",
+      "bytes": 1975162,
+      "sha256": "5402b15f22c2a95a4ead965d707bef72217b6bc69a2f10e5f126133083868f0f"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "bytes": 33306624,
+      "sha256": "36cb48433ca270994ada6625348af7f1c51a1a50f7dc6d63b7d0fff372c0a040"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "bytes": 101376,
+      "sha256": "1e2184a8e30d6aa48ce39d522856215ee24e953093735f2eab96e08ab4be16a8"
+    },
+    {
+      "file": "D4XGaming.Devices.winmd",
+      "bytes": 5632,
+      "sha256": "3f5aa477951b7274eb9897975d3ee7bbd74ef545116c7a9b191ea4f118628765"
+    }
+  ],
+  "abi_reference": {
+    "file": "Wine windows.gaming.input.custom.idl",
+    "sha256": "6d0eaf71853c361a152a8baaad1398b3e3cfe17a4fddcbe7d4210f516585e117",
+    "scope": "IGameControllerInputSink method order and IGameControllerProvider IID only; local file does not define IGipGameControllerProvider"
+  },
+  "native_anchors": [
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x198b578",
+      "file_byte_offset": 26773880,
+      "length": 4,
+      "label": "payload marker",
+      "sha256": "33c04b8ddba402d59c3e16b7ac4387974a0e5f767786f73bd1f938bc101afb5e"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x198b5be",
+      "file_byte_offset": 26773950,
+      "length": 8,
+      "label": "direct path flag",
+      "sha256": "bf78c756b9e869d5f2bf79664d9c3460c512cbd4d410f8243bd0f035f5a630af"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x187354f",
+      "file_byte_offset": 25626959,
+      "length": 7,
+      "label": "non-direct branch skips direct dispatch",
+      "sha256": "fe18adc19302d2603ecf34527fb58805afc6094f4c8134daa488be85c6107b55"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x1873573",
+      "file_byte_offset": 25626995,
+      "length": 4,
+      "label": "selected cached device interface",
+      "sha256": "e081cd22fea627fa2280b3ff5238745fcf611b40ed54ddd535dd07c1ae8e156a"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x187357a",
+      "file_byte_offset": 25627002,
+      "length": 9,
+      "label": "type and payload forwarded",
+      "sha256": "eb4c6b53cdedf2da148a1208f65df37d901a090b861eeaae5604b2d26323d140"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x1873583",
+      "file_byte_offset": 25627011,
+      "length": 5,
+      "label": "call SendMessage projection",
+      "sha256": "d8e90884e31d511e25a6171517a5d65f0555397d48b7e028b81b95a0556e44c5"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x148ff41",
+      "file_byte_offset": 21549889,
+      "length": 3,
+      "label": "array length",
+      "sha256": "b51ee80b009a1a2da31edb837bb8c31916139a074330313e2e6fcfd7908c76d9"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x148ff83",
+      "file_byte_offset": 21549955,
+      "length": 4,
+      "label": "array payload starts after object header",
+      "sha256": "40f26ab90f17cfd076330892730ce9030a8a8e09684b4675a62e99bafa701472"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x148ff98",
+      "file_byte_offset": 21549976,
+      "length": 6,
+      "label": "ID4XDevice slot13",
+      "sha256": "eca4c7f5408c39eebf6f46a03649ecfa3e668ea7e9388c7a5af50a6c8a420f4a"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x148ffa8",
+      "file_byte_offset": 21549992,
+      "length": 5,
+      "label": "call ABI bridge",
+      "sha256": "7033a486a104534e024d67219ed43dd770ca6f8ba8e491fb376dbc9d2ed90974"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x149000e",
+      "file_byte_offset": 21550094,
+      "length": 4,
+      "label": "virtual slot lookup",
+      "sha256": "0d11f7972a118899016afbc95eca6c0617892df2a97f71a78bf217b13d8d684d"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x149005c",
+      "file_byte_offset": 21550172,
+      "length": 2,
+      "label": "invoke resolved method",
+      "sha256": "491e503ba40e8d303d46b4b51b14826ae08e8c8c3ded6f1441ef1d5d53c42534"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x1490087",
+      "file_byte_offset": 21550215,
+      "length": 6,
+      "label": "signed HRESULT test",
+      "sha256": "485ceabf8dab63d183f3b0c4f63cc284d1d460cff23dc38bac50b9cf40174e34"
+    },
+    {
+      "file": "HJC.GameSir.Nexus2_0.dll",
+      "rva": "0x1490092",
+      "file_byte_offset": 21550226,
+      "length": 6,
+      "label": "negative result error helper",
+      "sha256": "89fba4e88ff2975341c00d6fcb7bedd04eda1c93e89f442fe938b2575a8110ac"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x4780",
+      "file_byte_offset": 15232,
+      "length": 11,
+      "label": "ID4XDevice subobject at object+16",
+      "sha256": "3a1236b0f8036336418e1276ae918a791934e044b5b584de453fa0251b6f2c60"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x4822",
+      "file_byte_offset": 15394,
+      "length": 7,
+      "label": "provider QueryInterface IID",
+      "sha256": "24d3a6d5884942b97e82e234857878e076b123c3925d6d79ebfa523fe5bdeed7"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x483a",
+      "file_byte_offset": 15418,
+      "length": 3,
+      "label": "provider initialization slot9",
+      "sha256": "9db50a8f32bcf398b5946159f1fa2e20280b166c33ef974cbd251a988ecb70ab"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1801",
+      "file_byte_offset": 3073,
+      "length": 7,
+      "label": "store provider at complete object+128",
+      "sha256": "de8be1e1e36c4e7100746cdbf8badc982725efdc0f9e64a79ae0b14b430973fd"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1831",
+      "file_byte_offset": 3121,
+      "length": 7,
+      "label": "QueryInterface general provider",
+      "sha256": "048654a86c3e38a3f41a89a5513e9c9a8d08bfb40cb5855ac9e4a8719acd8a3d"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1860",
+      "file_byte_offset": 3168,
+      "length": 3,
+      "label": "input resumed/suspended success stub",
+      "sha256": "4bc724f3b1d0caf4fe369c18cba3102e6c4ea057f63fe1587e3973134a7f755e"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1bed",
+      "file_byte_offset": 4077,
+      "length": 4,
+      "label": "copy message type",
+      "sha256": "a5a4ccb5c44a3f441f7f2d91b606984c4b00ec4a4bf81677402afe5742b2b106"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1bf1",
+      "file_byte_offset": 4081,
+      "length": 4,
+      "label": "load provider at interface+112",
+      "sha256": "1824238993c97ffc57a5a19bfc8c446cc76115fd60c78f20f94d0c5e1a25ec47"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1bf8",
+      "file_byte_offset": 4088,
+      "length": 5,
+      "label": "payload pointer fifth ABI argument",
+      "sha256": "819d91338fc966438903e849cb72ffc03d7329927b6f92fb46d936a674398c40"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1bfd",
+      "file_byte_offset": 4093,
+      "length": 3,
+      "label": "length fourth ABI argument",
+      "sha256": "0d7da70aafa0a036e2ac5603ef95ec1b8b11e7f5d2808511011850adcc657b67"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1c00",
+      "file_byte_offset": 4096,
+      "length": 4,
+      "label": "type third ABI argument",
+      "sha256": "553a86c99fee42d0227b5c0249db8978648f575a777911b29a28ea155c9147d7"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1c04",
+      "file_byte_offset": 4100,
+      "length": 2,
+      "label": "zero second ABI argument",
+      "sha256": "a843932057795ea71b924ac1dbe4196f846aa6e914088874b991473831eeb65b"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1c06",
+      "file_byte_offset": 4102,
+      "length": 3,
+      "label": "provider virtual slot6",
+      "sha256": "f801a6f1f65f33a9b750f2f1a009031db41328122f5449d3b6fb81f92fbb2fc6"
+    },
+    {
+      "file": "D4XGaming.Devices.dll",
+      "rva": "0x1c09",
+      "file_byte_offset": 4105,
+      "length": 6,
+      "label": "return preserves provider HRESULT",
+      "sha256": "4e4745001a62b8b5cba90f0fab769ac56315048c8095a5cba1cb6892ee4bd34b"
+    }
+  ],
+  "javascript_landmarks": [
+    {
+      "label": "webview_send_no_return_or_ack",
+      "file_byte_offset": 595850,
+      "length": 104,
+      "sha256": "9aaa771028c5c6ed7f3af9a20e72bb0f4a2fa40cbec35b8dc0b6d5452f5bcff1"
+    },
+    {
+      "label": "current_device_getter",
+      "file_byte_offset": 578423,
+      "length": 68,
+      "sha256": "7ea19cc3b275c742cdb0ff67a98c246e4bcb7622bf4eb724d76918b061fc4e16"
+    },
+    {
+      "label": "request_current_selection",
+      "file_byte_offset": 599588,
+      "length": 86,
+      "sha256": "9972fca724e9092702d39449384b08432a0f62725360782e5ba464aeccdf4a50"
+    },
+    {
+      "label": "request_envelope",
+      "file_byte_offset": 599528,
+      "length": 59,
+      "sha256": "1318d40f977887f9cd91109feeb53da6db76debc5c01142e0840d5b2f332c40a"
+    },
+    {
+      "label": "delayed_finish_without_handle",
+      "file_byte_offset": 1573295,
+      "length": 33,
+      "sha256": "19f34d248cb5a7813e279ab59352dc0bf56fd2760040d7534ec8eb4e65d31e14"
+    },
+    {
+      "label": "close_measuring_sends_exit",
+      "file_byte_offset": 1573015,
+      "length": 109,
+      "sha256": "1ffaee591a13e785755342975491f1682c0885182743fe61b03fb06fd2657c42"
+    },
+    {
+      "label": "finish_on_step4",
+      "file_byte_offset": 1574051,
+      "length": 81,
+      "sha256": "6a6b5dcba43325b84ab7dc8e78c4cd1bf3f84f81d1896ffecf8bb6705c9bca6d"
+    },
+    {
+      "label": "destroy_only_clears_preparation",
+      "file_byte_offset": 1574512,
+      "length": 133,
+      "sha256": "4ebc983eb3b0a6eb3f902a45b44e9d140fa1bab5f102e4369b336736f23ab4b1"
+    },
+    {
+      "label": "start",
+      "file_byte_offset": 1574708,
+      "length": 55,
+      "sha256": "124629440de605cde77bfca02086831637d2fe51b5ab6fd2a20084fbeb60f80e"
+    },
+    {
+      "label": "finish",
+      "file_byte_offset": 1574820,
+      "length": 34,
+      "sha256": "dc5f3599b484c62a71e635082371232ed8d8800c61688af5c8e2a78bcd4acec3"
+    },
+    {
+      "label": "exit",
+      "file_byte_offset": 1574907,
+      "length": 34,
+      "sha256": "f46cf81d1781cfc2c545e90977874b709229b9d49503ef98a83f47213aa2b090"
+    }
+  ],
+  "provider": {
+    "class_name": "Windows.Gaming.Input.Custom.IGipGameControllerProvider",
+    "basis": "D4X final-object RTTI base class plus constructor QI and field flow; provider implementation remains outside app",
+    "rtti_bases": [
+      {
+        "base_descriptor_rva": "0xa740",
+        "type_descriptor_rva": "0x14ba0",
+        "name_sha256": "5dc83d6d7bd00a528693e6e1b08a1df277b7aa13543529e1abe8889b594f3c26"
+      }
+    ],
+    "iid": "dbcf1e19-1af5-45a8-bf02-a0ee50c823fc",
+    "iid_rva": "0x8ad8",
+    "interface_offset": 16,
+    "provider_offset_from_interface": 112,
+    "provider_offset_from_object": 128,
+    "send_slot": 6,
+    "abi_arguments": [
+      "provider",
+      "0",
+      "type 0x0f",
+      "length 3",
+      "payload pointer"
+    ],
+    "payloads": {
+      "Start": [
+        "0xfe",
+        "0x00",
+        "0x03"
+      ],
+      "Finish": [
+        "0xfe",
+        "0x01",
+        "0x00"
+      ],
+      "Exit": [
+        "0xfe",
+        "0x02",
+        "0x00"
+      ]
+    },
+    "no_complete_usb_frame": true
+  },
+  "firmware_followup": {
+    "file": "JS_3103_DV_V209_No_Key.app.bin",
+    "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6",
+    "bytes": 379140,
+    "call_pattern_candidates": {
+      "0x19b6": [
+        "0x2208",
+        "0x54fe8"
+      ],
+      "0x1a80": [
+        "0x2226",
+        "0x551f2"
+      ]
+    },
+    "scan_limit": "Reviewed relative22 call encoding on even offsets, including suffix relocation. Not a complete CFG, instruction-boundary or indirect-call scan.",
+    "static_decode": {
+      "rows": 2,
+      "records": 128,
+      "failed_rows": 0,
+      "sources_unchanged": true,
+      "decoder_changed": false,
+      "output_sha256": "2dbef6257c54ac6aa293631fce27e9f0005db3e27cda5c1bba51435cf02ec8af"
+    },
+    "anchors": [
+      {
+        "offset": "0x54fc8",
+        "length": 4,
+        "sha256": "a6cd6557cea02cbe664c1b2e0d3b4b4fcebd5f8df64a970e8c418c9bd85c1b3c"
+      },
+      {
+        "offset": "0x54fd0",
+        "length": 2,
+        "sha256": "109c13554936af167b41194b7c48df92ffcc0656ab0a657246a3f7969e7189e3"
+      },
+      {
+        "offset": "0x54fe4",
+        "length": 4,
+        "sha256": "16f9af106f5996e5104800443f0b7dc7658e84c95119042b8e2b8685455b0e75"
+      },
+      {
+        "offset": "0x54fe8",
+        "length": 4,
+        "sha256": "7b5dff871cb93252a186f60013431068bd202f4b21373c66a65f9e8095e306eb"
+      },
+      {
+        "offset": "0x551d4",
+        "length": 4,
+        "sha256": "c39e754fbd10c192a11e57d2ce5c559252826aabc141c9ddac4f1a88ddca135b"
+      },
+      {
+        "offset": "0x551dc",
+        "length": 2,
+        "sha256": "109c13554936af167b41194b7c48df92ffcc0656ab0a657246a3f7969e7189e3"
+      },
+      {
+        "offset": "0x551f0",
+        "length": 2,
+        "sha256": "81904e68a8b9a2427e9e87e2c61b1098057608d18357d70d9281e8513941cf53"
+      },
+      {
+        "offset": "0x551f2",
+        "length": 4,
+        "sha256": "ac6ba1faa80ffaccc2f00e99ee7f28c47d8a90a5b72ca9fb1a9ede8ac87cd477"
+      }
+    ],
+    "classification": "Extra restore calls have local table-value gates. No disconnect-to-restore edge established."
+  },
+  "negative_controls": 20,
+  "limits": [
+    "Provider slot6 is identified by typed-object flow, not a recovered Windows implementation or full USB/GIP framing.",
+    "Signed HRESULT branch covers immediate provider errors, not a separately observed calibration storage response.",
+    "No path from that error to an operation-specific dialog result established; WebView calls do not return a per-request Promise here.",
+    "Input suspend/resume stubs do not send Exit; this does not exclude higher-level removal handling or firmware radio-loss handling.",
+    "No-Finish means no new save in the reviewed stick finalization path, not automatic RAM restoration or a whole-firmware non-write proof.",
+    "Disconnect may leave Finish delivery unknown; do not infer non-delivery from loss of a result.",
+    "Runtime G7Pro/ZZZ/cable/radio selection, reconnect lifecycle and exact EE53 oracle remain incomplete."
+  ],
+  "hardware_access": false,
+  "network_access": false,
+  "driver_changed": false
+}

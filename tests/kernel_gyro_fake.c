@@ -45,6 +45,7 @@ struct input_dev {
     bool registered, has_timestamp, has_ff;
 };
 struct gsn_device {
+	struct gs_tmr tmr;
     struct input_dev *input, *gyro_input;
     struct usb_device *udev;
     struct usb_interface *intf;
@@ -62,7 +63,7 @@ static struct gsn_device *registration_fault_target;
 static bool experimental_accel;
 static int accel_axis_map[3], accel_axis_map_count;
 static unsigned accel_counts_per_g_num=8192, accel_counts_per_g_den=1;
-static bool experimental_gyro, persistent_mode, fail_alloc, fail_register, defer_input;
+static bool experimental_gyro, experimental_gyro_105e, persistent_mode, fail_alloc, fail_register, defer_input;
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(*(a)))
 #define le16_to_cpu(a) (a)
 #define ns_to_ktime(a) (a)
@@ -89,10 +90,12 @@ static void input_report_key(struct input_dev *d,int key,int value) { assert(d->
 static void gsn_neutral_locked(struct gsn_device *g) { assert(g->input_registered); }
 static void input_sync(struct input_dev *d) { assert(d->registered); d->syncs++; }
 #include "gyro-functions.h"
-int main(void) {
+static void run_profile(unsigned pid, bool zzz) {
+    experimental_gyro_105e=false; experimental_accel=false; defer_input=false;
+    persistent_mode=false; experimental_gyro=false; accel_axis_map_count=0;
     struct usb_device u={.descriptor.bcdDevice=1};
     struct usb_interface intf={.dev.name="2-3.4:1.0"};
-    struct gsn_device a={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=1,.accel_scale={8192,1}};
+    struct gsn_device a={.udev=&u,.intf=&intf,.rt.pid=pid,.identity.instance=1,.accel_scale={8192,1}};
     for(unsigned k=0;k<3;k++) {
         struct gsn_device g=a;
         experimental_gyro=k!=0; g.rt.pid=k==1?0x105e:k==2?0x100a:0x109c;
@@ -100,9 +103,11 @@ int main(void) {
         assert(!g.gyro_input && !g.gyro_registered && !g.input->uniq);
         free(g.input);
     }
-    experimental_gyro=true; persistent_mode=true;
+    experimental_gyro=true; experimental_gyro_105e=zzz; persistent_mode=true;
     assert(!gsn_input_register(&a));
     assert(a.gyro_registered && a.input->has_ff && !a.gyro_input->has_ff);
+    assert(a.input->id.product==pid && a.gyro_input->id.product==pid);
+    assert(!memcmp(&a.input->id,&a.gyro_input->id,sizeof(a.input->id)));
     assert(!strcmp(a.input->name,"GameSir G7 Pro"));
     assert(a.input->uniq[0] && a.input->uniq==a.gyro_input->uniq);
     for(unsigned c=704;c<=707;c++)assert(a.input->key_capabilities[c]);
@@ -111,10 +116,10 @@ int main(void) {
     for(int i=ABS_RX;i<=ABS_RZ;i++) {
         assert(a.gyro_input->res[i]==100 && a.gyro_input->lo[i]==-229376 && a.gyro_input->hi[i]==229369);
     }
-    struct gsn_device b={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=2};
+    struct gsn_device b={.udev=&u,.intf=&intf,.rt.pid=pid,.identity.instance=2};
     assert(!gsn_input_register(&b));
     assert(strcmp(a.input->uniq,b.input->uniq));
-    intf.dev.name="9-1:1.0"; struct gsn_device c={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=1,.accel_scale={8192,1}};
+    intf.dev.name="9-1:1.0"; struct gsn_device c={.udev=&u,.intf=&intf,.rt.pid=pid,.identity.instance=1,.accel_scale={8192,1}};
     assert(!gsn_input_register(&c)); assert(!strcmp(c.input->uniq,"gsn-9-1:1.0-1"));
     free(c.gyro_input); c.gyro_input=NULL; c.gyro_registered=false;
     assert(strcmp(a.input->uniq,c.input->uniq));
@@ -142,7 +147,7 @@ int main(void) {
     accel_counts_per_g_den=3; assert(gsn_sensor_options()==-EINVAL);
     accel_counts_per_g_den=1; assert(!gsn_sensor_options());
     experimental_gyro=false; assert(gsn_sensor_options()==-EINVAL); experimental_gyro=true;
-    struct gsn_device d={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=3,.accel_scale={8192,1}};
+    struct gsn_device d={.udev=&u,.intf=&intf,.rt.pid=pid,.identity.instance=3,.accel_scale={8192,1}};
     assert(!gsn_input_register(&d));
     for(unsigned i=ABS_X;i<=ABS_Z;i++) {
         assert(d.gyro_input->res[i]==8192 && d.gyro_input->lo[i]==-32768 && d.gyro_input->hi[i]==32768);
@@ -178,16 +183,18 @@ int main(void) {
     /* Disabled experiment never adds fake acceleration; other capabilities survive. */
     for(unsigned i=704;i<=707;i++) assert(d.input->key_capabilities[i]);
     assert(d.input->has_ff && !d.gyro_input->has_ff);
+    experimental_gyro_105e=false;
     for(unsigned i=0;i<2;i++) {
         struct gsn_device other={.udev=&u,.intf=&intf,.rt.pid=i?0x105e:0x100a,.accel_scale={8192,1}};
         assert(!gsn_input_register(&other));
         assert(!other.gyro_input && !other.gyro_registered);
         free(other.input);
     }
+    experimental_gyro_105e=zzz;
     /* Real publication adapter, synthetic kernel objects, no USB operation. */
     defer_input=true;
     struct gsn_device p={.udev=&u,.intf=&intf,
-        .rt={.pid=0x109c,.state=GS_RUNNING,.session_active=1},
+        .rt={.pid=pid,.state=GS_RUNNING,.session_active=1},
         .identity={.port=91,.instance=42},.accel_scale={8192,1},.boot_handoff=true};
     intf.dev.driver=&gsn_driver.driver; intf.dev.registered=true;
     intf.condition=USB_INTERFACE_BOUND; intf.data=&p;
@@ -235,4 +242,46 @@ int main(void) {
     free(d.gyro_input); free(d.input);
     free(a.gyro_input); free(a.input); free(b.gyro_input); free(b.input); free(c.gyro_input); free(c.input);
     puts("PASS: actual gyro/accel registration/emission; explicit map/scale gates, coherent six-axis report, neutral retains real accel, opt-in/model guards, seat metadata, unique pairing, arbitrary ports, failed allocations/registration, full-range units, unchanged samples, neutral/pause clock, independent FF and paddle capabilities");
+}
+
+/* Exact model/gate matrix, including simultaneous standard + ZZZ pairing. */
+static void profile_matrix(void) {
+    const unsigned pids[]={0x109c,0x105e,0x100a,0x0575,0x1022,0xffff};
+    struct usb_device u={.descriptor.bcdDevice=0x607};
+    struct usb_interface intf={.dev.name="2-3.4:1.0"};
+    unsigned cases=0;
+    accel_axis_map_count=3;
+    for(int axis=0;axis<3;axis++) accel_axis_map[axis]=axis+1;
+    for(unsigned model=0;model<ARRAY_SIZE(pids);model++)
+    for(unsigned flags=0;flags<32;flags++) {
+        experimental_gyro=flags&1; experimental_gyro_105e=flags&2;
+        experimental_accel=flags&4; persistent_mode=flags&8; defer_input=flags&16;
+        struct gsn_device g={.udev=&u,.intf=&intf,.rt.pid=pids[model],
+            .identity.instance=cases+1,.accel_scale={8192,1}};
+        int result=gsn_input_register(&g);
+        if(experimental_accel && !experimental_gyro) {
+            assert(result==-EINVAL && !g.gyro_registered && !g.input_registered);
+        } else {
+            bool sensor=experimental_gyro && (pids[model]==0x109c || (pids[model]==0x105e && experimental_gyro_105e));
+            bool deferred=sensor && experimental_accel && persistent_mode && defer_input;
+            assert(!result && g.gyro_registered==sensor && !!g.input->uniq==sensor);
+            assert(g.input_deferred==deferred && g.input_registered==!deferred);
+        }
+        free(g.input); free(g.gyro_input); cases++;
+    }
+    experimental_gyro=experimental_gyro_105e=experimental_accel=persistent_mode=defer_input=true;
+    struct usb_interface other={.dev.name="9-1:1.0"};
+    struct gsn_device a={.udev=&u,.intf=&intf,.rt.pid=0x109c,.identity.instance=1,.accel_scale={8192,1}};
+    struct gsn_device b={.udev=&u,.intf=&other,.rt.pid=0x105e,.identity.instance=1,.accel_scale={8192,1}};
+    assert(!gsn_input_register(&a) && !gsn_input_register(&b));
+    assert(strcmp(a.input->uniq,b.input->uniq));
+    assert(!strcmp(a.input->uniq,a.gyro_input->uniq) && !strcmp(b.input->uniq,b.gyro_input->uniq));
+    free(a.input); free(a.gyro_input); free(b.input); free(b.gyro_input);
+    printf("PASS: %u model/option combinations, default-off ZZZ, mixed-model pairing\n",cases);
+}
+int main(void) {
+    run_profile(0x109c,false);
+    run_profile(0x109c,true);
+    run_profile(0x105e,true);
+    profile_matrix();
 }

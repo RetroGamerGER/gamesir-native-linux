@@ -242,7 +242,7 @@ class Reconnect(unittest.TestCase):
         self.assertEqual([op for op, _ in self.host.calls].count("claim"), 1)
         self.assertTrue(self.manager.recent_failures)
 
-    def test_successful_reconnects_work_within_budget_and_fourth_start_stays_bounded(self):
+    def test_short_successful_reconnects_and_fourth_start_stay_bounded(self):
         self.boot()
         for generation in (3, 5):
             self.host.now += 3
@@ -263,8 +263,8 @@ class Reconnect(unittest.TestCase):
         fresh = self.replacement(generation=7)
         self.tick(4)
         self.assertEqual(self.host.devices[PORT], fresh)
-        self.assertEqual(self.manager.entries[PORT].phase, "blocked")
-        self.assertIn("Three starts", self.manager.entries[PORT].error)
+        self.assertEqual(self.manager.entries[PORT].phase, "cooldown")
+        self.assertGreater(self.manager.status()['devices'][PORT]['start_retry_in'], 0)
         self.assertEqual([op for op, _ in self.host.calls].count("claim"), 3)
         self.assertEqual([op for op, _ in self.host.calls].count("bootstrap"), 3)
         self.assertFalse(any(op in ("end", "restore") for op, _ in self.host.calls))
@@ -603,6 +603,299 @@ class ObservationGuard(unittest.TestCase):
         with self.assertRaises(service.Unsafe) as mutation:
             self.host.guard(self.native)
         self.assertNotIsInstance(mutation.exception, service.StatusChanged)
+
+
+class StartBudgetRecovery(unittest.TestCase):
+    """Fake clock/jobs only: cooldown is not ownership or a retry grant."""
+
+    def setUp(self):
+        self.host = fixture.Fake([device()])
+        self.manager = service.Manager(self.host, lambda: self.host.now)
+
+    def tick(self, count=1):
+        for _ in range(count):
+            self.manager.tick()
+
+    def exhaust(self, pid='100a', driver='xpad'):
+        self.host.devices[PORT] = device(pid=pid, driver=driver)
+        self.manager.budget_boot = self.host.boot_id
+        self.manager.budgets[PORT] = service.deque([0, 1, 2])
+        self.host.now = 3
+        self.manager.save()
+        self.tick()
+        self.assertEqual(self.manager.entries[PORT].phase, 'cooldown')
+        self.assertNotIn(PORT, self.manager.leases)
+        self.assertEqual(self.host.calls, [])
+
+    def boot(self, pid='100a', generation=1):
+        fresh = device(pid=pid, generation=generation)
+        self.host.devices[PORT] = fresh
+        self.tick(3)  # Retire an old healthy lifetime, acquire, start.
+        native = replace(fresh, pid='109c' if pid == '100a' else pid,
+                         token=f'{PORT}/native-{generation}', driver='gs_native') if pid == '100a' else replace(fresh, driver='gs_native')
+        self.host.devices[PORT] = native
+        self.host.complete('bootstrap', output=proof(native))
+        self.tick(2)
+        self.assertEqual(self.manager.entries[PORT].phase, 'active')
+        return native
+
+    def healthy(self, duration):
+        for _ in range(duration // 2 + 1):
+            self.tick()
+            d = self.host.devices[PORT]
+            self.host.complete('info', output=HEALTHY.replace('pid=109c', 'pid=' + d.pid))
+            self.tick()
+            self.host.now += 2
+
+    def test_exact_expiry_rechecks_each_supported_pid_and_free_owner(self):
+        for pid in ('100a', '109c', '105e'):
+            for owner in ('xpad', None):
+                with self.subTest(pid=pid, owner=owner):
+                    self.setUp(); self.exhaust(pid, owner)
+                    self.assertEqual(self.manager.status()['devices'][PORT]['start_retry_in'], 597)
+                    self.host.now = 599.999; self.tick(5)
+                    self.assertEqual(self.host.calls, [])
+                    self.host.now = 600; self.tick()
+                    self.assertEqual(self.host.calls, [])  # Another scan before any claim.
+                    self.tick()
+                    self.assertEqual(self.host.calls[0], ('claim', PORT))
+                    self.assertEqual(sum(op == 'claim' for op, _ in self.host.calls), 1)
+
+    def test_expiry_uses_latest_replacement_not_cooldown_snapshot(self):
+        self.exhaust('109c')
+        fresh = device(generation=20)
+        self.host.devices[PORT] = fresh
+        self.host.now = 601; self.tick(2)
+        self.assertEqual(self.manager.entries[PORT].device.token, fresh.token)
+        self.assertEqual(self.host.calls[0], ('claim', PORT))
+
+    def test_changed_owner_after_expiry_still_requires_fresh_discovery(self):
+        self.exhaust()
+        self.host.now = 600
+        self.tick()  # Only retire the unowned timer entry.
+        self.host.devices[PORT] = replace(self.host.devices[PORT], driver='usbfs')
+        self.tick(5)
+        self.assertEqual(self.host.calls, [])
+
+    def test_status_countdown_is_read_only_even_with_extra_saved_attempts(self):
+        self.exhaust()
+        self.manager.budgets[PORT] = service.deque([0, 1, 2, 3])
+        self.manager.save()
+        saved = copy.deepcopy(self.host.saved)
+        before = list(self.manager.budgets[PORT])
+        self.host.now = 600
+        for _ in range(5):
+            self.assertEqual(self.manager.status()['devices'][PORT]['start_retry_in'], 1)
+        self.assertEqual(self.host.saved, saved)
+        self.assertEqual(list(self.manager.budgets[PORT]), before)
+        self.assertEqual(self.host.calls, [])
+        self.tick(2)
+        self.assertEqual(self.host.calls, [])
+        self.host.now = 601
+        self.tick(2)
+        self.assertEqual(self.host.calls[0], ('claim', PORT))
+
+    def test_restart_keeps_remaining_budget_without_a_fake_lease(self):
+        self.exhaust()
+        self.host.now = 590
+        self.manager = service.Manager(self.host, lambda: self.host.now)
+        self.tick()
+        self.assertEqual(self.manager.entries[PORT].phase, 'cooldown')
+        self.assertEqual(self.manager.status()['devices'][PORT]['start_retry_in'], 10)
+        self.host.now = 600; self.tick(2)
+        self.assertEqual(self.host.calls[0], ('claim', PORT))
+
+    def test_no_cleanup_or_takeover_of_foreign_owner_after_expiry(self):
+        for owner in ('gs_native', 'usbfs'):
+            with self.subTest(owner=owner):
+                self.setUp(); self.exhaust()
+                self.host.devices[PORT] = replace(self.host.devices[PORT], driver=owner)
+                self.host.now = 700; self.tick(10)
+                self.assertEqual(self.host.calls, [])
+                self.assertNotIn(PORT, self.manager.leases)
+
+    def test_expiry_does_not_bypass_pause_shutdown_monitor_or_attempted_token(self):
+        for gate in ('paused', 'stopping', 'input_error', 'attempted'):
+            with self.subTest(gate=gate):
+                self.setUp(); self.exhaust()
+                if gate == 'input_error': self.host.input_error = 'unavailable'
+                elif gate == 'attempted': self.manager.attempted.add(self.host.devices[PORT].token)
+                else: setattr(self.manager, gate, True)
+                self.host.now = 700; self.tick(10)
+                self.assertEqual(self.host.calls, [])
+
+    def test_partial_or_global_unknown_metadata_cannot_expire_into_claim(self):
+        for global_error in (False, True):
+            with self.subTest(global_error=global_error):
+                self.setUp(); self.exhaust(); original = self.host.scan
+                scan = service.Scan(); scan.errors[PORT] = 'incomplete'
+                if global_error: self.host.scan_failure = True
+                else: self.host.scan = lambda: scan
+                self.host.now = 700; self.tick(5)
+                self.assertEqual(self.host.calls, [])
+                self.host.scan = original; self.host.scan_failure = False
+                self.tick(2)
+                self.assertEqual(self.host.calls[0], ('claim', PORT))
+
+    def test_lookalike_error_and_owned_block_are_never_timer_retries(self):
+        for owned in (False, True):
+            with self.subTest(owned=owned):
+                self.setUp(); self.exhaust()
+                entry = self.manager.entries[PORT]
+                entry.phase = 'blocked'
+                entry.error = 'Three starts in 10 minutes; explicit resume required'
+                if owned:
+                    entry.device = replace(entry.device, pid='109c', driver='usbfs')
+                    self.host.devices[PORT] = entry.device
+                    entry.origin_pid = '109c'; self.manager.remember(entry)
+                self.host.now = 700; self.tick(10)
+                self.assertEqual(self.host.calls, [])
+                self.assertEqual(entry.phase, 'blocked')
+
+    def test_inconsistent_cooldown_never_becomes_a_start_grant(self):
+        for state in ('lease', 'error', 'kernel_tokens', 'bootstrap_started', 'candidate',
+                      'end_attempted', 'cleanup_attempted'):
+            with self.subTest(state=state):
+                self.setUp()
+                self.exhaust()
+                entry = self.manager.entries[PORT]
+                if state == 'lease':
+                    self.manager.remember(entry)
+                else:
+                    setattr(entry, state, {'error': 'original fault', 'kernel_tokens': [1, 2],
+                                          'candidate': entry.device}.get(state, True))
+                self.host.now = 700
+                self.tick()
+                self.assertEqual(entry.phase, 'blocked')
+                self.assertEqual(self.host.calls, [])
+                if state == 'error':
+                    self.assertEqual(entry.error, 'original fault')
+
+    def test_stable_successful_reconnects_do_not_exhaust_budget(self):
+        for pid in ('100a', '109c', '105e'):
+            with self.subTest(pid=pid):
+                self.setUp()
+                for generation in range(1, 6):
+                    self.boot(pid, generation)
+                    self.assertEqual(len(self.manager.budgets[PORT]), 1)
+                    self.healthy(60)
+                    self.assertEqual(list(self.manager.budgets[PORT]), [])
+                self.assertEqual(sum(op == 'bootstrap' for op, _ in self.host.calls), 5)
+                self.assertLess(self.host.now, 600)
+                self.assertFalse(any(op in ('end', 'restore', 'resume') for op, _ in self.host.calls))
+
+    def test_short_successes_still_spend_budget(self):
+        for generation in range(1, 4):
+            self.boot(generation=generation); self.healthy(10)
+        self.host.devices[PORT] = device(generation=20)
+        self.tick(4)
+        self.assertEqual(self.manager.entries[PORT].phase, 'cooldown')
+        self.assertEqual(sum(op == 'bootstrap' for op, _ in self.host.calls), 3)
+
+    def test_elapsed_time_alone_is_not_a_health_receipt(self):
+        self.boot(); self.healthy(10)
+        self.host.now += 100; self.healthy(0)
+        self.assertEqual(len(self.manager.budgets[PORT]), 1)
+        self.healthy(60)
+        self.assertEqual(list(self.manager.budgets[PORT]), [])
+
+    def test_monitor_failure_and_pm_suspend_break_health_continuity(self):
+        for event in ('monitor', 'pm', 'clock-backward'):
+            with self.subTest(event=event):
+                self.setUp()
+                self.boot()
+                self.healthy(58)
+                if event == 'monitor':
+                    self.host.input_error = 'monitor unavailable'
+                    self.healthy(0)
+                    self.host.input_error = ''
+                elif event == 'pm':
+                    self.tick()
+                    self.host.complete('info', output=HEALTHY.replace('state=1', 'state=3'))
+                    self.tick(2)
+                    self.host.complete('resume')
+                    self.tick()
+                else:
+                    # A pending getter completes against a backwards fake clock.
+                    self.tick()
+                    self.host.now = 55
+                    self.host.complete('info', output=HEALTHY)
+                    self.tick()
+                    self.host.now = 60
+                self.healthy(0)
+                self.assertEqual(len(self.manager.budgets[PORT]), 1)
+                self.healthy(60)
+                self.assertEqual(list(self.manager.budgets[PORT]), [])
+
+    def test_waiting_receiver_is_not_healthy_runtime(self):
+        from test_receiver_wait import waiting
+        self.host.devices[PORT] = device(pid='109c')
+        self.tick()
+        native = self.host.devices[PORT]
+        self.host.attest[PORT] = (0, waiting(native))
+        self.host.complete('bootstrap', output=waiting(native))
+        self.tick(2)
+        for _ in range(40):
+            self.host.now += 2
+            self.tick(2)
+        self.assertEqual(self.manager.entries[PORT].phase, 'receiver_wait')
+        self.assertEqual(len(self.manager.budgets[PORT]), 1)
+        self.assertFalse(any(op == 'info' for op, _ in self.host.calls))
+        self.host.attest[PORT] = (0, proof(native))
+        self.host.now += 2
+        self.tick(2)
+        self.healthy(0)
+        self.assertEqual(len(self.manager.budgets[PORT]), 1)
+        self.healthy(60)
+        self.assertEqual(list(self.manager.budgets[PORT]), [])
+
+    def test_read_conflict_or_unknown_scan_breaks_success_window(self):
+        for unknown in ('busy', 'global', 'port'):
+            with self.subTest(unknown=unknown):
+                self.setUp(); self.boot(); self.healthy(58)
+                original = self.host.scan
+                if unknown == 'busy': self.host.control_busy.add(PORT)
+                elif unknown == 'global': self.host.scan_failure = True
+                else:
+                    scan = service.Scan(); scan.errors[PORT] = 'incomplete'
+                    self.host.scan = lambda: scan
+                self.tick()
+                self.host.control_busy.clear(); self.host.scan_failure = False; self.host.scan = original
+                self.host.now += 2; self.healthy(0)
+                self.assertEqual(len(self.manager.budgets[PORT]), 1)
+
+    def test_failure_near_success_threshold_keeps_budget_and_first_error(self):
+        self.boot(); self.healthy(58)
+        self.tick(); self.host.complete('info', rc=1, output=FAULT); self.tick()
+        entry = self.manager.entries[PORT]
+        self.assertEqual(entry.phase, 'failed')
+        self.assertIn('runtime fault', entry.error)
+        self.assertEqual(len(self.manager.budgets[PORT]), 1)
+        self.assertTrue(self.manager.recent_failures)
+
+    def test_daemon_restart_requires_new_health_window_but_does_not_reinitialize(self):
+        self.boot(); self.healthy(58)
+        self.manager = service.Manager(self.host, lambda: self.host.now)
+        self.tick(2); self.healthy(0)
+        self.assertEqual(len(self.manager.budgets[PORT]), 1)
+        self.healthy(60)
+        self.assertEqual(list(self.manager.budgets[PORT]), [])
+        self.assertEqual(sum(op == 'bootstrap' for op, _ in self.host.calls), 1)
+
+    def test_budget_recovery_is_per_port_and_preserves_attempts_and_failure_history(self):
+        self.boot(); self.healthy(58)
+        self.manager.budgets['4-2'] = service.deque([0, 1, 2])
+        attempts = set(self.manager.attempted)
+        # Existing genuine history is independent of whether runtime recovers.
+        record = {'port': PORT, 'source_instance': 'old', 'origin_pid': '100a',
+                  'message': 'earlier failure', 'bootstrap_diagnostic': {}, 'resolution': 'observed_100a_xpad'}
+        self.manager.recent_failures.append(record)
+        self.healthy(0)
+        self.assertEqual(list(self.manager.budgets[PORT]), [])
+        self.assertEqual(list(self.manager.budgets['4-2']), [0, 1, 2])
+        self.assertEqual(self.manager.attempted, attempts)
+        self.assertIn(record, self.host.saved['recent_failures'])
+        self.assertEqual(self.host.saved['budgets'][PORT], [])
 
 
 if __name__ == "__main__":

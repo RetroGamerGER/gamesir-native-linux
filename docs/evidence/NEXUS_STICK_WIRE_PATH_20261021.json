@@ -1,0 +1,662 @@
+{
+  "schema": 1,
+  "date": "2026-10-21",
+  "scope": "Static transport and loss boundaries; no firmware execution/emulation or devices.",
+  "sources": [
+    {
+      "image": "DV209",
+      "name": "JS_3103_DV_V209_No_Key.app.bin",
+      "size": 379140,
+      "sha256": "15e48c1c8a6cb9584b059bf54d1f8ad6131a4a3c5b6c082eba394310d03db1d6"
+    },
+    {
+      "image": "DG144",
+      "name": "JS_3103_DG_V144_No_Key.app.bin",
+      "size": 246552,
+      "sha256": "b1181a4a244e885f033b281289f87a49893ea7fdfd8e70f019f681fe95aaf3e6"
+    }
+  ],
+  "static_decode": {
+    "rows": 23,
+    "records": 494,
+    "failed_rows": 0,
+    "sources_unchanged": true,
+    "decoder_changed": false,
+    "network_and_device_isolation": true,
+    "decoder_sha256": "53aaff9f06ad5c65e640cff8360cd74b80a3551a494a0823329796e7164f4458",
+    "request_sha256": "145e98db709980c15c70e60b5addb97ea297117e986061c19723f5a2e26bdfdb",
+    "output_sha256": "ee368c1c04b05fddf470f4ac23876b0c13cba7d989f355846d9eaa6c5f7e22e8"
+  },
+  "anchors": [
+    {
+      "image": "DG144",
+      "offset": "0xb2c",
+      "length": 4,
+      "instruction_sha256": "a2ef575c973c783d12baf86eedb67446e34b012817732fb42ee5e10e1d85acff",
+      "landmark": "0xf"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xb30",
+      "length": 2,
+      "instruction_sha256": "aed375ce32c114ccbcb5432b81f6f6a310fdc8bc5345ef9426817a885d4229d8",
+      "landmark": "0x4"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xb32",
+      "length": 4,
+      "instruction_sha256": "04727dcc576a1c1ba16901491becc5e20c7fdbd0a12c93af3f212c8d3cfb9de2",
+      "landmark": "0xbca"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xbca",
+      "length": 4,
+      "instruction_sha256": "e59a79a81aaaf0e70cf7626246e05c2feb94234e70d74bb175fd528db0e36a05",
+      "landmark": "0x2dc"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xbd4",
+      "length": 4,
+      "instruction_sha256": "bb7fb65e96464d788e5ac1300853d7c7586ea0d32047fee6a7802b1d85e0ac59",
+      "landmark": "0x680"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa7a8",
+      "length": 4,
+      "instruction_sha256": "894668f51af613d1b9df685739fee44db5fbc4e5039d3c08fd15a2bbd2e86eac",
+      "landmark": "0x2cc"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa7bc",
+      "length": 4,
+      "instruction_sha256": "b95b09b5f86b194c4cb5bf98fac9bb856e4bfd5e865cb2e968e9695b10075334",
+      "landmark": "0x2d0"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa7c6",
+      "length": 2,
+      "instruction_sha256": "17c76396f75dbc3aeb8831762248357f0839a12ebd90a1f87c12e95facc7c11b",
+      "landmark": "0xa0"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa7da",
+      "length": 4,
+      "instruction_sha256": "e1bfba095c30a16b3e15d6366b90ce295cebff694c5c017c5ff569ed2032e493",
+      "landmark": "0x3126e8"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa7f2",
+      "length": 4,
+      "instruction_sha256": "1c3b160e575f048469bed41253147d80b3f349054bd850686654413c4ea79668",
+      "landmark": "0x2dc"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa802",
+      "length": 4,
+      "instruction_sha256": "eeb44217e337ba4ee30d99cf0f52a5da5a5bbd65a0e0b413cc15d4f18386cd24",
+      "landmark": "0x14"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa806",
+      "length": 4,
+      "instruction_sha256": "e011c200c801dda662d6523342281880d8a01a2ad4ff79abe60a70d1005e0013",
+      "landmark": "0x2"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa80e",
+      "length": 4,
+      "instruction_sha256": "4a77fdfde24c705a4b9d21b92c4dd1849c96d039eea0a876dec39fde6cd649c7",
+      "landmark": "0x31e2"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa824",
+      "length": 4,
+      "instruction_sha256": "77f973f7759e2a529aaab918bfa7023fb1f2ff5334b33b6a7c6d185955f3d3a7",
+      "landmark": "0x3126e8"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa82a",
+      "length": 2,
+      "instruction_sha256": "f4690a902e0fc3b636d66a4578c4666338e539424e88c44adfdabc98b1cac8ad",
+      "landmark": "0x1"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa82e",
+      "length": 2,
+      "instruction_sha256": "893a3d2c8f4d7f6d6c9d626729af3d44398ec3f3e851c199b9dd9fd53d1fd3e4",
+      "landmark": "0xa0"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa83a",
+      "length": 4,
+      "instruction_sha256": "a805160a1cc20826abc3426cc70d944e10eb62d439403386381c305aab531f07",
+      "landmark": "STORE"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa844",
+      "length": 2,
+      "instruction_sha256": "57742460719fa6adfd95138b721b65e94f1fafd25551b2789ba173d9d07b0405",
+      "landmark": "0x2"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa8dc",
+      "length": 6,
+      "instruction_sha256": "4f0228947f98d854553ffe40874ef970c7f07b1ea8528c13cbc3be266dc1e55d",
+      "landmark": "0x62c0"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa8e2",
+      "length": 6,
+      "instruction_sha256": "64ceb89ee517fe429de3cdc2d807ca0ebba2d51d5f3b924135c655ca0ba56009",
+      "landmark": "0x9fd0"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa908",
+      "length": 6,
+      "instruction_sha256": "f28ae545c958635d780d9888e6debc8328f0b87fc27c7a8fef669a81baea7874",
+      "landmark": "0x11"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa924",
+      "length": 4,
+      "instruction_sha256": "5bbed88ba868e00af42b52ed16e9ee1bbe8884f96868fa529192910670930fce",
+      "landmark": "0x6ea"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa928",
+      "length": 4,
+      "instruction_sha256": "1078f1ea83abb00ca06a436c151aeaebab62f55694e54d89d759b91b1930dd1b",
+      "landmark": "0x602"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa92e",
+      "length": 4,
+      "instruction_sha256": "9dda84449871bcc22dcd31b173db621da85a6c66a92fbacdba03d6a1532e3095",
+      "landmark": "0x6d5"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa95c",
+      "length": 4,
+      "instruction_sha256": "74c1a73eac4697c73bffae31f39133f7d6c59190970f3d71609102bd85aad9b2",
+      "landmark": "0xa75e"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa962",
+      "length": 4,
+      "instruction_sha256": "a437dec5c6b7015977ac39444d42d7c2b305e7e427535917e638e1ab69249e3a",
+      "landmark": "0x2e"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa966",
+      "length": 4,
+      "instruction_sha256": "c315af36a8c8ff8370cbbafe06d80ceb1cf5589aeb748eea4f15904fab6c3556",
+      "landmark": "INT_ADD"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa96c",
+      "length": 4,
+      "instruction_sha256": "bfa89d07fe79272134d8f1271c6214de202e0573e2a4135e5d160471ff3ba587",
+      "landmark": "0xa7a6"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa98c",
+      "length": 2,
+      "instruction_sha256": "c07f7315fac532fbb0a450ee4ab48ca4d75bbd757bbfcf2e328cdf60070c1aa9",
+      "landmark": "0x8"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa990",
+      "length": 4,
+      "instruction_sha256": "e2c7aaf123a153333981edb3f33e2444550a211e092161bdfbeacf0eaa4a5109",
+      "landmark": "0x9"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa994",
+      "length": 4,
+      "instruction_sha256": "71d8e7adadc5b5c062eccd0ad1b46e037244527546f43bbd7364746d13ddd6eb",
+      "landmark": "0x7bfe"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa99a",
+      "length": 2,
+      "instruction_sha256": "75ecfe5a4c15e11635576e124f4faa231f4124dbfc1f8af2d4e31aed3dac6224",
+      "landmark": "0xa"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa99c",
+      "length": 2,
+      "instruction_sha256": "63496152b599bdd8c499f75d7a0187c57de1d7bff956b5786b260913019194f3",
+      "landmark": "0xb"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa9a4",
+      "length": 2,
+      "instruction_sha256": "81be5cdd0726a3ea7af02e7d51488db9c07fe9c1aaff2c6b246d317cacd563cc",
+      "landmark": "0x23"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa9a8",
+      "length": 4,
+      "instruction_sha256": "1398c32cc02a16202f0a8d3898ceffd355bcf280803fcbc18d5ab115557feffc",
+      "landmark": "0x3126e8"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa852",
+      "length": 4,
+      "instruction_sha256": "1e64d558acd8f39d771dd1671e6621c96497078e8011d5d3e7d8e44cb26c956f",
+      "landmark": "0x6d5"
+    },
+    {
+      "image": "DG144",
+      "offset": "0xa856",
+      "length": 2,
+      "instruction_sha256": "99748b47df52db25e193b4a4f7676b171213936d9a5ab4e1eb131fa30ed4600e",
+      "landmark": "0x21"
+    },
+    {
+      "image": "DG144",
+      "offset": "0x7bfa",
+      "length": 4,
+      "instruction_sha256": "e9243e62f7f1a09f92640c64a06a8f7021272b8ac49dd4f14ef026bc2fb9ce05",
+      "landmark": "0x18b78"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x4e96",
+      "length": 6,
+      "instruction_sha256": "111db030569a9122a19dc64148617d6b47dc614298cf73d518b2476df4f9ff8b",
+      "landmark": "0x1e0250e"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x4eaa",
+      "length": 2,
+      "instruction_sha256": "4b32a3d897611e1e088a9f7ccf9efa0d7d7603e6208a198156d249ce6bf02552",
+      "landmark": "0x2"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x4eb2",
+      "length": 4,
+      "instruction_sha256": "e62e0f7fafc424ed95e60561d4502c3e36e2d395eceae1586810a965c2b56d62",
+      "landmark": "0x2bb0"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x2454",
+      "length": 4,
+      "instruction_sha256": "a32ce07e5041a34f196faf141d51625d97cc58525e38f32d98f5ebbb7eb16a45",
+      "landmark": "0x13a"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x245c",
+      "length": 4,
+      "instruction_sha256": "578f551556ee4a49b28acf39a4f2a403e1f2900c78e13c8ca129faeea2ee4601",
+      "landmark": "0x2e0"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x27a8",
+      "length": 2,
+      "instruction_sha256": "2337824722eba6d15e55312ba8f882d2a556f2f0858df2a012dff725f35d86d6",
+      "landmark": "0x23ae"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x23b0",
+      "length": 2,
+      "instruction_sha256": "a28b7067b65d4c2e73b8f18c9d78c8b0334b22982ae73670a2f26ceeebfcc1d6",
+      "landmark": "COPY"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x23b2",
+      "length": 2,
+      "instruction_sha256": "dd4c4ed8095a5b1bf4ce6899201fb3259385ad7064a566ccf5ed1e1a0fd0bdd7",
+      "landmark": "LOAD"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x23b6",
+      "length": 6,
+      "instruction_sha256": "b3ecb6807001e70deb6cf772f0c3a298ce08794f1b34274253f527f041ebe41a",
+      "landmark": "0xf140"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x2434",
+      "length": 4,
+      "instruction_sha256": "028ba124f6b482c3dd0a6406140090f5f5bf89efc894385890d0e3e442887378",
+      "landmark": "0xf"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x243a",
+      "length": 4,
+      "instruction_sha256": "632ad35c3cd8eaf8d7f91e5f6856e49111855167bb41c88c11a2152274d23948",
+      "landmark": "0x1c98"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xf350",
+      "length": 4,
+      "instruction_sha256": "fc3fe0d16ce7599224c2d9f0ac520d33aec85763602e243bed41daab815cca2b",
+      "landmark": "0xf506"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xf354",
+      "length": 4,
+      "instruction_sha256": "69d77df84a70e2ec5f5751fcc2d03e94189ee2034d21d7dfa4d1afcee1389ade",
+      "landmark": "0xf50e"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xf506",
+      "length": 2,
+      "instruction_sha256": "28938b1f69a16377b62ae47e8311953604c10997b4efdeb57baf9dea2e385e46",
+      "landmark": "0xd"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xf508",
+      "length": 4,
+      "instruction_sha256": "9504cf53696da68a2c4ab49accdbd072a7100fc12530d2daa0bd73bc751b33b0",
+      "landmark": "0xde2e"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xde32",
+      "length": 6,
+      "instruction_sha256": "ff8ff923774c229ac2c78c077ffb276bfde2d633f058841085de9476f95eedaa",
+      "landmark": "0xf140"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xde44",
+      "length": 4,
+      "instruction_sha256": "2512f09d0b7b10126c8ec2086ada57b4633e48f831de54feea37c555c8fe5b42",
+      "landmark": "0xd78"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xde48",
+      "length": 2,
+      "instruction_sha256": "81be5cdd0726a3ea7af02e7d51488db9c07fe9c1aaff2c6b246d317cacd563cc",
+      "landmark": "0x23"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xde4e",
+      "length": 4,
+      "instruction_sha256": "546e12e439f775500418c09d7713027294ceb43879ae2c519d9e2f66aa669ac3",
+      "landmark": "0x3126e8"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xde52",
+      "length": 2,
+      "instruction_sha256": "99748b47df52db25e193b4a4f7676b171213936d9a5ab4e1eb131fa30ed4600e",
+      "landmark": "0x21"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xde56",
+      "length": 4,
+      "instruction_sha256": "cbcecd8c91c0013e224fcc95689ec8c79379b0054bed3a0fc8349f989cc73f9b",
+      "landmark": "0xdb2e"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xde76",
+      "length": 4,
+      "instruction_sha256": "8f844778fea7084d8982ae99c8d2e7cd6bfee608ebcbd7cc5c81423b9bdb7ad4",
+      "landmark": "0xdf10"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe1b6",
+      "length": 4,
+      "instruction_sha256": "2700cd42754772b0e7995f0a3e086942f669aee365828a3b2c85653ad4e707cc",
+      "landmark": "0xffffffff"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe1be",
+      "length": 4,
+      "instruction_sha256": "0281439833c2353b2a2e21af391bc6e66ee8a91ece0cd6448071e4cf36c55504",
+      "landmark": "0x3f"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe1c2",
+      "length": 4,
+      "instruction_sha256": "4cebf0b27206e6ee99cab1bf46366d359a04bf5a0eb691c8a2b97263bac050e5",
+      "landmark": "0x23"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe1ca",
+      "length": 4,
+      "instruction_sha256": "b41242fdb51dbaacdbeab07d87992f692b893eac6c1a83f9ee60ba39aea3d5d7",
+      "landmark": "0xdb2e"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe1f2",
+      "length": 4,
+      "instruction_sha256": "228dee1a28b8d5c2e4410eac70926e3851679a038433eadd4e169a08d7fcf2b6",
+      "landmark": "0x1c98"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe200",
+      "length": 4,
+      "instruction_sha256": "ac314207b6d09ae79c3ce7a800f17bc9c356fc78c2acad64d054247875c2824a",
+      "landmark": "0xd95"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe208",
+      "length": 4,
+      "instruction_sha256": "282c5c68c4cd3b87d3d1c341837f6443dd4961b0a9b182aa2b28a0a6fe3b47d1",
+      "landmark": "0xd96"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe218",
+      "length": 2,
+      "instruction_sha256": "848344e27a8f64ee1c7704f8010b2fc05543e19607c715aeb375d4df57ca5a86",
+      "landmark": "INT_ADD"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe21a",
+      "length": 4,
+      "instruction_sha256": "d406cf8259a0efa88b2e099ab6d69147704c8d919bfdc9ce38998ff71f2af9fa",
+      "landmark": "0x23"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe222",
+      "length": 4,
+      "instruction_sha256": "0c6aaf39b7d51f8baa642df6239551dbce92d75a8d2d40560a29cc58b882c7f5",
+      "landmark": "0xdb2e"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe226",
+      "length": 4,
+      "instruction_sha256": "0c06fe1fd1e22fb0b5554ba24cd240aba39833991746fbf2a5a30f2bcf6f8031",
+      "landmark": "0xd97"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe23a",
+      "length": 4,
+      "instruction_sha256": "d8b75587c2e2c0c4833cd21d55f606a4582d443f2f6db2049446e86df12bdcad",
+      "landmark": "0xe262"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe240",
+      "length": 4,
+      "instruction_sha256": "a82e3e6b468c97c290ca14d7dcfa1286d367723dff26cb9268b142496efc3df9",
+      "landmark": "0xa0"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe246",
+      "length": 4,
+      "instruction_sha256": "35cdb6835aa8fae1a67476b87b2078f2943fa96ccf67415b75227510e5eee9fc",
+      "landmark": "0x50"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe24a",
+      "length": 4,
+      "instruction_sha256": "b9c8d0b71be20b486b5cf6cca144ef38c48ff1d61412907662f97eff11f5e57d",
+      "landmark": "INT_EQUAL"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe252",
+      "length": 2,
+      "instruction_sha256": "b0eb0be8f4fc8e3701c0bacf626d93ce94a53b08ebb98507bdb80134d27dbb42",
+      "landmark": "0x2"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe254",
+      "length": 4,
+      "instruction_sha256": "f54edada1a7d28addd96a8baa8e40cc6bbdb766fdbc359ec195e9126f6b99de8",
+      "landmark": "0xfffffffe"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xe258",
+      "length": 4,
+      "instruction_sha256": "7577feaa3eba8b526ebc54cecac31083e30edfd867670b83cde90fbc29687ca8",
+      "landmark": "0xde2a"
+    },
+    {
+      "image": "DV209",
+      "offset": "0xde2a",
+      "length": 4,
+      "instruction_sha256": "74123f25b7f7e178bebc86d54a4e0ffe25328f943a4ac7c19e2e96320265aa62",
+      "landmark": "0x23ae"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x4820",
+      "length": 6,
+      "instruction_sha256": "fd188eea27f9785b52ac5acd9c2ce8cbe46edd35404b156b6c28c89e65bdcde9",
+      "landmark": "0xf156"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x4842",
+      "length": 2,
+      "instruction_sha256": "8509b81230019d2ad970d970f791dfbdc8caf54f5c594fcd327cef9feed206c1",
+      "landmark": "RETURN"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x54fa2",
+      "length": 4,
+      "instruction_sha256": "26bfb85a0b0a408178ecdc2db1355f83a91d4f3f9498c95717e919aca13fd9c3",
+      "landmark": "0x1edf"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x54fc8",
+      "length": 4,
+      "instruction_sha256": "a6cd6557cea02cbe664c1b2e0d3b4b4fcebd5f8df64a970e8c418c9bd85c1b3c",
+      "landmark": "0x1b90"
+    },
+    {
+      "image": "DV209",
+      "offset": "0x54fe8",
+      "length": 4,
+      "instruction_sha256": "7b5dff871cb93252a186f60013431068bd202f4b21373c66a65f9e8095e306eb",
+      "landmark": "CALL"
+    }
+  ],
+  "independent_relative22_checks": 11,
+  "changed_call_operands_rejected": 11,
+  "geometry": {
+    "synthetic_cases": 195,
+    "first_length_predicate_cases": 65536,
+    "header_bytes": 35,
+    "second_block_length_offset": 29,
+    "second_block_check_offset": 31,
+    "header_check_offset": 33,
+    "second_block_prefix_bytes": 2,
+    "second_block_prefix": "0xa0, sequence",
+    "claim": "Own byte-layout witnesses; not packet captures, complete framing, firmware emulation or hardware acceptance"
+  },
+  "path": {
+    "dongle_queue_pointer": "D+0x2dc",
+    "pending_copy": "D+0xb64",
+    "pending_flag": "D+0x2d0",
+    "queue_consumer": "0xa7a6",
+    "controller_second_block": "0xe200..0xe260",
+    "shared_controller_dispatch": "0x23ae -> 0x1c98",
+    "first_block_alternative": "D+0x2a4 -> 0xa75e; do not substitute it for ordinary GIP second-block proof"
+  },
+  "loss": {
+    "explicit_exit_ram_restore": "Previously proven for active, not finalized stick calibration",
+    "candidate_helper": "DV209 0x4820..0x4842 has no call and only different state-field writes",
+    "automatic_radio_loss_restore_proven": false,
+    "pending_radio_copy_observed_statically": true,
+    "disconnect_flush_and_cross_reconnect_replay_resolved": false
+  },
+  "limitations": [
+    "Windows GIP provider implementation and exact USB framing/ACK/sequence generation remain outside the analyzed app.",
+    "USB callback root/mode selection in DG144 not completely traced; 0x10 branch routes type0x0f with selector other than0xf0 to second queue.",
+    "Second-block sequence comparison is recorded without asserting whether its reference is previous or expected sequence; decoder conditional limits remain.",
+    "CRC-family table loop is present but full CRC semantics are not independently validated here.",
+    "Lower radio delivery and actual active firmware/edition are not established.",
+    "No automatic radio-loss to Exit/RAM restoration chain; no Finish means no new write in reviewed finalizer, not whole-firmware or immediate live-RAM guarantee.",
+    "Exploratory rows hit tables, unsuitable entry boundaries and undecoded forms; they are excluded from successful bounded pass, not repaired or concealed."
+  ],
+  "hardware_access": false,
+  "network_access": false,
+  "driver_changed": false,
+  "target_executed": false
+}

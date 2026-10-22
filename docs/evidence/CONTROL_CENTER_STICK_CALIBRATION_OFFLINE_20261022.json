@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "date": "2026-10-22",
+  "scope": "Control Center TMR calibration offline preview only",
+  "base_commit": "87628ca",
+  "source_sha256": {
+    "tools/control_center/stick_calibration.py": "d4eeeaee63624833eca28498f682708ad5c5e3934ec9043bfc8193ad16b2ced2",
+    "tools/control_center/calibration_bridge.py": "7efdca5fbbf543870ddd95f118ebcaa8fad4011fb56ed4dc6c59549a6d7b75e3",
+    "tools/control_center/main.py": "b57b475426454dfd881cf91696c3fb13ddaa4c4b91cfb07f7ad6d81c6be2b2c4",
+    "tools/control_center/qt_bridge.py": "ccef140464ed356ee111dd66293a60863e410083c482a858bfdf2451187b77a7",
+    "tools/control_center/qml/Main.qml": "5bf52e73a8f1116be5f1237b134f4f1b89901b1575cfc37f48ff82d67c74d863",
+    "tools/control_center/qml/CalibrationDialog.qml": "7f1df643d03c7455db05528a13ce95142179eba5bed0e4ba1420670d4aa27bac",
+    "tools/control_center/qml/StickView.qml": "9a693be48e986c701747ce5890905f8acdbca26d89640fc2e83b1bd60d9631a4",
+    "tools/control_center/i18n.py": "8e835c1b67a2de48ae229cee3ac8681ed5ccd3227562996ab0dc079bcd684aad",
+    "tests/test_control_center_calibration.py": "6b9c80f61783c578997cff91cf3431e51efda35ce2a5db3162b5471180deb51b",
+    "tests/test_control_center_calibration_ui.py": "7a86d127c1e9815987f522fc169a41ab0a0a64c22e00a692feeaad08527a65a9",
+    "tests/test_control_center_lifecycle.py": "b01d02f115b45e83c9cc46eaa8158616350054a867c2f05dd06befa56a91a598",
+    "tests/render_control_center_calibration.py": "382dd7f74885641002f83a84665791a6c028577fae5c8e5dabfa4652b990858d"
+  },
+  "validation": {
+    "control_center_cases": 376,
+    "qt_and_lifecycle_cases": 79,
+    "new_cases": {
+      "session": 25,
+      "qml": 10,
+      "launcher": 1
+    },
+    "licensing_cases": 3,
+    "public_readme_cases": 7,
+    "nexus_flow_cases": 16,
+    "rendered_states": [
+      "measuring-de",
+      "measuring-en",
+      "ready-de",
+      "ready-en",
+      "lost-de",
+      "lost-en",
+      "small-de"
+    ],
+    "core_packaging_supplement": {
+      "passed": 24,
+      "failed": 1,
+      "existing_failure": "ZZZ_GYRO_EXTENSION.md references evidence/ZZZ_GYRO_ACCEPTANCE_20261021.json, absent from the pre-existing core documentation allowlist",
+      "same_failure_confirmed_with_HEAD_allowlist": true
+    }
+  },
+  "transport": "memory-only semantic Start/Finish/Exit intents; no packet encoding or live adapter",
+  "readiness": "both current active/done stick bits; independent of 24-sector visual coverage",
+  "lifecycle": "one device/connection/local generation; cancel invalidates pending preparation; loss and stale heartbeat stop without replay; explicit new start",
+  "hardware_access": false,
+  "network_access": false,
+  "firmware_executed": false,
+  "installed_driver_changed": false,
+  "helper_changed": false,
+  "appimage_rebuilt": false,
+  "published": false,
+  "limitations": [
+    "No real Linux calibration transport, ownership integration or hardware acceptance.",
+    "Normalized axes and preview heartbeat/coverage thresholds require separate review before live integration.",
+    "UI cancellation cannot recall commands already delivered to a real receiver.",
+    "Supplemental core documentation packaging failure predates this change."
+  ]
+}

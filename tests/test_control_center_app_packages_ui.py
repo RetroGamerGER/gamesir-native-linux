@@ -37,7 +37,7 @@ class BundleWindow(unittest.TestCase):
         self.profile,self.trust=fixture(self.root)
         self.release=threading.Event();self.release.set()
 
-    def open(self,code=0):
+    def open(self,code=0,calibration_factory=None):
         def read(request):
             self.reads.append((threading.get_ident(),request))
             def collect():
@@ -46,7 +46,8 @@ class BundleWindow(unittest.TestCase):
             return Mock(collect=collect)
         self.tx=AppImageTransactions(self.root,reader=read,clock=lambda:100,
             transport_factory=lambda pins:FakeTransport(pins,self.adapter,self.trust,code))
-        self.engine=create_engine(self.root/'prefs.ini',demo=False,collector=Mock(collect=lambda:None),execution=self.tx)
+        self.engine=create_engine(self.root/'prefs.ini',demo=False,collector=Mock(collect=lambda:None),
+                                  execution=self.tx,calibration_factory=calibration_factory)
         self.window=self.engine.rootObjects()[0];self.window.resize(940,1020)
         self.model=self.engine.center_model;self.model.setLanguage('en')
         self.wait_state(('idle','blocked'))

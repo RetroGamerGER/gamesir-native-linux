@@ -208,7 +208,22 @@ def stage_reviewed_helper(directory, package_directory, target):
     return {'files': len(payload.rows), 'root_script': False, 'installed': False}
 
 
-def stage(destination, *, reviewed_packages=None, reviewed_helper=None):
+def stage_calibration_helper(directory, app):
+    """Copy an explicit reviewed companion, never install/elevate its payload."""
+    sys.path.insert(0, str(ROOT / 'tools/control_center'))
+    from tmr_client import load_pins
+    from tmr_wire import HELPER
+    source = Path(directory)
+    pins = load_pins(source / 'tmr-helper.json')
+    for name, digest in pins.items():
+        path = source / 'root' / name.lstrip('/')
+        if any(p.is_symlink() for p in (path, *path.parents)) or sha(path.read_bytes()) != digest:
+            raise ValueError('Calibration helper differs from reviewed manifest')
+        copy(path, app / 'tmr-helper-payload' / name.lstrip('/'), 0o755 if name == HELPER else 0o644)
+    copy(source / 'tmr-helper.json', app / 'tmr-helper.json')
+
+
+def stage(destination, *, reviewed_packages=None, reviewed_helper=None, reviewed_tmr=None):
     if reviewed_helper is not None and reviewed_packages is None:
         raise ValueError('Helper payload requires an independently reviewed package bundle')
     dest = safe_output(destination)
@@ -250,6 +265,8 @@ def stage(destination, *, reviewed_packages=None, reviewed_helper=None):
     app = appdir / 'usr/share' / APP_ID
     tree(ROOT / 'tools/control_center', app / 'app')
     copy(ASSETS / 'entry.py', app / 'entry.py')
+    if reviewed_tmr is not None:
+        stage_calibration_helper(reviewed_tmr, app)
     binding = (stage_reviewed_packages(reviewed_packages, app / 'reviewed-packages')
                if reviewed_packages is not None else None)
     if reviewed_helper is not None:
@@ -435,6 +452,7 @@ def main():
     s = sub.add_parser('stage'); s.add_argument('--dest', required=True)
     s.add_argument('--reviewed-packages', help='explicit independently reviewed local bundle directory')
     s.add_argument('--reviewed-helper', help='explicit independently reviewed helper payload directory')
+    s.add_argument('--reviewed-tmr', help='reviewed calibration companion; enables the normal app entry without installing it')
     i = sub.add_parser('image')
     i.add_argument('--appdir', required=True); i.add_argument('--dest', required=True)
     i.add_argument('--runtime-container', required=True); i.add_argument('--container-sha256', required=True)
@@ -445,7 +463,8 @@ def main():
     if real_effective_uid() == 0:
         p.error('Build and stage as the ordinary user, never as root')
     if args.action == 'stage':
-        print(stage(args.dest, reviewed_packages=args.reviewed_packages, reviewed_helper=args.reviewed_helper))
+        print(stage(args.dest, reviewed_packages=args.reviewed_packages, reviewed_helper=args.reviewed_helper,
+                    reviewed_tmr=args.reviewed_tmr))
     elif args.action == 'image':
         print(image(args.appdir, args.dest, args.runtime_container, args.container_sha256, epoch=args.epoch))
     elif args.action == 'desktop':

@@ -227,6 +227,56 @@ class Integration(unittest.TestCase):
             with self.assertRaises(ReadinessError): host.input_binding(d,{**meta,'uniq':'gsn-other'})
 
 
+class ZZZIntegration(Integration):
+    """Run the entire readiness/failure suite through direct105e startup too."""
+    def setUp(self):
+        super().setUp()
+        self.host.devices = {'2-3.4': device(pid='105e', driver=None)}
+        self.host.readiness_105e_enabled = True
+
+    def waiting(self):
+        self.manager.tick()
+        current = self.host.devices['2-3.4']
+        self.assertEqual(current.pid, '105e')
+        self.host.complete('bootstrap', output=proof(current))
+        for _ in range(3):
+            self.manager.tick()
+        self.assertEqual(self.manager.entries[current.port].phase, 'awaiting_sensor')
+        self.assertNotIn(('info', current.port), self.host.calls)
+        return self.manager.entries[current.port]
+
+
+class ZZZProfileSelection(unittest.TestCase):
+    def test_module_options_select_zzz_only_with_full_explicit_opt_in(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'build') as tmp:
+            root = Path(tmp)
+            parameters = root/'module/gs_native/parameters'
+            parameters.mkdir(parents=True)
+            for zzz in (None, 'N', 'Y'):
+                for flags in range(8):
+                    for index, name in enumerate(('defer_input','experimental_gyro','experimental_accel')):
+                        (parameters/name).write_text('Y' if flags & (1 << index) else 'N')
+                    path = parameters/'experimental_gyro_105e'
+                    if zzz is None: path.unlink(missing_ok=True)
+                    else: path.write_text(zzz)
+                    host = service.Host('/never-run', root/'state', sysfs=root)
+                    with patch.object(service, 'ProcessedInputs') as inputs:
+                        host.configure_inputs()
+                        self.assertEqual(host.readiness_enabled, flags == 7)
+                        self.assertEqual(host.readiness_105e_enabled, flags == 7 and zzz == 'Y')
+                        self.assertEqual(inputs.call_count, int(flags == 7))
+
+    def test_legacy_zzz_without_new_opt_in_remains_immediate(self):
+        host = FeatureHost()
+        host.devices = {'2-3.4': device(pid='105e', driver=None)}
+        manager = service.Manager(host, lambda: host.now)
+        manager.tick()
+        host.complete('bootstrap', output=proof(host.devices['2-3.4']))
+        for _ in range(3): manager.tick()
+        self.assertEqual(manager.entries['2-3.4'].phase, 'active')
+        self.assertFalse(any(op in ('input-info','publish-input') for op, _ in host.calls))
+
+
 class Receipts(unittest.TestCase):
     def backend(self):
         backend = object.__new__(ProcessedInputs)

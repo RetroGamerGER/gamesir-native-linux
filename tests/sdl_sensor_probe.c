@@ -221,6 +221,13 @@ int main(void)
     if (!j) { fprintf(stderr, "count=%d %s\n", count, SDL_GetError()); return 2; }
     char guid[33]; SDL_GUIDToString(SDL_GetJoystickGUID(j), guid, sizeof(guid));
 #endif
+    unsigned expected_pid = getenv("GS_VARIANT") && !strcmp(getenv("GS_VARIANT"),"105e") ? 0x105e : 0x109c;
+#ifdef TEST_SDL2
+    if (SDL_JoystickGetVendor(j)!=0x3537 || SDL_JoystickGetProduct(j)!=expected_pid) return 2;
+#else
+    if (SDL_GetJoystickVendor(j)!=0x3537 || SDL_GetJoystickProduct(j)!=expected_pid) return 2;
+#endif
+    printf("fixture_identity=3537:%04x\n", expected_pid);
     /* Explicit mapping isolates sensor discovery from the controller DB. */
     char mapping[512];
     snprintf(mapping, sizeof(mapping), "%s,GameSir Offline Fixture,a:b0,b:b1,x:b2,y:b3,guide:b8,leftx:a0,lefty:a1,rightx:a3,righty:a4,lefttrigger:a2,righttrigger:a5,paddle1:b12,paddle2:b11,paddle3:b14,paddle4:b13,platform:Linux,", guid);

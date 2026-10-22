@@ -47,12 +47,18 @@ static ushort test_pid;
 module_param(test_pid, ushort, 0400);
 MODULE_PARM_DESC(test_pid, "Exact expected PID: 0x100a, 0x109c or experimental 0x105e; required");
 static bool enable_output;
+static bool experimental_tmr;
+module_param(experimental_tmr, bool, 0400);
+MODULE_PARM_DESC(experimental_tmr, "Unvalidated TMR-only maintenance/USB candidate; default false, no GUI activation");
 module_param(enable_output, bool, 0400);
 MODULE_PARM_DESC(enable_output, "Permit explicit native OUT activation; default false; persistent_mode selects service runtime");
 static bool experimental_gyro;
+static bool experimental_gyro_105e;
+module_param(experimental_gyro_105e, bool, 0400);
+MODULE_PARM_DESC(experimental_gyro_105e, "Opt-in unvalidated 105e ZZZ motion profile; requires experimental_gyro, default false");
 static bool defer_input;
 module_param(defer_input, bool, 0400);
-MODULE_PARM_DESC(defer_input, "Opt-in two-phase persistent 109c six-axis input; requires updated manager, default false");
+MODULE_PARM_DESC(defer_input, "Opt-in two-phase persistent motion-profile input; requires updated manager, default false");
 module_param(experimental_gyro, bool, 0400);
 MODULE_PARM_DESC(experimental_gyro, "Opt-in 109c evdev gyro: observed axes, user-selected 0.07 dps/raw; no accelerometer calibration");
 static uint accel_counts_per_g_num = 8192;
@@ -63,7 +69,7 @@ module_param(accel_counts_per_g_den, uint, 0400);
 /* No guessed accelerometer frame: a separate explicit experiment only. */
 static bool experimental_accel;
 module_param(experimental_accel, bool, 0400);
-MODULE_PARM_DESC(experimental_accel, "Opt-in real 109c evdev acceleration; requires experimental_gyro and explicit accel_axis_map");
+MODULE_PARM_DESC(experimental_accel, "Opt-in real motion-profile evdev acceleration; requires experimental_gyro and explicit accel_axis_map");
 static int accel_axis_map[3];
 static int accel_axis_map_count;
 module_param_array(accel_axis_map, int, &accel_axis_map_count, 0400);
@@ -156,6 +162,7 @@ struct gsn_device {
 	bool boot_handoff, boot_claimed, pm_quiesced, resume_ready, resuming;
 	bool direct_native; /* Exact acquire_109c grant, never an unrestricted probe. */
 	struct gsn_sample sample;
+	struct gs_tmr tmr; /* lock: RX, continuity and exclusive maintenance state */
 	u64 input_packets, imu_packets, rejected_packets, iio_push_errors;
 	struct gs_accel_experimental_scale accel_scale;
 	unsigned long next_heartbeat;
@@ -227,6 +234,7 @@ static void gsn_fault(struct gsn_device *g, int error)
 
 	spin_lock_irqsave(&g->lock, flags);
 	if (!g->stopping && g->rt.state == GS_RUNNING) {
+		gs_tmr_invalidate(&g->tmr, error);
 		gs_runtime_halt(&g->rt, GS_FAULTED, error);
 		/* Latch a terminal cause at its producer. A last OUT completion,
 		 * disconnect or READY/adopt racing the next worker must not win over it.
@@ -264,6 +272,10 @@ static int gsn_send(struct gsn_device *g, const u8 *packet, int len, bool stop)
 	allowed = g->rt.output_enabled && gs_pid_native(g->rt.pid) &&
 		(stop || (!g->stopping && g->rt.state == GS_RUNNING && g->rt.session_active &&
 			  READ_ONCE(g->intf->condition) == USB_INTERFACE_BOUND));
+	if (packet && len == 64 && packet[0] == 0x0f && packet[4] == 0xfe) {
+		gs_tmr_check(&g->tmr, ktime_get_ns());
+		allowed = allowed && experimental_tmr && g->tmr.held && !g->tmr.error;
+	}
 	ret = 0;
 	if (allowed && !packet &&
 	    gs_haptic_packet(g->tx_buf, gsn_sequence(g), &g->rt.motors, now) != len)
@@ -496,7 +508,8 @@ static void gsn_gyro_report(struct gsn_device *g, const gs_s16 raw[3],
 	unsigned int i;
 
 	if (!g->gyro_registered ||
-	    gs_gyro_convert_observed(g->rt.pid, experimental_gyro, raw, values) !=
+	    gs_gyro_convert_observed(g->rt.pid, experimental_gyro,
+				     experimental_gyro_105e, raw, values) !=
 	    GS_SENSOR_EXPERIMENTAL)
 		return;
 	/* NULL means lifecycle neutralization: never invent a gravity sample. */
@@ -590,6 +603,8 @@ static void gsn_rx(struct urb *urb)
 	kind = gs_decode(g->rx_buf, urb->actual_length, &frame);
 	spin_lock_irqsave(&g->lock, flags);
 	accepts = gs_runtime_accepts(&g->rt, kind);
+	if (accepts && experimental_tmr)
+		gs_tmr_receive(&g->tmr, g->rx_buf, urb->actual_length, ktime_get_ns());
 	if (!accepts)
 		g->rejected_packets++;
 	else if (kind == GS_PAD_XINPUT || kind == GS_PAD_GIP)
@@ -852,11 +867,12 @@ static int gsn_release(struct inode *inode, struct file *file)
 	unsigned long flags;
 
 	mutex_lock(&g->io_lock);
-	if (!g->stopping && (!persistent_mode || !g->boot_handoff) &&
+	if (!g->tmr.handle && !g->stopping && (!persistent_mode || !g->boot_handoff) &&
 	    (!g->boot_handoff || g->boot_claimed))
 		gsn_stop(g, true);
 	spin_lock_irqsave(&g->lock, flags);
 	g->rt.owner = 0;
+	gs_tmr_close(&g->tmr); /* No synthetic Exit or runtime END on maintenance close. */
 	spin_unlock_irqrestore(&g->lock, flags);
 	mutex_unlock(&g->io_lock);
 	kref_put(&g->ref, gsn_delete);
@@ -1667,7 +1683,7 @@ static int gsn_bootstrap(struct gsn_device *g, const struct gsn_boot_request *re
 	    (gs_pid_native(g->identity.pid) && request->flags))
 		return -EINVAL;
 	mutex_lock(&g->io_lock);
-	if (g->stopping || (g->identity.pid != 0x100a && g->identity.pid != 0x105e &&
+	if (g->tmr.handle || g->stopping || (g->identity.pid != 0x100a && g->identity.pid != 0x105e &&
 			    !(g->identity.pid == 0x109c && g->direct_native)) ||
 	    !g->rt.owner || g->boot) {
 		ret = -EBUSY;
@@ -2002,6 +2018,79 @@ static int gsn_end(struct gsn_device *g)
 	return ret;
 }
 
+/* io_lock held. The existing exclusive control FD is the maintenance owner.
+ * RX snapshots use lock; USB uses the same sequence/DMA/output gate as FF.
+ */
+static int gsn_tmr_control(struct gsn_device *g, unsigned int cmd, void __user *user)
+{
+	struct gsn_tmr_status out = { .abi_version = GSN_ABI_VERSION };
+	struct gsn_tmr_request request;
+	unsigned long flags;
+	u8 packet[64];
+	int ret = 0;
+	u64 now;
+
+	if (!capable(CAP_SYS_ADMIN))
+		return -EPERM;
+	/* Even a disabled/failed TMR getter must close without ending gameplay. */
+	spin_lock_irqsave(&g->lock, flags);
+	g->tmr.handle = 1;
+	if (!experimental_tmr || !persistent_mode)
+		ret = -EOPNOTSUPP;
+	else if (g->stopping || g->rt.state != GS_RUNNING ||
+		 !g->rt.session_active || !g->rt.output_enabled ||
+		 !gs_pid_native(g->rt.pid))
+		ret = -ENODEV;
+	spin_unlock_irqrestore(&g->lock, flags);
+	if (ret)
+		return ret;
+	if (cmd == GSN_TMR_COMMAND && copy_from_user(&request, user, sizeof(request)))
+		return -EFAULT;
+	spin_lock_irqsave(&g->lock, flags);
+	now = ktime_get_ns();
+	gs_tmr_check(&g->tmr, now);
+	if (cmd == GSN_TMR_GET) {
+		out.flags = GSN_TMR_ENABLED | (g->tmr.held ? GSN_TMR_LEASED : 0) |
+			(gs_tmr_fresh(&g->tmr, now) ? GSN_TMR_FRESH : 0);
+		out.pid = g->rt.pid;
+		out.phase = g->tmr.phase;
+		out.error = g->tmr.error;
+		out.port_token = g->identity.port;
+		out.instance_token = g->identity.instance;
+		out.stream_epoch = g->tmr.epoch;
+		out.generation = g->tmr.generation;
+		out.report_number = g->tmr.number;
+		out.host_monotonic_ns = g->tmr.received_ns;
+		out.lease_deadline_ns = g->tmr.deadline_ns;
+		memcpy(out.report, g->tmr.report, 64);
+	} else if (request.abi_version != GSN_ABI_VERSION || request.reserved[0] ||
+		   request.reserved[1] || request.operation < GSN_TMR_ACQUIRE ||
+		   request.operation > GSN_TMR_RENEW) {
+		ret = -EINVAL;
+	} else if (!request.port_token || !request.instance_token ||
+		   request.port_token != g->identity.port ||
+		   request.instance_token != g->identity.instance) {
+		ret = -ESTALE;
+	} else {
+		ret = gs_tmr_command(&g->tmr, request.operation, request.stream_epoch,
+				     request.generation, now);
+	}
+	spin_unlock_irqrestore(&g->lock, flags);
+	if (cmd == GSN_TMR_GET)
+		return copy_to_user(user, &out, sizeof(out)) ? -EFAULT : 0;
+	if (ret != 1)
+		return ret;
+	gs_tmr_packet(packet, gsn_sequence(g), request.operation);
+	ret = gsn_send(g, packet, sizeof(packet), false); /* Exactly once. */
+	spin_lock_irqsave(&g->lock, flags);
+	if (ret)
+		gs_tmr_fail(&g->tmr, ret);
+	gs_tmr_check(&g->tmr, ktime_get_ns());
+	ret = g->tmr.error;
+	spin_unlock_irqrestore(&g->lock, flags);
+	return ret;
+}
+
 static long gsn_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
 	struct gsn_device *g = file->private_data;
@@ -2023,6 +2112,15 @@ static long gsn_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		return gsn_bootstrap(g, &request);
 	}
 	mutex_lock(&g->io_lock);
+	if (cmd == GSN_TMR_GET || cmd == GSN_TMR_COMMAND) {
+		ret = gsn_tmr_control(g, cmd, user);
+		goto out;
+	}
+	if (g->tmr.handle && cmd != GSN_GET_INFO && cmd != GSN_GET_SAMPLE &&
+	    cmd != GSN_GET_BOOT_STATUS) {
+		ret = -EBUSY;
+		goto out;
+	}
 	if (cmd == GSN_GET_BOOT_STATUS) {
 		ret = gsn_boot_status(g, &boot_status);
 		if (!ret && copy_to_user(user, &boot_status, sizeof(boot_status)))
@@ -2136,8 +2234,8 @@ static int gsn_input_register(struct gsn_device *g)
 	unsigned int i;
 	int ret;
 
-	g->input_deferred = defer_input && persistent_mode && experimental_gyro &&
-		experimental_accel && g->rt.pid == 0x109c;
+	g->input_deferred = defer_input && persistent_mode && experimental_accel &&
+		gs_gyro_profile_enabled(g->rt.pid, experimental_gyro, experimental_gyro_105e);
 	g->input = input_allocate_device();
 	if (!g->input)
 		return -ENOMEM;
@@ -2154,7 +2252,7 @@ static int gsn_input_register(struct gsn_device *g)
 	g->input->id.product = g->rt.pid;
 	g->input->id.version = le16_to_cpu(g->udev->descriptor.bcdDevice);
 	g->input->dev.parent = &g->intf->dev;
-	if (experimental_gyro && g->rt.pid == 0x109c) {
+	if (gs_gyro_profile_enabled(g->rt.pid, experimental_gyro, experimental_gyro_105e)) {
 		/* Session association, not a claimed hardware serial. Nonempty and
 		 * distinct for simultaneous dongles and replacement bindings.
 		 */
@@ -2238,6 +2336,10 @@ static int gsn_input_control(struct gsn_device *g, unsigned int cmd, void __user
 		ret = copy_to_user(user, &status, sizeof(status)) ? -EFAULT : 0;
 		goto out;
 	}
+	if (g->tmr.handle) {
+		ret = -EBUSY;
+		goto out;
+	}
 	if (request.abi_version != GSN_ABI_VERSION || request.reserved ||
 	    !request.port_token || !request.instance_token ||
 	    request.port_token != g->identity.port ||
@@ -2247,7 +2349,9 @@ static int gsn_input_control(struct gsn_device *g, unsigned int cmd, void __user
 	}
 	spin_lock_irqsave(&g->lock, flags);
 	if (!g->input_deferred || !g->gyro_registered || !g->boot_handoff ||
-	    !persistent_mode || g->rt.pid != 0x109c || g->stopping || g->resuming ||
+	    !persistent_mode ||
+	    !gs_gyro_profile_enabled(g->rt.pid, experimental_gyro, experimental_gyro_105e) ||
+	    g->stopping || g->resuming ||
 	    g->pm_quiesced || g->publication_cancelled || g->rt.state != GS_RUNNING ||
 	    g->rt.error || !g->rt.session_active)
 		ret = -ENODEV;
@@ -2294,7 +2398,7 @@ static int gsn_gyro_register(struct gsn_device *g)
 
 	if (gsn_sensor_options())
 		return -EINVAL;
-	if (!experimental_gyro || g->rt.pid != 0x109c)
+	if (!gs_gyro_profile_enabled(g->rt.pid, experimental_gyro, experimental_gyro_105e))
 		return 0;
 	g->gyro_input = input_allocate_device();
 	if (!g->gyro_input)
@@ -2340,6 +2444,7 @@ static void gsn_quiesce(struct gsn_device *g, int state, int error)
 	spin_lock_irqsave(&g->lock, flags);
 	g->stopping = true;
 	g->publication_cancelled = true;
+	gs_tmr_invalidate(&g->tmr, error);
 	gs_runtime_halt(&g->rt, state, error);
 	spin_unlock_irqrestore(&g->lock, flags);
 	mutex_unlock(&g->io_lock);

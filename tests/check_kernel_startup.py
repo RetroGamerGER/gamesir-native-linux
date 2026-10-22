@@ -14,7 +14,7 @@ names = ['gsn_boot_delete', 'gsn_now_us', 'gsn_now_ms', 'gsn_delete', 'gsn_seque
          'gsn_describe', 'gsn_boot_cancel_device', 'gsn_boot_detach', 'gsn_boot_pending',
          'gsn_boot_connect', 'gsn_boot_rx', 'gsn_boot_adopt', 'gsn_boot_xinput_query', 'gsn_boot_service',
          'gsn_boot_find', 'gsn_boot_handover', 'gsn_bootstrap', 'gsn_boot_status', 'gsn_quiesce',
-         'gsn_resume_session', 'gsn_unready_boot_owned', 'gsn_end', 'gsn_ioctl',
+         'gsn_resume_session', 'gsn_unready_boot_owned', 'gsn_end', 'gsn_ioctl', 'gsn_tmr_control',
          'gsn_sample_snapshot', 'gsn_play_effect', 'gsn_suspend', 'gsn_resume',
          'gsn_pre_reset', 'gsn_shutdown', 'gsn_pad', 'gsn_neutral', 'gsn_neutral_locked',
          'gsn_rx', 'gsn_extras', 'gsn_imu', 'gsn_boot_rx_teardown', 'gsn_boot_old_rx', 'gsn_boot_retire_rx']

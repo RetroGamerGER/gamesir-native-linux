@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 pkgname=gamesir-native-dkms
 pkgver=@VERSION@
-pkgrel=16
+pkgrel=20
 pkgdesc='Experimental native GameSir G7 Pro driver and session manager'
 arch=('x86_64')
 license=('GPL-2.0-only')

@@ -330,6 +330,12 @@ Abwesenheit einer versteckten oder anders benannten Sensorauswertung.
 
 ## 4. Kalibrierung vom UI bis zur nativen Transportgrenze
 
+Nachtrag vom 21. Oktober: Die [vertiefte Stickanalyse](NEXUS_STICK_CALIBRATION_FLOW.md)
+belegt jetzt die Zuordnung des gemeinsam genutzten Builders zu `G7Pro.Proxy`
+über native Metadaten. Dialogabschluss, Abbruch und ausstehende Speicherbelege
+sind dort genauer getrennt. Frühere offene Punkte unten beschreiben den
+damaligen Untersuchungsstand; vollständiges Laufzeit-/USB-Routing bleibt offen.
+
 Der zuvor belegte UI-Aufruf `deviceReq("calibrate", …)` ist jetzt auch
 auf der nativen Seite verfolgt:
 

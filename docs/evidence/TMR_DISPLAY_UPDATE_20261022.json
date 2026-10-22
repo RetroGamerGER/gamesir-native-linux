@@ -1,0 +1,100 @@
+{
+  "autostart_preference_preserved": "enabled",
+  "calibration_finish_issued_by_agent": false,
+  "calibration_hardware_acceptance": false,
+  "calibration_start_issued_by_agent": false,
+  "controlled_receiver_removal_reinsertion": true,
+  "date": "2026-10-22",
+  "dkms_installed": true,
+  "documentation_checks": {
+    "groups": 3,
+    "passed": true,
+    "scope": "package documentation, licensing, public README",
+    "unittest_cases": 35
+  },
+  "gui_left_open_in_preview": true,
+  "gui_log_bytes": 0,
+  "gui_matching_pins": true,
+  "helper_hashes_verified": 8,
+  "installation_authorized": true,
+  "journal_precondition": {
+    "correction": "n1 plus explicit cursor-line parsing",
+    "initial_query": "journalctl -k -n0 --show-cursor",
+    "interrupted_log_preserved_privately": true,
+    "outcome": "no cursor, observer stopped before Resume",
+    "resume_issued_before_stop": false
+  },
+  "kernel": "7.3.0-2-garuda",
+  "kernel_and_shared_source_files_unchanged": 16,
+  "live_cpu": {
+    "basis": "100 percent equals one CPU core",
+    "comparison_limit": "earlier approximately 49 percent manager reading was a screenshot, not an identical timed benchmark",
+    "duration_seconds": 10.0,
+    "means": {
+      "gui": 5.1,
+      "helper": 0.9,
+      "manager": 6.3
+    },
+    "processes_survived_with_same_start_ids": true
+  },
+  "maintainer_preview_report": {
+    "both_stick_plots_without_perceived_delay": true,
+    "start_button_steady": true
+  },
+  "manager_paused": false,
+  "module_parameters_restored": {
+    "accel_axis_map": "1,2,3",
+    "accel_counts_per_g_den": "1",
+    "accel_counts_per_g_num": "8192",
+    "bootstrap_mode": "Y",
+    "defer_input": "Y",
+    "enable_output": "Y",
+    "experimental_accel": "Y",
+    "experimental_gyro": "Y",
+    "experimental_tmr": "Y",
+    "persistent_mode": "Y",
+    "receiver_wait": "Y"
+  },
+  "module_vermagic_matches_kernel": true,
+  "motion_configuration_preserved": true,
+  "native_bootstrap": {
+    "error": 0,
+    "failed_stage": 0,
+    "handover": 1,
+    "imu": 1,
+    "instance_token": 2,
+    "pad": 1,
+    "port_token": 1,
+    "state": 7
+  },
+  "native_input_publication": "confirmed",
+  "network_access": false,
+  "new_calibration_go": false,
+  "next": "Wait for explicit maintainer Go before actual calibration",
+  "package_integrity_altered_files": 0,
+  "packages": {
+    "core": {
+      "new": "0.1.0.alpha3-20",
+      "old": "0.1.0.alpha3-19",
+      "sha256": "f4df1973d2d91c6840b51134952afd87662823b2accac989e9bea539303003d9"
+    },
+    "tmr_helper": {
+      "new": "0.1.0.alpha1-2",
+      "old": "0.1.0.alpha1-1",
+      "sha256": "17858c9c2cbb07cd1eb5fac28b33b087d2cc52d46a72259b47577016c7bac5c6"
+    }
+  },
+  "persistence_test_performed": false,
+  "persistent_tmr_config_added": false,
+  "platform": "Garuda Linux",
+  "precision_gyro_calibration": "paused",
+  "public_catalog_or_recipe_changed": false,
+  "push": false,
+  "resume_invocations": 1,
+  "root_ownership_and_modes_verified": true,
+  "schema": 1,
+  "scope": "authorized matching manager/helper/GUI update and preview, calibration pending",
+  "service_active": true,
+  "source_commit": "5ee3199",
+  "steam_and_trigger_bridge_preserved": true
+}

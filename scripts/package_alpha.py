@@ -18,6 +18,17 @@ SYSTEM_ROOTS = ('/usr', '/etc', '/var', '/opt', '/bin', '/sbin', '/lib', '/lib64
 LICENSE_FILES = ('COPYING', 'LICENSES/exceptions/Linux-syscall-note')
 DOCUMENT_FILES = (
     'README.md', 'AGENTS.md',
+    'docs/CONTROL_CENTER_TMR_PERMISSION.md',
+    'docs/CONTROL_CENTER_NORMAL_CALIBRATION.md',
+    'docs/TMR_SETUP.md', 'docs/RELEASE_PRE_ALPHA_4.md', 'docs/CONTROL_CENTER_ALPHA2_RELEASE.md',
+    'docs/TMR_DISPLAY_POLLING_FIX.md',
+    'docs/evidence/TMR_DISPLAY_POLLING_20261022.json',
+    'docs/evidence/TMR_DISPLAY_UPDATE_20261022.json',
+    'docs/evidence/TMR_FIRST_LIVE_CALIBRATION_20261022.json',
+    'docs/evidence/TMR_ZZZ_CALIBRATION_20261022.json',
+    'docs/evidence/CONTROL_CENTER_TMR_PERMISSION_20261022.json',
+    'docs/evidence/TMR_MAINRIG_INSTALL_20261022.json',
+    'docs/evidence/TMR_MAINRIG_ACTIVATION_20261022.json',
     'docs/images/control-center.png',
     'docs/LICENSING.md',
     'docs/INSTALLATION.md', 'docs/RELEASE_AUDIT.md', 'docs/PUBLIC_RELEASE_CHECK.md',
@@ -44,6 +55,7 @@ DOCUMENT_FILES = (
     'docs/evidence/CACHYOS_BOOTSTRAP_20261015.json',
     'docs/DUALSENSE_SENSOR_COMPARISON.md',
     'docs/SDL_EDEN_GYRO.md', 'docs/sdl-eden-gyro-validation.json',
+    'docs/ZZZ_GYRO_EXTENSION.md', 'docs/evidence/ZZZ_GYRO_OFFLINE_20261021.json',
     'docs/STEAM_ACCEL_EXTENSION.md', 'docs/steam-accel-extension-validation.json',
     'docs/evidence/STEAM_ACCEL_INSTALL_20261019.json',
     'docs/evidence/STEAM_ACCEL_ACTIVATION_20261019.json',
@@ -63,7 +75,23 @@ DOCUMENT_FILES = (
     'docs/experimental-gyro-live-001.json',
     'docs/experimental-gyro-live-002.json',
     'docs/GAMESIR_NEXUS_RESEARCH.md', 'docs/NEXUS_SENSOR_DATAFLOW.md',
+    'docs/NEXUS_MAINTENANCE_RESEARCH.md',
+    'docs/evidence/NEXUS_MAINTENANCE_20261021.json',
+    'docs/NEXUS_STICK_CALIBRATION_FLOW.md',
+    'docs/NEXUS_STICK_FIRMWARE.md',
+    'docs/evidence/NEXUS_STICK_FIRMWARE_20261021.json',
+    'docs/NEXUS_STICK_STORAGE.md',
+    'docs/evidence/NEXUS_STICK_STORAGE_20261021.json',
+    'docs/evidence/NEXUS_STICK_FLOW_20261021.json',
     'docs/ROADMAP.md', 'docs/CONTROL_CENTER.md', 'docs/CONTROL_CENTER_APPIMAGE.md',
+    'docs/CONTROL_CENTER_STICK_CALIBRATION.md',
+    'docs/CONTROL_CENTER_CALIBRATION_ADAPTER.md',
+    'docs/TMR_NATIVE_INTERFACE.md',
+    'docs/TMR_USB_FRAMING.md',
+    'docs/evidence/TMR_USB_FRAMING_20261022.json',
+    'docs/evidence/TMR_NATIVE_INTERFACE_20261022.json',
+    'docs/evidence/ZZZ_GYRO_ACCEPTANCE_20261021.json',
+    'docs/evidence/ZZZ_GYRO_INSTALLATION_20261021.json',
     'docs/CONTROL_CENTER_AUTHORIZATION.md',
     'docs/CONTROL_CENTER_PACKAGES.md',
     'docs/CONTROL_CENTER_DEPLOYMENT_REVIEW.md',
@@ -108,13 +136,14 @@ def source_files(root=ROOT):
              'scripts/package_alpha.py', 'scripts/kernel_toolchain.py',
              'tools/native/gsnative-ctl.c',
              'tools/service/gamesir_native.py', 'tools/service/haptics_broker.py',
+             'tools/service/tmr_maintenance.py', 'tools/service/tmr_native.py',
              'tools/service/input_readiness.py', 'tools/sdl/input_pair_readiness.py',
              'tools/haptics/gamesir_haptics.py', 'tools/sdl/gamesir_mapping.py']
     patterns = {
         'kernel': ('gs_native_usb.c', 'gs_protocol.c', 'gs_sensor.c',
                    'gs_runtime.c', 'gs_startup.c', 'Kbuild'),
         'src': ('gs_protocol.c', 'gs_protocol.h', 'gs_sensor.c', 'gs_sensor.h',
-                'gs_runtime.c', 'gs_runtime.h', 'gs_startup.c', 'gs_startup.h'),
+                'gs_runtime.c', 'gs_runtime.h', 'gs_startup.c', 'gs_startup.h', 'gs_tmr.h'),
         'include/uapi': ('gs_native.h',),
         'packaging': ('VERSION', 'dkms.conf.in', 'prepare_remove.py',
                       'bin/gamesir-native', 'systemd/gamesir-native.service',
@@ -211,6 +240,8 @@ def stage(dest, client, root=ROOT):
     dkms.write_text((root / 'packaging/dkms.conf.in').read_text().replace('@VERSION@', ver))
     copy(client, 'usr/lib/gamesir-native/gsnative-ctl', 0o755)
     copy(root / 'tools/service/gamesir_native.py', 'usr/lib/gamesir-native/gamesir_native.py')
+    for name in ('tmr_maintenance.py', 'tmr_native.py'):
+        copy(root / 'tools/service' / name, 'usr/lib/gamesir-native/' + name)
     copy(root / 'tools/service/haptics_broker.py', 'usr/lib/gamesir-native/haptics_broker.py')
     copy(root / 'tools/service/input_readiness.py', 'usr/lib/gamesir-native/input_readiness.py')
     copy(root / 'tools/sdl/input_pair_readiness.py', 'usr/lib/gamesir-native/input_pair_readiness.py')

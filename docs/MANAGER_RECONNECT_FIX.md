@@ -1,4 +1,87 @@
-# Manager reconnect correction — local update and acceptance status
+# Manager reconnect corrections
+
+Revision18 was subsequently installed with explicit approval on both test hosts.
+[Installation receipt](evidence/START_BUDGET_INSTALLATION_20261021.json): matching
+target builds and both transactions passed. Subsequent separately approved
+[activation](evidence/START_BUDGET_ACTIVATION_20261021.json) started and resumed
+both managers successfully. The primary receiver reached native receiver_wait
+with the controller off; no secondary receiver was observed. Functional input
+and reconnect acceptance remain pending. The offline section below records
+development, not the final deployment status.
+
+## Start budget recovery — 21 October 2026, offline only
+
+The primary-host incident was saved in local checkpoint `3109a96`. Its
+unowned `100a/xpad` candidate was blocked by the three-start budget. The
+synthetic reproduction also failed after the ten-minute window and a fresh
+USB instance. Successful starts consumed the same budget as failed attempts.
+The expiry calculation itself was not enough: the existing `blocked` entry
+prevented discovery from reaching it again.
+
+The limit is a conservative manager policy, present since the initial public
+source import (`22b5342`). It bounds repeated initialization and USB mode
+transitions when a receiver repeatedly re-enumerates or startup fails. It is
+not a documented GameSir or Xbox requirement. Removing every limit would hide
+the distinction between ordinary reconnects and a rapid failure loop.
+
+The offline correction changes the userspace manager only:
+
+- A candidate refused **before acquisition** enters `cooldown`, without a lease,
+  kernel ownership tokens or a protocol error. Status reports `start_retry_in`
+  in seconds. Reading status does not expire entries or issue device commands.
+- Without stable-runtime recovery, the limit remains three starts per physical
+  port in a sliding 600-second window.
+  At exact expiry the unowned timer entry is retired. Only a later complete
+  scan may discover the current device, with all ordinary ownership, instance,
+  attempted-token, pause and monitor checks. Expiry itself never claims,
+  initializes, sends END or restores a driver.
+- After **60 seconds of continuously observed healthy active runtime**, recent
+  charges for that port are cleared and persisted. Existing passive `info`
+  replies must confirm the same attested native instance, state1, error0,
+  output enabled and a session. Normal two-second checks are reused; no new
+  USB command or faster polling is introduced. This is manager runtime health,
+  not a new radio-connected bit or proof that every physical button works.
+- Gaps longer than six seconds, backwards time, incomplete metadata, busy
+  access, power-management suspension, monitor failure, faults and identity
+  changes break that health window. A daemon restart must establish it anew.
+  `receiver_wait`, READY alone and awaiting sensor publication earn no credit.
+  Short reconnects therefore still reach the three-start limit.
+- Attempted-instance protection, failure history, other ports, explicit pause,
+  cleanup rights and true `failed`/`blocked` entries are retained. A denied
+  post-acquisition start remains a recovery case, not an expiring unowned timer.
+  Legacy faults are not migrated by matching their error text. An inconsistent
+  cooldown carrying ownership/fault state is blocked, preserving its error.
+
+No existing installed manager state was cleared. A later approved package
+update must use the established checked return/stop path; this source commit
+is neither installation nor permission to bypass an unresolved device state.
+The earlier binding loss, cancellation and missing X/Y/RT remain separate,
+unresolved observations. The secondary-host cause is not established here.
+
+### Validation
+
+The new cases use synthetic devices, jobs and time. Before implementation,
+14 new tests produced 25 failing subcases against the old policy. The final
+19-test budget regression group covers supported start PIDs `100a`, `109c` and
+`105e`, free/xpad candidates, exact expiry, replacements and foreign owners,
+read-only countdown, persisted budgets/restart, pause/shutdown, unknown metadata,
+owned and lookalike faults, stable versus short reconnects, busy access, suspend,
+monitor failure, backwards time, receiver standby and failure-history retention.
+Four earlier expectations now distinguish unowned `cooldown` from true faults;
+their original no-acquisition/no-repeat checks remain.
+
+All 328 manager, reconnect, standalone acquisition, receiver-wait, input
+publication, service-client and haptics tests pass. The reproducible source
+archive and 20 removal-policy tests also pass: **349 tests total**. No hardware, sudo, SSH,
+installed service, driver/module, Steam, package installation, network or push
+is involved. No package revision or release asset is changed. Nexus research
+remains saved at `50e8c13`; precision gyro calibration remains paused.
+
+## Historical revision-6 correction — 17 October 2026
+
+The remainder records the earlier correction and its separately approved local
+installation. Its budget-exhaustion behavior is superseded by the offline
+policy above, not by an installed update.
 
 Date: 2026-10-17. PRE-ALPHA. The correction was developed and tested offline,
 then installed locally under separate explicit authorization. Installation
@@ -54,8 +137,9 @@ confirmed disconnect, replacement or new ownership grant.
 
 The existing limit of **three starts per physical port in ten minutes remains**.
 This patch is not a removal of the restart-loop guard or a promise of unlimited
-rapid reconnects. Even successful starts currently count. A distinct budget
-exhaustion requires explicit review/resume and is not this observed error.
+rapid reconnects. At that historical revision, even successful starts counted. A distinct budget
+exhaustion required explicit review/resume and was not that observed error.
+The 21 October offline correction above supersedes this budget behavior.
 
 The installed old `released` entry is not automatically migrated merely by
 matching its error text. A later approved update uses the normal checked

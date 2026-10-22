@@ -9,7 +9,7 @@ ApplicationWindow {
     width: 940; height: 1020
     minimumWidth: 560; minimumHeight: 480
     visible: true
-    title: t.title + " · " + t.subtitle + " · " + (appModel.hasTransactions ? t.backend_badge : appModel.isDemo ? t.demo : t.read_only)
+    title: t.title + " · " + t.subtitle + " · " + (appModel.isRehearsal ? t.backend_badge : appModel.isDemo ? t.demo : t.prealpha)
     color: "#101417"
     property var t: appModel.strings
     property var v: appModel.view
@@ -24,11 +24,15 @@ ApplicationWindow {
     palette.highlight: "#354e45"
     palette.highlightedText: "#d8f3e6"
     palette.mid: "#384149"
+    onClosing: appModel.stickCalibration.close()
 
     // Keep keyboard navigation visible even on a short Gamescope window.
-    onActiveFocusItemChanged: {
+    onActiveFocusItemChanged: Qt.callLater(revealMainFocus)
+    function revealMainFocus() {
         const item = activeFocusItem
         if (!item || !scroll.contentItem)
+            return
+        if (calibrationFlow.visible && calibrationFlow.revealFocus(item))
             return
         let ancestor = item
         while (ancestor && ancestor !== page)
@@ -51,6 +55,11 @@ ApplicationWindow {
         function onSetupDialogRequested() { setupFlow.open() }
         function onDialogRequested() { confirmation.open() }
         function onResultRequested() { outcome.open() }
+    }
+
+    Connections {
+        target: scroll.contentItem
+        function onContentHeightChanged() { Qt.callLater(window.revealMainFocus) }
     }
 
     ScrollView {
@@ -109,10 +118,10 @@ ApplicationWindow {
                     Icon { kind: "shield"; ink: "#a6d8c2"; Layout.alignment: Qt.AlignTop }
                     ColumnLayout {
                         Layout.fillWidth: true; spacing: 5
-                        Copy { Layout.fillWidth: true; text: appModel.hasTransactions ? t.backend_title : appModel.isDemo ? t.demo_title : t.read_title; color: "#cee8dc"; font.bold: true }
-                        Copy { Layout.fillWidth: true; text: appModel.hasTransactions ? t.backend_intro : appModel.isDemo ? t.demo_body : t.read_body; color: "#a6bcb1"; font.pixelSize: 12 }
+                        Copy { Layout.fillWidth: true; text: appModel.isDemo ? t.demo_title : t.center_intro; color: "#cee8dc"; font.bold: true }
+                        Copy { visible: appModel.isDemo; Layout.fillWidth: true; text: t.demo_body; color: "#a6bcb1"; font.pixelSize: 12 }
                     }
-                    Copy { text: appModel.hasTransactions ? t.backend_badge : appModel.isDemo ? t.demo : t.read_only; color: "#a6d8c2"; font.pixelSize: 10; font.bold: true; Layout.alignment: Qt.AlignTop }
+                    Copy { text: appModel.isDemo ? t.demo : t.prealpha; color: "#a6d8c2"; font.pixelSize: 10; font.bold: true; Layout.alignment: Qt.AlignTop }
                 }
             }
 
@@ -175,20 +184,19 @@ ApplicationWindow {
                 GridLayout {
                     objectName: "statusGrid"
                     Layout.fillWidth: true
-                    columns: window.narrow ? 2 : 4
+                    columns: window.narrow ? 1 : 3
                     columnSpacing: 10; rowSpacing: 10
                     Repeater {
                         model: [
                             { label: t.driver, value: v.driver, on: v.installed },
-                            { label: t.module, value: v.module, on: v.loaded },
                             { label: t.dongle, value: v.dongle, on: v.receiver },
-                            { label: t.controller, value: v.controller, on: v.connected }
+                            { label: t.controller, value: v.controller === t.fact_unobserved ? t.connection_status : v.controller, on: v.connected }
                         ]
                         Rectangle {
                             required property var modelData
                             Layout.fillWidth: true
                             Layout.preferredWidth: 1
-                            implicitHeight: appModel.isDemo ? 81 : 106
+                            implicitHeight: window.narrow ? 70 : 94
                             radius: 10; color: "#11171b"
                             ColumnLayout {
                                 anchors.fill: parent; anchors.margins: 12; spacing: 7
@@ -201,14 +209,13 @@ ApplicationWindow {
                         }
                     }
                 }
-                Copy { Layout.fillWidth: true; text: t.os + ": " + v.os + "   /   " + t.kernel + ": " + v.kernel; color: "#9aa5af"; font.pixelSize: 11 }
-                Copy { Layout.fillWidth: true; text: t.manager + ": " + v.manager; color: "#9aa5af"; font.pixelSize: 11 }
                 RowLayout {
+                    visible: appModel.isDemo || v.noticeWarning
                     Layout.fillWidth: true; spacing: 7
                     Rectangle { width: 5; height: 5; radius: 3; color: v.noticeWarning ? "#d4b88a" : "#a6d8c2" }
                     Copy { Layout.fillWidth: true; text: v.requirements; color: v.noticeWarning ? "#d4b88a" : "#a6d8c2"; font.pixelSize: 12 }
                 }
-                Copy { objectName: "scenarioNotice"; Layout.fillWidth: true; text: v.notice; color: v.noticeWarning ? "#d4b88a" : "#a4aeb7"; font.pixelSize: 12 }
+                Copy { objectName: "scenarioNotice"; visible: v.notice !== t.read_notice; Layout.fillWidth: true; text: v.notice; color: v.noticeWarning ? "#d4b88a" : "#a4aeb7"; font.pixelSize: 12 }
                 RowLayout {
                     visible: !appModel.isDemo
                     Layout.fillWidth: true
@@ -216,7 +223,7 @@ ApplicationWindow {
                     Copy {
                         objectName: "sampleTime"
                         Layout.fillWidth: true
-                        text: t.sample_label + ": " + (v.sampleTime || "—") + "\n" + (v.sampleState || "")
+                        text: v.sampleState || ""
                         color: "#9aa5af"; font.pixelSize: 11
                     }
                     ActionButton {
@@ -237,7 +244,7 @@ ApplicationWindow {
                     Icon { kind: "download"; ink: "#a6d8c2"; width: 22; height: 22 }
                     Copy { text: t.install; font.bold: true; font.pixelSize: 16 }
                 }
-                Copy { Layout.fillWidth: true; text: appModel.hasTransactions ? t.backend_intro : appModel.isDemo ? t.install_intro : t.read_install; color: "#a4aeb7"; font.pixelSize: 12 }
+                Copy { Layout.fillWidth: true; text: appModel.hasTransactions ? t.package_short_intro : appModel.isDemo ? t.install_intro : t.read_install; color: "#a4aeb7"; font.pixelSize: 12 }
                 RowLayout {
                     Layout.fillWidth: true; spacing: 10
                     ActionButton {
@@ -273,17 +280,44 @@ ApplicationWindow {
                 }
             }
 
+            Card {
+                objectName: "calibrationCard"
+                Layout.fillWidth: true
+                Layout.leftMargin: page.gutter; Layout.rightMargin: page.gutter
+                RowLayout {
+                    Layout.fillWidth: true; spacing: 10
+                    Icon { kind: "sliders"; ink: "#a6d8c2" }
+                    Copy { Layout.fillWidth: true; text: t.sticks; font.pixelSize: 16; font.bold: true }
+                }
+                Copy { Layout.fillWidth: true; text: appModel.stickCalibration.available ? t.cal_card_intro : t.cal_unavailable; color: "#a4aeb7"; font.pixelSize: 12 }
+                ActionButton {
+                    objectName: "calibrationOpen"
+                    Layout.fillWidth: true
+                    text: appModel.stickCalibration.view.simulated === false ? t.cal_live_open : t.cal_open
+                    enabled: appModel.canCalibrate
+                    onClicked: {
+                        if (appModel.stickCalibration.open()) calibrationFlow.open()
+                    }
+                }
+            }
+
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.leftMargin: page.gutter; Layout.rightMargin: page.gutter
                 spacing: 10
-                Copy { text: t.planned; color: "#9aa5af"; font.pixelSize: 12 }
+                ActionButton {
+                    id: plannedToggle
+                    objectName: "plannedToggle"
+                    property bool expanded: false
+                    text: t.planned + (expanded ? "  −" : "  +")
+                    onClicked: expanded = !expanded
+                }
                 GridLayout {
-                    Layout.fillWidth: true; columns: 2; columnSpacing: 12; rowSpacing: 12
+                    visible: plannedToggle.expanded
+                    Layout.fillWidth: true; columns: window.narrow ? 1 : 2; columnSpacing: 12; rowSpacing: 12
                     Repeater {
                         model: [
                             { title: t.software_update, icon: "update" },
-                            { title: t.sticks, icon: "sliders" },
                             { title: t.controller_firmware, icon: "chip" },
                             { title: t.dongle_firmware, icon: "chip" }
                         ]
@@ -326,10 +360,16 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.leftMargin: page.gutter; Layout.rightMargin: page.gutter
                 Layout.bottomMargin: 24; spacing: 6
-                Copy { text: appModel.hasTransactions ? t.backend_badge : appModel.isDemo ? t.footer : t.read_footer; color: "#7d8a95"; font.pixelSize: 11 }
+                Copy { text: appModel.isDemo ? t.footer : t.permission_hint; color: "#7d8a95"; font.pixelSize: 11 }
                 Copy { Layout.fillWidth: true; text: t.keyboard_hint + " · " + t.links_hint; color: "#65737e"; font.pixelSize: 10 }
             }
         }
+    }
+
+    CalibrationDialog {
+        id: calibrationFlow
+        controller: appModel.stickCalibration
+        texts: t
     }
 
     Dialog {
@@ -358,6 +398,10 @@ ApplicationWindow {
                 width: detailsScroll.availableWidth
                 spacing: 18
                 Copy { Layout.fillWidth: true; text: t.system_details_intro; color: "#a4aeb7"; font.pixelSize: 12 }
+                Copy { Layout.fillWidth: true; text: t.os + ": " + v.os + "\n" + t.kernel + ": " + v.kernel + "\n" + t.module + ": " + v.module + "\n" + t.manager + ": " + v.manager; font.pixelSize: 12 }
+                Copy { Layout.fillWidth: true; text: t.sample_label + ": " + (v.sampleTime || "—"); color: "#9aa5af"; font.pixelSize: 11 }
+                Copy { Layout.fillWidth: true; text: t.read_notice; color: "#9aa5af"; font.pixelSize: 12 }
+                Copy { Layout.fillWidth: true; text: v.requirements; color: "#9aa5af"; font.pixelSize: 12 }
                 GridLayout {
                     Layout.fillWidth: true
                     columns: window.narrow ? 1 : 2

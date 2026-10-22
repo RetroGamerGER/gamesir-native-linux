@@ -47,7 +47,7 @@ class CenterModel(QObject):
     setupDialogRequested = Signal()
 
     def __init__(self, settings, system_language='en', opener=None, *, demo=True, collector=None,
-                 rehearsal=None, execution=None):
+                 rehearsal=None, execution=None, calibration_preview=False, calibration_factory=None):
         super().__init__()
         self.settings = settings
         self.language_code = choose_language(settings.value('language', None), system_language)
@@ -57,6 +57,18 @@ class CenterModel(QObject):
         self.link_error = False
         self.opener = opener or QDesktopServices.openUrl
         self.demo = demo
+        if calibration_preview and (not demo or collector is not None
+                                    or rehearsal is not None or execution is not None):
+            raise ValueError('Calibration preview requires an isolated simulation')
+        from calibration_bridge import CalibrationPreview
+        self.calibration_preview = CalibrationPreview(enabled=calibration_preview, parent=self)
+        if calibration_factory is not None:
+            if demo or rehearsal is not None or calibration_preview:
+                raise ValueError('Live calibration cannot use simulated modes')
+            from tmr_bridge import CalibrationLive
+            self.calibration_preview = CalibrationLive(calibration_factory, parent=self,
+                                                       allow_open=self.can_begin_calibration)
+            self.calibration_preview.changed.connect(self.changed.emit)
         if rehearsal is not None and (not demo or collector is not None):
             raise ValueError('Backend rehearsal must not use real status evidence')
         if execution is not None:
@@ -85,6 +97,24 @@ class CenterModel(QObject):
     @Property(bool, constant=True)
     def isDemo(self):
         return self.demo
+
+    @Property(QObject, constant=True)
+    def stickCalibration(self):
+        return self.calibration_preview
+
+    def calibration_in_use(self):
+        return bool(getattr(self.stickCalibration, 'inUse', False))
+
+    def can_begin_calibration(self):
+        tx = self.execution
+        return (self.backend_job is None and self.inspection_job is None and self.setup_job is None
+                and (tx is None or not tx.uncertain and tx.state not in (
+                    'loading', 'editing', 'checking', 'review', 'running', 'checking_updates',
+                    'setup_review', 'setup_running', 'setup_failed')))
+
+    @Property(bool, notify=changed)
+    def canCalibrate(self):
+        return self.stickCalibration.available and self.can_begin_calibration() and not self.calibration_in_use()
 
     @Property(bool, constant=True)
     def isRehearsal(self):
@@ -165,6 +195,8 @@ class CenterModel(QObject):
                               and bool(tx.available('install')),
                               canRemove=tx.transport is not None and tx.state not in ('editing', 'checking', 'review', 'running')
                               and bool(tx.available('remove')))
+                if tx.transport is not None:
+                    result['requirements'] = t['package_plan_first']
                 if tx.state == 'loading':
                     result.update(notice=t['packages_checking'], noticeWarning=False)
                 elif tx.state == 'setup_failed':
@@ -182,6 +214,8 @@ class CenterModel(QObject):
                 if tx.uncertain:
                     result.update(driver=t['unknown'], module=t['unknown'], manager=t['unknown'],
                                   notice=t['backend_changes_possible'], noticeWarning=True)
+            if self.calibration_in_use():
+                result.update(canInstall=False, canRemove=False, canCheckUpdates=False)
             return result
         result = {
             'installed': s.installed, 'loaded': s.loaded, 'receiver': s.receiver,
@@ -289,12 +323,14 @@ class CenterModel(QObject):
 
     @Slot()
     def requestSetup(self):
+        if self.calibration_in_use(): return
         if self.execution is not None and hasattr(self.execution, 'request_setup') and self.execution.request_setup():
             self.changed.emit()
             self.setupDialogRequested.emit()
 
     @Slot()
     def confirmSetup(self):
+        if self.calibration_in_use(): return
         if self.execution is None or not hasattr(self.execution, 'begin_setup'): return
         session = self.execution.begin_setup()
         if session is None: return
@@ -347,6 +383,7 @@ class CenterModel(QObject):
 
     @Slot()
     def checkUpdates(self):
+        if self.calibration_in_use(): return
         if self.execution is not None and self.inspection_job is None:
             self.startInspection(self.execution.begin_update_check())
 
@@ -358,6 +395,7 @@ class CenterModel(QObject):
 
     @Slot()
     def prepareBackend(self):
+        if self.calibration_in_use(): return
         if self.execution is not None and hasattr(self.execution, 'begin_preparation'):
             if self.inspection_job is None:
                 self.startInspection(self.execution.begin_preparation())
@@ -368,6 +406,7 @@ class CenterModel(QObject):
 
     @Slot()
     def confirmBackend(self):
+        if self.calibration_in_use(): return
         if self.rehearsal is None:
             return
         submission = self.rehearsal.begin()
@@ -425,6 +464,7 @@ class CenterModel(QObject):
 
     @Slot(str)
     def request(self, action):
+        if self.calibration_in_use(): return
         if self.rehearsal is not None:
             if self.rehearsal.request(action):
                 self.changed.emit()

@@ -159,9 +159,11 @@ class PackageTests(unittest.TestCase):
                              (ROOT / 'src/gs_protocol.c').read_bytes())
             self.assertTrue((base / 'kernel/../src/gs_runtime.h').is_file())
             self.assertTrue((base / 'kernel/../include/uapi/gs_native.h').is_file())
+            self.assertTrue((base / 'src/gs_tmr.h').is_file())
             self.assertEqual((base / 'scripts/kernel_toolchain.py').read_bytes(),
                              (ROOT / 'scripts/kernel_toolchain.py').read_bytes())
-            for module in ('haptics_broker.py','gamesir_haptics.py','gamesir_mapping.py'):
+            for module in ('haptics_broker.py','gamesir_haptics.py','gamesir_mapping.py',
+                           'tmr_maintenance.py', 'tmr_native.py'):
                 self.assertTrue((staged / 'usr/lib/gamesir-native' / module).is_file())
             rule = staged / 'usr/lib/udev/rules.d/70-gamesir-native-sensors.rules'
             self.assertEqual(rule.read_bytes(), (ROOT / 'packaging/udev/70-gamesir-native-sensors.rules').read_bytes())
@@ -219,6 +221,21 @@ class PackageTests(unittest.TestCase):
             # Waiting is a vendor configuration default; no forced command-line
             # value may prevent a same-name local override from taking effect.
             self.assertNotIn('receiver_wait=1', unit)
+            # The candidate must ship both ends of the ZZZ profile, but
+            # installing it alone must never opt hardware into the experiment.
+            self.assertIn('experimental_gyro_105e', (base / 'kernel/gs_native_usb.c').read_text())
+            manager = staged / 'usr/lib/gamesir-native/gamesir_native.py'
+            self.assertIn('readiness_105e_enabled', manager.read_text())
+            self.assertNotIn('experimental_gyro_105e', unit)
+            self.assertNotIn('experimental_tmr', unit)
+            for config in (staged / 'usr/lib/modprobe.d').glob('*.conf'):
+                self.assertNotIn('experimental_gyro_105e', config.read_text())
+                self.assertNotIn('experimental_tmr', config.read_text())
+            for name in ('ZZZ_GYRO_EXTENSION.md',):
+                document = docroot / 'docs' / name
+                for link in re.findall(r'\]\(([^)]+)\)', document.read_text()):
+                    if not link.startswith(('https:', 'http:', '#')):
+                        self.assertTrue((document.parent / link.split('#')[0]).is_file(), link)
             self.assertIn('docs/RECEIVER_WAIT_KERNEL.md', package.DOCUMENT_FILES)
             self.assertIn('docs/RECEIVER_WAIT_UPDATE.md', package.DOCUMENT_FILES)
             self.assertIn('docs/evidence/RECEIVER_WAIT_OFFLINE_20261020.json',

@@ -53,6 +53,8 @@ for checking status and managing installation, in German and English.
 - **Controller detection** — the driver waits for your wireless controller
   to connect. Some reconnect problems remain under investigation.
 - **Control Center** — system status, installation, removal and driver-update checks.
+- **Optional stick calibration** — guided calibration for the G7 Pro and ZZZ,
+  with live stick displays. Requires [additional TMR setup](docs/TMR_SETUP.md).
 
 ## Acknowledgements / Special Thanks
 
@@ -76,14 +78,14 @@ Support currently focuses on the **2.4 GHz USB receiver**.
 | Hardware / system | Current scope |
 | --- | --- |
 | GameSir G7 Pro | Main development and testing device. |
-| G7 Pro Zenless Zone Zero Edition | Experimental support. Its gyro update is not yet in the published release. |
+| G7 Pro Zenless Zone Zero Edition | Experimental input, motion and stick-calibration support with scoped test results. |
 | Garuda Linux with KDE Plasma | Driver and Control Center tested. |
 | CachyOS Handheld Edition with Gamescope | Driver tested; use the manual installation guide. |
 
 Other controllers, connection modes and distributions have not been validated.
 
-**Current release:** [PRE-ALPHA.3](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.3),
-with driver `0.1.0.alpha3-16` and Control Center `0.1.0.alpha1`.
+**Current release:** [PRE-ALPHA.4](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.4),
+with driver `0.1.0.alpha3-20` and Control Center `0.1.0.alpha2`.
 
 <a id="installation-verification-and-complete-removal"></a>
 <a id="optional-control-center--pre-alpha"></a>
@@ -95,13 +97,14 @@ Read the [requirements](docs/CONTROL_CENTER_DISTRIBUTION.md) and
 [installation guide](docs/INSTALLATION.md), and close games and Deadband first.
 
 1. Download the **Control Center `.AppImage`** from the
-   [GitHub release](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.3).
+   [GitHub release](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.4).
 2. Make it executable in your file manager and open it as your normal user.
 3. If offered, choose **Set up helper** and review the request. Enter your
    password only in the system's password window.
-4. Choose **Review installation**, select the components you need and confirm
+4. Choose **Check driver updates** to load the current signed package list.
+5. Choose **Review installation**, select the components you need and confirm
    the plan when the app's checks pass.
-5. Follow the [activation and verification steps](docs/INSTALLATION.md#4-enable-normal-automatic-operation).
+6. Follow the [activation and verification steps](docs/INSTALLATION.md#4-enable-normal-automatic-operation).
    Installing packages and enabling the driver are separate steps.
 
 The app downloads checked packages from our GitHub releases. Compatible driver
@@ -121,9 +124,9 @@ For manual installation, CachyOS setup or complete removal, follow the
   to see the real controller and its motion sensors.
 - **Trigger vibration** has been confirmed with Forza Horizon 6 through Xodus
   Nexus. General Steam/Proton game support is not confirmed.
-- Control Center alpha1 may print terminal errors when closing. A correction
-  is being checked for a future update.
-- Firmware updates and stick calibration are planned, not available features.
+- Stick calibration requires the optional helper and explicit setup; the
+  normal driver installation leaves it disabled. See [TMR setup](docs/TMR_SETUP.md).
+- Firmware updates remain planned.
 
 ## Documentation
 

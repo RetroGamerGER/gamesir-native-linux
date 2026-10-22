@@ -4,12 +4,17 @@
 #include <linux/math64.h>
 #endif
 
-int gs_gyro_convert_observed(gs_u16 pid, int enabled,
+int gs_gyro_profile_enabled(gs_u16 pid, int enabled, int experimental_105e)
+{
+	return enabled && (pid == 0x109c || (pid == 0x105e && experimental_105e));
+}
+
+int gs_gyro_convert_observed(gs_u16 pid, int enabled, int experimental_105e,
 			     const gs_s16 raw[3], gs_s32 out[3])
 {
 	unsigned int i;
 
-	if (!enabled || pid != 0x109c)
+	if (!gs_gyro_profile_enabled(pid, enabled, experimental_105e))
 		return GS_SENSOR_NOT_READY;
 	if (!raw || !out)
 		return GS_SENSOR_BAD_CONFIG;

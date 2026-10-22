@@ -1,5 +1,13 @@
 # Control Center — Phase D offline AppImage preparation
 
+**Local alpha2 preparation (22 October 2026):**
+[normal TMR entry and simpler interface](CONTROL_CENTER_NORMAL_CALIBRATION.md).
+The reviewed companion enables normal launch without an experimental CLI flag;
+it does not install the TMR helper or enable the module. New synthetic
+`--bundle-calibration-self-test` complements the four existing smoke lanes.
+No new publication or installation. The older build/release entries below keep
+their historical scope.
+
 **Current distribution checkpoint (21 October 2026):** the reviewed Garuda
 x86_64/glibc2.44 alpha1 build, corresponding sources, signed revision1 and
 publication scope are documented in [the distribution review](CONTROL_CENTER_DISTRIBUTION.md).

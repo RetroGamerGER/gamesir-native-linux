@@ -117,24 +117,32 @@ static void evdev_accel(void)
 
 int main(void)
 {
-	/* Exact selected profile, including signed endpoints and model/opt-in gates. */
+	/* Exhaust all PID/opt-in combinations. Rejected profiles leave outputs alone. */
 	gs_s16 observed[3] = {-32768, 32767, -1};
-	gs_s32 evdev[3] = {11, 22, 33};
-	for (unsigned pid = 0; pid < 65536; pid++) {
-		assert(gs_gyro_convert_observed(pid, 0, observed, evdev) == GS_SENSOR_NOT_READY);
-		if (pid != 0x109c)
-			assert(gs_gyro_convert_observed(pid, 1, observed, evdev) == GS_SENSOR_NOT_READY);
+	gs_s32 evdev[3];
+	for (unsigned pid = 0; pid < 65536; pid++)
+	for (int enabled = 0; enabled <= 1; enabled++)
+	for (int zzz = 0; zzz <= 1; zzz++) {
+		int accepted = enabled && (pid == 0x109c || (pid == 0x105e && zzz));
+		evdev[0] = 11; evdev[1] = 22; evdev[2] = 33;
+		assert(gs_gyro_profile_enabled(pid, enabled, zzz) == accepted);
+		assert(gs_gyro_convert_observed(pid, enabled, zzz, observed, evdev) ==
+		       (accepted ? GS_SENSOR_EXPERIMENTAL : GS_SENSOR_NOT_READY));
+		if (accepted)
+			assert(evdev[0] == GS_GYRO_OBSERVED_MIN && evdev[1] == GS_GYRO_OBSERVED_MAX && evdev[2] == -7);
+		else
+			assert(evdev[0] == 11 && evdev[1] == 22 && evdev[2] == 33);
 	}
-	assert(evdev[0] == 11 && evdev[1] == 22 && evdev[2] == 33);
-	assert(gs_gyro_convert_observed(0x109c, 1, NULL, evdev) == GS_SENSOR_BAD_CONFIG);
-	assert(gs_gyro_convert_observed(0x109c, 1, observed, NULL) == GS_SENSOR_BAD_CONFIG);
-	assert(gs_gyro_convert_observed(0x109c, 1, observed, evdev) == GS_SENSOR_EXPERIMENTAL);
-	assert(evdev[0] == GS_GYRO_OBSERVED_MIN && evdev[1] == GS_GYRO_OBSERVED_MAX && evdev[2] == -7);
-	for (int value = -32768; value <= 32767; value++) {
-		observed[0] = observed[1] = observed[2] = value;
-		assert(gs_gyro_convert_observed(0x109c, 1, observed, evdev) == GS_SENSOR_EXPERIMENTAL);
-		for (unsigned i = 0; i < 3; i++)
-			assert(evdev[i] == value * 7);
+	const gs_u16 pids[] = {0x109c, 0x105e};
+	for (unsigned model = 0; model < 2; model++) {
+		assert(gs_gyro_convert_observed(pids[model], 1, 1, NULL, evdev) == GS_SENSOR_BAD_CONFIG);
+		assert(gs_gyro_convert_observed(pids[model], 1, 1, observed, NULL) == GS_SENSOR_BAD_CONFIG);
+		for (int value = -32768; value <= 32767; value++) {
+			observed[0] = value; observed[1] = 32767 - (value + 32768); observed[2] = -1;
+			assert(gs_gyro_convert_observed(pids[model], 1, 1, observed, evdev) == GS_SENSOR_EXPERIMENTAL);
+			for (unsigned i = 0; i < 3; i++)
+				assert(evdev[i] == observed[i] * 7);
+		}
 	}
 	struct gs_gyro_clock clock = {0};
 	assert(gs_gyro_timestamp(&clock, 1000000) == 1);
