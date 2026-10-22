@@ -1,4 +1,14 @@
-# Current: PRE-ALPHA.4 distribution and publication — 22 October 2026
+# Current: PRE-ALPHA.4 publication completed — 22 October 2026
+
+Completed: alpha2 AppImage with corresponding sources/licenses, core alpha3-20,
+optional TMR helper alpha1-2, source tag and verified release downloads.
+The unchanged trust key signs catalog revision2 for compatible AppImage updates.
+[Publication receipt](evidence/PRE_ALPHA4_PUBLICATION_20261022.json).
+Further work: explicitly reviewed five-component GUI package management, wider
+TMR cancellation/platform tests, known reconnect/partial-input faults and future
+firmware maintenance. No installation or hardware action in this release step.
+
+# Earlier: PRE-ALPHA.4 distribution and publication — 22 October 2026
 
 Publish the accepted alpha2 GUI with exact sources/licenses, core alpha3-20 and
 the separately installed TMR helper alpha1-2 after the authorized checks.

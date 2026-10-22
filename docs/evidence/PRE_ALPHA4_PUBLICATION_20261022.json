@@ -1,0 +1,256 @@
+{
+  "date": "2026-10-22",
+  "release_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.4",
+  "release_id": 420743138,
+  "tag": "v0.1.0-pre-alpha.4",
+  "source_commit": "48f2387d439171cd137bacd324bbbab5752c687a",
+  "prerelease": true,
+  "assets": [
+    {
+      "id": 665994191,
+      "name": "GameSir-Control-Center-alpha2-DISTRIBUTION_LOCK.json",
+      "size": 748550,
+      "digest": "sha256:d47348acd027e9154c46615511f99b2a36b151229cdcaab1ad45ca5165ff3fca",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/GameSir-Control-Center-alpha2-DISTRIBUTION_LOCK.json"
+    },
+    {
+      "id": 665994236,
+      "name": "GameSir-Control-Center-alpha2-MANIFEST.json",
+      "size": 1456,
+      "digest": "sha256:98349499a511779f5833173d9fc33a661b73dfc13752e13358e2b598b99bcda9",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/GameSir-Control-Center-alpha2-MANIFEST.json"
+    },
+    {
+      "id": 665930768,
+      "name": "GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha2-Corresponding-Sources.tar.zst",
+      "size": 1144574136,
+      "digest": "sha256:dfa33a22477bcd5cd765c273ee03d68cc05368741db6c3855310975191194b2b",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha2-Corresponding-Sources.tar.zst"
+    },
+    {
+      "id": 665990373,
+      "name": "GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha2-x86_64.AppImage",
+      "size": 70605304,
+      "digest": "sha256:dba3419349b4a7efb6ed3969f062a8d7ba97c13ec47a78bfe06f17ea4f0a9214",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/GameSir-Control-Center-PRE-ALPHA-0.1.0.alpha2-x86_64.AppImage"
+    },
+    {
+      "id": 665994730,
+      "name": "gamesir-native-dkms-0.1.0.alpha3-20-x86_64.pkg.tar.zst",
+      "size": 1278134,
+      "digest": "sha256:8f59637e147d1f165ba6d83a5083d3c0e8b25ad2b4fa42dc0bc8919ec1e25e22",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/gamesir-native-dkms-0.1.0.alpha3-20-x86_64.pkg.tar.zst"
+    },
+    {
+      "id": 665994258,
+      "name": "GameSir-Native-Linux-PRE-ALPHA-0.1.0.alpha1-2-TMR-helper-build-source.tar.gz",
+      "size": 19969,
+      "digest": "sha256:2b2ab7653de15b60f91a740e899bcc6af01a4a7e5fc174d9791aa0a88e20ce5a",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/GameSir-Native-Linux-PRE-ALPHA-0.1.0.alpha1-2-TMR-helper-build-source.tar.gz"
+    },
+    {
+      "id": 665994289,
+      "name": "GameSir-Native-Linux-PRE-ALPHA-0.1.0.alpha3-20-DKMS-build-source.tar.gz",
+      "size": 1289435,
+      "digest": "sha256:631b0124fdc88fdd8159f253c0abf4b4db52b62b0bc2c5ef5317314ed3f0e20d",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/GameSir-Native-Linux-PRE-ALPHA-0.1.0.alpha3-20-DKMS-build-source.tar.gz"
+    },
+    {
+      "id": 665994415,
+      "name": "GameSir-Native-Linux-PRE-ALPHA-v0.1.0-pre-alpha.4-full-source.tar.gz",
+      "size": 3055387,
+      "digest": "sha256:d56489790753fd9088dd7ca48a845c8f01938459c34df3379eee84829fa54b48",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/GameSir-Native-Linux-PRE-ALPHA-v0.1.0-pre-alpha.4-full-source.tar.gz"
+    },
+    {
+      "id": 665994867,
+      "name": "gamesir-native-tmr-helper-0.1.0.alpha1-2-any.pkg.tar.zst",
+      "size": 36366,
+      "digest": "sha256:cc7f47f1347b6e9f3daef0a382b2dc5fd2504bfa7c616623fd3deeea66aa9616",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/gamesir-native-tmr-helper-0.1.0.alpha1-2-any.pkg.tar.zst"
+    },
+    {
+      "id": 665994879,
+      "name": "pre-alpha-revision-2.json",
+      "size": 6499,
+      "digest": "sha256:2a9b8eee1ca9888eca239d2577cbc3b18d7f714f0973081969c37d91e37a9eaa",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/pre-alpha-revision-2.json"
+    },
+    {
+      "id": 665994704,
+      "name": "RELEASE_MANIFEST.json",
+      "size": 5987,
+      "digest": "sha256:26c6de1582a895b58b8ab8fa4ad8e044bf999ee2eeba8fb757982ca7ed8847d5",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/RELEASE_MANIFEST.json"
+    },
+    {
+      "id": 665994715,
+      "name": "SHA256SUMS",
+      "size": 1339,
+      "digest": "sha256:4d5c94935539380bc8b745deba6338af0ee49eb0fedf4d10390614f12ffea3ce",
+      "browser_download_url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/SHA256SUMS"
+    }
+  ],
+  "github_asset_digests": "all twelve match frozen local bytes",
+  "actual_package_downloads": [
+    {
+      "component": "core",
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.4/gamesir-native-dkms-0.1.0.alpha3-20-x86_64.pkg.tar.zst",
+      "sha256": "8f59637e147d1f165ba6d83a5083d3c0e8b25ad2b4fa42dc0bc8919ec1e25e22",
+      "archive_verifier": "passed"
+    },
+    {
+      "component": "steam",
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.3/gamesir-native-steam-0.1.0.alpha2-1-any.pkg.tar.zst",
+      "sha256": "702b0390a71d73159cba678742d51ba72d56e95bee127aa80a54f5428d8a3b06",
+      "archive_verifier": "passed"
+    },
+    {
+      "component": "gamescope",
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.3/gamesir-native-steam-gamescope-0.1.0.alpha1-1-any.pkg.tar.zst",
+      "sha256": "33a77a04c46c74220e42a5c84e777c4f3316fdf53f61387f0fde3d019b9f3058",
+      "archive_verifier": "passed"
+    },
+    {
+      "component": "bridge",
+      "url": "https://github.com/RetroGamerGER/gamesir-native-linux/releases/download/v0.1.0-pre-alpha.3/gamesir-native-trigger-bridge-0.1.0.alpha1-2-x86_64.pkg.tar.zst",
+      "sha256": "26e3f0c1a809ce9fa47d2b7951813efb03f643b98a4329788e661b8b1a0ab0be",
+      "archive_verifier": "passed"
+    }
+  ],
+  "actual_appimage_and_tmr_downloads": "verified; not executed",
+  "unchanged_previous_release_assets": 22,
+  "catalog_revision": 2,
+  "installed": false,
+  "hardware_access": false,
+  "offline_python_tests": 1877,
+  "qml_tests": 112,
+  "packaged_smoke_lanes": 5,
+  "signature_verification": {
+    "revision": 2,
+    "installed_helper_module_verification": true,
+    "app_module_verification": true,
+    "privileged_calls": 0,
+    "state_writes": 0
+  },
+  "appimage_privacy": {
+    "appdir_files_scanned": 1883,
+    "actionable_findings": 0,
+    "reviewed_upstream_literals": [
+      {
+        "file": "usr/lib/libQt6Network.so.6",
+        "component": "package:qt6-base",
+        "classification": "Qt TLS PEM parser marker",
+        "unchanged_source_audited_dependency": true
+      },
+      {
+        "file": "usr/lib/libgio-2.0.so.0",
+        "component": "package:glib2",
+        "classification": "GIO TLS PEM parser marker",
+        "unchanged_source_audited_dependency": true
+      },
+      {
+        "file": "usr/lib/python3.14/ipaddress.py",
+        "component": "package:python",
+        "classification": "upstream Python documented example addresses",
+        "unchanged_source_audited_dependency": true
+      },
+      {
+        "file": "usr/lib/python3.14/urllib/request.py",
+        "component": "package:python",
+        "classification": "upstream Python documented example addresses",
+        "unchanged_source_audited_dependency": true
+      }
+    ]
+  },
+  "packages": [
+    {
+      "component": "core",
+      "filename": "gamesir-native-dkms-0.1.0.alpha3-20-x86_64.pkg.tar.zst",
+      "package": "gamesir-native-dkms",
+      "version": "0.1.0.alpha3-20",
+      "size": 1278134,
+      "sha256": "8f59637e147d1f165ba6d83a5083d3c0e8b25ad2b4fa42dc0bc8919ec1e25e22",
+      "dependencies": [
+        "dkms",
+        "python",
+        "systemd",
+        "kmod",
+        "clang",
+        "llvm",
+        "lld",
+        "make",
+        "gcc",
+        "binutils"
+      ],
+      "guards": [
+        [
+          "usr/lib/gamesir-native/prepare_remove.py",
+          "e0409e421cea644f1db05947cd16afbdd30bf4e51c2d141c6bc2d3d92f02547f"
+        ],
+        [
+          "usr/share/libalpm/hooks/60-gamesir-native-release.hook",
+          "4a478c84c0bc347c0bc76968ac918e1063e374f49b1040381f343adf6769b44b"
+        ],
+        [
+          "usr/share/libalpm/hooks/60-gamesir-native-upgrade.hook",
+          "1eaa0750b04e6edced4730e624b858df51387996ddea2f151727f8d3f8eccff9"
+        ]
+      ],
+      "runtime_matches_hardware_tested_package": true,
+      "changed_documentation_files": [
+        "usr/share/doc/gamesir-native/AGENTS.md",
+        "usr/share/doc/gamesir-native/README.md",
+        "usr/share/doc/gamesir-native/docs/CONTROL_CENTER_ALPHA2_RELEASE.md",
+        "usr/share/doc/gamesir-native/docs/CONTROL_CENTER_APPIMAGE.md",
+        "usr/share/doc/gamesir-native/docs/CONTROL_CENTER_DISTRIBUTION.md",
+        "usr/share/doc/gamesir-native/docs/CONTROL_CENTER_NORMAL_CALIBRATION.md",
+        "usr/share/doc/gamesir-native/docs/CONTROL_CENTER_TMR_PERMISSION.md",
+        "usr/share/doc/gamesir-native/docs/PROJECT_STATE.md",
+        "usr/share/doc/gamesir-native/docs/RELEASE_PRE_ALPHA_4.md",
+        "usr/share/doc/gamesir-native/docs/ROADMAP.md",
+        "usr/share/doc/gamesir-native/docs/TMR_DISPLAY_POLLING_FIX.md",
+        "usr/share/doc/gamesir-native/docs/TMR_SETUP.md",
+        "usr/share/doc/gamesir-native/docs/evidence/TMR_DISPLAY_UPDATE_20261022.json",
+        "usr/share/doc/gamesir-native/docs/evidence/TMR_FIRST_LIVE_CALIBRATION_20261022.json",
+        "usr/share/doc/gamesir-native/docs/evidence/TMR_ZZZ_CALIBRATION_20261022.json"
+      ],
+      "private_marker_scan": "passed",
+      "source_commit": "48f2387d439171cd137bacd324bbbab5752c687a",
+      "tag": "v0.1.0-pre-alpha.4"
+    },
+    {
+      "component": "helper",
+      "filename": "gamesir-native-tmr-helper-0.1.0.alpha1-2-any.pkg.tar.zst",
+      "package": "gamesir-native-tmr-helper",
+      "version": "0.1.0.alpha1-2",
+      "size": 36366,
+      "sha256": "cc7f47f1347b6e9f3daef0a382b2dc5fd2504bfa7c616623fd3deeea66aa9616",
+      "dependencies": [
+        "python",
+        "polkit",
+        "gamesir-native-dkms>=0.1.0.alpha3-20"
+      ],
+      "guards": [],
+      "runtime_matches_hardware_tested_package": true,
+      "changed_documentation_files": [],
+      "private_marker_scan": "passed",
+      "source_commit": "48f2387d439171cd137bacd324bbbab5752c687a",
+      "tag": "v0.1.0-pre-alpha.4"
+    }
+  ],
+  "catalog_expiry_utc": "2026-11-21T13:11:43+00:00",
+  "public_history_identity_check": {
+    "commits_checked": 94,
+    "identity": "RetroGamerGER <109895785+RetroGamerGER@users.noreply.github.com>",
+    "private_development_ancestry_included": false
+  },
+  "notes": [
+    "All 12 uploaded asset sizes and GitHub SHA256 digests match frozen local files.",
+    "Actual downloads verified for four signed components, optional TMR helper, AppImage, manifest, checksums and signed envelope.",
+    "Matching corresponding sources were checked locally member-by-member and bound to the uploaded GitHub digest; the 1.14 GB archive was not downloaded again.",
+    "New package runtime files are identical to the live-tested builds; changed package documents and neutral build metadata are recorded separately.",
+    "TMR remains an explicitly enabled, separately installed optional fifth helper.",
+    "The signed channel expires for new package transactions; this does not disable an installed driver."
+  ]
+}

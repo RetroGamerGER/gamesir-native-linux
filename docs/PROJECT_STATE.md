@@ -1,4 +1,16 @@
-# Current: PRE-ALPHA.4 publication authorized — 22 October 2026
+# Current: PRE-ALPHA.4 published — 22 October 2026
+
+[Release](https://github.com/RetroGamerGER/gamesir-native-linux/releases/tag/v0.1.0-pre-alpha.4)
+published from clean public source 48f2387: Control Center alpha2, core
+alpha3-20 and optional TMR helper alpha1-2. All 12 asset digests/sizes and
+actual package/AppImage downloads verified; 22 previous release assets unchanged.
+Offline suite: 1,877 Python cases, 112 Qt/QML cases and five packaged synthetic
+lanes. [Publication receipt](evidence/PRE_ALPHA4_PUBLICATION_20261022.json).
+Signed catalog revision2 uses the unchanged key and expires 21 November 2026
+at 13:11:43 UTC. TMR needs separate setup; known reconnect/partial-button
+issues remain open. No installation, running-driver or hardware changes.
+
+# Earlier: PRE-ALPHA.4 publication authorized — 22 October 2026
 
 The maintainer accepted the simpler alpha2 interface with real status data,
 then requested source/license release preparation and explicitly authorized the

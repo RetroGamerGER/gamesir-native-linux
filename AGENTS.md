@@ -16,7 +16,18 @@ changes locally. No public remote, tag, upload or push without explicit
 maintainer approval. Preserve third-party notices and source provenance.
 Own sources use GPL-2.0-only; preserve the UAPI Linux-syscall-note exception.
 
-## Current: PRE-ALPHA.4 / alpha2 publication — 22 October 2026
+## Current: PRE-ALPHA.4 / alpha2 published — 22 October 2026
+
+The authorized release is published at v0.1.0-pre-alpha.4, source 48f2387.
+AppImage alpha2, core alpha3-20 and optional TMR helper alpha1-2 have 12
+verified release assets; previous release assets and private history are
+preserved. Read docs/evidence/PRE_ALPHA4_PUBLICATION_20261022.json. Signed
+catalog revision2 retains the same trust key and expires 21 November 2026
+at 13:11:43 UTC. No installed driver, helper, Steam or hardware changes occurred.
+This publication request is complete; further releases require new approval.
+TMR setup remains separate; the GUI backend manages four components.
+
+## Earlier: PRE-ALPHA.4 / alpha2 publication — 22 October 2026
 
 The maintainer now explicitly authorizes pushing the new packages and creating
 a tagged release after the requested source/license review. Read
